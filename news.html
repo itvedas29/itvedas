@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Latest IT and cybersecurity news explained in plain English — updated multiple times daily on ITVedas.">
-<meta name="keywords" content="IT news, cybersecurity news, tech news today, cloud computing news, DevOps news">
-<meta property="og:title" content="IT News Today | ITVedas">
-<meta property="og:description" content="Latest tech and cybersecurity news explained simply — updated throughout the day.">
+<meta name="description" content="Original IT and cybersecurity news explained in plain English — written by ITVedas, updated throughout the day.">
+<meta name="keywords" content="IT news, cybersecurity news, tech news today, cloud news, DevOps news">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://itvedas.com/news.html">
 <title>IT News Today — June 16, 2026 | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--subtle:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
@@ -22,246 +20,106 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-links{display:flex;gap:1.5rem;}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
-.hero{padding:6rem 2rem 3rem;background:linear-gradient(180deg,rgba(255,107,53,0.05) 0%,transparent 100%);border-bottom:1px solid var(--border);}
-.hero-inner{max-width:1200px;margin:0 auto;}
-.live-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}
-.live-dot{width:6px;height:6px;background:#10B981;border-radius:50%;animation:blink 1.5s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero{padding:6rem 2rem 2.5rem;background:linear-gradient(180deg,rgba(255,107,53,0.05),transparent);border-bottom:1px solid var(--border);}
+.hero-in{max-width:1200px;margin:0 auto;}
+.live{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}
+.dot{width:6px;height:6px;background:#10B981;border-radius:50%;animation:b 1.5s infinite;}
+@keyframes b{0%,100%{opacity:1}50%{opacity:0.3}}
 .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}
 .hero h1 span{background:linear-gradient(135deg,#FF6B35,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{color:var(--muted);font-size:1rem;max-width:540px;}
-.update-time{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}
+.hero p{color:var(--muted);max-width:560px;}
+.upd{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}
 .main{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;}
 .filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
-.filter-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
-.filter-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
-.filter-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
-.stats-bar{display:flex;gap:2rem;padding:1.25rem 1.5rem;background:var(--bg2);border-radius:12px;margin-bottom:2rem;flex-wrap:wrap;}
-.stat{text-align:center;}
-.stat-num{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent);}
-.stat-lbl{font-size:0.75rem;color:var(--muted);}
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem;}
-.news-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:transform 0.2s,border-color 0.2s;}
-.news-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.15);}
-.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;}
-.card-badge{font-size:0.7rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}
-.card-time{font-size:0.75rem;color:var(--muted);}
-.card-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;line-height:1.4;margin-bottom:0.75rem;}
-.card-title a{color:var(--text);text-decoration:none;transition:color 0.2s;}
-.card-title a:hover{color:var(--accent);}
-.card-summary{font-size:0.875rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
-.card-link{font-size:0.8rem;color:var(--accent);text-decoration:none;font-weight:600;transition:opacity 0.2s;}
-.card-link:hover{opacity:0.75;}
-.section-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.fb{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
+.fb:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.fb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+.nc{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}
+.nc:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}
+.nc-vis{height:140px;display:flex;align-items:center;justify-content:center;}
+.nc-body{padding:1.35rem;}
+.nc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+.nc-badge{font-size:0.68rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.nc-time{font-size:0.75rem;color:var(--muted);}
+.nc-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:0.6rem;color:var(--text);}
+.nc-sum{font-size:0.875rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}
+.nc-link{font-size:0.8rem;color:var(--accent);font-weight:600;}
 .empty{text-align:center;padding:3rem;color:var(--muted);}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
 .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
 .fl span{color:var(--accent);}
-.flinks{display:flex;gap:2rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
-.flinks a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
 .flinks a:hover{color:var(--accent);}
-@media(max-width:768px){
-  nav{padding:0 1.25rem;}
-  .nav-links{display:none;}
-  .hero,.main{padding-left:1.25rem;padding-right:1.25rem;}
-  .news-grid{grid-template-columns:1fr;}
-}
+@media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.main{padding-left:1.25rem;padding-right:1.25rem;}.grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/news.html" class="active">News</a>
-    <a href="/#chapters">Chapters</a>
-    <a href="/#newsletter">Newsletter</a>
-  </div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
-
 <div class="hero">
-  <div class="hero-inner">
-    <div class="live-badge"><span class="live-dot"></span>Live updates</div>
+  <div class="hero-in">
+    <div class="live"><span class="dot"></span>Live updates</div>
     <h1>IT & Cybersecurity <span>News Today</span></h1>
-    <p class="hero-sub">The latest tech, security and cloud news — explained in plain English, no jargon. Updated throughout the day.</p>
-    <p class="update-time">Last updated: 07:58 PM IST · June 16, 2026</p>
+    <p>Original reporting on the latest tech, security and cloud news — written by ITVedas in plain English. Updated throughout the day.</p>
+    <p class="upd">Last updated: 08:22 PM IST · June 16, 2026</p>
   </div>
 </div>
-
 <div class="main">
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-num">15</div><div class="stat-lbl">Stories today</div></div>
-    <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Topics covered</div></div>
-    <div class="stat"><div class="stat-num">3×</div><div class="stat-lbl">Daily updates</div></div>
-    <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Plain English</div></div>
-  </div>
-
-  <div class="filters"><button onclick="filterNews('all')" class="filter-btn active" data-topic="all">All</button><button onclick="filterNews('AI')" class="filter-btn" data-topic="AI" style="--tc:#F97316">AI</button><button onclick="filterNews('Security')" class="filter-btn" data-topic="Security" style="--tc:#10B981">Security</button><button onclick="filterNews('General')" class="filter-btn" data-topic="General" style="--tc:#64748B">General</button></div>
-
-  <div class="news-grid" id="newsGrid">
-    
-        <div class="news-card" data-topic="AI">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#F97316;">AI</span>
-            <span class="card-time">07:58 PM IST</span>
+  <div class="filters"><button onclick="f('all')" class="fb active" data-t="all">All</button><button onclick="f('General')" class="fb" data-t="General" style="--tc:#64748B">General</button><button onclick="f('Security')" class="fb" data-t="Security" style="--tc:#10B981">Security</button></div>
+  <div class="grid" id="grid"><a href="/news/2026-06-16-new-android-malware-gives-hackers-complete-phone-control-her.html" class="nc" data-t="General">
+          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
+          <div class="nc-body">
+            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-06-16</span></div>
+            <h3 class="nc-title">New Android Malware Gives Hackers Complete Phone Control—Here's What You Need to Know</h3>
+            <p class="nc-sum">Dangerous malware targets hundreds of banking apps, leaving Android users at risk of total device compromise.</p>
+            <span class="nc-link">Read full story →</span>
           </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/google-vertex-ai-sdk-flaw-let-attackers.html" target="_blank" rel="noopener">Google Vertex AI SDK Flaw Let Attackers Hijack Model Uploads via Bucket Squatting</a></h3>
-          <p class="card-summary">A flaw in Google's AI software let hackers upload and run harmful code in Google's cloud system without needing access to someone's account. This matters because people using Google's AI services could have their work stolen or sabotaged without thei</p>
-          <a href="https://thehackernews.com/2026/06/google-vertex-ai-sdk-flaw-let-attackers.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
+        </a><a href="/news/2026-06-16-android-users-under-attack-new-malware-targets-digital-walle.html" class="nc" data-t="Security">
+          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+          <div class="nc-body">
+            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-16</span></div>
+            <h3 class="nc-title">Android Users Under Attack: New Malware Targets Digital Wallets and Personal Security Codes</h3>
+            <p class="nc-sum">Cybersecurity teams discover dangerous Android threat stealing passwords, text messages, and cryptocurrency funds through fake update scams.</p>
+            <span class="nc-link">Read full story →</span>
           </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/clickfix-campaigns-expand-malware.html" target="_blank" rel="noopener">ClickFix Campaigns Expand Malware Delivery With New Loaders and Fake Update Lures</a></h3>
-          <p class="card-summary">Hackers are using fake update notifications to trick people into downloading three different types of malware that steals data and money. This matters because you could accidentally install malware thinking you're just updating your software.</p>
-          <a href="https://thehackernews.com/2026/06/clickfix-campaigns-expand-malware.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
+        </a><a href="/news/2026-06-16-google-cloud-ai-platform-vulnerability-exposes-machine-learn.html" class="nc" data-t="Security">
+          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+          <div class="nc-body">
+            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-16</span></div>
+            <h3 class="nc-title">Google Cloud AI Platform Vulnerability Exposes Machine Learning Systems to Unauthorized Code Execution</h3>
+            <p class="nc-sum">Security researchers discover critical flaw allowing attackers to hijack AI model uploads and run malicious code in Google's infrastructure.</p>
+            <span class="nc-link">Read full story →</span>
           </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/new-rokarolla-android-malware-steals.html" target="_blank" rel="noopener">New Rokarolla Android Malware Steals PINs, SMS Codes, and Crypto Wallet Funds</a></h3>
-          <p class="card-summary">A new malware called Rokarolla targets Android phones and can steal your PIN codes, text messages, and money from cryptocurrency wallets. This matters because your phone could be compromised without you knowing, putting your financial accounts at ris</p>
-          <a href="https://thehackernews.com/2026/06/new-rokarolla-android-malware-steals.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="General">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#64748B;">General</span>
-            <span class="card-time">07:58 PM IST</span>
+        </a><a href="/news/2026-06-16-google-s-ai-platform-exposed-to-account-takeover-attacks-thr.html" class="nc" data-t="Security">
+          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+          <div class="nc-body">
+            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-16</span></div>
+            <h3 class="nc-title">Google's AI Platform Exposed to Account Takeover Attacks Through Storage Bucket Vulnerability</h3>
+            <p class="nc-sum">Security flaw in Google Vertex AI allowed attackers to intercept and redirect model uploads by claiming unused storage buckets.</p>
+            <span class="nc-link">Read full story →</span>
           </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/survey-94-of-incidents-involve.html" target="_blank" rel="noopener">Survey: 94% of Incidents Involve Anonymized Infrastructure. Teams Are Still Reactive</a></h3>
-          <p class="card-summary">A survey found that 94% of security incidents involve hidden infrastructure, and security teams are still reacting to attacks rather than preventing them. This matters because it shows that most organizations aren't protecting your data effectively u</p>
-          <a href="https://thehackernews.com/2026/06/survey-94-of-incidents-involve.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/attackers-exploit-three-fortinet.html" target="_blank" rel="noopener">Attackers Exploit Three Fortinet FortiSandbox Flaws, One Patched Last Week</a></h3>
-          <p class="card-summary">Hackers are exploiting multiple security holes in Fortinet's FortiSandbox security tool, including one that was just patched last week. This matters because companies using this tool to protect themselves may still be vulnerable to attacks.</p>
-          <a href="https://thehackernews.com/2026/06/attackers-exploit-three-fortinet.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="General">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#64748B;">General</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://thehackernews.com/2026/06/china-linked-sprysocks-backdoor-expands.html" target="_blank" rel="noopener">China-Linked SprySOCKS Backdoor Expands to Windows with Driver-Based Stealth</a></h3>
-          <p class="card-summary">A China-linked malware called SprySOCKS has expanded to Windows computers and uses special driver-level techniques to hide itself from detection. This matters because this advanced malware could steal data from your computer without antivirus softwar</p>
-          <a href="https://thehackernews.com/2026/06/china-linked-sprysocks-backdoor-expands.html" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/steam-workshop-abused-to-spread-malware-via-wallpaper-engine-app/" target="_blank" rel="noopener">Steam Workshop abused to spread malware via Wallpaper Engine app</a></h3>
-          <p class="card-summary">Criminals are hiding malware inside wallpaper packages on Steam Workshop to trick gamers into downloading it. This matters because you could accidentally install malware while trying to customize your game's appearance.</p>
-          <a href="https://www.bleepingcomputer.com/news/security/steam-workshop-abused-to-spread-malware-via-wallpaper-engine-app/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="General">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#64748B;">General</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/uk-to-require-id-or-face-scan-before-you-can-make-social-media-accounts/" target="_blank" rel="noopener">UK to require ID or face scan before you can make social media accounts</a></h3>
-          <p class="card-summary">The UK is requiring people to upload their ID or take a facial age scan before creating social media accounts to prevent under-16s from joining. This matters because your personal information will be collected and stored before you can use social med</p>
-          <a href="https://www.bleepingcomputer.com/news/security/uk-to-require-id-or-face-scan-before-you-can-make-social-media-accounts/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/ghosttree-attack-abused-recursive-windows-junctions-to-hide-malware/" target="_blank" rel="noopener">GhostTree Attack Abused Recursive Windows Junctions to Hide Malware</a></h3>
-          <p class="card-summary">A malware attack called GhostTree uses a Windows trick to create fake file paths that confuse Microsoft Defender security scans and never complete. This matters because your computer's security software could get stuck and stop protecting you from ma</p>
-          <a href="https://www.bleepingcomputer.com/news/security/ghosttree-attack-abused-recursive-windows-junctions-to-hide-malware/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="General">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#64748B;">General</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/ftc-warns-of-record-35-billion-losses-to-imposter-scams-in-2025/" target="_blank" rel="noopener">FTC warns of record $3.5 billion losses to imposter scams in 2025</a></h3>
-          <p class="card-summary">Americans lost $3.5 billion to imposter scams in 2025, with losses nearly tripling since 2020. This matters because scammers are getting better at pretending to be someone you trust to steal your money.</p>
-          <a href="https://www.bleepingcomputer.com/news/security/ftc-warns-of-record-35-billion-losses-to-imposter-scams-in-2025/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-another-actively-exploited-cpanel-plugin-flaw/" target="_blank" rel="noopener">CISA warns of another cPanel plugin flaw exploited in attacks</a></h3>
-          <p class="card-summary">A vulnerability in cPanel plugins is being actively exploited by attackers, and the U.S. government has given agencies 3 days to patch it. This matters because websites using this plugin could be hacked, putting your personal information at risk.</p>
-          <a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-another-actively-exploited-cpanel-plugin-flaw/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.bleepingcomputer.com/news/security/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malicious-traffic/" target="_blank" rel="noopener">Ransomware gang abuses Microsoft Teams relays to hide malicious traffic</a></h3>
-          <p class="card-summary">Ransomware gangs are using Microsoft Teams relay systems to hide their malicious traffic from detection. This matters because hackers can sneak their attacks through a trusted business tool without being noticed.</p>
-          <a href="https://www.bleepingcomputer.com/news/security/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malicious-traffic/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.securityweek.com/" target="_blank" rel="noopener">SecurityWeek</a></h3>
-          <p class="card-summary">This is a news website header with no specific security news. It does not require a summary.</p>
-          <a href="https://www.securityweek.com/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.securityweek.com/irhythm-confirms-data-stolen-in-hack/" target="_blank" rel="noopener">iRhythm Confirms Data Stolen in Hack</a></h3>
-          <p class="card-summary">iRhythm, a digital health company, confirmed that hackers stole data from their systems and demanded ransom money. This matters because patient health information could be exposed and used by criminals.</p>
-          <a href="https://www.securityweek.com/irhythm-confirms-data-stolen-in-hack/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-        <div class="news-card" data-topic="Security">
-          <div class="card-top">
-            <span class="card-badge" style="background:rgba(255,107,53,0.1);color:#10B981;">Security</span>
-            <span class="card-time">07:58 PM IST</span>
-          </div>
-          <h3 class="card-title"><a href="https://www.securityweek.com/hacker-conversations-isira-adithya-the-evolution-of-an-ethical-hacker/" target="_blank" rel="noopener">Hacker Conversations: Isira Adithya, the Evolution of an Ethical Hacker</a></h3>
-          <p class="card-summary">This is a profile interview about an ethical hacker who built a successful career finding security vulnerabilities. It does not require a traditional security threat summary.</p>
-          <a href="https://www.securityweek.com/hacker-conversations-isira-adithya-the-evolution-of-an-ethical-hacker/" target="_blank" rel="noopener" class="card-link">Read full story →</a>
-        </div>
-  </div>
-  <div class="empty" id="emptyMsg" style="display:none;">No stories in this category right now. Check back soon.</div>
+        </a></div>
+  <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>
 </div>
-
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
-  <p>The complete IT knowledge hub — news, guides and tutorials, all in plain English.</p>
-  <div class="flinks">
-    <a href="/">Home</a><a href="/#chapters">Chapters</a>
-    <a href="/#newsletter">Newsletter</a><a href="/sitemap.xml">Sitemap</a>
-  </div>
-  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Original reporting</p>
 </footer>
-
 <script>
-function filterNews(topic) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-topic="${topic}"]`).classList.add('active');
-  const cards = document.querySelectorAll('.news-card');
-  let visible = 0;
-  cards.forEach(c => {
-    const show = topic === 'all' || c.dataset.topic === topic;
-    c.style.display = show ? '' : 'none';
-    if(show) visible++;
+function f(t){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-t="${t}"]`).classList.add('active');
+  let v=0;
+  document.querySelectorAll('.nc').forEach(c=>{
+    const s=t==='all'||c.dataset.t===t;c.style.display=s?'':'none';if(s)v++;
   });
-  document.getElementById('emptyMsg').style.display = visible === 0 ? 'block' : 'none';
+  document.getElementById('empty').style.display=v===0?'block':'none';
 }
 </script>
 </body>
