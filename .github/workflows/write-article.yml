@@ -1,0 +1,22 @@
+name: ITVedas Auto Writer
+on:
+  schedule:
+    - cron: '30 3 * * 1,3,5'
+  workflow_dispatch:
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 scripts/generate.py
+      - name: Commit draft
+        run: |
+          git config user.name "ITVedas Bot"
+          git config user.email "bot@itvedas.com"
+          git add drafts/
+          git diff --staged --quiet || git commit -m "New article draft"
+          git push
