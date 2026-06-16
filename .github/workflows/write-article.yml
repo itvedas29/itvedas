@@ -1,13 +1,17 @@
-name: ITVedas Brain + News
+name: ITVedas Autopilot
 
+# ──────────────────────────────────────────────────────────────
+#  Schedules (times in UTC; IST = UTC + 5:30)
+#    Deep articles : Mon, Wed, Fri  9:00 AM IST
+#    News refresh  : every day at 8 AM, 1 PM, 6 PM IST
+#  Manual run: Actions tab → Run workflow → choose what to run
+# ──────────────────────────────────────────────────────────────
 on:
   schedule:
-    # Deep articles: Mon, Wed, Fri at 9:00 AM IST (3:30 AM UTC)
-    - cron: '30 3 * * 1,3,5'
-    # News updates: Every day at 8 AM, 1 PM, 6 PM IST
-    - cron: '30 2 * * *'
-    - cron: '30 7 * * *'
-    - cron: '30 12 * * *'
+    - cron: '30 3 * * 1,3,5'   # 09:00 IST  Mon/Wed/Fri  → article
+    - cron: '30 2 * * *'       # 08:00 IST  daily         → news
+    - cron: '30 7 * * *'       # 13:00 IST  daily         → news
+    - cron: '30 12 * * *'      # 18:00 IST  daily         → news
   workflow_dispatch:
     inputs:
       run_type:
@@ -15,51 +19,66 @@ on:
         required: true
         default: 'both'
         type: choice
-        options:
-          - both
-          - article_only
-          - news_only
+        options: [both, article_only, news_only]
 
 permissions:
   contents: write
 
+# Use the newer Node runtime (silences the deprecation warning)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: itvedas-autopilot
+  cancel-in-progress: false
+
 jobs:
-  brain:
+  autopilot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Run Deep Article Brain
-        if: |
-          github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'article_only') ||
-          github.event_name == 'schedule' && (github.event.schedule == '30 3 * * 1,3,5')
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # ── Deep article: Mon/Wed/Fri schedule, or manual both/article_only ──
+      - name: Run Brain (deep article)
+        if: >-
+          (github.event_name == 'schedule' && github.event.schedule == '30 3 * * 1,3,5') ||
+          (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'article_only'))
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
-          SMTP_FROM: ${{ secrets.SMTP_FROM }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
-        run: python3 scripts/brain_v2.py
+          GA4_ID:            ${{ secrets.GA4_ID }}
+          NOTIFY_EMAIL:      ${{ secrets.NOTIFY_EMAIL }}
+          SMTP_FROM:         ${{ secrets.SMTP_FROM }}
+          SMTP_PASS:         ${{ secrets.SMTP_PASS }}
+        run: python3 scripts/brain.py
 
+      # ── News: daily schedules, or manual both/news_only ──
       - name: Run News Agent
-        if: |
-          github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'news_only') ||
-          github.event_name == 'schedule' && (github.event.schedule != '30 3 * * 1,3,5')
+        if: >-
+          (github.event_name == 'schedule' && github.event.schedule != '30 3 * * 1,3,5') ||
+          (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'news_only'))
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python3 scripts/news_agent.py
+          GA4_ID:            ${{ secrets.GA4_ID }}
+        run: python3 scripts/news_agent_v2.py
 
-      - name: Commit and push everything
+      # ── Commit & push everything the agents produced ──
+      - name: Commit and push
         run: |
-          git config user.name "ITVedas Brain"
-          git config user.email "brain@itvedas.com"
+          git config user.name  "ITVedas Bot"
+          git config user.email "bot@itvedas.com"
           git add -A
           git stash
           git pull --rebase origin main
           git stash pop || true
           git add -A
-          git diff --staged --quiet || git commit -m "Auto update $(date +'%Y-%m-%d %H:%M')"
+          git diff --staged --quiet || git commit -m "Autopilot update $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push origin main
