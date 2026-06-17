@@ -80,6 +80,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .note{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.75rem;margin:3rem 0 1rem;font-size:0.92rem;color:var(--sub);}
 .note strong{color:var(--text);}
 
+.domain-head{justify-content:space-between;}
+.domain-head-left{display:flex;align-items:center;gap:1rem;}
+.learn-link{font-size:0.82rem;font-weight:600;color:var(--stage-c,var(--net));text-decoration:none;border:1px solid var(--border);border-radius:100px;padding:0.45rem 1rem;white-space:nowrap;transition:transform .2s,border-color .2s;}
+.learn-link:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.25);}
+
+.overview{margin:2.5rem 0 1rem;overflow-x:auto;border:1px solid var(--border);border-radius:16px;}
+.overview table{width:100%;border-collapse:collapse;font-size:0.86rem;min-width:640px;}
+.overview th{text-align:left;background:var(--bg2);color:var(--muted);font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:0.85rem 1rem;border-bottom:1px solid var(--border);}
+.overview td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);color:var(--sub);}
+.overview tr:last-child td{border-bottom:none;}
+.overview td:first-child{color:var(--text);font-weight:600;font-family:var(--fd);white-space:nowrap;}
+.overview a.row-link{color:inherit;text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+
 .cta{text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3rem 2rem;margin:4rem 0 1rem;}
 .cta h2{font-family:var(--fd);font-size:1.6rem;margin-bottom:0.75rem;}
 .cta p{color:var(--muted);max-width:480px;margin:0 auto 1.75rem;}
@@ -106,6 +119,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
   .hero,.wrap{padding-left:1.25rem;padding-right:1.25rem;}
   .track{grid-template-columns:1fr;}
   .domain-head h2{font-size:1.4rem;}
+  .domain-head{flex-wrap:wrap;gap:0.75rem;}
 }
 </style>
 </head>
@@ -142,11 +156,30 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 
 <div class="wrap">
 
+<div class="overview">
+  <table>
+    <thead><tr><th>Domain</th><th>Entry role</th><th>Mid-level role</th><th>Senior role</th><th>Top role</th><th>Top certification</th></tr></thead>
+    <tbody>
+      <tr><td><a class="row-link" href="#networking">🌐 Networking</a></td><td>Help Desk / NOC L1</td><td>Network Engineer</td><td>Senior Network Engineer</td><td>Principal Network Architect</td><td>CCIE</td></tr>
+      <tr><td><a class="row-link" href="#cloud">☁️ Cloud</a></td><td>Cloud Support Associate</td><td>Cloud Engineer</td><td>Cloud Solutions Architect</td><td>Principal Cloud Architect</td><td>AWS Solutions Architect – Pro</td></tr>
+      <tr><td><a class="row-link" href="#security">🔐 Security</a></td><td>SOC Analyst L1</td><td>Security Engineer</td><td>Penetration Tester / IR Lead</td><td>CISO</td><td>CISSP</td></tr>
+      <tr><td><a class="row-link" href="#devops">⚙️ DevOps</a></td><td>Junior DevOps Engineer</td><td>DevOps Engineer</td><td>Site Reliability Engineer</td><td>Head of Platform Engineering</td><td>CKA / CKS</td></tr>
+      <tr><td><a class="row-link" href="#databases">🗄️ Databases</a></td><td>Junior DBA</td><td>Database Administrator</td><td>Database Architect</td><td>Head of Data Platform</td><td>AWS Database – Specialty</td></tr>
+      <tr><td><a class="row-link" href="#linux">🐧 Linux / OS</a></td><td>Junior Sysadmin</td><td>Linux Systems Administrator</td><td>Infrastructure Engineer</td><td>Head of Infrastructure</td><td>RHCA</td></tr>
+      <tr><td><a class="row-link" href="#hardware">🖥️ Hardware</a></td><td>Hardware Support Tech</td><td>Server Hardware Technician</td><td>Data Center Engineer</td><td>Data Center Architect</td><td>CDCP / CDCE</td></tr>
+      <tr><td><a class="row-link" href="#compliance">📋 Compliance</a></td><td>Compliance Analyst (Jr)</td><td>Compliance Analyst</td><td>Senior Compliance Manager</td><td>Director of Compliance</td><td>CISA / CISM</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <!-- ══════════════════════════════ NETWORKING ══════════════════════════════ -->
 <div class="domain" id="networking" style="--stage-c:#FF6B35;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(255,107,53,0.12);">🌐</div>
-    <h2>Networking</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(255,107,53,0.12);">🌐</div>
+      <h2>Networking</h2>
+    </div>
+    <a href="/articles/networking/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">The skill of designing, building and troubleshooting the systems that move data between devices — from a home Wi-Fi router to a global ISP backbone.</p>
   <div class="track" style="--stage-c:#FF6B35;">
@@ -224,8 +257,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ CLOUD ══════════════════════════════ -->
 <div class="domain" id="cloud" style="--stage-c:#3B82F6;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(59,130,246,0.12);">☁️</div>
-    <h2>Cloud</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(59,130,246,0.12);">☁️</div>
+      <h2>Cloud</h2>
+    </div>
+    <a href="/articles/cloud/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Designing, deploying and operating infrastructure and applications on AWS, Azure, Google Cloud and similar platforms — the backbone of almost every modern product.</p>
   <div class="track" style="--stage-c:#3B82F6;">
@@ -303,8 +339,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ SECURITY ══════════════════════════════ -->
 <div class="domain" id="security" style="--stage-c:#10B981;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(16,185,129,0.12);">🔐</div>
-    <h2>Security</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(16,185,129,0.12);">🔐</div>
+      <h2>Security</h2>
+    </div>
+    <a href="/articles/security/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Protecting systems, networks and data from attackers — spanning defensive operations, offensive testing, governance and incident response.</p>
   <div class="track" style="--stage-c:#10B981;">
@@ -382,8 +421,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ DEVOPS ══════════════════════════════ -->
 <div class="domain" id="devops" style="--stage-c:#8B5CF6;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(139,92,246,0.12);">⚙️</div>
-    <h2>DevOps</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(139,92,246,0.12);">⚙️</div>
+      <h2>DevOps</h2>
+    </div>
+    <a href="/articles/devops/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Bridging development and operations — automating builds, deployments and infrastructure so software ships faster and more reliably.</p>
   <div class="track" style="--stage-c:#8B5CF6;">
@@ -461,8 +503,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ DATABASES ══════════════════════════════ -->
 <div class="domain" id="databases" style="--stage-c:#F59E0B;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(245,158,11,0.12);">🗄️</div>
-    <h2>Databases</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(245,158,11,0.12);">🗄️</div>
+      <h2>Databases</h2>
+    </div>
+    <a href="/articles/databases/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Designing, building and operating the systems that store and serve an organization's data reliably, securely and at scale.</p>
   <div class="track" style="--stage-c:#F59E0B;">
@@ -540,8 +585,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ LINUX ══════════════════════════════ -->
 <div class="domain" id="linux" style="--stage-c:#EF4444;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(239,68,68,0.12);">🐧</div>
-    <h2>Linux & OS</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(239,68,68,0.12);">🐧</div>
+      <h2>Linux & OS</h2>
+    </div>
+    <a href="/articles/linux/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Mastering the command line and operating systems that power most of the world's servers — from a single workstation to thousands of fleet machines.</p>
   <div class="track" style="--stage-c:#EF4444;">
@@ -619,8 +667,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ HARDWARE ══════════════════════════════ -->
 <div class="domain" id="hardware" style="--stage-c:#06B6D4;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(6,182,212,0.12);">🖥️</div>
-    <h2>Hardware</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(6,182,212,0.12);">🖥️</div>
+      <h2>Hardware</h2>
+    </div>
+    <a href="/articles/hardware/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Understanding and working with the physical components — CPUs, memory, storage and the data centers that house them — that everything else runs on.</p>
   <div class="track" style="--stage-c:#06B6D4;">
@@ -698,8 +749,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cent
 <!-- ══════════════════════════════ COMPLIANCE ══════════════════════════════ -->
 <div class="domain" id="compliance" style="--stage-c:#EC4899;">
   <div class="domain-head">
-    <div class="domain-icon" style="background:rgba(236,72,153,0.12);">📋</div>
-    <h2>Compliance</h2>
+    <div class="domain-head-left">
+      <div class="domain-icon" style="background:rgba(236,72,153,0.12);">📋</div>
+      <h2>Compliance</h2>
+    </div>
+    <a href="/articles/compliance/" class="learn-link">Learn this on ITVedas →</a>
   </div>
   <p class="domain-blurb">Ensuring an organization's technology and data practices meet legal, regulatory and industry standards — GDPR, HIPAA, SOC 2, PCI DSS and more.</p>
   <div class="track" style="--stage-c:#EC4899;">
