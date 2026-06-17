@@ -133,7 +133,7 @@ def parse_article(content, item):
     body = re.sub(r'<!-- META.*?-->','',content,flags=re.DOTALL).strip()
     return meta, body
 
-def build_article_page(meta, body, item, date_str, slug):
+def build_article_page(meta, body, item, date_str, slug, time_str=""):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
     emoji = TOPIC_EMOJI.get(topic,"📰")
@@ -225,7 +225,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › {topic}</div>
   <div class="badges">
     <span class="badge">{topic}</span>
-    <span class="badge-info">📅 {date_str}</span>
+    <span class="badge-info">📅 {date_str}{(' · ' + time_str) if time_str else ''}</span>
     <span class="badge-info">⏱ {rt}</span>
   </div>
   <h1>{headline}</h1>
@@ -271,7 +271,7 @@ def build_news_index(articles, update_time):
         cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
           <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
           <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}</span></div>
+            <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}{(' · ' + a['time']) if a.get('time') else ''}</span></div>
             <h3 class="nc-title">{a['headline']}</h3>
             <p class="nc-sum">{a['summary']}</p>
             <span class="nc-link">Read full story →</span>
@@ -421,12 +421,12 @@ def main():
         # Avoid dup slug
         if any(p['slug']==slug for p in published):
             slug += "-" + hashlib.md5(item['title'].encode()).hexdigest()[:4]
-        page = build_article_page(meta, body, item, today, slug)
+        page = build_article_page(meta, body, item, today, slug, update_time)
         (pathlib.Path("news")/f"{slug}.html").write_text(page, encoding="utf-8")
         published.insert(0, {
             "slug": slug, "headline": meta['headline'],
             "summary": meta['summary'], "topic": meta['topic'],
-            "date": today, "orig_title": item['title']
+            "date": today, "time": update_time, "orig_title": item['title']
         })
         written += 1
         print(f"  → news/{slug}.html")
