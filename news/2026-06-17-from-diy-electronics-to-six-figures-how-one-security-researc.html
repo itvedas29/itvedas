@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A self-taught ethical hacker shares how finding software vulnerabilities became a lucrative career path.">
+<meta name="keywords" content="Security news, IT news, From DIY Electronics to Six Figures: How One Secur">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="From DIY Electronics to Six Figures: How One Security Researcher Built Wealth Through Bug Hunting | ITVedas News">
+<meta property="og:description" content="A self-taught ethical hacker shares how finding software vulnerabilities became a lucrative career path.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://itvedas.com/news/2026-06-17-from-diy-electronics-to-six-figures-how-one-security-researc.html">
+<title>From DIY Electronics to Six Figures: How One Security Researcher Built Wealth Through Bug Hunting | ITVedas News</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"NewsArticle","headline":"From DIY Electronics to Six Figures: How One Security Researcher Built Wealth Through Bug Hunting",
+"description":"A self-taught ethical hacker shares how finding software vulnerabilities became a lucrative career path.","datePublished":"2026-06-17","dateModified":"2026-06-17",
+"author":{"@type":"Organization","name":"ITVedas"},
+"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10B98122,#10B98108);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#10B98118,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #10B98144);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news.html" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🔐</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › Security</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-06-17</span>
+    <span class="badge-info">⏱ 2 min read</span>
+  </div>
+  <h1>From DIY Electronics to Six Figures: How One Security Researcher Built Wealth Through Bug Hunting</h1>
+  <p class="summary">A self-taught ethical hacker shares how finding software vulnerabilities became a lucrative career path.</p>
+</div>
+<div class="article">
+  <h2 id="a-new-path-to-financial-independence">A New Path to Financial Independence</h2>
+
+<p>In an inspiring career journey, security researcher Isira Adithya has demonstrated that identifying computer weaknesses can transform into genuine financial success. Starting from humble beginnings—tinkering with basic electronics projects like LED bulbs—Adithya eventually turned cybersecurity skills into substantial income through bug bounty programs, ultimately achieving major life milestones including purchasing a home.</p>
+
+<p>Bug bounty programs work like a modern treasure hunt. Companies intentionally invite independent security experts to search for problems in their software, offering cash rewards when vulnerabilities are discovered and reported responsibly. Rather than waiting years to climb a corporate ladder, Adithya took a different route, building expertise through personal experimentation and then capitalizing on the growing demand for security talent.</p>
+
+<h2 id="what-this-means">What This Means</h2>
+
+<p>Adithya's story illustrates a significant shift in how technology careers develop. Formal degrees and traditional employment paths are no longer the only ways to build expertise and earn competitive salaries in cybersecurity. The technology industry increasingly values demonstrated skills over credentials, creating opportunities for self-taught professionals willing to invest time in learning.</p>
+
+<p>This matters because cybersecurity remains one of the most critical challenges facing organizations worldwide. Companies desperately need knowledgeable people to identify problems before criminals exploit them. Bug bounty platforms have democratized access to these opportunities, removing geographic and financial barriers that previously locked out talented individuals.</p>
+
+<blockquote>
+<p>The pathway from hobbyist to professional security researcher has never been more accessible than it is today.</p>
+</blockquote>
+
+<h2 id="why-you-should-care">Why You Should Care</h2>
+
+<p>If you work in technology or manage digital systems, understanding this trend affects your hiring strategy. Talented security professionals may come from unexpected backgrounds. They might not have traditional degrees but could possess superior practical knowledge gained through real-world experience.</p>
+
+<p>For aspiring tech professionals, Adithya's trajectory shows that alternative routes to lucrative careers exist. You don't necessarily need to follow conventional paths—classroom education, entry-level positions, multi-year promotions. Instead, focused skill development in high-demand areas can accelerate your progress toward financial goals.</p>
+
+<p>Additionally, the proliferation of bug bounty programs strengthens overall digital security. When thousands of motivated researchers search for problems across platforms, more vulnerabilities get discovered and fixed before malicious actors find them. This protects everyone who uses these services.</p>
+
+<h2 id="what-you-can-do">What You Can Do</h2>
+
+<ul>
+<li><strong>If you're curious about security work:</strong> Explore free educational resources about cybersecurity fundamentals. Platforms like HackTheBox and TryHackMe offer hands-on learning environments where you can practice safely.</li>
+<li><strong>If you're hiring talent:</strong> Consider evaluating candidates based on demonstrated abilities rather than exclusively on formal credentials. Review portfolios of bug bounty contributions or personal security projects.</li>
+<li><strong>If you operate digital services:</strong> Launch or expand your bug bounty program. Paying independent researchers to find problems costs far less than dealing with security breaches after they occur.</li>
+<li><strong>If you're already in security:</strong> Consider whether bug bounties could supplement your income or eventually become your primary income source.</li>
+</ul>
+
+<p>Adithya's evolution from building simple circuits to owning property through vulnerability discovery demonstrates that persistence, curiosity, and skill development remain more valuable than any single credential in today's technology landscape.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://www.securityweek.com/hacker-conversations-isira-adithya-the-evolution-of-an-ethical-hacker/" target="_blank" rel="noopener nofollow">source</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>
