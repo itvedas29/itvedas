@@ -44,8 +44,9 @@ def think(prompt, max_tokens=2500):
     for i in range(3):
         try:
             return json.load(urllib.request.urlopen(req,timeout=90))["content"][0]["text"].strip()
-        except:
+        except Exception as e:
             if i==2: raise
+            print(f"API retry {i+1}: {e}")
             time.sleep(6)
 
 def fetch_feed(url):
@@ -64,7 +65,8 @@ def fetch_feed(url):
             desc  = re.sub(r'<[^>]+>','',(d1 or d2))[:300].strip()
             if title and len(title)>10:
                 items.append({"title":title,"link":link,"desc":desc,"source":source})
-    except: pass
+    except Exception as e:
+        print(f"Feed fetch error ({url}): {e}")
     return items
 
 def classify(title):
@@ -131,7 +133,7 @@ def parse_article(content, item):
     body = re.sub(r'<!-- META.*?-->','',content,flags=re.DOTALL).strip()
     return meta, body
 
-def build_article_page(meta, body, item, date_str, slug):
+def build_article_page(meta, body, item, date_str, slug, time_str=""):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
     emoji = TOPIC_EMOJI.get(topic,"📰")
@@ -223,7 +225,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › {topic}</div>
   <div class="badges">
     <span class="badge">{topic}</span>
-    <span class="badge-info">📅 {date_str}</span>
+    <span class="badge-info">📅 {date_str}{(' · ' + time_str) if time_str else ''}</span>
     <span class="badge-info">⏱ {rt}</span>
   </div>
   <h1>{headline}</h1>
@@ -269,7 +271,7 @@ def build_news_index(articles, update_time):
         cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
           <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
           <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}</span></div>
+            <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}{(' · ' + a['time']) if a.get('time') else ''}</span></div>
             <h3 class="nc-title">{a['headline']}</h3>
             <p class="nc-sum">{a['summary']}</p>
             <span class="nc-link">Read full story →</span>
@@ -388,8 +390,11 @@ def main():
     news_state_f = pathlib.Path("brain/news_state.json")
     published = []
     if news_state_f.exists():
-        try: published = json.loads(news_state_f.read_text())
-        except: published = []
+        try:
+            published = json.loads(news_state_f.read_text())
+        except Exception as e:
+            print(f"news_state.json corrupt, resetting: {e}")
+            published = []
 
     # Fetch headlines
     raw = []
@@ -398,7 +403,7 @@ def main():
         print(f"Fetched from {feed.split('/')[2]}")
 
     # Dedupe
-    seen = set(p['orig_title'][:50].lower() for p in published)
+    seen = set((p.get('orig_title') or p.get('headline', ''))[:50].lower() for p in published)
     new_items = []
     for item in raw:
         key = item['title'][:50].lower()
@@ -416,22 +421,27 @@ def main():
         # Avoid dup slug
         if any(p['slug']==slug for p in published):
             slug += "-" + hashlib.md5(item['title'].encode()).hexdigest()[:4]
-        page = build_article_page(meta, body, item, today, slug)
+        page = build_article_page(meta, body, item, today, slug, update_time)
         (pathlib.Path("news")/f"{slug}.html").write_text(page, encoding="utf-8")
         published.insert(0, {
             "slug": slug, "headline": meta['headline'],
             "summary": meta['summary'], "topic": meta['topic'],
-            "date": today, "orig_title": item['title']
+            "date": today, "time": update_time, "orig_title": item['title']
         })
         written += 1
         print(f"  → news/{slug}.html")
 
     published = published[:40]  # keep last 40
-    news_state_f.write_text(json.dumps(published, indent=2))
+    tmp = news_state_f.with_suffix(".tmp")
+    tmp.write_text(json.dumps(published, indent=2))
+    tmp.replace(news_state_f)
 
     # Build index page
     index = build_news_index(published, update_time)
-    pathlib.Path("news.html").write_text(index, encoding="utf-8")
+    news_html = pathlib.Path("news.html")
+    tmp2 = news_html.with_suffix(".tmp")
+    tmp2.write_text(index, encoding="utf-8")
+    tmp2.replace(news_html)
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 
 if __name__ == "__main__":

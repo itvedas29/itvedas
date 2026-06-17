@@ -76,9 +76,7 @@ jobs:
           git config user.name  "ITVedas Bot"
           git config user.email "bot@itvedas.com"
           git add -A
-          git stash
-          git pull --rebase origin main
-          git stash pop || true
+          git pull --rebase --autostash origin main
           git add -A
           git diff --staged --quiet || git commit -m "Autopilot update $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push origin main

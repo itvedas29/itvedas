@@ -17,7 +17,7 @@ def claude(prompt, max_tokens=2000):
             "content-type": "application/json"
         }
     )
-    res = json.load(urllib.request.urlopen(req))
+    res = json.load(urllib.request.urlopen(req, timeout=30))
     return res["content"][0]["text"].strip()
 
 def extract_meta(content):

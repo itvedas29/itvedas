@@ -17,7 +17,7 @@ def claude(prompt, max_tokens=4000):
             "content-type": "application/json"
         }
     )
-    res = json.load(urllib.request.urlopen(req))
+    res = json.load(urllib.request.urlopen(req, timeout=30))
     return res["content"][0]["text"].strip()
 
 # High-traffic IT keywords mapped to topics
@@ -73,7 +73,8 @@ def pick_keyword():
     if used_file.exists():
         try:
             used = json.loads(used_file.read_text())[-20:]  # last 20
-        except:
+        except Exception as e:
+            print(f"Used keywords file corrupt, resetting: {e}")
             used = []
 
     available = [k for k in KEYWORD_POOL if k["keyword"] not in used]
