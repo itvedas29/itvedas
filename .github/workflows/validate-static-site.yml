@@ -1,0 +1,46 @@
+name: Validate static site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          python -m json.tool search-index.json > /tmp/search-index.json
+
+      - name: Check generated article cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          security_article = Path('articles/2026-06-17-security.html').read_text(encoding='utf-8')
+          quiz = Path('quiz.html').read_text(encoding='utf-8')
+          index = Path('index.html').read_text(encoding='utf-8')
+
+          checks = [
+              ('security article has no leaked code fence', '```html' not in security_article),
+              ('security article has a conclusion section', '<h2 id="conclusion">Conclusion</h2>' in security_article),
+              ('quiz does not include placeholder EmailJS config', 'YOUR_PUBLIC_KEY' not in quiz),
+              ('home loads article search index', "fetch('/search-index.json')" in index),
+          ]
+
+          failed = [name for name, ok in checks if not ok]
+          if failed:
+              for name in failed:
+                  print(f'FAILED: {name}')
+              raise SystemExit(1)
+
+          for name, _ in checks:
+              print(f'OK: {name}')
+          PY
