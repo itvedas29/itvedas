@@ -258,10 +258,10 @@ def build_news_index(articles, update_time):
     for a in articles:
         by_topic.setdefault(a['topic'], []).append(a)
 
-    filter_btns = '<button onclick="f(\'all\')" class="fb active" data-t="all">All</button>'
+    filter_btns = '<button class="fb active" data-t="all">All</button>'
     for t in by_topic:
         c = TOPIC_COLORS.get(t,"#64748B")
-        filter_btns += f'<button onclick="f(\'{t}\')" class="fb" data-t="{t}" style="--tc:{c}">{t}</button>'
+        filter_btns += f'<button class="fb" data-t="{t}" style="--tc:{c}">{t}</button>'
 
     cards = ""
     for a in articles:
@@ -368,6 +368,7 @@ function f(t){{
   }});
   document.getElementById('empty').style.display=v===0?'block':'none';
 }}
+document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
 </body>
 </html>"""
@@ -378,6 +379,8 @@ def slugify(text):
 
 def main():
     print("News Agent v2 — original commentary mode")
+    if not API_KEY:
+        raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
     pathlib.Path("brain").mkdir(exist_ok=True)
 
