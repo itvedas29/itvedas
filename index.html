@@ -117,8 +117,56 @@ nav {
 }
 .hero-sub {
   font-size:1.1rem; color:var(--muted); max-width:560px;
-  margin:0 auto 2.75rem; line-height:1.75;
+  margin:0 auto 2.25rem; line-height:1.75;
 }
+/* Google-style search */
+.hero-search { max-width:580px; margin:0 auto 2.5rem; position:relative; }
+.search-box {
+  display:flex; align-items:center; gap:0.75rem;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:100px; padding:0.5rem 0.5rem 0.5rem 1.5rem;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.search-box:focus-within {
+  border-color:rgba(255,107,53,0.4);
+  box-shadow:0 0 0 4px rgba(255,107,53,0.1);
+}
+.search-icon { color:var(--muted); flex-shrink:0; font-size:1.1rem; }
+.search-box input {
+  flex:1; background:none; border:none; outline:none;
+  color:var(--text); font-size:1.02rem; font-family:var(--fb);
+  padding:0.65rem 0;
+}
+.search-box input::placeholder { color:var(--muted); }
+.search-go {
+  background:var(--net); color:#fff; border:none;
+  width:44px; height:44px; border-radius:50%; cursor:pointer;
+  font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:opacity 0.2s, transform 0.15s;
+}
+.search-go:hover { opacity:0.9; transform:scale(1.05); }
+.search-results {
+  position:absolute; top:calc(100% + 0.5rem); left:0; right:0;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:18px; padding:0.5rem; z-index:50;
+  max-height:360px; overflow-y:auto; text-align:left;
+  display:none; box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+.search-results.show { display:block; }
+.search-result {
+  display:flex; align-items:center; gap:0.85rem;
+  padding:0.85rem 1rem; border-radius:12px;
+  text-decoration:none; color:inherit; transition:background 0.15s;
+}
+.search-result:hover { background:var(--bg3); }
+.sr-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.sr-text { flex:1; min-width:0; }
+.sr-title { font-size:0.92rem; color:var(--text); font-weight:500; margin-bottom:0.1rem; }
+.sr-topic { font-size:0.74rem; color:var(--muted); }
+.search-empty { padding:1.5rem; text-align:center; color:var(--muted); font-size:0.9rem; }
+.search-suggest { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-top:1rem; }
+.search-chip { font-size:0.8rem; color:var(--muted); background:var(--bg2); border:1px solid var(--border); border-radius:100px; padding:0.35rem 0.9rem; cursor:pointer; transition:all 0.2s; }
+.search-chip:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
 .hero-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:4rem; }
 .btn-primary {
   background:var(--net); color:#fff; padding:0.9rem 2.25rem;
@@ -313,7 +361,8 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   <ul class="nav-links">
     <li><a href="#chapters">Chapters</a></li>
     <li><a href="/news.html" class="nav-news">📰 IT News</a></li>
-    <li><a href="#demos">Demos</a></li>
+    <li><a href="/quiz.html">Quiz</a></li>
+    <li><a href="/about.html">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#newsletter" class="nav-cta">Subscribe Free</a>
@@ -328,9 +377,26 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <span class="l2">Explained Simply.</span>
   </h1>
   <p class="hero-sub">7 complete chapters covering Networking, Cloud, Security, DevOps, Databases, Linux and Hardware — plus daily cybersecurity news and compliance guides. All in plain English. All free.</p>
+
+  <div class="hero-search">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search IT topics — DNS, Docker, GDPR, Linux..." autocomplete="off" oninput="runSearch()" onkeydown="if(event.key==='Enter')goFirstResult()">
+      <button class="search-go" onclick="goFirstResult()" aria-label="Search">→</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-suggest">
+      <span class="search-chip" onclick="quickSearch('DNS')">What is DNS?</span>
+      <span class="search-chip" onclick="quickSearch('Docker')">Docker</span>
+      <span class="search-chip" onclick="quickSearch('GDPR')">GDPR</span>
+      <span class="search-chip" onclick="quickSearch('VPN')">VPN</span>
+      <span class="search-chip" onclick="quickSearch('cloud')">Cloud</span>
+    </div>
+  </div>
+
   <div class="hero-actions">
     <a href="#chapters" class="btn-primary">Explore All Chapters →</a>
-    <a href="/news.html" class="btn-ghost">📰 Today's IT News</a>
+    <a href="/quiz.html" class="btn-ghost">🧠 Test Your Knowledge</a>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">IT Chapters</div></div>
@@ -362,7 +428,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 <div style="padding:5rem 0;" id="newsletter-anchor-top"></div>
 
 <!-- LATEST_ARTICLES_START -->
-<div id="latest-articles" style="background:#13131C;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08);padding:5rem 2rem;"><div style="max-width:1200px;margin:0 auto;"><div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FF6B35;margin-bottom:0.75rem;">Latest Articles</div><h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;">Fresh from the Knowledge Hub</h2><p style="color:#8888A8;margin-bottom:2.5rem;max-width:500px;">New articles every Monday, Wednesday and Friday — always plain English, always free.</p><div style="max-width:720px;"><a href="/articles/2026-06-16-cloud.html" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;"><span style="background:#3B82F61a;color:#3B82F6;font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">Cloud</span><div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">What is Cloud Computing Explained Simply 2026: Your Complete Beginner's Guide</div><div style="font-size:0.75rem;color:#8888A8;">2026-06-16 · 8 min read</div></div></a><a href="/articles/2026-06-16-networking-1.html" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;"><span style="background:#FF6B351a;color:#FF6B35;font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">Networking</span><div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">How Does a VPN Work? Explained Simply for Beginners</div><div style="font-size:0.75rem;color:#8888A8;">2026-06-16 · 6 min read</div></div></a><a href="/articles/2026-06-16-networking.html" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;"><span style="background:#FF6B351a;color:#FF6B35;font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">Networking</span><div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">What is DNS and How Does It Work? A Beginner's Step-by-Step Guide</div><div style="font-size:0.75rem;color:#8888A8;">2026-06-16 · 7 min read</div></div></a></div></div></div>
 <!-- LATEST_ARTICLES_END -->
 
 <!-- ── CHAPTERS ────────────────────────────────────────── -->
@@ -464,6 +529,23 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
   </div>
 </div>
+</div>
+
+<!-- ── QUIZ CTA ───────────────────────────────────────── -->
+<div style="padding:5.5rem 2rem;">
+  <div style="max-width:1000px;margin:0 auto;background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(139,92,246,0.12));border:1px solid rgba(255,107,53,0.2);border-radius:24px;padding:3.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40%;right:-10%;width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);pointer-events:none;"></div>
+    <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--dev);margin-bottom:1rem;position:relative;">Free Interactive Quiz</div>
+    <h2 style="font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1rem;position:relative;">Test Your IT Knowledge</h2>
+    <p style="color:var(--muted);max-width:520px;margin:0 auto 2rem;font-size:1.08rem;position:relative;">Think you know your stuff? Take our 10-question challenge across networking, cloud, security and more. Get your score instantly, see your weak spots, and get a personalized learning path — free, no sign-up to start.</p>
+    <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.25rem;position:relative;">
+      <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--net);">10</div><div style="font-size:0.78rem;color:var(--muted);">Questions</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--cld);">3</div><div style="font-size:0.78rem;color:var(--muted);">Skill levels</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--sec);">7</div><div style="font-size:0.78rem;color:var(--muted);">Topics covered</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--db);">~3</div><div style="font-size:0.78rem;color:var(--muted);">Minutes</div></div>
+    </div>
+    <a href="/quiz.html" style="display:inline-block;background:var(--net);color:#fff;padding:1rem 2.75rem;border-radius:12px;text-decoration:none;font-family:var(--fd);font-weight:600;font-size:1.05rem;transition:transform .15s,opacity .15s;position:relative;" onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'" onmouseout="this.style.transform='';this.style.opacity=''">🧠 Take the Quiz →</a>
+  </div>
 </div>
 
 <!-- ── NEWS SECTION ───────────────────────────────────── -->
@@ -662,7 +744,8 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       <h4>Resources</h4>
       <ul>
         <li><a href="/news.html">📰 IT News</a></li>
-        <li><a href="#demos">Live Demos</a></li>
+        <li><a href="/quiz.html">🧠 IT Quiz</a></li>
+        <li><a href="/about.html">About</a></li>
         <li><a href="#newsletter">Newsletter</a></li>
         <li><a href="mailto:info@itvedas.com">✉️ Contact Us</a></li>
         <li><a href="/sitemap.xml">Sitemap</a></li>
@@ -691,6 +774,64 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 </footer>
 
 <script>
+/* ── Site Search ─────────────────────────────────── */
+let SEARCH_INDEX = [
+  {title:"Networking — How Networks Talk", topic:"Networking", url:"/articles/networking/", icon:"🌐", color:"#FF6B35", kw:"dns vpn tcp ip subnet router firewall network"},
+  {title:"Cloud Computing — AWS, Azure, GCP", topic:"Cloud", url:"/articles/cloud/", icon:"☁️", color:"#3B82F6", kw:"cloud aws azure gcp serverless cdn kubernetes"},
+  {title:"Security — Defending the Stack", topic:"Security", url:"/articles/security/", icon:"🔐", color:"#10B981", kw:"security encryption firewall zero trust owasp 2fa ssl phishing ransomware"},
+  {title:"DevOps — Ship Faster, Break Less", topic:"DevOps", url:"/articles/devops/", icon:"⚙️", color:"#8B5CF6", kw:"devops docker kubernetes ci cd terraform ansible git pipeline"},
+  {title:"Databases — Data at Any Scale", topic:"Databases", url:"/articles/databases/", icon:"🗄️", color:"#F59E0B", kw:"database sql nosql postgresql mongodb redis indexing"},
+  {title:"Linux & OS — Own the Terminal", topic:"Linux", url:"/articles/linux/", icon:"🐧", color:"#EF4444", kw:"linux bash terminal ssh systemd cron permissions ubuntu"},
+  {title:"Hardware — Silicon to System", topic:"Hardware", url:"/articles/hardware/", icon:"🖥️", color:"#06B6D4", kw:"hardware cpu ram ssd hdd gpu nvme raid memory"},
+  {title:"Compliance — Rules That Protect You", topic:"Compliance", url:"/articles/compliance/", icon:"📋", color:"#EC4899", kw:"compliance gdpr hipaa soc 2 pci dss iso 27001 regulation"},
+  {title:"IT News Today", topic:"News", url:"/news.html", icon:"📰", color:"#14B8A6", kw:"news latest cybersecurity updates breaking"},
+  {title:"Test Your IT Knowledge — Quiz", topic:"Quiz", url:"/quiz.html", icon:"🧠", color:"#8B5CF6", kw:"quiz test knowledge score skills assessment"},
+  {title:"About ITVedas", topic:"About", url:"/about.html", icon:"ℹ️", color:"#64748B", kw:"about mission team contact"}
+];
+
+// Load the brain's article index when available (grows as articles publish)
+fetch('/search-index.json').then(r=>r.ok?r.json():null).then(data=>{
+  if(Array.isArray(data)){
+    const icons={Networking:"🌐",Cloud:"☁️",Security:"🔐",DevOps:"⚙️",Databases:"🗄️",Linux:"🐧",Hardware:"🖥️",Compliance:"📋"};
+    const extra=data.map(a=>({
+      title:a.title, topic:a.topic||"Article", url:"/articles/"+a.file,
+      icon:(icons[a.topic]||"📄"), color:"#FF6B35", kw:(a.keyword||"")+" "+(a.title||"")
+    }));
+    SEARCH_INDEX = extra.concat(SEARCH_INDEX);
+  }
+}).catch(()=>{});
+
+function runSearch(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const box=document.getElementById('searchResults');
+  if(!q){box.classList.remove('show');box.innerHTML='';return;}
+  const hits=SEARCH_INDEX.filter(i=>
+    i.title.toLowerCase().includes(q)||i.topic.toLowerCase().includes(q)||(i.kw&&i.kw.toLowerCase().includes(q))
+  ).slice(0,7);
+  if(hits.length===0){
+    box.innerHTML='<div class="search-empty">No matches yet. Try DNS, Docker, GDPR, cloud or security.</div>';
+  }else{
+    box.innerHTML=hits.map(h=>
+      `<a class="search-result" href="${h.url}"><span class="sr-icon" style="background:${h.color}22;">${h.icon}</span><span class="sr-text"><span class="sr-title">${h.title}</span><span class="sr-topic">${h.topic}</span></span></a>`
+    ).join('');
+  }
+  box.classList.add('show');
+}
+function goFirstResult(){
+  const f=document.querySelector('#searchResults .search-result');
+  if(f)window.location.href=f.getAttribute('href');
+}
+function quickSearch(t){
+  const i=document.getElementById('searchInput');
+  i.value=t;i.focus();runSearch();
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.hero-search')){
+    const b=document.getElementById('searchResults');
+    if(b)b.classList.remove('show');
+  }
+});
+
 /* ── Subnet Calculator ───────────────────────── */
 function calcSubnet() {
   const val = document.getElementById('subnet-in').value.trim();
