@@ -69,7 +69,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   </div>
 </div>
 <div class="main">
-  <div class="filters"><button onclick="f('all')" class="fb active" data-t="all">All</button><button onclick="f('General')" class="fb" data-t="General" style="--tc:#64748B">General</button><button onclick="f('Security')" class="fb" data-t="Security" style="--tc:#10B981">Security</button><button onclick="f('DevOps')" class="fb" data-t="DevOps" style="--tc:#8B5CF6">DevOps</button><button onclick="f('Cloud')" class="fb" data-t="Cloud" style="--tc:#3B82F6">Cloud</button><button onclick="f('AI')" class="fb" data-t="AI" style="--tc:#F97316">AI</button></div>
+  <div class="filters"><button class="fb active" data-t="all">All</button><button class="fb" data-t="General" style="--tc:#64748B">General</button><button class="fb" data-t="Security" style="--tc:#10B981">Security</button><button class="fb" data-t="DevOps" style="--tc:#8B5CF6">DevOps</button><button class="fb" data-t="Cloud" style="--tc:#3B82F6">Cloud</button><button class="fb" data-t="AI" style="--tc:#F97316">AI</button></div>
   <div class="grid" id="grid"><a href="/news/2026-06-17-etcd-database-hits-testing-phase-with-major-data-streaming-u.html" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
@@ -297,6 +297,7 @@ function f(t){
   });
   document.getElementById('empty').style.display=v===0?'block':'none';
 }
+document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
 </body>
 </html>

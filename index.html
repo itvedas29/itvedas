@@ -346,6 +346,9 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   .footer-bottom { flex-direction:column; text-align:center; }
 }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
+.quiz-cta-btn:hover { transform:translateY(-2px); opacity:0.9; }
+.contact-card-net:hover { transform:translateY(-4px); border-color:rgba(255,107,53,0.3); }
+.contact-card-dev:hover { transform:translateY(-4px); border-color:rgba(139,92,246,0.3); }
 </style>
 </head>
 <body>
@@ -375,16 +378,16 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   <div class="hero-search">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Search IT topics — DNS, Docker, GDPR, Linux..." autocomplete="off" oninput="runSearch()" onkeydown="if(event.key==='Enter')goFirstResult()">
-      <button class="search-go" onclick="goFirstResult()" aria-label="Search">→</button>
+      <input type="text" id="searchInput" placeholder="Search IT topics — DNS, Docker, GDPR, Linux..." autocomplete="off">
+      <button class="search-go" id="searchGoBtn" aria-label="Search">→</button>
     </div>
     <div class="search-results" id="searchResults"></div>
     <div class="search-suggest">
-      <span class="search-chip" onclick="quickSearch('DNS')">What is DNS?</span>
-      <span class="search-chip" onclick="quickSearch('Docker')">Docker</span>
-      <span class="search-chip" onclick="quickSearch('GDPR')">GDPR</span>
-      <span class="search-chip" onclick="quickSearch('VPN')">VPN</span>
-      <span class="search-chip" onclick="quickSearch('cloud')">Cloud</span>
+      <span class="search-chip" data-q="DNS">What is DNS?</span>
+      <span class="search-chip" data-q="Docker">Docker</span>
+      <span class="search-chip" data-q="GDPR">GDPR</span>
+      <span class="search-chip" data-q="VPN">VPN</span>
+      <span class="search-chip" data-q="cloud">Cloud</span>
     </div>
   </div>
 
@@ -522,7 +525,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--sec);">7</div><div style="font-size:0.78rem;color:var(--muted);">Topics covered</div></div>
       <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--db);">~3</div><div style="font-size:0.78rem;color:var(--muted);">Minutes</div></div>
     </div>
-    <a href="/quiz.html" style="display:inline-block;background:var(--net);color:#fff;padding:1rem 2.75rem;border-radius:12px;text-decoration:none;font-family:var(--fd);font-weight:600;font-size:1.05rem;transition:transform .15s,opacity .15s;position:relative;" onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'" onmouseout="this.style.transform='';this.style.opacity=''">🧠 Take the Quiz →</a>
+    <a href="/quiz.html" class="quiz-cta-btn" style="display:inline-block;background:var(--net);color:#fff;padding:1rem 2.75rem;border-radius:12px;text-decoration:none;font-family:var(--fd);font-weight:600;font-size:1.05rem;transition:transform .15s,opacity .15s;position:relative;">🧠 Take the Quiz →</a>
   </div>
 </div>
 
@@ -547,7 +550,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
       <div class="demo-form">
         <input type="text" id="subnet-in" placeholder="e.g. 192.168.1.0/24" value="192.168.1.0/24">
-        <button class="demo-run" onclick="calcSubnet()">Run</button>
+        <button class="demo-run" id="subnetRunBtn">Run</button>
       </div>
     </div>
 
@@ -564,7 +567,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
       <div class="demo-form">
         <input type="text" id="dns-in" placeholder="e.g. itvedas.com" value="itvedas.com">
-        <button class="demo-run" onclick="dnsLookup()">Run</button>
+        <button class="demo-run" id="dnsRunBtn">Run</button>
       </div>
     </div>
   </div>
@@ -619,7 +622,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   <h2 class="section-title">Questions? Suggestions?</h2>
   <p class="section-sub" style="margin-left:auto;margin-right:auto;">Spotted an error, want a topic covered, or just want to say hello? We read every message. Reach out and we'll get back to you.</p>
   <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;max-width:720px;margin:0 auto;">
-    <a href="mailto:info@itvedas.com" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;min-width:240px;" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='rgba(255,107,53,0.3)'" onmouseout="this.style.transform='';this.style.borderColor=''">
+    <a href="mailto:info@itvedas.com" class="contact-card contact-card-net" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;min-width:240px;">
       <div style="width:56px;height:56px;border-radius:14px;background:rgba(255,107,53,0.12);display:flex;align-items:center;justify-content:center;font-size:1.75rem;">✉️</div>
       <div>
         <div style="font-family:var(--fd);font-weight:700;font-size:1rem;margin-bottom:0.25rem;">Email us</div>
@@ -627,7 +630,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
       <div style="font-size:0.8rem;color:var(--muted);">We reply within 24 hours</div>
     </a>
-    <a href="#newsletter" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;min-width:240px;" onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.transform='';this.style.borderColor=''">
+    <a href="#newsletter" class="contact-card contact-card-dev" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem 2.5rem;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;min-width:240px;">
       <div style="width:56px;height:56px;border-radius:14px;background:rgba(139,92,246,0.12);display:flex;align-items:center;justify-content:center;font-size:1.75rem;">📬</div>
       <div>
         <div style="font-family:var(--fd);font-weight:700;font-size:1rem;margin-bottom:0.25rem;">Subscribe</div>
@@ -647,7 +650,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <p>New tutorials, cybersecurity alerts, compliance updates and curated IT resources — every week in plain English. No spam, unsubscribe any time.</p>
     <div class="nl-form">
       <input type="email" placeholder="your@email.com" id="nl-email">
-      <button onclick="subscribe()">Subscribe Free →</button>
+      <button id="nlSubscribeBtn">Subscribe Free →</button>
     </div>
     <p class="nl-note">Joining 2,000+ IT professionals and learners. Free forever.</p>
     <p class="nl-success" id="nl-success">✓ You're in! Welcome to ITVedas.</p>
@@ -764,6 +767,10 @@ document.addEventListener('click',e=>{
     if(b)b.classList.remove('show');
   }
 });
+document.getElementById('searchInput').addEventListener('input',runSearch);
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')goFirstResult();});
+document.getElementById('searchGoBtn').addEventListener('click',goFirstResult);
+document.querySelectorAll('.search-chip').forEach(el=>el.addEventListener('click',()=>quickSearch(el.dataset.q)));
 
 /* ── Subnet Calculator ───────────────────────── */
 function calcSubnet() {
@@ -824,6 +831,9 @@ function subscribe() {
 }
 
 /* ── Run demos on load ───────────────────────── */
+document.getElementById('subnetRunBtn').addEventListener('click',calcSubnet);
+document.getElementById('dnsRunBtn').addEventListener('click',dnsLookup);
+document.getElementById('nlSubscribeBtn').addEventListener('click',subscribe);
 calcSubnet(); dnsLookup();
 </script>
 </body>
