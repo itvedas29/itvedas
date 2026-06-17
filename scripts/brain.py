@@ -180,12 +180,14 @@ def load_state():
     if STATE_FILE.exists():
         try:
             return json.loads(STATE_FILE.read_text())
-        except Exception:
-            pass
+        except Exception as e:
+            log(f"state.json corrupt, resetting: {e}")
     return {"published": [], "used_keywords": [], "topic_counts": {}, "total": 0}
 
 def save_state(s):
-    STATE_FILE.write_text(json.dumps(s, indent=2))
+    tmp = STATE_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(s, indent=2))
+    tmp.replace(STATE_FILE)
 
 def ga4_snippet():
     if not GA4_ID:
@@ -310,9 +312,12 @@ def build_page(content, meta, date_str):
 
     # table of contents + anchors
     toc = ""
+    seen_anchors: dict = {}
     for h in re.findall(r'<h2[^>]*>(.*?)</h2>', body, re.IGNORECASE | re.DOTALL):
         clean = re.sub(r'<[^>]+>', '', h).strip()
-        anc = slugify(clean)
+        base_anc = slugify(clean)
+        seen_anchors[base_anc] = seen_anchors.get(base_anc, 0) + 1
+        anc = base_anc if seen_anchors[base_anc] == 1 else f"{base_anc}-{seen_anchors[base_anc]}"
         toc += f'<li><a href="#{anc}">{clean}</a></li>'
         body = re.sub(rf'<h2([^>]*)>{re.escape(h)}</h2>',
                       f'<h2\\1 id="{anc}">{h}</h2>', body, count=1)
@@ -507,7 +512,11 @@ def update_homepage(state):
     else:
         html = html.replace('<div style="padding:5rem 0;" id="newsletter">',
                             section + '\n<div style="padding:5rem 0;" id="newsletter">')
-    index.write_text(html, encoding="utf-8")
+    try:
+        index.write_text(html, encoding="utf-8")
+    except Exception as e:
+        log(f"Homepage write error: {e}")
+        return
     log("Homepage Latest Articles updated")
 
 # ─────────────────────────────────────────────────────────────────
@@ -645,7 +654,10 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 </html>"""
         d = ARTICLES / slug
         d.mkdir(parents=True, exist_ok=True)
-        (d / "index.html").write_text(page, encoding="utf-8")
+        try:
+            (d / "index.html").write_text(page, encoding="utf-8")
+        except Exception as e:
+            log(f"Chapter page write error ({slug}): {e}")
     log(f"Chapter pages rebuilt ({len(CHAPTERS)})")
 
 # ─────────────────────────────────────────────────────────────────
@@ -659,10 +671,14 @@ def build_sitemap(state):
         urls.append(f'  <url><loc>{SITE_URL}/articles/{slug}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>')
     for a in state.get("published", []):
         urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{a.get("date",today)}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
-    (ROOT / "sitemap.xml").write_text(
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "\n".join(urls) + "\n</urlset>")
+    try:
+        (ROOT / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "\n".join(urls) + "\n</urlset>")
+    except Exception as e:
+        log(f"Sitemap write error: {e}")
+        return
     log(f"Sitemap rebuilt ({len(urls)} URLs)")
 
 # ─────────────────────────────────────────────────────────────────
@@ -734,7 +750,11 @@ def main():
         fname = f"{today}-{topic.lower()}-{n}.html"
         out = ARTICLES / fname
         n += 1
-    out.write_text(page, encoding="utf-8")
+    try:
+        out.write_text(page, encoding="utf-8")
+    except Exception as e:
+        log(f"Article write error: {e}")
+        raise
     log(f"Published: articles/{fname}")
     # 6. update state
     rt = reading_time(content)

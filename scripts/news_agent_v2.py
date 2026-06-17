@@ -44,8 +44,9 @@ def think(prompt, max_tokens=2500):
     for i in range(3):
         try:
             return json.load(urllib.request.urlopen(req,timeout=90))["content"][0]["text"].strip()
-        except:
+        except Exception as e:
             if i==2: raise
+            print(f"API retry {i+1}: {e}")
             time.sleep(6)
 
 def fetch_feed(url):
@@ -64,7 +65,8 @@ def fetch_feed(url):
             desc  = re.sub(r'<[^>]+>','',(d1 or d2))[:300].strip()
             if title and len(title)>10:
                 items.append({"title":title,"link":link,"desc":desc,"source":source})
-    except: pass
+    except Exception as e:
+        print(f"Feed fetch error ({url}): {e}")
     return items
 
 def classify(title):
@@ -388,8 +390,11 @@ def main():
     news_state_f = pathlib.Path("brain/news_state.json")
     published = []
     if news_state_f.exists():
-        try: published = json.loads(news_state_f.read_text())
-        except: published = []
+        try:
+            published = json.loads(news_state_f.read_text())
+        except Exception as e:
+            print(f"news_state.json corrupt, resetting: {e}")
+            published = []
 
     # Fetch headlines
     raw = []
@@ -398,7 +403,7 @@ def main():
         print(f"Fetched from {feed.split('/')[2]}")
 
     # Dedupe
-    seen = set(p['orig_title'][:50].lower() for p in published)
+    seen = set((p.get('orig_title') or p.get('headline', ''))[:50].lower() for p in published)
     new_items = []
     for item in raw:
         key = item['title'][:50].lower()
@@ -427,11 +432,16 @@ def main():
         print(f"  → news/{slug}.html")
 
     published = published[:40]  # keep last 40
-    news_state_f.write_text(json.dumps(published, indent=2))
+    tmp = news_state_f.with_suffix(".tmp")
+    tmp.write_text(json.dumps(published, indent=2))
+    tmp.replace(news_state_f)
 
     # Build index page
     index = build_news_index(published, update_time)
-    pathlib.Path("news.html").write_text(index, encoding="utf-8")
+    news_html = pathlib.Path("news.html")
+    tmp2 = news_html.with_suffix(".tmp")
+    tmp2.write_text(index, encoding="utf-8")
+    tmp2.replace(news_html)
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 
 if __name__ == "__main__":
