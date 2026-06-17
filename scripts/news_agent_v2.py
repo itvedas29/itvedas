@@ -424,6 +424,29 @@ def main():
             print(f"news_state.json corrupt, resetting: {e}")
             published = []
 
+    # Backfill images for articles that were published before image generation was added
+    needs_image = [p for p in published if not p.get('image')]
+    if needs_image:
+        print(f"Backfilling images for {len(needs_image)} existing articles...")
+        for p in needs_image:
+            img = generate_image(p['headline'], p['topic'], p['slug'])
+            if img:
+                p['image'] = img
+                art_path = pathlib.Path("news") / f"{p['slug']}.html"
+                if art_path.exists():
+                    html = art_path.read_text(encoding="utf-8")
+                    emoji = TOPIC_EMOJI.get(p['topic'], "📰")
+                    old_vis = f'<div class="hero-visual"><div class="hero-emoji">{emoji}</div></div>'
+                    new_vis = (f'<div class="hero-visual" style="padding:0;overflow:hidden;">'
+                               f'<img src="{img}" alt="{p["headline"]}" style="width:100%;height:100%;object-fit:cover;"></div>')
+                    art_path.write_text(html.replace(old_vis, new_vis), encoding="utf-8")
+                    print(f"  Updated hero: {p['slug']}")
+        # Save state with backfilled images immediately
+        tmp = news_state_f.with_suffix(".tmp")
+        tmp.write_text(json.dumps(published, indent=2))
+        tmp.replace(news_state_f)
+        print(f"Backfill complete.")
+
     # Fetch headlines
     raw = []
     for feed in NEWS_FEEDS:
