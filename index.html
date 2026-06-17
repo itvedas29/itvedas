@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
-<meta name="description" content="ITVedas — The complete IT knowledge hub. Master Networking, Cloud, Security, DevOps, Databases, Linux and Hardware with free in-depth guides, cybersecurity tutorials, compliance guides and daily IT news. Explained simply for everyone.">
-<meta name="keywords" content="IT knowledge hub, networking tutorials, cloud computing, cybersecurity, DevOps, Linux, databases, compliance, GDPR, IT news">
+<meta name="description" content="ITVedas — The complete IT knowledge hub. Master Networking, Cloud, Security, DevOps, Databases, Linux and Hardware with free in-depth guides, cybersecurity tutorials, compliance guides. Explained simply for everyone.">
+<meta name="keywords" content="IT knowledge hub, networking tutorials, cloud computing, cybersecurity, DevOps, Linux, databases, compliance, GDPR">
 <meta property="og:title" content="ITVedas — The Complete IT Knowledge Hub">
-<meta property="og:description" content="Master every layer of IT — from hardware to cloud security. Free guides, daily news and interactive demos.">
+<meta property="og:description" content="Master every layer of IT — from hardware to cloud security. Free guides and interactive demos.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://itvedas.com">
 <meta name="twitter:card" content="summary_large_image">
@@ -32,6 +33,7 @@
 <style>
 /* ── Tokens ─────────────────────────────────────────── */
 :root {
+  color-scheme: dark;
   --bg:    #0A0A0F;
   --bg2:   #13131C;
   --bg3:   #1C1C2A;
@@ -54,7 +56,8 @@
 }
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 html { scroll-behavior:smooth; }
-body { background:var(--bg); color:var(--text); font-family:var(--fb); font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+html { background:#0A0A0F; }
+body { background:#0A0A0F; color:#F0F0F8; font-family:var(--fb); font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
 
 /* ── Nav ────────────────────────────────────────────── */
 nav {
@@ -197,24 +200,15 @@ nav {
 }
 .stat-lbl { font-size:0.82rem; color:var(--muted); margin-top:0.25rem; }
 
-/* ── News ticker ─────────────────────────────────────── */
-.ticker-wrap {
   background:var(--bg2); border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
   padding:0.6rem 0; overflow:hidden; white-space:nowrap;
 }
-.ticker-inner { display:inline-flex; gap:4rem; animation:ticker 40s linear infinite; }
-.ticker-inner:hover { animation-play-state:paused; }
-@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-.ticker-item { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--muted); }
-.ticker-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:3px; text-transform:uppercase; }
-.ticker-link { color:var(--sub); text-decoration:none; font-weight:500; }
-.ticker-link:hover { color:var(--net); }
 
 /* ── Shared section styles ───────────────────────────── */
 .section { padding:5.5rem 2rem; max-width:1200px; margin:0 auto; }
 .section-eyebrow { display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--net); margin-bottom:0.875rem; }
-.section-title { font-family:var(--fd); font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700; letter-spacing:-0.025em; margin-bottom:0.875rem; }
+.section-title { font-family:var(--fd); font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700; letter-spacing:-0.025em; margin-bottom:0.875rem; color:#F0F0F8; }
 .section-sub { color:var(--muted); max-width:520px; line-height:1.75; margin-bottom:3rem; }
 
 /* ── Chapter cards ───────────────────────────────────── */
@@ -253,7 +247,7 @@ nav {
 .articles-bg { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 
 /* ── News section ────────────────────────────────────── */
-.news-bg { background:var(--bg3); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.alt-bg { background:var(--bg3); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 .news-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
 .news-card {
   background:var(--bg2); border:1px solid var(--border);
@@ -294,8 +288,9 @@ nav {
 
 /* ── Newsletter ──────────────────────────────────────── */
 .nl-wrap {
-  background:linear-gradient(135deg,rgba(255,107,53,0.10),rgba(139,92,246,0.10));
-  border:1px solid rgba(255,107,53,0.2);
+  background:linear-gradient(135deg, #1A1320, #16161F), linear-gradient(135deg,rgba(255,107,53,0.12),rgba(139,92,246,0.12));
+  background-blend-mode:normal;
+  border:1px solid rgba(255,107,53,0.25);
   border-radius:24px; padding:4rem; text-align:center;
   max-width:820px; margin:0 auto;
 }
@@ -360,7 +355,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   <a href="/" class="logo">IT<span>Vedas</span></a>
   <ul class="nav-links">
     <li><a href="#chapters">Chapters</a></li>
-    <li><a href="/news.html" class="nav-news">📰 IT News</a></li>
     <li><a href="/quiz.html">Quiz</a></li>
     <li><a href="/about.html">About</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -406,23 +400,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Free Forever</div></div>
   </div>
 </section>
-
-<!-- ── TICKER ─────────────────────────────────────────── -->
-<div class="ticker-wrap" aria-label="Latest IT news headlines">
-  <div class="ticker-inner">
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(16,185,129,0.12);color:#10B981;">Security</span><a href="/news.html" class="ticker-link">New zero-day vulnerability discovered in popular VPN software — patch available</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(59,130,246,0.12);color:#3B82F6;">Cloud</span><a href="/news.html" class="ticker-link">AWS launches new region in India — lower latency for South Asia</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">DevOps</span><a href="/news.html" class="ticker-link">Kubernetes 1.31 released with improved auto-scaling and security features</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(236,72,153,0.12);color:#EC4899;">Compliance</span><a href="/news.html" class="ticker-link">EU issues record GDPR fine — what businesses need to know</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(245,158,11,0.12);color:#F59E0B;">Databases</span><a href="/news.html" class="ticker-link">PostgreSQL 17 performance benchmarks show 40% improvement over v16</a></span>
-    <!-- Duplicated for seamless loop -->
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(16,185,129,0.12);color:#10B981;">Security</span><a href="/news.html" class="ticker-link">New zero-day vulnerability discovered in popular VPN software — patch available</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(59,130,246,0.12);color:#3B82F6;">Cloud</span><a href="/news.html" class="ticker-link">AWS launches new region in India — lower latency for South Asia</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">DevOps</span><a href="/news.html" class="ticker-link">Kubernetes 1.31 released with improved auto-scaling and security features</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(236,72,153,0.12);color:#EC4899;">Compliance</span><a href="/news.html" class="ticker-link">EU issues record GDPR fine — what businesses need to know</a></span>
-    <span class="ticker-item"><span class="ticker-badge" style="background:rgba(245,158,11,0.12);color:#F59E0B;">Databases</span><a href="/news.html" class="ticker-link">PostgreSQL 17 performance benchmarks show 40% improvement over v16</a></span>
-  </div>
-</div>
 
 <!-- ── LATEST ARTICLES (filled by brain agent) ─────────── -->
 <div style="padding:5rem 0;" id="newsletter-anchor-top"></div>
@@ -533,10 +510,10 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
 <!-- ── QUIZ CTA ───────────────────────────────────────── -->
 <div style="padding:5.5rem 2rem;">
-  <div style="max-width:1000px;margin:0 auto;background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(139,92,246,0.12));border:1px solid rgba(255,107,53,0.2);border-radius:24px;padding:3.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;">
+  <div style="max-width:1000px;margin:0 auto;background:linear-gradient(135deg,#1A1320,#16161F);border:1px solid rgba(255,107,53,0.25);border-radius:24px;padding:3.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;">
     <div style="position:absolute;top:-40%;right:-10%;width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);pointer-events:none;"></div>
     <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--dev);margin-bottom:1rem;position:relative;">Free Interactive Quiz</div>
-    <h2 style="font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1rem;position:relative;">Test Your IT Knowledge</h2>
+    <h2 style="font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1rem;position:relative;color:#F0F0F8;">Test Your IT Knowledge</h2>
     <p style="color:var(--muted);max-width:520px;margin:0 auto 2rem;font-size:1.08rem;position:relative;">Think you know your stuff? Take our 10-question challenge across networking, cloud, security and more. Get your score instantly, see your weak spots, and get a personalized learning path — free, no sign-up to start.</p>
     <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.25rem;position:relative;">
       <div style="text-align:center;"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--net);">10</div><div style="font-size:0.78rem;color:var(--muted);">Questions</div></div>
@@ -546,48 +523,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     </div>
     <a href="/quiz.html" style="display:inline-block;background:var(--net);color:#fff;padding:1rem 2.75rem;border-radius:12px;text-decoration:none;font-family:var(--fd);font-weight:600;font-size:1.05rem;transition:transform .15s,opacity .15s;position:relative;" onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'" onmouseout="this.style.transform='';this.style.opacity=''">🧠 Take the Quiz →</a>
   </div>
-</div>
-
-<!-- ── NEWS SECTION ───────────────────────────────────── -->
-<div class="news-bg" id="news-preview">
-<div class="section">
-  <div class="section-eyebrow" style="color:var(--news);">Live Updates</div>
-  <h2 class="section-title">Today's IT & Cybersecurity News</h2>
-  <p class="section-sub">The latest from across the IT world — translated from tech-speak to plain English. Updated 3 times every day.</p>
-
-  <div class="news-grid">
-    <a href="/news.html" class="news-card">
-      <div class="news-card-top">
-        <span class="news-badge" style="background:rgba(16,185,129,0.12);color:#10B981;">Security</span>
-        <span class="news-time">Today</span>
-      </div>
-      <div class="news-title">Critical vulnerability patched in OpenSSH — update your servers now</div>
-    </a>
-    <a href="/news.html" class="news-card">
-      <div class="news-card-top">
-        <span class="news-badge" style="background:rgba(59,130,246,0.12);color:#3B82F6;">Cloud</span>
-        <span class="news-time">Today</span>
-      </div>
-      <div class="news-title">Google Cloud announces 30% price reduction on storage services for 2026</div>
-    </a>
-    <a href="/news.html" class="news-card">
-      <div class="news-card-top">
-        <span class="news-badge" style="background:rgba(236,72,153,0.12);color:#EC4899;">Compliance</span>
-        <span class="news-time">Today</span>
-      </div>
-      <div class="news-title">New DORA regulation takes effect — what financial IT teams must do by Q3</div>
-    </a>
-    <a href="/news.html" class="news-card">
-      <div class="news-card-top">
-        <span class="news-badge" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">DevOps</span>
-        <span class="news-time">Today</span>
-      </div>
-      <div class="news-title">GitHub Copilot now supports Terraform and Ansible — what changed</div>
-    </a>
-  </div>
-
-  <a href="/news.html" class="news-cta">View All IT News Today →</a>
-</div>
 </div>
 
 <!-- ── LIVE DEMOS ─────────────────────────────────────── -->
@@ -677,7 +612,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 </div>
 
 <!-- ── CONTACT ────────────────────────────────────────── -->
-<div class="news-bg" id="contact">
+<div class="alt-bg" id="contact">
 <div class="section" style="text-align:center;">
   <div class="section-eyebrow" style="color:var(--cld);">Get in Touch</div>
   <h2 class="section-title">Questions? Suggestions?</h2>
@@ -707,7 +642,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 <div style="padding:5rem 2rem;" id="newsletter">
   <div class="nl-wrap">
     <div class="section-eyebrow" style="color:var(--dev);">Free Weekly Newsletter</div>
-    <h2>Stay Ahead of IT</h2>
+    <h2 style="color:#F0F0F8;">Stay Ahead of IT</h2>
     <p>New tutorials, cybersecurity alerts, compliance updates and curated IT resources — every week in plain English. No spam, unsubscribe any time.</p>
     <div class="nl-form">
       <input type="email" placeholder="your@email.com" id="nl-email">
@@ -743,7 +678,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <div class="footer-col">
       <h4>Resources</h4>
       <ul>
-        <li><a href="/news.html">📰 IT News</a></li>
         <li><a href="/quiz.html">🧠 IT Quiz</a></li>
         <li><a href="/about.html">About</a></li>
         <li><a href="#newsletter">Newsletter</a></li>
@@ -768,7 +702,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <span style="display:flex;gap:1.5rem;">
       <a href="mailto:info@itvedas.com">Contact</a>
       <a href="/sitemap.xml">Sitemap</a>
-      <a href="/news.html">IT News</a>
     </span>
   </div>
 </footer>
@@ -784,7 +717,6 @@ let SEARCH_INDEX = [
   {title:"Linux & OS — Own the Terminal", topic:"Linux", url:"/articles/linux/", icon:"🐧", color:"#EF4444", kw:"linux bash terminal ssh systemd cron permissions ubuntu"},
   {title:"Hardware — Silicon to System", topic:"Hardware", url:"/articles/hardware/", icon:"🖥️", color:"#06B6D4", kw:"hardware cpu ram ssd hdd gpu nvme raid memory"},
   {title:"Compliance — Rules That Protect You", topic:"Compliance", url:"/articles/compliance/", icon:"📋", color:"#EC4899", kw:"compliance gdpr hipaa soc 2 pci dss iso 27001 regulation"},
-  {title:"IT News Today", topic:"News", url:"/news.html", icon:"📰", color:"#14B8A6", kw:"news latest cybersecurity updates breaking"},
   {title:"Test Your IT Knowledge — Quiz", topic:"Quiz", url:"/quiz.html", icon:"🧠", color:"#8B5CF6", kw:"quiz test knowledge score skills assessment"},
   {title:"About ITVedas", topic:"About", url:"/about.html", icon:"ℹ️", color:"#64748B", kw:"about mission team contact"}
 ];
