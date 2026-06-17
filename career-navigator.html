@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Navigator — Find Your IT Path | ITVedas</title>
+<meta name="description" content="Answer a few questions and let ITVedas guide you to the right IT career path — Networking, Cloud, Security, DevOps, and more.">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D98BFZSJYP');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0A0A0F;
+    --bg-panel:#111118;
+    --bg-panel-raised:#16161F;
+    --line:#23232E;
+    --text:#EDEDF2;
+    --text-dim:#8C8C9C;
+    --text-faint:#5C5C6E;
+
+    /* topic accents, inherited from main site */
+    --c-networking:#FF6B35;
+    --c-cloud:#3B82F6;
+    --c-security:#10B981;
+    --c-devops:#8B5CF6;
+    --c-databases:#F59E0B;
+    --c-linux:#EF4444;
+    --c-hardware:#06B6D4;
+    --c-compliance:#EC4899;
+
+    --accent:#3B82F6; /* default, shifts per question/result */
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html,body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+  }
+
+  .mono{
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- top nav (minimal) ---------- */
+  .topnav{
+    width:100%;
+    max-width:1100px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:24px clamp(20px,5vw,32px) 0;
+  }
+  .brand-link{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .back-link{
+    font-size:0.85rem;
+    color:var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:color 0.2s ease;
+  }
+  .back-link:hover{color:var(--text);}
+
+  /* ---------- the route trail (signature element) ---------- */
+  .route-shell{
+    width:100%;
+    max-width:1100px;
+    padding:8px clamp(20px,5vw,32px) 0;
+  }
+  .route-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:14px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .route-label span:last-child{color:var(--accent); transition:color 0.4s ease;}
+
+  .route-track{
+    position:relative;
+    height:3px;
+    background:var(--line);
+    border-radius:2px;
+    margin-bottom:6px;
+    overflow:hidden;
+  }
+  .route-progress{
+    position:absolute;
+    top:0;left:0;
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    border-radius:2px;
+    transition:width 0.5s cubic-bezier(.4,0,.2,1), background 0.4s ease;
+  }
+  .route-progress::after{
+    content:'';
+    position:absolute;
+    right:-6px;
+    top:50%;
+    transform:translateY(-50%);
+    width:10px;height:10px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent), 0 0 14px var(--accent);
+  }
+
+  /* ---------- main card ---------- */
+  .stage{
+    width:100%;
+    max-width:680px;
+    padding:0 clamp(20px,5vw,32px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+    justify-content:center;
+    min-height:62vh;
+  }
+
+  .card{
+    width:100%;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:clamp(28px,5vw,48px);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0.6;
+    transition:background 0.4s ease;
+  }
+
+  /* ---------- intro screen ---------- */
+  .intro-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:18px;
+    display:block;
+  }
+  .intro-title{
+    font-size:clamp(1.8rem,5vw,2.6rem);
+    font-weight:600;
+    line-height:1.15;
+    letter-spacing:-0.02em;
+    margin-bottom:18px;
+  }
+  .intro-sub{
+    color:var(--text-dim);
+    font-size:1.02rem;
+    line-height:1.6;
+    margin-bottom:32px;
+    max-width:480px;
+  }
+  .waypoint-preview{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:36px;
+  }
+  .wp-chip{
+    font-size:0.78rem;
+    padding:6px 12px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  /* ---------- question screens ---------- */
+  .q-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    color:var(--text-faint);
+    margin-bottom:14px;
+    letter-spacing:0.05em;
+  }
+  .q-title{
+    font-size:clamp(1.3rem,3.6vw,1.7rem);
+    font-weight:600;
+    line-height:1.35;
+    letter-spacing:-0.01em;
+    margin-bottom:28px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .option-btn{
+    text-align:left;
+    width:100%;
+    background:var(--bg-panel-raised);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:16px 18px;
+    border-radius:12px;
+    font-family:'Inter',sans-serif;
+    font-size:0.95rem;
+    cursor:pointer;
+    transition:all 0.18s ease;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .option-btn .opt-key{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    color:var(--text-faint);
+    border:1px solid var(--line);
+    border-radius:6px;
+    width:24px;height:24px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    transition:all 0.18s ease;
+  }
+  .option-btn:hover{
+    border-color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 8%, var(--bg-panel-raised));
+    transform:translateX(2px);
+  }
+  .option-btn:hover .opt-key{
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  .option-btn.selected{
+    border-color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 14%, var(--bg-panel-raised));
+  }
+  .option-btn.selected .opt-key{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#0A0A0F;
+  }
+
+  textarea.open-text{
+    width:100%;
+    background:var(--bg-panel-raised);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:16px 18px;
+    border-radius:12px;
+    font-family:'Inter',sans-serif;
+    font-size:0.95rem;
+    resize:vertical;
+    min-height:110px;
+    line-height:1.5;
+    transition:border-color 0.18s ease;
+  }
+  textarea.open-text:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  textarea.open-text::placeholder{color:var(--text-faint);}
+
+  .char-hint{
+    font-size:0.75rem;
+    color:var(--text-faint);
+    margin-top:8px;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  /* ---------- nav row ---------- */
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:32px;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.92rem;
+    border-radius:10px;
+    padding:13px 24px;
+    cursor:pointer;
+    border:none;
+    transition:all 0.18s ease;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#0A0A0F;
+  }
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-primary:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+    filter:none;
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--text-dim);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{color:var(--text); border-color:var(--text-faint);}
+  .btn-block{width:100%;}
+
+  /* ---------- loading / analyzing screen ---------- */
+  .analyzing{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:24px 0;
+  }
+  .pulse-dot{
+    width:54px;height:54px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    position:relative;
+    margin-bottom:28px;
+  }
+  .pulse-dot::before{
+    content:'';
+    position:absolute;
+    inset:-2px;
+    border-radius:50%;
+    border:2px solid var(--accent);
+    border-top-color:transparent;
+    border-right-color:transparent;
+    animation:spin 1.1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .analyzing-title{
+    font-size:1.2rem;
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .analyzing-sub{
+    color:var(--text-dim);
+    font-size:0.9rem;
+    font-family:'JetBrains Mono',monospace;
+    min-height:1.4em;
+  }
+
+  /* ---------- result screen ---------- */
+  .result-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:10px;
+  }
+  .result-destination{
+    font-size:clamp(1.9rem,6vw,2.8rem);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    color:var(--accent);
+    margin-bottom:18px;
+    line-height:1.1;
+  }
+  .result-why{
+    color:var(--text-dim);
+    font-size:0.98rem;
+    line-height:1.7;
+    margin-bottom:28px;
+    white-space:pre-line;
+  }
+  .result-section-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:12px;
+    margin-top:28px;
+  }
+  .next-steps{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .step-item{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    padding:14px 16px;
+    background:var(--bg-panel-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .step-marker{
+    width:22px;height:22px;
+    border-radius:50%;
+    background:color-mix(in srgb, var(--accent) 18%, transparent);
+    border:1px solid var(--accent);
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .step-text{font-size:0.9rem; color:var(--text); line-height:1.5;}
+
+  .result-actions{
+    display:flex;
+    gap:12px;
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+
+  .error-box{
+    background:color-mix(in srgb, #EF4444 12%, var(--bg-panel-raised));
+    border:1px solid #EF4444;
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:0.9rem;
+    color:#FFD7D7;
+    margin-bottom:20px;
+    line-height:1.5;
+  }
+
+  footer.foot{
+    width:100%;
+    max-width:1100px;
+    padding:40px clamp(20px,5vw,32px) 32px;
+    text-align:center;
+    color:var(--text-faint);
+    font-size:0.8rem;
+  }
+  footer.foot a{color:var(--text-dim); text-decoration:underline; text-decoration-color:var(--line);}
+
+  @media (max-width:560px){
+    .stage{min-height:auto; padding-top:8px; padding-bottom:8px;}
+    .card{padding:24px 20px;}
+    .result-actions{flex-direction:column;}
+    .btn{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="/" class="brand-link">ITVedas</a>
+  <a href="/" class="back-link">&larr; Back to home</a>
+</nav>
+
+<div class="route-shell" id="routeShell" style="visibility:hidden;">
+  <div class="route-label">
+    <span>YOUR ROUTE</span>
+    <span id="routeStatus">Question 1 of 10</span>
+  </div>
+  <div class="route-track">
+    <div class="route-progress" id="routeProgress"></div>
+  </div>
+</div>
+
+<main class="stage">
+  <div class="card" id="card">
+    <!-- content injected by JS -->
+  </div>
+</main>
+
+<footer class="foot">
+  Your answers are analyzed live by Claude AI and are not stored unless you choose to email yourself the result.
+  <br>Part of <a href="/">ITVedas.com</a> — Information Technology, explained for humans.
+</footer>
+
+<script>
+/* =========================================================
+   CAREER NAVIGATOR — quiz engine + Claude analysis caller
+   ========================================================= */
+
+const ACCENTS = {
+  networking: '#FF6B35',
+  cloud: '#3B82F6',
+  security: '#10B981',
+  devops: '#8B5CF6',
+  databases: '#F59E0B',
+  linux: '#EF4444',
+  hardware: '#06B6D4',
+  compliance: '#EC4899'
+};
+
+const CHAPTER_LABELS = {
+  networking: 'Networking',
+  cloud: 'Cloud Computing',
+  security: 'Cybersecurity',
+  devops: 'DevOps',
+  databases: 'Databases',
+  linux: 'Linux & Systems',
+  hardware: 'Hardware & Infrastructure',
+  compliance: 'IT Compliance & Risk'
+};
+
+// 10 questions: 8 multiple-choice + 2 open-text, designed to surface
+// signal across interest, work style, and motivation — not just "pick a topic"
+const QUESTIONS = [
+  {
+    type: 'choice',
+    eyebrow: 'Warm-up',
+    title: 'When something breaks — your phone, your wifi, an app — what do you actually do first?',
+    options: [
+      'Restart it and see if that fixes it',
+      'Try to figure out exactly why it broke before touching anything',
+      'Look up whether other people are having the same problem',
+      'Hand it to someone else who\'s good with this stuff'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Interest check',
+    title: 'Which of these would you rather spend a free Saturday reading about?',
+    options: [
+      'How data travels from your phone to a website and back',
+      'How companies keep hackers out of their systems',
+      'How apps like Netflix run on thousands of servers at once',
+      'How a computer actually works on the inside'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Work style',
+    title: 'In a group project, which role do you naturally drift toward?',
+    options: [
+      'The one who keeps everything organized and running on schedule',
+      'The one who spots what could go wrong before it does',
+      'The one who builds the actual thing',
+      'The one who explains it to people outside the group'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Risk vs structure',
+    title: 'Which sounds more satisfying to you?',
+    options: [
+      'Finding the one weak point in a system before someone else does',
+      'Building a process so reliable nobody has to think about it again',
+      'Setting up rules and checks that keep everyone out of trouble',
+      'Tracing a problem back to its exact root cause'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Pace',
+    title: 'Do you prefer work that\'s urgent and reactive, or steady and preventive?',
+    options: [
+      'Urgent — I like the adrenaline of fixing things fast',
+      'Steady — I\'d rather prevent the fire than put it out',
+      'A mix, depending on the day',
+      'I prefer planning far ahead so urgency rarely happens'
+    ]
+  },
+  {
+    type: 'text',
+    eyebrow: 'In your own words',
+    title: 'Think of a time tech genuinely impressed or frustrated you. What was it, and why did it stick with you?',
+    placeholder: 'e.g. "My bank froze my card the second someone tried to use it abroad — that felt like magic and I want to understand how..."'
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Comfort zone',
+    title: 'Which of these feels closest to "yes, I could get into this"?',
+    options: [
+      'Command lines, servers, and configuring systems',
+      'Spotting suspicious activity and thinking like an attacker',
+      'Organizing and querying large amounts of data',
+      'Automating repetitive tasks so humans don\'t have to do them'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'People vs systems',
+    title: 'Would you rather work mostly with systems, or mostly translating systems for people?',
+    options: [
+      'Mostly systems — I\'d rather go deep technically',
+      'A balance — technical work, but explaining it matters too',
+      'Mostly people — policy, compliance, and process over raw building',
+      'Whatever lets me keep learning new tools constantly'
+    ]
+  },
+  {
+    type: 'choice',
+    eyebrow: 'Starting point',
+    title: 'Be honest — where are you right now with IT knowledge?',
+    options: [
+      'Complete beginner, just curious',
+      'I know the basics and want a real direction',
+      'I\'ve dabbled (courses, tinkering) but no job yet',
+      'I work adjacent to IT and want to specialize'
+    ]
+  },
+  {
+    type: 'text',
+    eyebrow: 'Last one',
+    title: 'If this actually worked out — eighteen months from now, what would "success" look like for you?',
+    placeholder: 'e.g. "Landing a junior support role" or "Switching out of my current job into something technical" or "Just understanding this world better"'
+  }
+];
+
+const state = {
+  current: -1, // -1 = intro screen
+  answers: new Array(QUESTIONS.length).fill(null),
+  resultCache: null
+};
+
+const card = document.getElementById('card');
+const routeShell = document.getElementById('routeShell');
+const routeProgress = document.getElementById('routeProgress');
+const routeStatus = document.getElementById('routeStatus');
+
+function setAccent(hex){
+  document.documentElement.style.setProperty('--accent', hex);
+}
+
+function renderIntro(){
+  routeShell.style.visibility = 'hidden';
+  setAccent('#3B82F6');
+  card.innerHTML = `
+    <span class="intro-eyebrow">Career Navigator</span>
+    <h1 class="intro-title">Find the IT path that actually fits you.</h1>
+    <p class="intro-sub">Answer ${QUESTIONS.length} quick questions about how you think and what pulls your attention. Claude AI reads your answers and points you toward a real starting path — Networking, Cloud, Security, DevOps, Databases, Linux, Hardware, or Compliance.</p>
+    <div class="waypoint-preview">
+      ${Object.entries(CHAPTER_LABELS).map(([k,v]) => `<span class="wp-chip" style="border-color:${ACCENTS[k]}55;color:${ACCENTS[k]}">${v}</span>`).join('')}
+    </div>
+    <button class="btn btn-primary btn-block" id="startBtn">Start — takes about 3 minutes</button>
+  `;
+  document.getElementById('startBtn').onclick = () => {
+    state.current = 0;
+    renderQuestion();
+  };
+}
+
+function updateRoute(){
+  routeShell.style.visibility = 'visible';
+  const pct = Math.round(((state.current) / QUESTIONS.length) * 100);
+  routeProgress.style.width = pct + '%';
+  routeStatus.textContent = `Question ${state.current + 1} of ${QUESTIONS.length}`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.current];
+  updateRoute();
+
+  let bodyHtml = '';
+  if(q.type === 'choice'){
+    bodyHtml = `
+      <div class="options" id="optionsWrap">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" data-idx="${i}">
+            <span class="opt-key">${String.fromCharCode(65+i)}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+    `;
+  } else {
+    bodyHtml = `
+      <textarea class="open-text" id="openText" placeholder="${q.placeholder}">${state.answers[state.current] || ''}</textarea>
+      <div class="char-hint" id="charHint">A sentence or two is plenty.</div>
+    `;
+  }
+
+  card.innerHTML = `
+    <div class="q-eyebrow">${q.eyebrow}</div>
+    <div class="q-title">${q.title}</div>
+    ${bodyHtml}
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="backBtn" ${state.current === 0 ? 'style="visibility:hidden;"' : ''}>&larr; Back</button>
+      <button class="btn btn-primary" id="nextBtn" disabled>${state.current === QUESTIONS.length - 1 ? 'See my path →' : 'Next →'}</button>
+    </div>
+  `;
+
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  if(q.type === 'choice'){
+    const existing = state.answers[state.current];
+    const buttons = card.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+      const idx = parseInt(btn.dataset.idx);
+      if(existing && existing.idx === idx) btn.classList.add('selected');
+      btn.onclick = () => {
+        buttons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        state.answers[state.current] = { idx, text: q.options[idx] };
+        nextBtn.disabled = false;
+      };
+    });
+    if(existing) nextBtn.disabled = false;
+  } else {
+    const textarea = document.getElementById('openText');
+    const charHint = document.getElementById('charHint');
+    const checkLen = () => {
+      const len = textarea.value.trim().length;
+      nextBtn.disabled = len < 8;
+      charHint.textContent = len < 8 ? 'A sentence or two is plenty.' : `${len} characters — good.`;
+    };
+    textarea.oninput = checkLen;
+    checkLen();
+  }
+
+  nextBtn.onclick = () => {
+    if(q.type === 'text'){
+      state.answers[state.current] = { idx: null, text: document.getElementById('openText').value.trim() };
+    }
+    if(state.current === QUESTIONS.length - 1){
+      runAnalysis();
+    } else {
+      state.current++;
+      renderQuestion();
+    }
+  };
+
+  backBtn.onclick = () => {
+    state.current--;
+    renderQuestion();
+  };
+}
+
+const ANALYZING_LINES = [
+  'Reading your answers...',
+  'Weighing interest signals...',
+  'Cross-checking work style...',
+  'Matching against IT paths...',
+  'Drafting your route...'
+];
+
+function renderAnalyzing(){
+  routeStatus.textContent = 'Analyzing';
+  routeProgress.style.width = '100%';
+  card.innerHTML = `
+    <div class="analyzing">
+      <div class="pulse-dot"></div>
+      <div class="analyzing-title">Mapping your path</div>
+      <div class="analyzing-sub" id="analyzingSub">${ANALYZING_LINES[0]}</div>
+    </div>
+  `;
+  let i = 0;
+  const sub = document.getElementById('analyzingSub');
+  const interval = setInterval(() => {
+    i = (i + 1) % ANALYZING_LINES.length;
+    if(sub) sub.textContent = ANALYZING_LINES[i];
+  }, 1400);
+  return () => clearInterval(interval);
+}
+
+function buildAnswersPayload(){
+  return QUESTIONS.map((q, i) => ({
+    question: q.title,
+    answer: state.answers[i] ? state.answers[i].text : ''
+  }));
+}
+
+async function runAnalysis(){
+  const stopAnimating = renderAnalyzing();
+
+  try{
+    const res = await fetch('/api/career-advice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers: buildAnswersPayload() })
+    });
+
+    if(!res.ok){
+      throw new Error('Request failed with status ' + res.status);
+    }
+
+    const data = await res.json();
+    stopAnimating();
+    state.resultCache = data;
+    renderResult(data);
+
+    if(typeof gtag === 'function'){
+      gtag('event', 'career_navigator_complete', { chapter: data.chapter || 'unknown' });
+    }
+  } catch(err){
+    stopAnimating();
+    renderError();
+    console.error('Career Navigator analysis failed:', err);
+  }
+}
+
+function renderError(){
+  card.innerHTML = `
+    <div class="error-box">
+      Something went wrong reaching the analysis service. This usually means a temporary connection issue — your answers are still saved in this session.
+    </div>
+    <div class="nav-row" style="margin-top:0;">
+      <button class="btn btn-ghost" id="retryBtn">Try again</button>
+    </div>
+  `;
+  document.getElementById('retryBtn').onclick = runAnalysis;
+}
+
+function renderResult(data){
+  const chapterKey = (data.chapter || 'networking').toLowerCase();
+  const accent = ACCENTS[chapterKey] || '#3B82F6';
+  setAccent(accent);
+  routeStatus.textContent = 'Destination reached';
+
+  const stepsHtml = (data.next_steps || []).map(step => `
+    <div class="step-item">
+      <div class="step-marker"></div>
+      <div class="step-text">${escapeHtml(step)}</div>
+    </div>
+  `).join('');
+
+  card.innerHTML = `
+    <div class="result-eyebrow">Your recommended path</div>
+    <div class="result-destination">${escapeHtml(data.chapter_label || CHAPTER_LABELS[chapterKey] || data.chapter)}</div>
+    <div class="result-why">${escapeHtml(data.explanation || '')}</div>
+    <div class="result-section-label">Where to start</div>
+    <div class="next-steps">${stepsHtml}</div>
+    <div class="result-actions">
+      <a href="/articles/${chapterKey}/" class="btn btn-primary">Explore ${escapeHtml(data.chapter_label || chapterKey)} articles →</a>
+      <button class="btn btn-ghost" id="retakeBtn">Retake quiz</button>
+    </div>
+  `;
+
+  document.getElementById('retakeBtn').onclick = () => {
+    state.current = -1;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    renderIntro();
+  };
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderIntro();
+</script>
+
+</body>
+</html>
