@@ -8,7 +8,7 @@ Legal: transformative original content, not copying.
 Each story = own headline, own words, own analysis,
 own page on itvedas.com, with a source citation link.
 """
-import os, json, urllib.request, pathlib, datetime, re, time, hashlib
+import os, json, urllib.request, urllib.parse, pathlib, datetime, re, time, hashlib
 
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MODEL   = "claude-haiku-4-5-20251001"
@@ -133,7 +133,7 @@ def parse_article(content, item):
     body = re.sub(r'<!-- META.*?-->','',content,flags=re.DOTALL).strip()
     return meta, body
 
-def build_article_page(meta, body, item, date_str, slug, time_str=""):
+def build_article_page(meta, body, item, date_str, slug, time_str="", image_path=None):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
     emoji = TOPIC_EMOJI.get(topic,"📰")
@@ -220,7 +220,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <a href="/" class="logo">IT<span>Vedas</span></a>
   <a href="/news.html" class="nav-back">← All News</a>
 </nav>
-<div class="hero-visual"><div class="hero-emoji">{emoji}</div></div>
+{f'<div class="hero-visual" style="padding:0;overflow:hidden;"><img src="{image_path}" alt="{headline}" style="width:100%;height:100%;object-fit:cover;"></div>' if image_path else f'<div class="hero-visual"><div class="hero-emoji">{emoji}</div></div>'}
 <div class="hero">
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › {topic}</div>
   <div class="badges">
@@ -268,8 +268,12 @@ def build_news_index(articles, update_time):
     for a in articles:
         c = TOPIC_COLORS.get(a['topic'],"#64748B")
         emoji = TOPIC_EMOJI.get(a['topic'],"📰")
+        img = a.get('image')
+        vis = (f'<div class="nc-vis" style="padding:0;overflow:hidden;"><img src="{img}" alt="{a["headline"]}" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>'
+               if img else
+               f'<div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>')
         cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
-          <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
+          {vis}
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}{(' · ' + a['time']) if a.get('time') else ''}</span></div>
             <h3 class="nc-title">{a['headline']}</h3>
@@ -377,6 +381,30 @@ def slugify(text):
     s = re.sub(r'[^a-z0-9]+','-',text.lower()).strip('-')
     return s[:60]
 
+def generate_image(headline, topic, slug):
+    """Generate an AI image via Pollinations.ai (free, no API key required)."""
+    img_dir = pathlib.Path("news/images")
+    img_dir.mkdir(parents=True, exist_ok=True)
+    img_path = img_dir / f"{slug}.jpg"
+    prompt = (
+        f"professional digital illustration for IT news article: {headline}. "
+        f"{topic} technology concept, dark background, cinematic lighting, "
+        f"modern tech aesthetic, no text, no watermark"
+    )
+    url = (
+        "https://image.pollinations.ai/prompt/"
+        + urllib.parse.quote(prompt)
+        + "?width=800&height=400&nologo=true&model=flux"
+    )
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "ITVedas/1.0"})
+        data = urllib.request.urlopen(req, timeout=45).read()
+        img_path.write_bytes(data)
+        return f"/news/images/{slug}.jpg"
+    except Exception as e:
+        print(f"Image generation failed for {slug}: {e}")
+        return None
+
 def main():
     print("News Agent v2 — original commentary mode")
     pathlib.Path("news").mkdir(exist_ok=True)
@@ -421,12 +449,15 @@ def main():
         # Avoid dup slug
         if any(p['slug']==slug for p in published):
             slug += "-" + hashlib.md5(item['title'].encode()).hexdigest()[:4]
-        page = build_article_page(meta, body, item, today, slug, update_time)
+        print(f"  Generating image...")
+        image_path = generate_image(meta['headline'], meta['topic'], slug)
+        page = build_article_page(meta, body, item, today, slug, update_time, image_path)
         (pathlib.Path("news")/f"{slug}.html").write_text(page, encoding="utf-8")
         published.insert(0, {
             "slug": slug, "headline": meta['headline'],
             "summary": meta['summary'], "topic": meta['topic'],
-            "date": today, "time": update_time, "orig_title": item['title']
+            "date": today, "time": update_time, "orig_title": item['title'],
+            "image": image_path
         })
         written += 1
         print(f"  → news/{slug}.html")
