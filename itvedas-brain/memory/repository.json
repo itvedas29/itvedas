@@ -1,28 +1,30 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-06-18T10:11:53Z",
+  "generated_at": "2026-06-18T17:11:11Z",
   "source": {
     "repository": "itvedas29/itvedas",
     "repository_url": "https://github.com/itvedas29/itvedas",
     "ref": "main",
-    "tree_sha": "e0f7f52bd8a0e580d716a0920298b43146ac1beb",
+    "tree_sha": "348e5e0b6663fb212ab7142f1555e37e80c10be0",
     "default_branch": "main",
     "visibility": "public",
     "archived": false,
-    "pushed_at": "2026-06-18T10:11:39Z"
+    "pushed_at": "2026-06-18T17:10:32Z"
   },
   "summary": {
-    "folder_count": 21,
-    "file_count": 88,
-    "total_bytes": 1240381,
+    "folder_count": 23,
+    "file_count": 120,
+    "total_bytes": 1672967,
     "extension_counts": {
-      ".html": 66,
+      ".example": 1,
+      ".html": 70,
       ".jpg": 4,
       ".js": 1,
-      ".json": 4,
+      ".json": 18,
       ".log": 1,
-      ".md": 3,
-      ".py": 4,
+      ".md": 7,
+      ".py": 12,
+      ".txt": 1,
       ".xml": 1,
       ".yml": 3,
       "[no extension]": 1
@@ -30,11 +32,11 @@
     "category_counts": {
       "articles": 13,
       "article_indexes": 8,
-      "news_pages": 38,
+      "news_pages": 42,
       "career_pages": 2,
       "apis": 1,
       "github_workflows": 3,
-      "brain_logic": 8
+      "brain_logic": 33
     }
   },
   "identified": {
@@ -101,7 +103,11 @@
       "news/2026-06-17-scammers-use-fake-ratings-and-ai-voices-to-steal-cryptocurre.html",
       "news/2026-06-17-security-teams-face-decision-paralysis-as-vulnerability-numb.html",
       "news/2026-06-17-when-hackers-go-underground-how-attackers-maintain-secret-do.html",
-      "news/2026-06-17-why-devops-teams-are-moving-beyond-traditional-kubernetes-da.html"
+      "news/2026-06-17-why-devops-teams-are-moving-beyond-traditional-kubernetes-da.html",
+      "news/2026-06-18-ai-tools-are-creating-hidden-compliance-gaps-in-payment-secu.html",
+      "news/2026-06-18-attackers-exploit-klue-login-system-to-steal-salesforce-cust.html",
+      "news/2026-06-18-attackers-hide-malware-communications-inside-microsoft-teams.html",
+      "news/2026-06-18-criminals-hide-inside-your-teams-app-here-s-why-your-company.html"
     ],
     "career_pages": [
       "career-navigator.html",
@@ -116,12 +122,37 @@
       ".github/workflows/write-article.yml"
     ],
     "brain_logic": [
-      "brain/activity.log",
-      "brain/news_state.json",
-      "brain/state.json",
+      "itvedas-brain/BRAIN_STATUS.md",
+      "itvedas-brain/FINAL_BRAIN_STATUS.md",
+      "itvedas-brain/MIGRATION_REPORT.md",
       "itvedas-brain/README.md",
+      "itvedas-brain/analytics-agent.py",
+      "itvedas-brain/coo-agent.py",
+      "itvedas-brain/daemon.py",
+      "itvedas-brain/decision-engine.py",
+      "itvedas-brain/execution-engine.py",
+      "itvedas-brain/github-agent.py",
+      "itvedas-brain/healthcheck.py",
       "itvedas-brain/knowledge-builder.py",
+      "itvedas-brain/knowledge/career_paths.json",
+      "itvedas-brain/knowledge/certifications.json",
+      "itvedas-brain/knowledge/courses.json",
+      "itvedas-brain/knowledge/faq.json",
+      "itvedas-brain/knowledge/student_personas.json",
+      "itvedas-brain/knowledge/technologies.json",
+      "itvedas-brain/memory/analytics.json",
+      "itvedas-brain/memory/coo_memory.json",
+      "itvedas-brain/memory/repository.json",
+      "itvedas-brain/memory/search_console.json",
       "itvedas-brain/repo-scanner.py",
+      "itvedas-brain/repository_knowledge.json",
+      "itvedas-brain/search-console-agent.py",
+      "itvedas-brain/state/activity.log",
+      "itvedas-brain/state/daily-plan.json",
+      "itvedas-brain/state/execution-plan.json",
+      "itvedas-brain/state/github-actions.json",
+      "itvedas-brain/state/news_state.json",
+      "itvedas-brain/state/state.json",
       "scripts/brain.py",
       "scripts/news_agent_v2.py"
     ]
@@ -139,22 +170,30 @@
       "articles/linux",
       "articles/networking",
       "articles/security",
-      "brain",
       "docs",
       "drafts",
       "drafts/articles",
       "functions",
       "functions/api",
       "itvedas-brain",
+      "itvedas-brain/knowledge",
+      "itvedas-brain/memory",
+      "itvedas-brain/state",
       "news",
       "news/images",
       "scripts"
     ],
     "files": [
       {
+        "path": ".env.example",
+        "size": 1073,
+        "sha": "252d2064e4932167dd8139b1baf744bdfa644e8a",
+        "categories": []
+      },
+      {
         "path": ".github/workflows/refresh-repository-memory.yml",
-        "size": 1975,
-        "sha": "09320ff6c1c235660d6361b871f4350d214ecb8c",
+        "size": 3618,
+        "sha": "63ffa8df9377fb436bdda75812fbcbf522e9153a",
         "categories": [
           "github_workflows"
         ]
@@ -177,14 +216,20 @@
       },
       {
         "path": ".gitignore",
-        "size": 103,
-        "sha": "3063506a852c6a84e46d8026dd6d8d0c6c55083a",
+        "size": 117,
+        "sha": "3a5653d955558d9cf681ab6289ac2b58b86bb758",
+        "categories": []
+      },
+      {
+        "path": "DEPLOYMENT.md",
+        "size": 15962,
+        "sha": "1e7c51dd6bc9ce9d1477fc140f5eb43771f24e11",
         "categories": []
       },
       {
         "path": "README.md",
-        "size": 2679,
-        "sha": "e5c5282b6eee5db8ee94f0e032c2227b574e1cbb",
+        "size": 2708,
+        "sha": "b3e5254bd13e661f0f6e721cfb9fb3a4329daa32",
         "categories": []
       },
       {
@@ -362,30 +407,6 @@
         ]
       },
       {
-        "path": "brain/activity.log",
-        "size": 4727,
-        "sha": "6bee383c466964e5876d62bf84be43ebc5edfd9a",
-        "categories": [
-          "brain_logic"
-        ]
-      },
-      {
-        "path": "brain/news_state.json",
-        "size": 19426,
-        "sha": "4f216c60daa98807528aa3a15eb120560a3c69af",
-        "categories": [
-          "brain_logic"
-        ]
-      },
-      {
-        "path": "brain/state.json",
-        "size": 2017,
-        "sha": "5bfa79f470a0b36006b571f47d050ba880c55ec4",
-        "categories": [
-          "brain_logic"
-        ]
-      },
-      {
         "path": "career-navigator.html",
         "size": 24811,
         "sha": "e3461f8562816ecf70e42348550a1ff84db8781a",
@@ -428,17 +449,177 @@
         "categories": []
       },
       {
+        "path": "itvedas-brain/BRAIN_STATUS.md",
+        "size": 11877,
+        "sha": "6380d2443a5a2de93cf02874b904a1755e01dbd9",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/FINAL_BRAIN_STATUS.md",
+        "size": 4166,
+        "sha": "550be66a34a7458596a6c17fc82bfddbda348aba",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/MIGRATION_REPORT.md",
+        "size": 4405,
+        "sha": "86a9892887beae33dcdcf2504077cf3919075a4b",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
         "path": "itvedas-brain/README.md",
-        "size": 1232,
-        "sha": "f0d8bbc78fe729d02f5c3ef5404d3563d6788198",
+        "size": 1313,
+        "sha": "b8c8909a4d602d03f58212ec2c1929740b6730df",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/analytics-agent.py",
+        "size": 10016,
+        "sha": "e4493ec49b56720531b297bfad87333ea7bf4f86",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/coo-agent.py",
+        "size": 24519,
+        "sha": "7919e253a98580253a9c15461132a16ebb57c07d",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/daemon.py",
+        "size": 1852,
+        "sha": "7af3859fed498edd723451e055928ddbda295cdc",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/decision-engine.py",
+        "size": 24060,
+        "sha": "5d8baa3ce36d58a6fc54f817a3a75eaf6b6920bb",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/execution-engine.py",
+        "size": 9577,
+        "sha": "fa0a5edb81c23e1982f9cdf839e38f3a9f15997c",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/github-agent.py",
+        "size": 13587,
+        "sha": "b34bb4ead97dd40f59b2a310104ffe196a59d462",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/healthcheck.py",
+        "size": 1862,
+        "sha": "36d81b9831886d11afba652c614a6539f3bf7fde",
         "categories": [
           "brain_logic"
         ]
       },
       {
         "path": "itvedas-brain/knowledge-builder.py",
-        "size": 23862,
-        "sha": "5718080dcd7e59f8107f08880a63a8c2308b9a28",
+        "size": 24743,
+        "sha": "11fa0d2d34df7b6ff5dc538c0a125ee8077e1d03",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/career_paths.json",
+        "size": 3137,
+        "sha": "4827b8a3e6c19e5f363f0606f560ddcf643a5f29",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/certifications.json",
+        "size": 1531,
+        "sha": "529835501dd8bf82c8d91ddd996763d609f5302e",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/courses.json",
+        "size": 9530,
+        "sha": "107e980e5e78d0f30da86b8f8fa6cd4a93f64c9a",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/faq.json",
+        "size": 6966,
+        "sha": "5922126a2ed8cf6a142b54b7b60edf6b1cbf3199",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/student_personas.json",
+        "size": 2465,
+        "sha": "6667afe42f1fccb03edb09ecae37950a3e3b3622",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/knowledge/technologies.json",
+        "size": 13228,
+        "sha": "b6bea05d18a2697f4dc4ea62e7044c016b8959f5",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/memory/analytics.json",
+        "size": 2212,
+        "sha": "b0f276029eb5650bfaaa6ff03b6bff266c8d426a",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/memory/coo_memory.json",
+        "size": 544,
+        "sha": "f33bfa5b501a543ab55f57d872fc22fe8394309b",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/memory/repository.json",
+        "size": 26332,
+        "sha": "f44c5e8388b46309cd51d6765a105ec9a346113d",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/memory/search_console.json",
+        "size": 2378,
+        "sha": "5237d4bbfe971a1a1c908a78323c50412aa3f334",
         "categories": [
           "brain_logic"
         ]
@@ -452,9 +633,73 @@
         ]
       },
       {
+        "path": "itvedas-brain/repository_knowledge.json",
+        "size": 45165,
+        "sha": "9bbb14bd2a5d24b7d87914d3e688a7ae6e7ccabf",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/search-console-agent.py",
+        "size": 10110,
+        "sha": "cb798ce5f4b8045ab42dc2b84b5eb9eb3dbd0d02",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/activity.log",
+        "size": 4727,
+        "sha": "6bee383c466964e5876d62bf84be43ebc5edfd9a",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/daily-plan.json",
+        "size": 8422,
+        "sha": "839766c52707eab0c2b1f434d90940b1306270fc",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/execution-plan.json",
+        "size": 34778,
+        "sha": "b57f92eccba7afd8b3f6a6037d408e6a3a46d235",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/github-actions.json",
+        "size": 90042,
+        "sha": "00f6036ca11a0e338fe90823ce1dc513f7167b8a",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/news_state.json",
+        "size": 20431,
+        "sha": "0a059be7465cf18eca5d4237f9d23599fed2c626",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
+        "path": "itvedas-brain/state/state.json",
+        "size": 2017,
+        "sha": "5bfa79f470a0b36006b571f47d050ba880c55ec4",
+        "categories": [
+          "brain_logic"
+        ]
+      },
+      {
         "path": "news.html",
-        "size": 39034,
-        "sha": "252996516dd5ad68e97793ea71251786e5a9dee7",
+        "size": 40788,
+        "sha": "36483b18ed827ccf41a10fc0296c4cfa0b47f25c",
         "categories": []
       },
       {
@@ -762,6 +1007,38 @@
         ]
       },
       {
+        "path": "news/2026-06-18-ai-tools-are-creating-hidden-compliance-gaps-in-payment-secu.html",
+        "size": 11534,
+        "sha": "c698ab8333214e3e0787c876e0641fa3f662fe61",
+        "categories": [
+          "news_pages"
+        ]
+      },
+      {
+        "path": "news/2026-06-18-attackers-exploit-klue-login-system-to-steal-salesforce-cust.html",
+        "size": 11616,
+        "sha": "f9cbb2818e0c1975d07ba793d50bbb1216948eaf",
+        "categories": [
+          "news_pages"
+        ]
+      },
+      {
+        "path": "news/2026-06-18-attackers-hide-malware-communications-inside-microsoft-teams.html",
+        "size": 11499,
+        "sha": "dd5de0c64c1c25e20c97f0bb2367a3eb5115d34d",
+        "categories": [
+          "news_pages"
+        ]
+      },
+      {
+        "path": "news/2026-06-18-criminals-hide-inside-your-teams-app-here-s-why-your-company.html",
+        "size": 12283,
+        "sha": "af0464f76e2821714e49a754b3fa43c5dbad6218",
+        "categories": [
+          "news_pages"
+        ]
+      },
+      {
         "path": "news/images/2026-06-17-aws-rolls-out-faster-greener-cloud-processors-with-new-gravi.jpg",
         "size": 54340,
         "sha": "42a366f31370cea8b70ce5fb35dc0da164ec69bc",
@@ -798,17 +1075,23 @@
         "categories": []
       },
       {
+        "path": "requirements.txt",
+        "size": 391,
+        "sha": "303422dd4180c6fd478a29412a14afed9ba6e2cc",
+        "categories": []
+      },
+      {
         "path": "scripts/brain.py",
-        "size": 48360,
-        "sha": "0c14b2f0872c7b81172f700bb43f54a9b53a8d73",
+        "size": 48378,
+        "sha": "f3714a837d2399875ccc2a698d622ddb8e272cea",
         "categories": [
           "brain_logic"
         ]
       },
       {
         "path": "scripts/news_agent_v2.py",
-        "size": 24120,
-        "sha": "5aaad9dabfcb92f159c4ef5b7051038a957cddfa",
+        "size": 24162,
+        "sha": "51c8d5c6187051ebdc545f900be7c2f03299da02",
         "categories": [
           "brain_logic"
         ]
