@@ -269,7 +269,15 @@ def contains_alias(text: str, aliases: Iterable[str]) -> bool:
     return any(alias.lower() in padded for alias in aliases)
 
 
-def course_for_source(source: dict[str, Any]) -> str | None:
+def course_for_source(source: dict[str, Any], min_score: int = 2) -> str | None:
+    """Score each course against a source's text/path and return the best match.
+
+    A minimum score is required before a course is assigned. This avoids
+    mis-tagging unrelated content based on a single incidental keyword hit
+    (e.g. one stray mention of "container" in an unrelated news story).
+    A strong path/filename signal (e.g. living in a `/cloud/` folder) is
+    enough on its own since it adds a large +20 bonus.
+    """
     text = source["text"].lower()
     path = source["path"].lower()
     scores: dict[str, int] = {}
@@ -279,7 +287,7 @@ def course_for_source(source: dict[str, Any]) -> str | None:
             score += 20
         scores[course_id] = score
     course_id, score = max(scores.items(), key=lambda item: item[1])
-    return course_id if score else None
+    return course_id if score >= min_score else None
 
 
 def extract_faqs(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -499,11 +507,24 @@ def main() -> int:
     memory = json.loads(memory_path.read_text(encoding="utf-8"))
     repository_root = BASE_DIR.parent
     source_paths = select_source_paths(memory)
-    sources = [
-        source
-        for path in source_paths
-        if (source := read_source(repository_root, path)) is not None
-    ]
+
+    sources: list[dict[str, Any]] = []
+    skipped: list[str] = []
+    for path in source_paths:
+        source = read_source(repository_root, path)
+        if source is None:
+            skipped.append(path)
+        else:
+            sources.append(source)
+
+    if skipped:
+        print(
+            f"Warning: {len(skipped)} referenced file(s) listed in repository.json "
+            f"were not found on disk and were skipped:"
+        )
+        for path in skipped:
+            print(f"  - {path}")
+
     all_text = " ".join(source["text"] for source in sources)
     generated_at = (
         dt.datetime.now(dt.timezone.utc)
@@ -552,6 +573,7 @@ def main() -> int:
         "source": memory["source"],
         "summary": {
             "sources_scanned": len(sources),
+            "sources_skipped": len(skipped),
             "courses": len(courses),
             "certifications": len(certifications),
             "career_paths": len(career_paths),
