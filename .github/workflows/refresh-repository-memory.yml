@@ -16,6 +16,7 @@ on:
       - 'itvedas-brain/knowledge-builder.py'
       - 'itvedas-brain/decision-engine.py'
       - 'itvedas-brain/execution-engine.py'
+      - 'itvedas-brain/github-agent.py'
       - '.github/workflows/refresh-repository-memory.yml'
   schedule:
     - cron: '15 0 * * *'
@@ -60,12 +61,16 @@ jobs:
       - name: Build execution plan
         run: python3 itvedas-brain/execution-engine.py
 
+      - name: Build GitHub action plan
+        run: python3 itvedas-brain/github-agent.py
+
       - name: Validate generated knowledge
         run: |
           python3 -m json.tool itvedas-brain/memory/repository.json > /dev/null
           python3 -m json.tool itvedas-brain/repository_knowledge.json > /dev/null
           python3 -m json.tool brain/daily-plan.json > /dev/null
           python3 -m json.tool brain/execution-plan.json > /dev/null
+          python3 -m json.tool brain/github-actions.json > /dev/null
           for file in itvedas-brain/knowledge/*.json; do
             python3 -m json.tool "$file" > /dev/null
           done
@@ -79,5 +84,6 @@ jobs:
           git add itvedas-brain/repository_knowledge.json
           git add brain/daily-plan.json
           git add brain/execution-plan.json
+          git add brain/github-actions.json
           git diff --staged --quiet || git commit -m "Brain knowledge refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push origin main
