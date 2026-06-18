@@ -16,6 +16,7 @@ on:
       - 'itvedas-brain/knowledge-builder.py'
       - 'itvedas-brain/decision-engine.py'
       - 'itvedas-brain/execution-engine.py'
+      - 'itvedas-brain/analytics-agent.py'
       - 'itvedas-brain/github-agent.py'
       - '.github/workflows/refresh-repository-memory.yml'
   schedule:
@@ -55,6 +56,12 @@ jobs:
       - name: Build repository knowledge
         run: python3 itvedas-brain/knowledge-builder.py
 
+      - name: Pull GA4 analytics
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_ACCESS_TOKEN: ${{ secrets.GA4_ACCESS_TOKEN }}
+        run: python3 itvedas-brain/analytics-agent.py
+
       - name: Build daily decision plan
         run: python3 itvedas-brain/decision-engine.py
 
@@ -67,6 +74,7 @@ jobs:
       - name: Validate generated knowledge
         run: |
           python3 -m json.tool itvedas-brain/memory/repository.json > /dev/null
+          python3 -m json.tool itvedas-brain/memory/analytics.json > /dev/null
           python3 -m json.tool itvedas-brain/repository_knowledge.json > /dev/null
           python3 -m json.tool brain/daily-plan.json > /dev/null
           python3 -m json.tool brain/execution-plan.json > /dev/null
@@ -80,6 +88,7 @@ jobs:
           git config user.name "ITVedas Bot"
           git config user.email "bot@itvedas.com"
           git add itvedas-brain/memory/repository.json
+          git add itvedas-brain/memory/analytics.json
           git add itvedas-brain/knowledge
           git add itvedas-brain/repository_knowledge.json
           git add brain/daily-plan.json

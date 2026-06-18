@@ -20,6 +20,7 @@ DEFAULT_KNOWLEDGE_DIR = BASE_DIR / "knowledge"
 DEFAULT_REPOSITORY_KNOWLEDGE = BASE_DIR / "repository_knowledge.json"
 DEFAULT_ARTICLE_STATE = REPO_ROOT / "brain" / "state.json"
 DEFAULT_NEWS_STATE = REPO_ROOT / "brain" / "news_state.json"
+DEFAULT_ANALYTICS = BASE_DIR / "memory" / "analytics.json"
 DEFAULT_OUTPUT = REPO_ROOT / "brain" / "daily-plan.json"
 
 # Scoring weights (must sum to 1.0).
@@ -50,6 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repository-knowledge", type=pathlib.Path, default=DEFAULT_REPOSITORY_KNOWLEDGE)
     parser.add_argument("--article-state", type=pathlib.Path, default=DEFAULT_ARTICLE_STATE)
     parser.add_argument("--news-state", type=pathlib.Path, default=DEFAULT_NEWS_STATE)
+    parser.add_argument("--analytics", type=pathlib.Path, default=DEFAULT_ANALYTICS)
     parser.add_argument("--output", type=pathlib.Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -76,6 +78,37 @@ def round_score(value: float) -> int:
     return int(round(max(0.0, min(100.0, value))))
 
 
+def normalize_ga_path(path: str) -> str:
+    return path.lstrip("/")
+
+
+def build_course_analytics(
+    courses: list[dict[str, Any]], analytics: dict[str, Any]
+) -> dict[str, dict[str, Any]]:
+    """Aggregate GA4 page-level metrics onto each course's content_paths."""
+    page_views = {normalize_ga_path(page["path"]): page for page in analytics.get("top_pages", [])}
+    conversions = {normalize_ga_path(page["path"]): page["conversions"] for page in analytics.get("conversion_pages", [])}
+
+    aggregates: dict[str, dict[str, Any]] = {}
+    for course in courses:
+        views = sessions = conv = 0
+        engagement_samples: list[float] = []
+        for content_path in course.get("content_paths", []):
+            page = page_views.get(content_path)
+            if page:
+                views += page.get("page_views", 0)
+                sessions += page.get("sessions", 0)
+                engagement_samples.append(page.get("engagement_rate", 0.0))
+            conv += conversions.get(content_path, 0)
+        aggregates[course["id"]] = {
+            "page_views": views,
+            "sessions": sessions,
+            "conversions": conv,
+            "engagement_rate": round(sum(engagement_samples) / len(engagement_samples), 4) if engagement_samples else 0.0,
+        }
+    return aggregates
+
+
 def build_course_profiles(
     courses: list[dict[str, Any]],
     career_paths: list[dict[str, Any]],
@@ -85,6 +118,7 @@ def build_course_profiles(
     faqs: list[dict[str, Any]],
     article_topic_counts: dict[str, int],
     news_topic_counts: dict[str, int],
+    course_analytics: dict[str, dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     profiles: dict[str, dict[str, Any]] = {}
 
@@ -107,6 +141,8 @@ def build_course_profiles(
             if cert["related_course_id"] == course_id
         ]
 
+        ga = course_analytics.get(course_id, {"page_views": 0, "sessions": 0, "conversions": 0, "engagement_rate": 0.0})
+
         profiles[course_id] = {
             "course": course,
             "career_count": career_count,
@@ -120,14 +156,24 @@ def build_course_profiles(
             "news_count": news_count,
             "uncovered_technologies": uncovered_terms,
             "certs_for_course": uncovered_certs,
+            "analytics": ga,
         }
 
     relevance_raw = {
         cid: profile["career_count"] * 3 + profile["cert_count"] * 2 + profile["tech_count"] + profile["persona_count"] * 2
         for cid, profile in profiles.items()
     }
+    # Real GA4 sessions/conversions are blended into demand alongside the
+    # on-site signals (personas, FAQs, news/article topic activity).
     demand_raw = {
-        cid: profile["persona_count"] * 3 + profile["faq_count"] * 2 + profile["news_count"] + profile["article_count"] * 0.5
+        cid: (
+            profile["persona_count"] * 3
+            + profile["faq_count"] * 2
+            + profile["news_count"]
+            + profile["article_count"] * 0.5
+            + profile["analytics"]["sessions"] * 0.1
+            + profile["analytics"]["conversions"] * 2
+        )
         for cid, profile in profiles.items()
     }
 
@@ -141,7 +187,13 @@ def build_course_profiles(
             0.0, 100.0 - profile["content_paths_count"] * 15.0
         )
         profile["content_gap_score"] = content_gap_raw
+        # SEO opportunity: uncovered keyword terms, boosted when the pages
+        # that do exist for this course have low GA4 engagement (visitors
+        # arrive but don't engage, suggesting the content isn't satisfying
+        # the underlying search intent).
         seo_raw = len(profile["uncovered_technologies"]) * 25.0
+        if profile["analytics"]["page_views"] > 0 and profile["analytics"]["engagement_rate"] < 0.4:
+            seo_raw += 20.0
         profile["seo_score"] = min(100.0, seo_raw)
         competition_raw = 100.0 - min(100.0, profile["news_count"] * 5.0)
         profile["competition_score"] = competition_raw
@@ -347,6 +399,7 @@ def main() -> int:
     repository_knowledge = load_json(args.repository_knowledge, {})
     article_state = load_json(args.article_state, {})
     news_state = load_json(args.news_state, [])
+    analytics = load_json(args.analytics, {"status": "not_configured", "top_pages": [], "conversion_pages": []})
 
     if not courses:
         raise SystemExit(
@@ -359,9 +412,11 @@ def main() -> int:
         topic = record.get("topic", "General")
         news_topic_counts[topic] = news_topic_counts.get(topic, 0) + 1
 
+    course_analytics = build_course_analytics(courses, analytics)
+
     profiles = build_course_profiles(
         courses, career_paths, certifications, technologies, personas, faqs,
-        article_topic_counts, news_topic_counts,
+        article_topic_counts, news_topic_counts, course_analytics,
     )
 
     opportunities: list[dict[str, Any]] = []
@@ -402,6 +457,7 @@ def main() -> int:
         "date": today,
         "weights": WEIGHTS,
         "source_repository": repository_knowledge.get("source", {}).get("repository"),
+        "analytics_status": analytics.get("status", "not_configured"),
         **top_priority,
         "summary": {
             "total_opportunities": len(opportunities),
