@@ -95,23 +95,23 @@ ACTIONS: dict[str, dict[str, Any]] = {
         "requires_approval": False,
     },
     "build-daily-plan": {
-        "description": "Re-score opportunities into brain/daily-plan.json.",
+        "description": "Re-score opportunities into itvedas-brain/state/daily-plan.json.",
         "command": [sys.executable, str(BASE_DIR / "decision-engine.py")],
         "requires_approval": False,
     },
     "build-execution-plan": {
-        "description": "Turn the daily plan into task briefs in brain/execution-plan.json.",
+        "description": "Turn the daily plan into task briefs in itvedas-brain/state/execution-plan.json.",
         "command": [sys.executable, str(BASE_DIR / "execution-engine.py")],
         "requires_approval": False,
     },
     "build-github-plan": {
-        "description": "Group tasks into issue/PR-ready groups in brain/github-actions.json (no GitHub API calls).",
+        "description": "Group tasks into issue/PR-ready groups in itvedas-brain/state/github-actions.json (no GitHub API calls).",
         "command": [sys.executable, str(BASE_DIR / "github-agent.py")],
         "requires_approval": False,
     },
     "create-github-issues": {
         "description": (
-            "Actually create GitHub issues from brain/github-actions.json via the GitHub API. "
+            "Actually create GitHub issues from itvedas-brain/state/github-actions.json via the GitHub API. "
             "Mutates a real, external, shared system - requires explicit approval."
         ),
         "command": [sys.executable, str(BASE_DIR / "github-agent.py"), "--create-issues"],
@@ -283,7 +283,7 @@ def format_context_markdown(context: dict[str, Any]) -> str:
     else:
         lines.append(f"- status: {search_console.get('status', 'not_configured')} ({search_console.get('reason', 'no Search Console credentials')})")
 
-    lines.append("\n## Daily plan (brain/daily-plan.json)")
+    lines.append("\n## Daily plan (itvedas-brain/state/daily-plan.json)")
     if plan:
         lines.append(f"- date: {plan.get('date')} | top priority: {plan.get('top_priority')} (score {plan.get('score')})")
         lines.append(f"- analytics_status={plan.get('analytics_status')} search_console_status={plan.get('search_console_status')}")
@@ -294,13 +294,13 @@ def format_context_markdown(context: dict[str, Any]) -> str:
     else:
         lines.append("- not yet generated. Run decision-engine.py (action: build-daily-plan).")
 
-    lines.append("\n## Execution plan (brain/execution-plan.json)")
+    lines.append("\n## Execution plan (itvedas-brain/state/execution-plan.json)")
     queue = execution.get("execution_queue", [])
     lines.append(f"- {len(queue)} queued item(s)")
     for item in queue[:5]:
         lines.append(f"  - [{item.get('score')}] {item.get('priority')}: {len(item.get('tasks', []))} task(s)")
 
-    lines.append("\n## GitHub action plan (brain/github-actions.json)")
+    lines.append("\n## GitHub action plan (itvedas-brain/state/github-actions.json)")
     gh_summary = github_actions.get("summary", {})
     lines.append(
         f"- {gh_summary.get('total_issues', 0)} issue(s) ready "
@@ -342,12 +342,12 @@ def recommend_actions(context: dict[str, Any]) -> str:
     issue_count = github_actions.get("summary", {}).get("total_issues", 0)
     if issue_count:
         lines.append(
-            f"\n{issue_count} issue(s) are staged in brain/github-actions.json and ready to file. "
+            f"\n{issue_count} issue(s) are staged in itvedas-brain/state/github-actions.json and ready to file. "
             "Run `/approve create-github-issues` to create them on GitHub (requires GITHUB_TOKEN)."
         )
     elif execution.get("execution_queue"):
         lines.append(
-            "\nbrain/github-actions.json has no staged issues yet - run `/run build-github-plan` first."
+            "\nitvedas-brain/state/github-actions.json has no staged issues yet - run `/run build-github-plan` first."
         )
 
     return "\n".join(lines)
