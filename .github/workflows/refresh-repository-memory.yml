@@ -17,6 +17,7 @@ on:
       - 'itvedas-brain/decision-engine.py'
       - 'itvedas-brain/execution-engine.py'
       - 'itvedas-brain/analytics-agent.py'
+      - 'itvedas-brain/search-console-agent.py'
       - 'itvedas-brain/github-agent.py'
       - '.github/workflows/refresh-repository-memory.yml'
   schedule:
@@ -62,6 +63,12 @@ jobs:
           GA4_ACCESS_TOKEN: ${{ secrets.GA4_ACCESS_TOKEN }}
         run: python3 itvedas-brain/analytics-agent.py
 
+      - name: Pull Search Console data
+        env:
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GSC_ACCESS_TOKEN: ${{ secrets.GSC_ACCESS_TOKEN }}
+        run: python3 itvedas-brain/search-console-agent.py
+
       - name: Build daily decision plan
         run: python3 itvedas-brain/decision-engine.py
 
@@ -75,6 +82,7 @@ jobs:
         run: |
           python3 -m json.tool itvedas-brain/memory/repository.json > /dev/null
           python3 -m json.tool itvedas-brain/memory/analytics.json > /dev/null
+          python3 -m json.tool itvedas-brain/memory/search_console.json > /dev/null
           python3 -m json.tool itvedas-brain/repository_knowledge.json > /dev/null
           python3 -m json.tool brain/daily-plan.json > /dev/null
           python3 -m json.tool brain/execution-plan.json > /dev/null
@@ -89,6 +97,7 @@ jobs:
           git config user.email "bot@itvedas.com"
           git add itvedas-brain/memory/repository.json
           git add itvedas-brain/memory/analytics.json
+          git add itvedas-brain/memory/search_console.json
           git add itvedas-brain/knowledge
           git add itvedas-brain/repository_knowledge.json
           git add brain/daily-plan.json
