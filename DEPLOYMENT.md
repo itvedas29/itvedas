@@ -326,8 +326,8 @@ SHELL=/bin/bash
 */5 * * * * pm2 describe itvedas-brain > /dev/null 2>&1 || (cd /opt/itvedas && pm2 start ecosystem.config.js)
 ```
 
-All brain scripts write idempotent state files (`memory/*.json`,
-`brain/*.json`) atomically, so running cron and PM2's daemon in the
+All brain scripts write idempotent state files (`itvedas-brain/memory/*.json`,
+`itvedas-brain/state/*.json`) atomically, so running cron and PM2's daemon in the
 same window is safe — duplicate runs just overwrite state with the same
 (or fresher) data, they don't corrupt it.
 
@@ -456,12 +456,12 @@ pm2 monit                  # live CPU/memory
 
 ## 10. Backup strategy
 
-The brain's durable state lives in JSON files under `brain/` and
+The brain's durable state lives in JSON files under `itvedas-brain/state/` and
 `itvedas-brain/memory/`, plus the git history itself. Back up both the
 state and the application code/secrets.
 
 **1. State + repo, via git (primary):** the pipeline already commits
-`brain/*.json` and `itvedas-brain/memory/*.json` back to `main` (see
+`itvedas-brain/state/*.json` and `itvedas-brain/memory/*.json` back to `main` (see
 `.github/workflows/refresh-repository-memory.yml`), so every snapshot
 is versioned in GitHub automatically — no extra step needed as long as
 the droplet's checkout stays in sync (`git pull` before each run, or
@@ -480,7 +480,7 @@ mkdir -p "$BACKUP_DIR"
 
 tar -czf "$BACKUP_DIR/itvedas-brain-$TS.tar.gz" \
   -C /opt/itvedas \
-  brain itvedas-brain/memory itvedas-brain/knowledge \
+  itvedas-brain/state itvedas-brain/memory itvedas-brain/knowledge \
   itvedas-brain/repository_knowledge.json .env
 
 # Keep the last 30 days of local backups
@@ -514,7 +514,7 @@ restorable:
 ```bash
 mkdir -p /tmp/restore-test
 tar -xzf /opt/itvedas-backups/itvedas-brain-<timestamp>.tar.gz -C /tmp/restore-test
-python3 -m json.tool /tmp/restore-test/brain/daily-plan.json > /dev/null && echo "OK"
+python3 -m json.tool /tmp/restore-test/itvedas-brain/state/daily-plan.json > /dev/null && echo "OK"
 ```
 
 ---

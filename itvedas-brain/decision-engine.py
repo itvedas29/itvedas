@@ -18,11 +18,11 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DEFAULT_KNOWLEDGE_DIR = BASE_DIR / "knowledge"
 DEFAULT_REPOSITORY_KNOWLEDGE = BASE_DIR / "repository_knowledge.json"
-DEFAULT_ARTICLE_STATE = REPO_ROOT / "brain" / "state.json"
-DEFAULT_NEWS_STATE = REPO_ROOT / "brain" / "news_state.json"
+DEFAULT_ARTICLE_STATE = BASE_DIR / "state" / "state.json"
+DEFAULT_NEWS_STATE = BASE_DIR / "state" / "news_state.json"
 DEFAULT_ANALYTICS = BASE_DIR / "memory" / "analytics.json"
 DEFAULT_SEARCH_CONSOLE = BASE_DIR / "memory" / "search_console.json"
-DEFAULT_OUTPUT = REPO_ROOT / "brain" / "daily-plan.json"
+DEFAULT_OUTPUT = BASE_DIR / "state" / "daily-plan.json"
 
 # Scoring weights (must sum to 1.0).
 WEIGHTS = {

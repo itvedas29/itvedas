@@ -18,9 +18,9 @@ from typing import Any
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
-DEFAULT_PLAN = REPO_ROOT / "brain" / "daily-plan.json"
+DEFAULT_PLAN = BASE_DIR / "state" / "daily-plan.json"
 DEFAULT_KNOWLEDGE_DIR = BASE_DIR / "knowledge"
-DEFAULT_OUTPUT = REPO_ROOT / "brain" / "execution-plan.json"
+DEFAULT_OUTPUT = BASE_DIR / "state" / "execution-plan.json"
 
 CAREER_SUFFIX = re.compile(r"\s+Career Path$")
 CONTENT_GAP_SUFFIX = re.compile(r"\s+Content Gap$")

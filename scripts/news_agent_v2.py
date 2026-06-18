@@ -382,14 +382,14 @@ def main():
     if not API_KEY:
         raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
-    pathlib.Path("brain").mkdir(exist_ok=True)
+    pathlib.Path("itvedas-brain/state").mkdir(parents=True, exist_ok=True)
 
     now = datetime.datetime.now()
     update_time = now.strftime("%I:%M %p IST")
     today = datetime.date.today().isoformat()
 
     # Load existing news state
-    news_state_f = pathlib.Path("brain/news_state.json")
+    news_state_f = pathlib.Path("itvedas-brain/state/news_state.json")
     published = []
     if news_state_f.exists():
         try:

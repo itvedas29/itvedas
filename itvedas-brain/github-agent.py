@@ -30,9 +30,9 @@ from typing import Any
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
-DEFAULT_PLAN = REPO_ROOT / "brain" / "daily-plan.json"
-DEFAULT_EXECUTION = REPO_ROOT / "brain" / "execution-plan.json"
-DEFAULT_OUTPUT = REPO_ROOT / "brain" / "github-actions.json"
+DEFAULT_PLAN = BASE_DIR / "state" / "daily-plan.json"
+DEFAULT_EXECUTION = BASE_DIR / "state" / "execution-plan.json"
+DEFAULT_OUTPUT = BASE_DIR / "state" / "github-actions.json"
 DEFAULT_REPOSITORY = "itvedas29/itvedas"
 API_ROOT = "https://api.github.com"
 

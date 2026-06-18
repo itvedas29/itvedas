@@ -44,7 +44,7 @@ CONTACT    = "info@itvedas.com"
 
 ROOT       = pathlib.Path(".")
 ARTICLES   = ROOT / "articles"
-BRAIN_DIR  = ROOT / "brain"
+BRAIN_DIR  = ROOT / "itvedas-brain" / "state"
 STATE_FILE = BRAIN_DIR / "state.json"
 LOG_FILE   = BRAIN_DIR / "activity.log"
 

@@ -64,9 +64,9 @@ INPUTS = {
     "analytics": BASE_DIR / "memory" / "analytics.json",
     "search_console": BASE_DIR / "memory" / "search_console.json",
     "repository_knowledge": BASE_DIR / "repository_knowledge.json",
-    "daily_plan": REPO_ROOT / "brain" / "daily-plan.json",
-    "execution_plan": REPO_ROOT / "brain" / "execution-plan.json",
-    "github_actions": REPO_ROOT / "brain" / "github-actions.json",
+    "daily_plan": BASE_DIR / "state" / "daily-plan.json",
+    "execution_plan": BASE_DIR / "state" / "execution-plan.json",
+    "github_actions": BASE_DIR / "state" / "github-actions.json",
 }
 
 # Whitelisted actions the COO agent is allowed to run. Anything that only
