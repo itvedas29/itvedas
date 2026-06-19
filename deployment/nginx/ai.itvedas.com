@@ -1,6 +1,4 @@
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
     server_name ai.itvedas.com localhost;
 
     root /root/itvedas/dashboard/frontend/dist;
@@ -21,4 +19,25 @@ server {
     location / {
         try_files $uri $uri/ /index.html;
     }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/ai.itvedas.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/ai.itvedas.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = ai.itvedas.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name ai.itvedas.com localhost;
+    return 404; # managed by Certbot
+
+
 }
