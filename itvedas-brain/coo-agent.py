@@ -9,8 +9,7 @@ actions when explicitly approved.
 
 It never invents new data sources: every fact it can discuss comes from
 files already written by repo-scanner.py, knowledge-builder.py,
-analytics-agent.py, search-console-agent.py, decision-engine.py,
-execution-engine.py, and github-agent.py. This script is the
+decision-engine.py, execution-engine.py, and github-agent.py. This script is the
 conversation/decision layer on top of that pipeline, not a replacement
 for it.
 
@@ -21,9 +20,7 @@ Credentials
                         still supports all slash commands (/context,
                         /recommend, /run, /approve, /memory) - only the
                         natural-language chat degrades to a notice that
-                        explains what's missing, the same "not_configured"
-                        philosophy used by analytics-agent.py and
-                        search-console-agent.py.
+                        explains what's missing.
   ANTHROPIC_MODEL       Optional override (defaults to the same Haiku
                         model used by scripts/brain.py).
   GITHUB_TOKEN          Required only for the create-issues action,
@@ -61,8 +58,6 @@ MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 INPUTS = {
     "repository": BASE_DIR / "memory" / "repository.json",
-    "analytics": BASE_DIR / "memory" / "analytics.json",
-    "search_console": BASE_DIR / "memory" / "search_console.json",
     "repository_knowledge": BASE_DIR / "repository_knowledge.json",
     "daily_plan": BASE_DIR / "state" / "daily-plan.json",
     "execution_plan": BASE_DIR / "state" / "execution-plan.json",
@@ -82,16 +77,6 @@ ACTIONS: dict[str, dict[str, Any]] = {
     "build-knowledge": {
         "description": "Rebuild itvedas-brain/knowledge/*.json and repository_knowledge.json.",
         "command": [sys.executable, str(BASE_DIR / "knowledge-builder.py")],
-        "requires_approval": False,
-    },
-    "pull-analytics": {
-        "description": "Pull fresh GA4 metrics into itvedas-brain/memory/analytics.json.",
-        "command": [sys.executable, str(BASE_DIR / "analytics-agent.py")],
-        "requires_approval": False,
-    },
-    "pull-search-console": {
-        "description": "Pull fresh Search Console metrics into itvedas-brain/memory/search_console.json.",
-        "command": [sys.executable, str(BASE_DIR / "search-console-agent.py")],
         "requires_approval": False,
     },
     "build-daily-plan": {
@@ -212,8 +197,6 @@ class Memory:
 
 def load_context() -> dict[str, Any]:
     repository = load_json(INPUTS["repository"], {})
-    analytics = load_json(INPUTS["analytics"], {"status": "not_configured"})
-    search_console = load_json(INPUTS["search_console"], {"status": "not_configured"})
     repository_knowledge = load_json(INPUTS["repository_knowledge"], {})
     daily_plan = load_json(INPUTS["daily_plan"], {})
     execution_plan = load_json(INPUTS["execution_plan"], {})
@@ -221,8 +204,6 @@ def load_context() -> dict[str, Any]:
 
     return {
         "repository": repository,
-        "analytics": analytics,
-        "search_console": search_console,
         "repository_knowledge": repository_knowledge,
         "daily_plan": daily_plan,
         "execution_plan": execution_plan,
@@ -232,8 +213,6 @@ def load_context() -> dict[str, Any]:
 
 def format_context_markdown(context: dict[str, Any]) -> str:
     repository = context["repository"]
-    analytics = context["analytics"]
-    search_console = context["search_console"]
     knowledge = context["repository_knowledge"]
     plan = context["daily_plan"]
     execution = context["execution_plan"]
@@ -256,41 +235,11 @@ def format_context_markdown(context: dict[str, Any]) -> str:
         f"{ks.get('faqs', 0)} FAQs, {ks.get('relationships', 0)} cross-references"
     )
 
-    lines.append("\n## Analytics (GA4)")
-    if analytics.get("status") == "ok":
-        totals = analytics.get("totals", {})
-        lines.append(
-            f"- status: ok | sessions={totals.get('sessions', 0)} page_views={totals.get('page_views', 0)} "
-            f"conversions={totals.get('conversions', 0)} engagement_rate={totals.get('engagement_rate', 0)}"
-        )
-        top = analytics.get("top_pages", [])[:5]
-        for page in top:
-            lines.append(f"  - {page['path']}: {page['page_views']} views, {page['sessions']} sessions")
-    else:
-        lines.append(f"- status: {analytics.get('status', 'not_configured')} ({analytics.get('reason', 'no GA4 credentials')})")
-
-    lines.append("\n## Search Console")
-    if search_console.get("status") == "ok":
-        totals = search_console.get("totals", {})
-        lines.append(
-            f"- status: ok | clicks={totals.get('clicks', 0)} impressions={totals.get('impressions', 0)} "
-            f"ctr={totals.get('ctr', 0)} avg_position={totals.get('average_position', 0)}"
-        )
-        insights = search_console.get("insights", {})
-        for bucket in ("low_ctr_pages", "ranking_opportunities", "high_click_pages"):
-            count = len(insights.get(bucket, []))
-            lines.append(f"  - {bucket}: {count} page(s)")
-    else:
-        lines.append(f"- status: {search_console.get('status', 'not_configured')} ({search_console.get('reason', 'no Search Console credentials')})")
-
     lines.append("\n## Daily plan (itvedas-brain/state/daily-plan.json)")
     if plan:
         lines.append(f"- date: {plan.get('date')} | top priority: {plan.get('top_priority')} (score {plan.get('score')})")
-        lines.append(f"- analytics_status={plan.get('analytics_status')} search_console_status={plan.get('search_console_status')}")
         for opp in plan.get("opportunities", [])[:5]:
             lines.append(f"  - [{opp['score']}] {opp['title']} ({opp['type']})")
-        for rec in plan.get("search_console_recommendations", [])[:5]:
-            lines.append(f"  - [SC:{rec['type']}] {rec['page']} -> {rec.get('related_course_id')}")
     else:
         lines.append("- not yet generated. Run decision-engine.py (action: build-daily-plan).")
 
@@ -332,12 +281,6 @@ def recommend_actions(context: dict[str, Any]) -> str:
             f"{rank}. [{opp['score']}] {opp['title']} - {opp['reason']} "
             f"(actions: {', '.join(opp['actions'])})"
         )
-
-    sc_recs = plan.get("search_console_recommendations", [])
-    if sc_recs:
-        lines.append("\nSearch Console-driven recommendations:")
-        for rec in sc_recs[:5]:
-            lines.append(f"- [{rec['type']}] {rec['page']}: {rec['reason']}")
 
     issue_count = github_actions.get("summary", {}).get("total_issues", 0)
     if issue_count:
@@ -406,8 +349,8 @@ SYSTEM_PROMPT_TEMPLATE = """\
 You are the ITVedas COO Agent: a conversational operations manager for the
 ITVedas content platform. You answer business questions and recommend
 actions using ONLY the data snapshot below, which was produced by the
-ITVedas brain pipeline (repository scan, knowledge graph, GA4 analytics,
-Search Console, and a scored opportunity plan). Do not invent metrics
+ITVedas brain pipeline (repository scan, knowledge graph, and a scored
+opportunity plan). Do not invent metrics
 that aren't in the snapshot - say so plainly if something isn't covered.
 
 When you recommend an action, name it using one of these action ids so

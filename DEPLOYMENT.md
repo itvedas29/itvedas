@@ -104,16 +104,6 @@ NOTIFY_EMAIL=
 SMTP_FROM=
 SMTP_PASS=
 
-# ── GA4 Data API (Phase 6 analytics-agent.py) ───────────────────
-GA4_PROPERTY_ID=
-GA4_ACCESS_TOKEN=
-GA4_ACCESS_TOKEN_FILE=
-
-# ── Search Console API (Phase 7 search-console-agent.py) ────────
-GSC_SITE_URL=
-GSC_ACCESS_TOKEN=
-GSC_ACCESS_TOKEN_FILE=
-
 # ── GitHub Agent (Phase 5 github-agent.py) ───────────────────────
 GITHUB_TOKEN=
 
@@ -221,8 +211,6 @@ PYTHON = f"{REPO_ROOT}/.venv/bin/python3.12"
 JOBS = [
     (f"{REPO_ROOT}/itvedas-brain/repo-scanner.py", 6 * 3600),
     (f"{REPO_ROOT}/itvedas-brain/knowledge-builder.py", 6 * 3600),
-    (f"{REPO_ROOT}/itvedas-brain/analytics-agent.py", 6 * 3600),
-    (f"{REPO_ROOT}/itvedas-brain/search-console-agent.py", 6 * 3600),
     (f"{REPO_ROOT}/itvedas-brain/decision-engine.py", 6 * 3600),
     (f"{REPO_ROOT}/itvedas-brain/execution-engine.py", 6 * 3600),
     (f"{REPO_ROOT}/itvedas-brain/github-agent.py", 6 * 3600),
@@ -310,8 +298,6 @@ Add:
 SHELL=/bin/bash
 15 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/repo-scanner.py
 20 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/knowledge-builder.py
-25 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/analytics-agent.py
-30 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/search-console-agent.py
 35 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/decision-engine.py
 40 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/execution-engine.py
 45 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/github-agent.py
@@ -396,8 +382,6 @@ MAX_AGE_HOURS = 30  # generous margin over the 24h cron/PM2 cycle
 
 CHECKS = [
     REPO_ROOT / "itvedas-brain" / "memory" / "repository.json",
-    REPO_ROOT / "itvedas-brain" / "memory" / "analytics.json",
-    REPO_ROOT / "itvedas-brain" / "memory" / "search_console.json",
     REPO_ROOT / "brain" / "daily-plan.json",
     REPO_ROOT / "brain" / "execution-plan.json",
     REPO_ROOT / "brain" / "github-actions.json",

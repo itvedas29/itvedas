@@ -21,8 +21,6 @@ BRAIN_DIR = REPO_ROOT / "itvedas-brain"
 JOBS = [
     (BRAIN_DIR / "repo-scanner.py", 6 * 3600),
     (BRAIN_DIR / "knowledge-builder.py", 6 * 3600),
-    (BRAIN_DIR / "analytics-agent.py", 6 * 3600),
-    (BRAIN_DIR / "search-console-agent.py", 6 * 3600),
     (BRAIN_DIR / "decision-engine.py", 6 * 3600),
     (BRAIN_DIR / "execution-engine.py", 6 * 3600),
     (BRAIN_DIR / "github-agent.py", 6 * 3600),
