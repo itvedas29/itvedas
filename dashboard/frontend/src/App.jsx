@@ -172,6 +172,94 @@ function ChatPane({ token, onUnauthorized }) {
   )
 }
 
+function ActionsPanel({ token, onUnauthorized }) {
+  const [actions, setActions] = useState([])
+  const [error, setError] = useState(null)
+  const [busyId, setBusyId] = useState(null)
+  const [results, setResults] = useState({})
+
+  useEffect(() => {
+    let cancelled = false
+
+    const load = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/actions`, { headers: authHeaders(token) })
+        if (res.status === 401) return onUnauthorized()
+        const data = await res.json()
+        if (!cancelled) setActions(data.actions || [])
+      } catch (err) {
+        if (!cancelled) setError(err.message)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [token, onUnauthorized])
+
+  const runAction = async (actionId, requiresApproval) => {
+    setBusyId(actionId)
+    setResults((prev) => ({ ...prev, [actionId]: null }))
+    try {
+      const url = requiresApproval ? `${API_BASE}/api/approve` : `${API_BASE}/api/run`
+      const body = requiresApproval
+        ? { action_id: actionId, confirm: true }
+        : { action_id: actionId }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
+        body: JSON.stringify(body),
+      })
+      if (res.status === 401) return onUnauthorized()
+      const data = await res.json()
+      if (!res.ok) {
+        setResults((prev) => ({ ...prev, [actionId]: `Error: ${data.detail || res.statusText}` }))
+      } else {
+        setResults((prev) => ({ ...prev, [actionId]: data.output }))
+      }
+    } catch (err) {
+      setResults((prev) => ({ ...prev, [actionId]: `Error: ${err.message}` }))
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  return (
+    <section>
+      <h3>Actions</h3>
+      {error && <p className="error-banner">Could not reach the API: {error}</p>}
+      <ul className="action-list">
+        {actions.map((action) => (
+          <li key={action.id} className="action-item">
+            <div className="action-item-row">
+              <div>
+                <span className="action-id">{action.id}</span>
+                <p className="action-description">{action.description}</p>
+              </div>
+              <button
+                type="button"
+                className={action.requires_approval ? 'action-run approve' : 'action-run'}
+                disabled={busyId === action.id}
+                onClick={() => runAction(action.id, action.requires_approval)}
+              >
+                {busyId === action.id
+                  ? 'Running...'
+                  : action.requires_approval
+                    ? 'Approve & Run'
+                    : 'Run'}
+              </button>
+            </div>
+            {results[action.id] && (
+              <pre className="action-output">{results[action.id]}</pre>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 function CooDashboard({ token, onUnauthorized }) {
   const [context, setContext] = useState('Loading...')
   const [recommendations, setRecommendations] = useState('Loading...')
@@ -224,6 +312,8 @@ function CooDashboard({ token, onUnauthorized }) {
           <ReactMarkdown>{recommendations}</ReactMarkdown>
         </div>
       </section>
+
+      <ActionsPanel token={token} onUnauthorized={onUnauthorized} />
     </aside>
   )
 }
