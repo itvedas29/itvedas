@@ -5,7 +5,7 @@ import './App.css'
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 const TOKEN_KEY = 'tango_session_token'
 
-const NAV_ITEMS = ['New Chat', 'History', 'Tasks', 'Settings']
+const NAV_ITEMS = ['New Chat']
 
 function authHeaders(token) {
   return token ? { Authorization: `Bearer ${token}` } : {}
