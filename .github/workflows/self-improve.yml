@@ -1,0 +1,48 @@
+name: ITVedas Self-Improve
+
+# ──────────────────────────────────────────────────────────────
+#  Daily autonomous code-improvement job.
+#  Claude decides what to change, OpenAI writes it, a build/syntax
+#  check gates the push — only pushes to main if the check passes.
+# ──────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 09:30 IST daily
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: itvedas-self-improve
+  cancel-in-progress: false
+
+jobs:
+  self-improve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend deps
+        run: npm install
+        working-directory: dashboard/frontend
+
+      - name: Run self-improve job
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
+        run: python3 scripts/self_improve.py
