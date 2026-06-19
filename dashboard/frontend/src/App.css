@@ -251,77 +251,113 @@ html, body {
   color: #ff6b6b;
 }
 
-/* Login page */
-.login-page {
-  min-height: 100vh;
+.login-screen {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg1);
+  height: 100vh;
 }
 
 .login-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.login-subtitle {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-bottom: 1.25rem;
-}
-
-.login-form {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 320px;
+  padding: 2rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
 
-.login-form input[type="password"] {
-  width: 100%;
-  padding: 0.65rem 0.9rem;
+.login-card h1 {
+  font-family: var(--fd);
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin: 0.5rem 0 0;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-family: var(--fb);
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+.login-card input {
   background: var(--bg3);
+  color: var(--text);
+  font-family: var(--fb);
   border: 1px solid var(--border);
   border-radius: 10px;
-  color: var(--fg);
-  font-size: 1rem;
-  font-family: inherit;
+  padding: 0.65rem 0.9rem;
+}
+
+.login-card input:focus {
   outline: none;
-  box-sizing: border-box;
+  border-color: rgba(255, 107, 53, 0.4);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
 }
 
-.login-form input[type="password"]:focus {
-  border-color: var(--accent);
-}
-
-.login-form button {
-  padding: 0.65rem;
-  background: var(--accent);
-  color: #fff;
-  border: none;
+.login-card button {
+  padding: 0.65rem 1rem;
   border-radius: 10px;
-  font-size: 0.95rem;
+  border: none;
+  background: var(--net);
+  color: #fff;
+  font-family: var(--fd);
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.15s;
 }
 
-.login-form button:disabled {
+.login-card button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.login-error {
-  color: #ff6b6b;
+.markdown-body {
+  font-family: var(--fb);
+}
+
+.markdown-body p {
+  margin: 0 0 0.5rem;
+}
+
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  font-family: var(--fd);
+  margin: 0.75rem 0 0.4rem;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin: 0 0 0.5rem;
+  padding-left: 1.25rem;
+}
+
+.markdown-body code {
+  background: var(--bg3);
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.85em;
+}
+
+.markdown-body pre {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  overflow-x: auto;
+}
+
+.markdown-panel {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
   font-size: 0.85rem;
-  text-align: center;
 }

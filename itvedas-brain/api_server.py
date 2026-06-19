@@ -15,6 +15,10 @@ format_context_markdown, recommend_actions, dispatch, handle_run_command,
 handle_approve_command, ACTIONS, Memory). The approval gate for mutating
 actions (currently only create-github-issues) is preserved exactly as-is.
 
+If DASHBOARD_PASSWORD is set in the environment, every endpoint except
+/api/health and /api/login requires a bearer session token obtained via
+POST /api/login. If DASHBOARD_PASSWORD is unset, auth is disabled.
+
 Run with:
     uvicorn itvedas-brain.api_server:app --host 0.0.0.0 --port 8000 --reload
 """
@@ -28,9 +32,8 @@ import secrets
 import threading
 from typing import Any
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
@@ -52,22 +55,6 @@ coo_agent = _load_coo_agent()
 _memory_lock = threading.Lock()
 _memory = coo_agent.Memory(coo_agent.DEFAULT_MEMORY)
 
-_DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "")
-# Random token minted at startup; invalidated on process restart.
-_SESSION_TOKEN = secrets.token_hex(32)
-
-_bearer = HTTPBearer(auto_error=False)
-
-
-def _require_auth(
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
-) -> None:
-    if not _DASHBOARD_PASSWORD:
-        return
-    if credentials is None or credentials.credentials != _SESSION_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
 app = FastAPI(title="ITVedas COO Agent API")
 
 # Dev: Vite default port. Production: the dashboard's real origin.
@@ -86,6 +73,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Single shared password gating the whole dashboard. Sessions are
+# in-memory bearer tokens issued by /api/login - this is a single-user
+# system, so there's no need for a database-backed session store.
+DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD")
+_valid_sessions: set[str] = set()
+
+
+def require_auth(authorization: str | None = Header(default=None)) -> None:
+    if DASHBOARD_PASSWORD is None:
+        return  # Auth disabled - no password configured.
+    token = (authorization or "").removeprefix("Bearer ").strip()
+    if token not in _valid_sessions:
+        raise HTTPException(status_code=401, detail="Invalid or missing session token.")
+
 
 
 class LoginRequest(BaseModel):
@@ -112,15 +115,17 @@ def health() -> dict[str, str]:
 
 @app.post("/api/login")
 def login(body: LoginRequest) -> dict[str, str]:
-    if not _DASHBOARD_PASSWORD:
-        return {"token": "no-auth"}
-    if body.password != _DASHBOARD_PASSWORD:
-        raise HTTPException(status_code=401, detail="Incorrect password")
-    return {"token": _SESSION_TOKEN}
+    if DASHBOARD_PASSWORD is None:
+        raise HTTPException(status_code=400, detail="Login is disabled - no DASHBOARD_PASSWORD configured.")
+    if not secrets.compare_digest(body.password, DASHBOARD_PASSWORD):
+        raise HTTPException(status_code=401, detail="Incorrect password.")
+    token = secrets.token_urlsafe(32)
+    _valid_sessions.add(token)
+    return {"token": token}
 
 
-@app.post("/api/chat")
-def chat(body: ChatRequest, _: None = Depends(_require_auth)) -> dict[str, str]:
+@app.post("/api/chat", dependencies=[Depends(require_auth)])
+def chat(body: ChatRequest) -> dict[str, str]:
     context = coo_agent.load_context()
     with _memory_lock:
         _memory.add_turn("user", body.message)
@@ -129,20 +134,20 @@ def chat(body: ChatRequest, _: None = Depends(_require_auth)) -> dict[str, str]:
     return {"reply": reply}
 
 
-@app.get("/api/context")
-def context(_: None = Depends(_require_auth)) -> dict[str, str]:
+@app.get("/api/context", dependencies=[Depends(require_auth)])
+def context() -> dict[str, str]:
     ctx = coo_agent.load_context()
     return {"context": coo_agent.format_context_markdown(ctx)}
 
 
-@app.get("/api/recommend")
-def recommend(_: None = Depends(_require_auth)) -> dict[str, str]:
+@app.get("/api/recommend", dependencies=[Depends(require_auth)])
+def recommend() -> dict[str, str]:
     ctx = coo_agent.load_context()
     return {"recommendations": coo_agent.recommend_actions(ctx)}
 
 
-@app.get("/api/actions")
-def actions(_: None = Depends(_require_auth)) -> dict[str, list[dict[str, Any]]]:
+@app.get("/api/actions", dependencies=[Depends(require_auth)])
+def actions() -> dict[str, list[dict[str, Any]]]:
     items = [
         {
             "id": action_id,
@@ -154,8 +159,8 @@ def actions(_: None = Depends(_require_auth)) -> dict[str, list[dict[str, Any]]]
     return {"actions": items}
 
 
-@app.post("/api/run")
-def run(body: RunRequest, _: None = Depends(_require_auth)) -> dict[str, str]:
+@app.post("/api/run", dependencies=[Depends(require_auth)])
+def run(body: RunRequest) -> dict[str, str]:
     action = coo_agent.ACTIONS.get(body.action_id)
     if action is None:
         raise HTTPException(status_code=404, detail=f"Unknown action '{body.action_id}'.")
@@ -169,8 +174,8 @@ def run(body: RunRequest, _: None = Depends(_require_auth)) -> dict[str, str]:
     return {"output": output}
 
 
-@app.post("/api/approve")
-def approve(body: ApproveRequest, _: None = Depends(_require_auth)) -> dict[str, str]:
+@app.post("/api/approve", dependencies=[Depends(require_auth)])
+def approve(body: ApproveRequest) -> dict[str, str]:
     action = coo_agent.ACTIONS.get(body.action_id)
     if action is None:
         raise HTTPException(status_code=404, detail=f"Unknown action '{body.action_id}'.")
@@ -189,8 +194,8 @@ def approve(body: ApproveRequest, _: None = Depends(_require_auth)) -> dict[str,
     return {"output": output}
 
 
-@app.get("/api/memory")
-def memory(_: None = Depends(_require_auth)) -> dict[str, list[dict[str, Any]]]:
+@app.get("/api/memory", dependencies=[Depends(require_auth)])
+def memory() -> dict[str, list[dict[str, Any]]]:
     return {
         "conversation_log": _memory.data.get("conversation_log", [])[-50:],
         "decisions": _memory.data.get("decisions", [])[-50:],
