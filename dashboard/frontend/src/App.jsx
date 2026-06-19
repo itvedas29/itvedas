@@ -5,10 +5,21 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 const NAV_ITEMS = ['New Chat', 'History', 'Analytics', 'Search Console', 'Tasks', 'Settings']
 
+function TopNav() {
+  return (
+    <header className="topnav">
+      <a className="logo" href="/">
+        IT<span>Vedas</span>
+      </a>
+      <span className="topnav-divider" />
+      <span className="topnav-product">Tango</span>
+    </header>
+  )
+}
+
 function Sidebar({ onNewChat }) {
   return (
     <nav className="sidebar">
-      <h2 className="sidebar-title">ITVedas COO</h2>
       <ul className="nav-list">
         {NAV_ITEMS.map((item) => (
           <li key={item}>
@@ -50,7 +61,7 @@ function ChatPane() {
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `Error reaching the COO agent: ${error.message}` },
+        { role: 'assistant', content: `Error reaching Tango: ${error.message}` },
       ])
     } finally {
       setLoading(false)
@@ -68,16 +79,19 @@ function ChatPane() {
     <main className="chat-pane">
       <div className="message-list">
         {messages.length === 0 && (
-          <p className="empty-state">Ask the COO agent a business question, or use the dashboard on the right.</p>
+          <div className="empty-state">
+            <p className="empty-state-title">Hi, I&apos;m Tango.</p>
+            <p>Ask a business question, or check the dashboard on the right.</p>
+          </div>
         )}
         {messages.map((message, index) => (
           <div key={index} className={`message message-${message.role}`}>
-            <span className="message-role">{message.role === 'user' ? 'You' : 'COO'}</span>
+            <span className="message-role">{message.role === 'user' ? 'You' : 'Tango'}</span>
             <p>{message.content}</p>
           </div>
         ))}
         {loading && <div className="message message-assistant">
-          <span className="message-role">COO</span>
+          <span className="message-role">Tango</span>
           <p>Thinking...</p>
         </div>}
       </div>
@@ -86,7 +100,7 @@ function ChatPane() {
           value={input}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask a business question..."
+          placeholder="Ask Tango a business question..."
           rows={2}
         />
         <button type="button" onClick={sendMessage} disabled={loading}>
@@ -130,7 +144,7 @@ function CooDashboard() {
 
   return (
     <aside className="coo-dashboard">
-      <h2>COO Dashboard</h2>
+      <h2>Tango Dashboard</h2>
       {error && <p className="error-banner">Could not reach the API: {error}</p>}
 
       <section>
@@ -150,10 +164,13 @@ function App() {
   const [chatKey, setChatKey] = useState(0)
 
   return (
-    <div className="app-layout">
-      <Sidebar onNewChat={() => setChatKey((key) => key + 1)} />
-      <ChatPane key={chatKey} />
-      <CooDashboard />
+    <div className="app-shell">
+      <TopNav />
+      <div className="app-layout">
+        <Sidebar onNewChat={() => setChatKey((key) => key + 1)} />
+        <ChatPane key={chatKey} />
+        <CooDashboard />
+      </div>
     </div>
   )
 }
