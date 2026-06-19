@@ -332,6 +332,14 @@ function App() {
     setToken(null)
   }
 
+  const handleNewChat = () => {
+    fetch(`${API_BASE}/api/chat/reset`, {
+      method: 'POST',
+      headers: authHeaders(token),
+    }).catch(() => {})
+    setChatKey((key) => key + 1)
+  }
+
   if (!token) {
     return <LoginScreen onLogin={handleLogin} />
   }
@@ -340,7 +348,7 @@ function App() {
     <div className="app-shell">
       <TopNav />
       <div className="app-layout">
-        <Sidebar onNewChat={() => setChatKey((key) => key + 1)} />
+        <Sidebar onNewChat={handleNewChat} />
         <ChatPane key={chatKey} token={token} onUnauthorized={handleUnauthorized} />
         <CooDashboard token={token} onUnauthorized={handleUnauthorized} />
       </div>

@@ -134,6 +134,13 @@ def chat(body: ChatRequest) -> dict[str, str]:
     return {"reply": reply}
 
 
+@app.post("/api/chat/reset", dependencies=[Depends(require_auth)])
+def chat_reset() -> dict[str, str]:
+    with _memory_lock:
+        _memory.reset_conversation()
+    return {"status": "ok"}
+
+
 @app.get("/api/context", dependencies=[Depends(require_auth)])
 def context() -> dict[str, str]:
     ctx = coo_agent.load_context()
