@@ -7,11 +7,13 @@ COMPLETELY ORIGINAL news articles hosted on ITVedas.
 Legal: transformative original content, not copying.
 Each story = own headline, own words, own analysis,
 own page on itvedas.com, with a source citation link.
+
+LLM: OpenAI writes the article body (OPENAI_API_KEY, OPENAI_MODEL).
 """
 import os, json, urllib.request, pathlib, datetime, re, time, hashlib
 
-API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-MODEL   = "claude-haiku-4-5-20251001"
+OPENAI_KEY   = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 SITE    = "https://itvedas.com"
 
 TOPIC_COLORS = {
@@ -35,17 +37,17 @@ NEWS_FEEDS = [
     "https://cloudblogs.microsoft.com/feed/",
 ]
 
-def think(prompt, max_tokens=2500):
-    body = json.dumps({"model":MODEL,"max_tokens":max_tokens,
-        "messages":[{"role":"user","content":prompt}]}).encode()
-    req = urllib.request.Request("https://api.anthropic.com/v1/messages",
-        data=body, headers={"x-api-key":API_KEY,"anthropic-version":"2023-06-01","content-type":"application/json"})
+def write_with_openai(prompt, max_tokens=2500):
+    body = json.dumps({"model": OPENAI_MODEL, "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}]}).encode()
+    req = urllib.request.Request("https://api.openai.com/v1/chat/completions",
+        data=body, headers={"Authorization": f"Bearer {OPENAI_KEY}", "content-type": "application/json"})
     for i in range(3):
         try:
-            return json.load(urllib.request.urlopen(req,timeout=90))["content"][0]["text"].strip()
+            return json.load(urllib.request.urlopen(req, timeout=90))["choices"][0]["message"]["content"].strip()
         except Exception as e:
-            if i==2: raise
-            print(f"API retry {i+1}: {e}")
+            if i == 2: raise
+            print(f"OpenAI API retry {i+1}: {e}")
             time.sleep(6)
 
 def fetch_feed(url):
@@ -82,7 +84,7 @@ def classify(title):
     return "General"
 
 def write_original_article(item):
-    """Claude writes a COMPLETELY ORIGINAL article about the news topic."""
+    """OpenAI writes a COMPLETELY ORIGINAL article about the news topic."""
     topic = classify(item['title'])
     prompt = f"""You are an IT news writer for ITVedas. A story is breaking on this topic:
 
@@ -118,7 +120,7 @@ Structure:
 
 Return ONLY meta block + HTML body. No html/head/body tags."""
 
-    return think(prompt, max_tokens=2000)
+    return write_with_openai(prompt, max_tokens=2000)
 
 def parse_article(content, item):
     meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title'])}
@@ -379,8 +381,8 @@ def slugify(text):
 
 def main():
     print("News Agent v2 — original commentary mode")
-    if not API_KEY:
-        raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
+    if not OPENAI_KEY:
+        raise SystemExit("FATAL: OPENAI_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
     pathlib.Path("itvedas-brain/state").mkdir(parents=True, exist_ok=True)
 

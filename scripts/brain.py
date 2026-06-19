@@ -15,8 +15,14 @@
    8. Regenerates sitemap.xml
    9. Emails you a notification (optional)
 
+ LLM roles:
+   Claude (Anthropic)  primary  — self-review/QA gate (decides PUBLISH vs REWRITE)
+   OpenAI              secondary — writes the article draft
+
  Config via environment variables (GitHub Secrets):
-   ANTHROPIC_API_KEY   (required)
+   ANTHROPIC_API_KEY   (required) — review/QA
+   OPENAI_API_KEY      (required) — article writing
+   OPENAI_MODEL        (optional, defaults to gpt-4o-mini)
    GA4_ID              (optional, e.g. G-XXXXXXXXXX)
    NOTIFY_EMAIL        (optional, where to send notifications)
    SMTP_FROM           (optional, Gmail sender)
@@ -32,12 +38,14 @@ from email.mime.text import MIMEText
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────
 API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "")
+OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
 GA4_ID     = os.environ.get("GA4_ID", "").strip()
 NOTIFY_TO  = os.environ.get("NOTIFY_EMAIL", "").strip()
 SMTP_FROM  = os.environ.get("SMTP_FROM", "").strip()
 SMTP_PASS  = os.environ.get("SMTP_PASS", "").strip()
 
-MODEL      = "claude-haiku-4-5-20251001"
+MODEL        = "claude-haiku-4-5-20251001"
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 SITE_URL   = "https://itvedas.com"
 SITE_NAME  = "ITVedas"
 CONTACT    = "info@itvedas.com"
@@ -175,6 +183,27 @@ def claude(prompt, system=None, max_tokens=4000):
             log(f"API retry {attempt+1}: {e}")
             time.sleep(8)
 
+def openai_chat(prompt, system=None, max_tokens=4000):
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+    payload = {"model": OPENAI_MODEL, "max_tokens": max_tokens, "messages": messages}
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/chat/completions",
+        data=json.dumps(payload).encode(),
+        headers={"Authorization": f"Bearer {OPENAI_KEY}",
+                 "content-type": "application/json"})
+    for attempt in range(3):
+        try:
+            res = json.load(urllib.request.urlopen(req, timeout=90))
+            return res["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            if attempt == 2:
+                raise
+            log(f"OpenAI API retry {attempt+1}: {e}")
+            time.sleep(8)
+
 def load_state():
     BRAIN_DIR.mkdir(exist_ok=True)
     if STATE_FILE.exists():
@@ -256,7 +285,7 @@ THEN the article HTML body:
 Include at least one <div class="callout"><div class="callout-title">Pro Tip</div>…</div>.
 Use <strong> for key terms and <code> for technical terms on first mention.
 1500-2000 words. Return ONLY the META comment + HTML body. No html/head/body tags."""
-    return claude(prompt, system=system, max_tokens=4000)
+    return openai_chat(prompt, system=system, max_tokens=4000)
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 3 — self-review
@@ -720,6 +749,9 @@ def main():
     log("ITVedas Brain — run start")
     if not API_KEY:
         log("FATAL: ANTHROPIC_API_KEY not set")
+        raise SystemExit(1)
+    if not OPENAI_KEY:
+        log("FATAL: OPENAI_API_KEY not set")
         raise SystemExit(1)
 
     ARTICLES.mkdir(exist_ok=True)

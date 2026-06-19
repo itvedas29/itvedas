@@ -96,7 +96,10 @@ nano .env
 
 ```
 # ── Content generation ──────────────────────────────────────────
+# Claude = primary (decisions/QA/review/traffic control), OpenAI = secondary (article writing)
 ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
 GA4_ID=G-XXXXXXXXXX
 
 # ── Email notifications (optional) ──────────────────────────────
