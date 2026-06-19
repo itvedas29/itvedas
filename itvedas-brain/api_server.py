@@ -15,6 +15,10 @@ format_context_markdown, recommend_actions, dispatch, handle_run_command,
 handle_approve_command, ACTIONS, Memory). The approval gate for mutating
 actions (currently only create-github-issues) is preserved exactly as-is.
 
+If DASHBOARD_PASSWORD is set in the environment, every endpoint except
+/api/health and /api/login requires a bearer session token obtained via
+POST /api/login. If DASHBOARD_PASSWORD is unset, auth is disabled.
+
 Run with:
     uvicorn itvedas-brain.api_server:app --host 0.0.0.0 --port 8000 --reload
 """
@@ -22,11 +26,13 @@ Run with:
 from __future__ import annotations
 
 import importlib.util
+import os
 import pathlib
+import secrets
 import threading
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -69,6 +75,25 @@ app.add_middleware(
 )
 
 
+# Single shared password gating the whole dashboard. Sessions are
+# in-memory bearer tokens issued by /api/login - this is a single-user
+# system, so there's no need for a database-backed session store.
+DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD")
+_valid_sessions: set[str] = set()
+
+
+def require_auth(authorization: str | None = Header(default=None)) -> None:
+    if DASHBOARD_PASSWORD is None:
+        return  # Auth disabled - no password configured.
+    token = (authorization or "").removeprefix("Bearer ").strip()
+    if token not in _valid_sessions:
+        raise HTTPException(status_code=401, detail="Invalid or missing session token.")
+
+
+class LoginRequest(BaseModel):
+    password: str
+
+
 class ChatRequest(BaseModel):
     message: str
 
@@ -87,7 +112,18 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.post("/api/chat")
+@app.post("/api/login")
+def login(body: LoginRequest) -> dict[str, str]:
+    if DASHBOARD_PASSWORD is None:
+        raise HTTPException(status_code=400, detail="Login is disabled - no DASHBOARD_PASSWORD configured.")
+    if not secrets.compare_digest(body.password, DASHBOARD_PASSWORD):
+        raise HTTPException(status_code=401, detail="Incorrect password.")
+    token = secrets.token_urlsafe(32)
+    _valid_sessions.add(token)
+    return {"token": token}
+
+
+@app.post("/api/chat", dependencies=[Depends(require_auth)])
 def chat(body: ChatRequest) -> dict[str, str]:
     context = coo_agent.load_context()
     with _memory_lock:
@@ -97,19 +133,19 @@ def chat(body: ChatRequest) -> dict[str, str]:
     return {"reply": reply}
 
 
-@app.get("/api/context")
+@app.get("/api/context", dependencies=[Depends(require_auth)])
 def context() -> dict[str, str]:
     ctx = coo_agent.load_context()
     return {"context": coo_agent.format_context_markdown(ctx)}
 
 
-@app.get("/api/recommend")
+@app.get("/api/recommend", dependencies=[Depends(require_auth)])
 def recommend() -> dict[str, str]:
     ctx = coo_agent.load_context()
     return {"recommendations": coo_agent.recommend_actions(ctx)}
 
 
-@app.get("/api/actions")
+@app.get("/api/actions", dependencies=[Depends(require_auth)])
 def actions() -> dict[str, list[dict[str, Any]]]:
     items = [
         {
@@ -122,7 +158,7 @@ def actions() -> dict[str, list[dict[str, Any]]]:
     return {"actions": items}
 
 
-@app.post("/api/run")
+@app.post("/api/run", dependencies=[Depends(require_auth)])
 def run(body: RunRequest) -> dict[str, str]:
     action = coo_agent.ACTIONS.get(body.action_id)
     if action is None:
@@ -137,7 +173,7 @@ def run(body: RunRequest) -> dict[str, str]:
     return {"output": output}
 
 
-@app.post("/api/approve")
+@app.post("/api/approve", dependencies=[Depends(require_auth)])
 def approve(body: ApproveRequest) -> dict[str, str]:
     action = coo_agent.ACTIONS.get(body.action_id)
     if action is None:
@@ -157,7 +193,7 @@ def approve(body: ApproveRequest) -> dict[str, str]:
     return {"output": output}
 
 
-@app.get("/api/memory")
+@app.get("/api/memory", dependencies=[Depends(require_auth)])
 def memory() -> dict[str, list[dict[str, Any]]]:
     return {
         "conversation_log": _memory.data.get("conversation_log", [])[-50:],
