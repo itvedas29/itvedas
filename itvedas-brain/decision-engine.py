@@ -20,8 +20,6 @@ DEFAULT_KNOWLEDGE_DIR = BASE_DIR / "knowledge"
 DEFAULT_REPOSITORY_KNOWLEDGE = BASE_DIR / "repository_knowledge.json"
 DEFAULT_ARTICLE_STATE = BASE_DIR / "state" / "state.json"
 DEFAULT_NEWS_STATE = BASE_DIR / "state" / "news_state.json"
-DEFAULT_ANALYTICS = BASE_DIR / "memory" / "analytics.json"
-DEFAULT_SEARCH_CONSOLE = BASE_DIR / "memory" / "search_console.json"
 DEFAULT_OUTPUT = BASE_DIR / "state" / "daily-plan.json"
 
 # Scoring weights (must sum to 1.0).
@@ -52,8 +50,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repository-knowledge", type=pathlib.Path, default=DEFAULT_REPOSITORY_KNOWLEDGE)
     parser.add_argument("--article-state", type=pathlib.Path, default=DEFAULT_ARTICLE_STATE)
     parser.add_argument("--news-state", type=pathlib.Path, default=DEFAULT_NEWS_STATE)
-    parser.add_argument("--analytics", type=pathlib.Path, default=DEFAULT_ANALYTICS)
-    parser.add_argument("--search-console", type=pathlib.Path, default=DEFAULT_SEARCH_CONSOLE)
     parser.add_argument("--output", type=pathlib.Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -80,130 +76,6 @@ def round_score(value: float) -> int:
     return int(round(max(0.0, min(100.0, value))))
 
 
-def normalize_ga_path(path: str) -> str:
-    return path.lstrip("/")
-
-
-def build_course_analytics(
-    courses: list[dict[str, Any]], analytics: dict[str, Any]
-) -> dict[str, dict[str, Any]]:
-    """Aggregate GA4 page-level metrics onto each course's content_paths."""
-    page_views = {normalize_ga_path(page["path"]): page for page in analytics.get("top_pages", [])}
-    conversions = {normalize_ga_path(page["path"]): page["conversions"] for page in analytics.get("conversion_pages", [])}
-
-    aggregates: dict[str, dict[str, Any]] = {}
-    for course in courses:
-        views = sessions = conv = 0
-        engagement_samples: list[float] = []
-        for content_path in course.get("content_paths", []):
-            page = page_views.get(content_path)
-            if page:
-                views += page.get("page_views", 0)
-                sessions += page.get("sessions", 0)
-                engagement_samples.append(page.get("engagement_rate", 0.0))
-            conv += conversions.get(content_path, 0)
-        aggregates[course["id"]] = {
-            "page_views": views,
-            "sessions": sessions,
-            "conversions": conv,
-            "engagement_rate": round(sum(engagement_samples) / len(engagement_samples), 4) if engagement_samples else 0.0,
-        }
-    return aggregates
-
-
-def build_course_search_console(
-    courses: list[dict[str, Any]], search_console: dict[str, Any]
-) -> dict[str, dict[str, Any]]:
-    """Aggregate Search Console page-level metrics onto each course's content_paths."""
-    pages_by_path = {normalize_ga_path(page["page"]): page for page in search_console.get("pages", [])}
-    insights = search_console.get("insights", {})
-    low_ctr_paths = {normalize_ga_path(page["page"]) for page in insights.get("low_ctr_pages", [])}
-    ranking_opportunity_paths = {normalize_ga_path(page["page"]) for page in insights.get("ranking_opportunities", [])}
-    high_click_paths = {normalize_ga_path(page["page"]) for page in insights.get("high_click_pages", [])}
-
-    aggregates: dict[str, dict[str, Any]] = {}
-    for course in courses:
-        impressions = clicks = 0
-        position_samples: list[float] = []
-        has_low_ctr = has_ranking_opportunity = has_high_click = False
-        for content_path in course.get("content_paths", []):
-            page = pages_by_path.get(content_path)
-            if page:
-                impressions += page.get("impressions", 0)
-                clicks += page.get("clicks", 0)
-                position_samples.append(page.get("position", 0.0))
-            if content_path in low_ctr_paths:
-                has_low_ctr = True
-            if content_path in ranking_opportunity_paths:
-                has_ranking_opportunity = True
-            if content_path in high_click_paths:
-                has_high_click = True
-        aggregates[course["id"]] = {
-            "impressions": impressions,
-            "clicks": clicks,
-            "average_position": round(sum(position_samples) / len(position_samples), 2) if position_samples else 0.0,
-            "has_low_ctr": has_low_ctr,
-            "has_ranking_opportunity": has_ranking_opportunity,
-            "has_high_click": has_high_click,
-        }
-    return aggregates
-
-
-def build_search_console_recommendations(
-    courses: list[dict[str, Any]], search_console: dict[str, Any]
-) -> list[dict[str, Any]]:
-    """Turn Search Console insight buckets into concrete, course-tagged recommendations."""
-    path_to_course_id = {
-        path: course["id"] for course in courses for path in course.get("content_paths", [])
-    }
-    insights = search_console.get("insights", {})
-    recommendations: list[dict[str, Any]] = []
-
-    for page in insights.get("low_ctr_pages", []):
-        path = normalize_ga_path(page["page"])
-        recommendations.append(
-            {
-                "type": "title_optimization",
-                "page": page["page"],
-                "reason": (
-                    f"{page['impressions']} impression(s) but CTR of {page['ctr']:.2%}; "
-                    "the title/meta description is likely underselling the result."
-                ),
-                "related_course_id": path_to_course_id.get(path),
-            }
-        )
-
-    for page in insights.get("ranking_opportunities", []):
-        path = normalize_ga_path(page["page"])
-        recommendations.append(
-            {
-                "type": "seo_improvement",
-                "page": page["page"],
-                "reason": (
-                    f"Ranking at position {page['position']} (page 1-2 boundary); "
-                    "targeted on-page SEO could push this onto page 1."
-                ),
-                "related_course_id": path_to_course_id.get(path),
-            }
-        )
-
-    for page in insights.get("high_click_pages", []):
-        path = normalize_ga_path(page["page"])
-        recommendations.append(
-            {
-                "type": "content_expansion",
-                "page": page["page"],
-                "reason": (
-                    f"{page['clicks']} click(s) already; expanding this page's coverage "
-                    "could capture more of the demand it has already proven."
-                ),
-                "related_course_id": path_to_course_id.get(path),
-            }
-        )
-
-    return recommendations
-
-
 def build_course_profiles(
     courses: list[dict[str, Any]],
     career_paths: list[dict[str, Any]],
@@ -213,8 +85,6 @@ def build_course_profiles(
     faqs: list[dict[str, Any]],
     article_topic_counts: dict[str, int],
     news_topic_counts: dict[str, int],
-    course_analytics: dict[str, dict[str, Any]],
-    course_search_console: dict[str, dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     profiles: dict[str, dict[str, Any]] = {}
 
@@ -237,12 +107,6 @@ def build_course_profiles(
             if cert["related_course_id"] == course_id
         ]
 
-        ga = course_analytics.get(course_id, {"page_views": 0, "sessions": 0, "conversions": 0, "engagement_rate": 0.0})
-        gsc = course_search_console.get(
-            course_id,
-            {"impressions": 0, "clicks": 0, "average_position": 0.0, "has_low_ctr": False, "has_ranking_opportunity": False, "has_high_click": False},
-        )
-
         profiles[course_id] = {
             "course": course,
             "career_count": career_count,
@@ -256,26 +120,18 @@ def build_course_profiles(
             "news_count": news_count,
             "uncovered_technologies": uncovered_terms,
             "certs_for_course": uncovered_certs,
-            "analytics": ga,
-            "search_console": gsc,
         }
 
     relevance_raw = {
         cid: profile["career_count"] * 3 + profile["cert_count"] * 2 + profile["tech_count"] + profile["persona_count"] * 2
         for cid, profile in profiles.items()
     }
-    # Real GA4 sessions/conversions are blended into demand alongside the
-    # on-site signals (personas, FAQs, news/article topic activity).
     demand_raw = {
         cid: (
             profile["persona_count"] * 3
             + profile["faq_count"] * 2
             + profile["news_count"]
             + profile["article_count"] * 0.5
-            + profile["analytics"]["sessions"] * 0.1
-            + profile["analytics"]["conversions"] * 2
-            + profile["search_console"]["clicks"] * 0.2
-            + (15.0 if profile["search_console"]["has_high_click"] else 0.0)
         )
         for cid, profile in profiles.items()
     }
@@ -290,20 +146,8 @@ def build_course_profiles(
             0.0, 100.0 - profile["content_paths_count"] * 15.0
         )
         profile["content_gap_score"] = content_gap_raw
-        # SEO opportunity: uncovered keyword terms, boosted when the pages
-        # that do exist for this course have low GA4 engagement (visitors
-        # arrive but don't engage, suggesting the content isn't satisfying
-        # the underlying search intent).
+        # SEO opportunity: uncovered keyword terms not yet covered by any page.
         seo_raw = len(profile["uncovered_technologies"]) * 25.0
-        if profile["analytics"]["page_views"] > 0 and profile["analytics"]["engagement_rate"] < 0.4:
-            seo_raw += 20.0
-        # High impressions + low CTR means the page ranks but its title/snippet
-        # isn't earning clicks; positions 8-20 sit just off page 1, where a
-        # focused SEO push has the best chance of moving the needle.
-        if profile["search_console"]["has_low_ctr"]:
-            seo_raw += 25.0
-        if profile["search_console"]["has_ranking_opportunity"]:
-            seo_raw += 20.0
         profile["seo_score"] = min(100.0, seo_raw)
         competition_raw = 100.0 - min(100.0, profile["news_count"] * 5.0)
         profile["competition_score"] = competition_raw
@@ -509,10 +353,6 @@ def main() -> int:
     repository_knowledge = load_json(args.repository_knowledge, {})
     article_state = load_json(args.article_state, {})
     news_state = load_json(args.news_state, [])
-    analytics = load_json(args.analytics, {"status": "not_configured", "top_pages": [], "conversion_pages": []})
-    search_console = load_json(
-        args.search_console, {"status": "not_configured", "pages": [], "insights": {}}
-    )
 
     if not courses:
         raise SystemExit(
@@ -525,13 +365,9 @@ def main() -> int:
         topic = record.get("topic", "General")
         news_topic_counts[topic] = news_topic_counts.get(topic, 0) + 1
 
-    course_analytics = build_course_analytics(courses, analytics)
-    course_search_console = build_course_search_console(courses, search_console)
-    search_console_recommendations = build_search_console_recommendations(courses, search_console)
-
     profiles = build_course_profiles(
         courses, career_paths, certifications, technologies, personas, faqs,
-        article_topic_counts, news_topic_counts, course_analytics, course_search_console,
+        article_topic_counts, news_topic_counts,
     )
 
     opportunities: list[dict[str, Any]] = []
@@ -572,8 +408,6 @@ def main() -> int:
         "date": today,
         "weights": WEIGHTS,
         "source_repository": repository_knowledge.get("source", {}).get("repository"),
-        "analytics_status": analytics.get("status", "not_configured"),
-        "search_console_status": search_console.get("status", "not_configured"),
         **top_priority,
         "summary": {
             "total_opportunities": len(opportunities),
@@ -583,7 +417,6 @@ def main() -> int:
             },
         },
         "opportunities": opportunities,
-        "search_console_recommendations": search_console_recommendations,
     }
 
     write_json_atomic(args.output, plan)

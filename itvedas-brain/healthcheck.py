@@ -17,8 +17,6 @@ MAX_AGE_HOURS = 30  # generous margin over the 24h cron/PM2 cycle
 
 CHECKS = [
     REPO_ROOT / "itvedas-brain" / "memory" / "repository.json",
-    REPO_ROOT / "itvedas-brain" / "memory" / "analytics.json",
-    REPO_ROOT / "itvedas-brain" / "memory" / "search_console.json",
     REPO_ROOT / "itvedas-brain" / "state" / "daily-plan.json",
     REPO_ROOT / "itvedas-brain" / "state" / "execution-plan.json",
     REPO_ROOT / "itvedas-brain" / "state" / "github-actions.json",
