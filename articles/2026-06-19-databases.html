@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn the key differences between SQL and NoSQL databases. Choose the right one for your needs with real examples and expert tips.">
+<meta name="keywords" content="SQL vs NoSQL which database should you choose 2026, Databases guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="SQL vs NoSQL: Which Database Should You Choose in 2026? | ITVedas">
+<meta property="og:description" content="Learn the key differences between SQL and NoSQL databases. Choose the right one for your needs with real examples and expert tips.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/2026-06-19-databases.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://itvedas.com/articles/2026-06-19-databases.html">
+<title>SQL vs NoSQL: Which Database Should You Choose in 2026? | ITVedas</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"SQL vs NoSQL: Which Database Should You Choose in 2026?",
+"description":"Learn the key differences between SQL and NoSQL databases. Choose the right one for your needs with real examples and expert tips.","keywords":"SQL vs NoSQL which database should you choose 2026",
+"author":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"datePublished":"2026-06-19","dateModified":"2026-06-19",
+"articleSection":"Databases","educationalLevel":"Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#F59E0B;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#F59E0B1f;border:1px solid #F59E0B44;color:#F59E0B;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#F59E0B10,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#F59E0B14,#8B5CF610);border:1px solid #F59E0B33;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#F59E0B14,#8B5CF614);border:1px solid #F59E0B33;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/databases/" class="nav-back">← Databases</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/databases/">Databases</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Databases</span>
+    <span class="badge-info">📅 2026-06-19</span>
+    <span class="badge-info">⏱ 5 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>SQL vs NoSQL: Which Database Should You Choose in 2026?</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-a-database">What is a Database?</a></li><li><a href="#understanding-sql-databases">Understanding SQL Databases</a></li><li><a href="#understanding-nosql-databases">Understanding NoSQL Databases</a></li><li><a href="#sql-vs-nosql-side-by-side-comparison">SQL vs NoSQL: Side-by-Side Comparison</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#real-world-examples">Real-World Examples</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#making-your-decision-in-2026">Making Your Decision in 2026</a></li><li><a href="#the-hybrid-approach-most-real-apps">The Hybrid Approach (Most Real Apps)</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    <h1>SQL vs NoSQL: Which Database Should You Choose in 2026?</h1>
+
+<p>Picking a database feels overwhelming. You're not alone. Most beginners don't know where to start.</p>
+
+<p>Here's the good news: you don't need years of experience. This guide explains SQL and NoSQL in plain English. We'll show you which fits your needs best.</p>
+
+<h2 id="what-is-a-database">What is a Database?</h2>
+
+<blockquote>
+<p>A database is like a filing cabinet for your data. Instead of paper folders, you store information digitally. The computer finds what you need instantly.</p>
+</blockquote>
+
+<p>There are two main types: <strong>SQL</strong> and <strong>NoSQL</strong>. They organize information differently. Think of SQL as traditional filing. Think of NoSQL as a more flexible system.</p>
+
+<h2 id="understanding-sql-databases">Understanding SQL Databases</h2>
+
+<blockquote>
+<p><strong>SQL (Structured Query Language)</strong> is like a spreadsheet on steroids. Data sits in organized rows and columns. Everything follows strict rules about format and structure.</p>
+</blockquote>
+
+<p>Popular SQL databases include MySQL, PostgreSQL, and Microsoft SQL Server.</p>
+
+<h3>How SQL Works: The Step-by-Step Process</h3>
+
+<ol>
+<li>You create a table (like a spreadsheet with defined columns).</li>
+<li>Each column has a specific data type (numbers, text, dates).</li>
+<li>You enter data into rows following these rules.</li>
+<li>SQL checks every entry matches the rules before saving.</li>
+<li>You retrieve data using SQL queries (search instructions).</li>
+</ol>
+
+<p><strong>In simple terms:</strong> SQL is strict. It says "no" if data doesn't match the rules. This keeps everything organized.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>SQL is perfect for data that never changes structure. A bank account's format stays the same forever.</p>
+</div>
+
+<h2 id="understanding-nosql-databases">Understanding NoSQL Databases</h2>
+
+<blockquote>
+<p><strong>NoSQL</strong> means "Not Only SQL." It's flexible storage. Each entry can have different information and structure. Like a notebook where each page can look different.</p>
+</blockquote>
+
+<p>Popular NoSQL databases include MongoDB, Firebase, and DynamoDB.</p>
+
+<h3>How NoSQL Works: The Step-by-Step Process</h3>
+
+<ol>
+<li>You store data as documents (like individual notes).</li>
+<li>Each document can have different fields and formats.</li>
+<li>No rules enforced on what goes inside.</li>
+<li>The database accepts any structure you give it.</li>
+<li>You retrieve data using different query methods.</li>
+</ol>
+
+<p><strong>In simple terms:</strong> NoSQL is flexible. It says "yes" to anything. This works great when data changes constantly.</p>
+
+<h2 id="sql-vs-nosql-side-by-side-comparison">SQL vs NoSQL: Side-by-Side Comparison</h2>
+
+<table>
+<tr>
+<th>Feature</th>
+<th>SQL</th>
+<th>NoSQL</th>
+</tr>
+<tr>
+<td><strong>Structure</strong></td>
+<td>Strict, organized</td>
+<td>Flexible, loose</td>
+</tr>
+<tr>
+<td><strong>Data Format</strong></td>
+<td>Tables with rows/columns</td>
+<td>Documents, key-value pairs</td>
+</tr>
+<tr>
+<td><strong>Learning Curve</strong></td>
+<td>Moderate</td>
+<td>Easier for beginners</td>
+</tr>
+<tr>
+<td><strong>Speed with Big Data</strong></td>
+<td>Slower with millions of rows</td>
+<td>Faster with varied data</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>Banks, fixed business data</td>
+<td>Apps, social media, flexible needs</td>
+</tr>
+</table>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p>The wrong choice wastes your time and money. You'll struggle rebuilding systems later.</p>
+
+<p><strong>Use SQL if you're:</strong></p>
+<ul>
+<li>Building a business app with fixed data types.</li>
+<li>Managing financial records or employee information.</li>
+<li>Running a traditional company system.</li>
+<li>Working with data that never changes shape.</li>
+</ul>
+
+<p><strong>Use NoSQL if you're:</strong></p>
+<ul>
+<li>Creating a social media app or chat platform.</li>
+<li>Storing user profiles that grow with new features.</li>
+<li>Handling real-time data from many sources.</li>
+<li>Building a startup that changes direction fast.</li>
+</ul>
+
+<p><strong>In simple terms:</strong> SQL = rigid structure. NoSQL = flexible growth. Choose based on your project's future.</p>
+
+<h2 id="real-world-examples">Real-World Examples</h2>
+
+<h3>Example 1: Netflix Uses Both</h3>
+
+<p>Netflix uses SQL for billing and subscriptions. Why? Payment data never changes. Same columns: user ID, email, payment method.</p>
+
+<p>Netflix uses NoSQL for viewing history. Why? Each user watches different content. Your data looks completely different from another user's data.</p>
+
+<h3>Example 2: A Restaurant Booking App</h3>
+
+<p>A restaurant app needs both databases:</p>
+
+<ol>
+<li>SQL stores restaurant details: name, address, phone, hours.</li>
+<li>NoSQL stores customer reviews. One review has 5 fields. Another has 8 fields and photos.</li>
+<li>SQL handles reservations: fixed date, time, party size.</li>
+<li>NoSQL handles preferences: dietary needs, favorite tables, special requests.</li>
+</ol>
+
+<p><strong>In simple terms:</strong> Use SQL for predictable data. Use NoSQL for unpredictable, growing information.</p>
+
+<h3>Example 3: Amazon's E-Commerce System</h3>
+
+<p>Amazon uses SQL for:</p>
+<ul>
+<li>Orders (order ID, date, total price).</li>
+<li>Inventory (product count, SKU, warehouse location).</li>
+</ul>
+
+<p>Amazon uses NoSQL for:</p>
+<ul>
+<li>Product reviews (variable length, star ratings, photos).</li>
+<li>Customer preferences (wishlists, browsing history).</li>
+</ul>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<h3>Mistake #1: Choosing SQL When You Need Flexibility</h3>
+
+<p><strong>Problem:</strong> You force flexible data into rigid columns. It breaks constantly.</p>
+
+<p><strong>Example:</strong> A new feature needs 10 new fields. You must rebuild your entire database.</p>
+
+<p><strong>Fix:</strong> Use NoSQL if your data structure might change this year.</p>
+
+<h3>Mistake #2: Choosing NoSQL When You Need Structure</h3>
+
+<p><strong>Problem:</strong> Data becomes messy and inconsistent. Finding information takes forever.</p>
+
+<p><strong>Example:</strong> Some customer records have phone numbers. Others don't. Reports become unreliable.</p>
+
+<p><strong>Fix:</strong> Use SQL if your data structure is final and unchanging.</p>
+
+<h3>Mistake #3: Not Considering Scalability</h3>
+
+<p><strong>Problem:</strong> Your app grows to 1 million users. Your database slows to a crawl.</p>
+
+<p><strong>Example:</strong> WhatsApp chose NoSQL. Why? It needed to handle messages from billions of users with different formats.</p>
+
+<p><strong>Fix:</strong> Test both with your projected data growth. Choose the one that scales better for your needs.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Most successful companies use BOTH. SQL for transactions. NoSQL for flexibility. You're not choosing one forever.</p>
+</div>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Q: Is SQL harder to learn than NoSQL?</h3>
+
+<p><strong>A:</strong> Not really. SQL queries look like English sentences. <code>SELECT * FROM customers WHERE age > 18</code> means "show me all customers over 18." NoSQL feels more familiar at first. But both take practice.</p>
+
+<h3>Q: Can I switch from SQL to NoSQL later?</h3>
+
+<p><strong>A:</strong> Yes, but it's painful. You'll need to rewrite your entire application and move your data. Plan correctly the first time. Talk to experienced developers before you start.</p>
+
+<h3>Q: Which is faster in 2026?</h3>
+
+<p><strong>A:</strong> NoSQL is faster for unstructured data and rapid changes. SQL is faster for precise searches and connections between data. Speed depends on your specific use case, not the database type.</p>
+
+<h2 id="making-your-decision-in-2026">Making Your Decision in 2026</h2>
+
+<p>Here's a simple checklist:</p>
+
+<p><strong>Choose SQL if:</strong></p>
+<ul>
+<li>Your data structure is set in stone.</li>
+<li>You need guaranteed consistency and accuracy.</li>
+<li>You work with business data: finance, HR, inventory.</li>
+<li>Data relationships matter (customers linked to orders).</li>
+</ul>
+
+<p><strong>Choose NoSQL if:</strong></p>
+<ul>
+<li>Your data structure will evolve and change.</li>
+<li>You need lightning-fast scaling.</li>
+<li>You work with user-generated content.</li>
+<li>Your data looks different for different users.</li>
+</ul>
+
+<h2 id="the-hybrid-approach-most-real-apps">The Hybrid Approach (Most Real Apps)</h2>
+
+<p>The smartest choice? Use both. Google does. Facebook does. Amazon does.</p>
+
+<p>Use <strong>SQL</strong> for your backbone data. Use <strong>NoSQL</strong> for everything else.</p>
+
+<p><strong>In simple terms:</strong> SQL handles your business rules. NoSQL handles flexibility and growth.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>You now understand SQL and NoSQL. You know when to use each. The choice isn't about "better." It's about fit.</p>
+
+<p>Start with the obvious choice for your project. Most beginners pick correctly on their first try. If you're building something with fixed rules (banking, inventory), pick SQL. If you're building something that grows (social apps, content platforms), pick NoSQL. Remember: millions of successful apps started with this same decision. You've got this. Choose with confidence, and don't overthink it.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-a-database">What is a Database?</a></li><li><a href="#understanding-sql-databases">Understanding SQL Databases</a></li><li><a href="#understanding-nosql-databases">Understanding NoSQL Databases</a></li><li><a href="#sql-vs-nosql-side-by-side-comparison">SQL vs NoSQL: Side-by-Side Comparison</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#real-world-examples">Real-World Examples</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#making-your-decision-in-2026">Making Your Decision in 2026</a></li><li><a href="#the-hybrid-approach-most-real-apps">The Hybrid Approach (Most Real Apps)</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
