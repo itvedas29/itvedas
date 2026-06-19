@@ -23,7 +23,11 @@
 ═══════════════════════════════════════════════════════════════════
 """
 
-import os, json, time, pathlib, datetime, subprocess, urllib.request
+import os, json, time, pathlib, datetime, subprocess, sys, urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from core.llm import claude as _core_claude, openai_chat as _core_openai_chat, strip_code_fence
+from core.log import log as _core_log
 
 API_KEY      = os.environ.get("ANTHROPIC_API_KEY", "")
 OPENAI_KEY   = os.environ.get("OPENAI_API_KEY", "")
@@ -32,82 +36,35 @@ OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
 ROOT      = pathlib.Path(".")
 BRAIN_DIR = ROOT / "itvedas-brain" / "state"
-LOG_FILE  = BRAIN_DIR / "self_improve.log"
+
+COMPONENT = "self-improve"
 
 # Only these files may ever be rewritten by this job. Keeps the blast
 # radius away from auth, the API server, infra/CI, and secrets handling.
 TARGET_FILES = [
-    "scripts/brain.py",
-    "scripts/news_agent_v2.py",
+    "itvedas-brain/content-writer.py",
+    "itvedas-brain/news-agent.py",
     "dashboard/frontend/src/App.css",
 ]
 
 
 def log(msg):
-    BRAIN_DIR.mkdir(parents=True, exist_ok=True)
-    line = f"[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] {msg}"
-    print(line)
-    with open(LOG_FILE, "a") as f:
-        f.write(line + "\n")
+    _core_log(COMPONENT, msg)
 
 
 def claude(prompt, system=None, max_tokens=2000):
-    payload = {"model": MODEL, "max_tokens": max_tokens,
-               "messages": [{"role": "user", "content": prompt}]}
-    if system:
-        payload["system"] = system
-    req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
-        data=json.dumps(payload).encode(),
-        headers={"x-api-key": API_KEY, "anthropic-version": "2023-06-01",
-                 "content-type": "application/json"})
-    for attempt in range(3):
-        try:
-            res = json.load(urllib.request.urlopen(req, timeout=90))
-            return res["content"][0]["text"].strip()
-        except Exception as e:
-            if attempt == 2:
-                raise
-            log(f"Claude retry {attempt+1}: {e}")
-            time.sleep(8)
+    return _core_claude(prompt, system=system, max_tokens=max_tokens,
+                         api_key=API_KEY, model=MODEL, log_fn=log)
 
 
 def openai_chat(prompt, system=None, max_tokens=6000):
-    messages = []
-    if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
-    payload = {"model": OPENAI_MODEL, "max_tokens": max_tokens, "messages": messages}
-    req = urllib.request.Request(
-        "https://api.openai.com/v1/chat/completions",
-        data=json.dumps(payload).encode(),
-        headers={"Authorization": f"Bearer {OPENAI_KEY}",
-                 "content-type": "application/json"})
-    for attempt in range(3):
-        try:
-            res = json.load(urllib.request.urlopen(req, timeout=90))
-            return res["choices"][0]["message"]["content"].strip()
-        except Exception as e:
-            if attempt == 2:
-                raise
-            log(f"OpenAI retry {attempt+1}: {e}")
-            time.sleep(8)
-
-
-def strip_code_fence(text):
-    text = text.strip()
-    if text.startswith("```"):
-        lines = text.split("\n")
-        lines = lines[1:]
-        if lines and lines[-1].strip().startswith("```"):
-            lines = lines[:-1]
-        text = "\n".join(lines)
-    return text
+    return _core_openai_chat(prompt, system=system, max_tokens=max_tokens,
+                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
 
 
 def decide_target():
     recent_log = ""
-    for name in ("activity.log",):
+    for name in ("brain.log",):
         p = BRAIN_DIR / name
         if p.exists():
             recent_log = p.read_text()[-4000:]

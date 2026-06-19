@@ -89,12 +89,10 @@ def classify(path: str) -> list[str]:
         categories.append("github_workflows")
 
     brain_paths = (
-        "scripts/brain.py",
-        "scripts/news_agent_v2.py",
         "brain/",
         "itvedas-brain/",
     )
-    if lower in brain_paths[:2] or lower.startswith(brain_paths[2:]):
+    if lower.startswith(brain_paths):
         categories.append("brain_logic")
 
     return categories

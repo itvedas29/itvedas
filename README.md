@@ -19,7 +19,7 @@ articles/            Published articles, grouped by category
 news/                Published news commentary articles
 drafts/              Draft articles not yet published
 itvedas-brain/state/  State/activity logs used by the content pipeline
-scripts/             Python automation (see below)
+itvedas-brain/core/   Shared LLM call + logging helpers for all brain scripts
 .github/workflows/    CI and the scheduled content pipeline
 ```
 
@@ -27,18 +27,18 @@ scripts/             Python automation (see below)
 
 Two scripts run unattended on a schedule (`.github/workflows/write-article.yml`):
 
-- **`scripts/brain.py`** — picks the next keyword from the content
+- **`itvedas-brain/content-writer.py`** — picks the next keyword from the content
   calendar, writes a full article with Claude, self-reviews it, builds the
   styled HTML page, publishes it to `articles/`, refreshes the homepage
   "Latest Articles" section and chapter landing pages, and regenerates
   `sitemap.xml`. Runs Mon/Wed/Fri.
-- **`scripts/news_agent_v2.py`** — fetches RSS headlines, generates
+- **`itvedas-brain/news-agent.py`** — fetches RSS headlines, generates
   original commentary with Claude, and publishes to `news/`. Runs three
   times daily.
 
 Both scripts require `ANTHROPIC_API_KEY` and exit immediately if it's
 missing. Optional env vars (`GA4_ID`, `NOTIFY_EMAIL`, `SMTP_FROM`,
-`SMTP_PASS`) are documented in the docstring at the top of `brain.py`.
+`SMTP_PASS`) are documented in the docstring at the top of `content-writer.py`.
 
 Workflow cron schedules are in UTC; comments in
 `.github/workflows/write-article.yml` note the equivalent IST time.
@@ -47,8 +47,8 @@ Workflow cron schedules are in UTC; comments in
 
 ```bash
 export ANTHROPIC_API_KEY=sk-...
-python3 scripts/brain.py          # write a new article
-python3 scripts/news_agent_v2.py  # refresh the news feed
+python3 itvedas-brain/content-writer.py   # write a new article
+python3 itvedas-brain/news-agent.py       # refresh the news feed
 ```
 
 Both scripts read/write relative to the repository root, so run them from
@@ -61,7 +61,7 @@ the repo root.
 
 ## Troubleshooting
 
-- Check `itvedas-brain/state/activity.log` for the pipeline's run history.
+- Check `itvedas-brain/state/brain.log` for the pipeline's run history (consolidated log shared by all brain scripts, prefixed by component name).
 - `itvedas-brain/state/news_state.json` tracks already-published news items; delete an
   entry to force the news agent to regenerate it.
 - If a scheduled run fails, re-run it manually from the Actions tab
