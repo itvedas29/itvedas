@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f1115;
+  color: #e6e6e6;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 360px;
+  height: 100vh;
+}
+
+.sidebar {
+  background: #161821;
+  padding: 1rem;
+  border-right: 1px solid #2a2d3a;
+}
+
+.sidebar-title {
+  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #c7c9d1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #21232f;
+}
+
+.chat-pane {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+}
+
+.empty-state {
+  color: #888;
+}
+
+.message {
+  max-width: 70ch;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: #1c1f2b;
+}
+
+.message-user {
+  align-self: flex-end;
+  background: #2a3a5c;
+}
+
+.message-role {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #8a8fa3;
+  margin-bottom: 0.25rem;
+}
+
+.message p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-row textarea {
+  flex: 1;
+  resize: none;
+  background: #1c1f2b;
+  color: #e6e6e6;
+  border: 1px solid #2a2d3a;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.input-row button {
+  padding: 0 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #4a6cf7;
+  color: white;
+  cursor: pointer;
+}
+
+.input-row button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.coo-dashboard {
+  background: #161821;
+  border-left: 1px solid #2a2d3a;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.coo-dashboard h2 {
+  margin-top: 0;
+}
+
+.coo-dashboard h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #8a8fa3;
+  margin: 1rem 0 0.5rem;
+}
+
+.coo-dashboard pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.85rem;
+  background: #1c1f2b;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.error-banner {
+  color: #ff6b6b;
+}
