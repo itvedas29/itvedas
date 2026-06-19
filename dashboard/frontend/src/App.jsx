@@ -3,6 +3,64 @@ import './App.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
+const TOKEN_KEY = 'itvedas_token'
+
+function authHeader(token) {
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+function LoginPage({ onLogin }) {
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch(`${API_BASE}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
+      if (!res.ok) {
+        setError('Incorrect password')
+        return
+      }
+      const { token } = await res.json()
+      localStorage.setItem(TOKEN_KEY, token)
+      onLogin(token)
+    } catch (err) {
+      setError(`Could not reach API: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        <a className="logo" href="/">IT<span>Vedas</span></a>
+        <p className="login-subtitle">Tango COO Dashboard</p>
+        <form onSubmit={handleSubmit} className="login-form">
+          <input
+            type="password"
+            placeholder="Dashboard password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+          />
+          {error && <p className="login-error">{error}</p>}
+          <button type="submit" disabled={loading || !password}>
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 const NAV_ITEMS = ['New Chat', 'History', 'Analytics', 'Search Console', 'Tasks', 'Settings']
 
 function TopNav() {
@@ -37,7 +95,7 @@ function Sidebar({ onNewChat }) {
   )
 }
 
-function ChatPane() {
+function ChatPane({ token }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -53,7 +111,7 @@ function ChatPane() {
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeader(token) },
         body: JSON.stringify({ message: text }),
       })
       const data = await res.json()
@@ -111,7 +169,7 @@ function ChatPane() {
   )
 }
 
-function CooDashboard() {
+function CooDashboard({ token }) {
   const [context, setContext] = useState('Loading...')
   const [recommendations, setRecommendations] = useState('Loading...')
   const [error, setError] = useState(null)
@@ -122,8 +180,8 @@ function CooDashboard() {
     const load = async () => {
       try {
         const [contextRes, recommendRes] = await Promise.all([
-          fetch(`${API_BASE}/api/context`),
-          fetch(`${API_BASE}/api/recommend`),
+          fetch(`${API_BASE}/api/context`, { headers: authHeader(token) }),
+          fetch(`${API_BASE}/api/recommend`, { headers: authHeader(token) }),
         ])
         const contextData = await contextRes.json()
         const recommendData = await recommendRes.json()
@@ -162,14 +220,19 @@ function CooDashboard() {
 
 function App() {
   const [chatKey, setChatKey] = useState(0)
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY))
+
+  if (!token) {
+    return <LoginPage onLogin={setToken} />
+  }
 
   return (
     <div className="app-shell">
       <TopNav />
       <div className="app-layout">
         <Sidebar onNewChat={() => setChatKey((key) => key + 1)} />
-        <ChatPane key={chatKey} />
-        <CooDashboard />
+        <ChatPane key={chatKey} token={token} />
+        <CooDashboard token={token} />
       </div>
     </div>
   )
