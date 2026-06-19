@@ -5,8 +5,8 @@ autopilot + Phase 2-7 brain scripts) on a self-hosted **Ubuntu 24.04**
 DigitalOcean droplet, as a supplement/fallback to the GitHub Actions
 workflows in `.github/workflows/`.
 
-Every brain script (`scripts/brain.py`, `scripts/news_agent_v2.py`,
-`itvedas-brain/*.py`) is pure Python 3 standard library — no third-party
+Every brain script (`itvedas-brain/*.py`, including `content-writer.py`,
+`news-agent.py`, and `self-improve.py`) is pure Python 3 standard library — no third-party
 packages are required to run them. The virtualenv and `requirements.txt`
 below exist so the deployment is reproducible and isolated from system
 Python, and so future scripts can add dependencies without changing this
@@ -306,10 +306,10 @@ SHELL=/bin/bash
 45 0 * * * /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/github-agent.py
 
 # Article + news autopilot (mirrors .github/workflows/write-article.yml)
-30 3 * * 1,3,5 /opt/itvedas/scripts/run-brain.sh /opt/itvedas/scripts/brain.py
-30 2 * * *     /opt/itvedas/scripts/run-brain.sh /opt/itvedas/scripts/news_agent_v2.py
-30 7 * * *     /opt/itvedas/scripts/run-brain.sh /opt/itvedas/scripts/news_agent_v2.py
-30 12 * * *    /opt/itvedas/scripts/run-brain.sh /opt/itvedas/scripts/news_agent_v2.py
+30 3 * * 1,3,5 /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/content-writer.py
+30 2 * * *     /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/news-agent.py
+30 7 * * *     /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/news-agent.py
+30 12 * * *    /opt/itvedas/scripts/run-brain.sh /opt/itvedas/itvedas-brain/news-agent.py
 
 # PM2 self-heal: if the itvedas-brain process is gone, resurrect it
 */5 * * * * pm2 describe itvedas-brain > /dev/null 2>&1 || (cd /opt/itvedas && pm2 start ecosystem.config.js)

@@ -22,7 +22,7 @@ Credentials
                         natural-language chat degrades to a notice that
                         explains what's missing.
   ANTHROPIC_MODEL       Optional override (defaults to the same Haiku
-                        model used by scripts/brain.py).
+                        model used by itvedas-brain/content-writer.py).
   GITHUB_TOKEN          Required only for the create-issues action,
                         which is gated behind explicit approval.
 
@@ -62,6 +62,15 @@ INPUTS = {
     "daily_plan": BASE_DIR / "state" / "daily-plan.json",
     "execution_plan": BASE_DIR / "state" / "execution-plan.json",
     "github_actions": BASE_DIR / "state" / "github-actions.json",
+}
+
+# Brain B (the GitHub-Actions-only content pipeline) state files. These
+# are produced by itvedas-brain/content-writer.py and itvedas-brain/news-agent.py
+# and were previously invisible to this agent - load_pipeline_status() below
+# surfaces them read-only, same as everything else in load_context().
+PIPELINE_INPUTS = {
+    "content_writer_state": BASE_DIR / "state" / "state.json",
+    "news_state": BASE_DIR / "state" / "news_state.json",
 }
 
 # Whitelisted actions the COO agent is allowed to run. Anything that only
@@ -195,12 +204,47 @@ class Memory:
 # Context: read everything the brain pipeline has already produced
 # ─────────────────────────────────────────────────────────────────
 
+def load_pipeline_status() -> dict[str, Any]:
+    """Read Brain B's (the content/news pipeline's) state files.
+
+    content-writer.py and news-agent.py run on GitHub Actions, independently
+    of this agent's own pipeline (repo-scanner -> ... -> github-agent), and
+    until now nothing here ever looked at what they had published. This is
+    a read-only summary of their last-known state - it does not, and
+    cannot, trigger either script.
+    """
+    content_state = load_json(PIPELINE_INPUTS["content_writer_state"], {})
+    news_state = load_json(PIPELINE_INPUTS["news_state"], [])
+
+    published = content_state.get("published", [])
+    last_article = published[-1] if published else None
+
+    # The full content calendar lives in content-writer.py's CALENDAR list,
+    # not in a state file - this agent only reads state, so it can't see
+    # the calendar without importing that script. We only know how many
+    # keywords have been used so far, not which keyword comes next.
+    used_keywords_count = len(content_state.get("used_keywords", []))
+
+    last_news = news_state[0] if isinstance(news_state, list) and news_state else None
+
+    return {
+        "content_writer_state": content_state,
+        "news_state": news_state,
+        "last_article": last_article,
+        "used_keywords_count": used_keywords_count,
+        "last_news_item": last_news,
+        "total_articles": content_state.get("total", len(published)),
+        "total_news_items": len(news_state) if isinstance(news_state, list) else 0,
+    }
+
+
 def load_context() -> dict[str, Any]:
     repository = load_json(INPUTS["repository"], {})
     repository_knowledge = load_json(INPUTS["repository_knowledge"], {})
     daily_plan = load_json(INPUTS["daily_plan"], {})
     execution_plan = load_json(INPUTS["execution_plan"], {})
     github_actions = load_json(INPUTS["github_actions"], {})
+    pipeline_status = load_pipeline_status()
 
     return {
         "repository": repository,
@@ -208,6 +252,7 @@ def load_context() -> dict[str, Any]:
         "daily_plan": daily_plan,
         "execution_plan": execution_plan,
         "github_actions": github_actions,
+        "pipeline_status": pipeline_status,
     }
 
 
@@ -217,6 +262,7 @@ def format_context_markdown(context: dict[str, Any]) -> str:
     plan = context["daily_plan"]
     execution = context["execution_plan"]
     github_actions = context["github_actions"]
+    pipeline_status = context.get("pipeline_status", {})
 
     lines: list[str] = []
 
@@ -255,6 +301,38 @@ def format_context_markdown(context: dict[str, Any]) -> str:
         f"- {gh_summary.get('total_issues', 0)} issue(s) ready "
         f"across {sum(1 for c in github_actions.get('groups', {}).values() if c)} categories"
     )
+
+    lines.append(
+        "\n## Content pipeline status (itvedas-brain/state/state.json, news_state.json - "
+        "published by content-writer.py / news-agent.py on GitHub Actions, read-only here)"
+    )
+    last_article = pipeline_status.get("last_article")
+    if last_article:
+        lines.append(
+            f"- Last article published: \"{last_article.get('title')}\" "
+            f"({last_article.get('topic')}, {last_article.get('date')}, "
+            f"score {last_article.get('score')}/100) - articles/{last_article.get('file')}"
+        )
+    else:
+        lines.append("- No article publication state found yet (itvedas-brain/state/state.json missing or empty).")
+    lines.append(
+        f"- {pipeline_status.get('total_articles', 0)} article(s) published total, "
+        f"{pipeline_status.get('used_keywords_count', 0)} calendar keyword(s) used so far "
+        "(the next keyword can't be shown here - it's only known inside content-writer.py's CALENDAR list, not a state file)."
+    )
+    last_news = pipeline_status.get("last_news_item")
+    if last_news:
+        lines.append(
+            f"- Last news item published: \"{last_news.get('headline')}\" "
+            f"({last_news.get('topic')}, {last_news.get('date')} {last_news.get('time', '')})".rstrip()
+        )
+    else:
+        lines.append("- No news publication state found yet (itvedas-brain/state/news_state.json missing or empty).")
+    lines.append(f"- {pipeline_status.get('total_news_items', 0)} news item(s) tracked total.")
+
+    queue = execution.get("execution_queue", [])
+    if queue:
+        lines.append(f"- {len(queue)} execution-engine brief(s) currently pending in itvedas-brain/state/execution-plan.json (see Execution plan section above).")
 
     return "\n".join(lines)
 

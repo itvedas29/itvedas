@@ -10,11 +10,21 @@ own page on itvedas.com, with a source citation link.
 
 LLM: OpenAI writes the article body (OPENAI_API_KEY, OPENAI_MODEL).
 """
-import os, json, urllib.request, pathlib, datetime, re, time, hashlib
+import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from core.llm import openai_chat as _core_openai_chat
+from core.log import log as _core_log
 
 OPENAI_KEY   = os.environ.get("OPENAI_API_KEY", "")
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 SITE    = "https://itvedas.com"
+
+COMPONENT = "news-agent"
+
+
+def log(msg):
+    _core_log(COMPONENT, msg)
 
 TOPIC_COLORS = {
     "Security":"#10B981","Cloud":"#3B82F6","DevOps":"#8B5CF6",
@@ -38,17 +48,8 @@ NEWS_FEEDS = [
 ]
 
 def write_with_openai(prompt, max_tokens=2500):
-    body = json.dumps({"model": OPENAI_MODEL, "max_tokens": max_tokens,
-        "messages": [{"role": "user", "content": prompt}]}).encode()
-    req = urllib.request.Request("https://api.openai.com/v1/chat/completions",
-        data=body, headers={"Authorization": f"Bearer {OPENAI_KEY}", "content-type": "application/json"})
-    for i in range(3):
-        try:
-            return json.load(urllib.request.urlopen(req, timeout=90))["choices"][0]["message"]["content"].strip()
-        except Exception as e:
-            if i == 2: raise
-            print(f"OpenAI API retry {i+1}: {e}")
-            time.sleep(6)
+    return _core_openai_chat(prompt, max_tokens=max_tokens,
+                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
 
 def fetch_feed(url):
     items = []

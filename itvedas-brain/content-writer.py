@@ -30,9 +30,13 @@
 ═══════════════════════════════════════════════════════════════════
 """
 
-import os, re, json, time, pathlib, datetime, smtplib, urllib.request
+import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
+from core.log import log as _core_log
 
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
@@ -54,7 +58,8 @@ ROOT       = pathlib.Path(".")
 ARTICLES   = ROOT / "articles"
 BRAIN_DIR  = ROOT / "itvedas-brain" / "state"
 STATE_FILE = BRAIN_DIR / "state.json"
-LOG_FILE   = BRAIN_DIR / "activity.log"
+
+COMPONENT  = "content-writer"
 
 # ─────────────────────────────────────────────────────────────────
 #  CHAPTERS  (slug -> display config)
@@ -157,52 +162,15 @@ CALENDAR = [
 #  HELPERS
 # ─────────────────────────────────────────────────────────────────
 def log(msg):
-    BRAIN_DIR.mkdir(exist_ok=True)
-    line = f"[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] {msg}"
-    print(line)
-    with open(LOG_FILE, "a") as f:
-        f.write(line + "\n")
+    _core_log(COMPONENT, msg)
 
 def claude(prompt, system=None, max_tokens=4000):
-    payload = {"model": MODEL, "max_tokens": max_tokens,
-               "messages": [{"role": "user", "content": prompt}]}
-    if system:
-        payload["system"] = system
-    req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
-        data=json.dumps(payload).encode(),
-        headers={"x-api-key": API_KEY, "anthropic-version": "2023-06-01",
-                 "content-type": "application/json"})
-    for attempt in range(3):
-        try:
-            res = json.load(urllib.request.urlopen(req, timeout=90))
-            return res["content"][0]["text"].strip()
-        except Exception as e:
-            if attempt == 2:
-                raise
-            log(f"API retry {attempt+1}: {e}")
-            time.sleep(8)
+    return _core_claude(prompt, system=system, max_tokens=max_tokens,
+                         api_key=API_KEY, model=MODEL, log_fn=log)
 
 def openai_chat(prompt, system=None, max_tokens=4000):
-    messages = []
-    if system:
-        messages.append({"role": "system", "content": system})
-    messages.append({"role": "user", "content": prompt})
-    payload = {"model": OPENAI_MODEL, "max_tokens": max_tokens, "messages": messages}
-    req = urllib.request.Request(
-        "https://api.openai.com/v1/chat/completions",
-        data=json.dumps(payload).encode(),
-        headers={"Authorization": f"Bearer {OPENAI_KEY}",
-                 "content-type": "application/json"})
-    for attempt in range(3):
-        try:
-            res = json.load(urllib.request.urlopen(req, timeout=90))
-            return res["choices"][0]["message"]["content"].strip()
-        except Exception as e:
-            if attempt == 2:
-                raise
-            log(f"OpenAI API retry {attempt+1}: {e}")
-            time.sleep(8)
+    return _core_openai_chat(prompt, system=system, max_tokens=max_tokens,
+                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
 
 def load_state():
     BRAIN_DIR.mkdir(exist_ok=True)
