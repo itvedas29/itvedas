@@ -664,7 +664,8 @@ def build_sitemap(state):
     today = datetime.date.today().isoformat()
     urls = [f'  <url><loc>{SITE_URL}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>',
             f'  <url><loc>{SITE_URL}/news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-            f'  <url><loc>{SITE_URL}/career-paths.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>']
+            f'  <url><loc>{SITE_URL}/career-paths.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>',
+            f'  <url><loc>{SITE_URL}/faq.html</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>']
     for slug in CHAPTERS:
         urls.append(f'  <url><loc>{SITE_URL}/articles/{slug}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>')
     for a in state.get("published", []):

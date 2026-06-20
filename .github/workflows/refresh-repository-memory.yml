@@ -64,6 +64,9 @@ jobs:
       - name: Build GitHub action plan
         run: python3 itvedas-brain/github-agent.py
 
+      - name: Regenerate FAQ page
+        run: python3 scripts/generate_faq_page.py
+
       - name: Validate generated knowledge
         run: |
           python3 -m json.tool itvedas-brain/memory/repository.json > /dev/null
@@ -85,5 +88,6 @@ jobs:
           git add itvedas-brain/state/daily-plan.json
           git add itvedas-brain/state/execution-plan.json
           git add itvedas-brain/state/github-actions.json
+          git add faq.html
           git diff --staged --quiet || git commit -m "Brain knowledge refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push origin main
