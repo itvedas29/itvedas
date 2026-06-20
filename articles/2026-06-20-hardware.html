@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A beginner's guide to computer hardware — CPUs, RAM, storage, network cards, motherboards and data centre architecture, explained simply.">
+<meta name="keywords" content="computer hardware guide, CPU explained, RAM types, NVMe SSD, RAID levels, NIC, data centre hardware, ITVedas">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Computer Hardware Explained: CPU, RAM, Storage and the Physical Layer | ITVedas">
+<meta property="og:description" content="A beginner's guide to computer hardware — CPUs, RAM, storage, network cards, motherboards and data centre architecture, explained simply.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/2026-06-20-hardware.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://itvedas.com/articles/2026-06-20-hardware.html">
+<title>Computer Hardware Explained: CPU, RAM, Storage and the Physical Layer | ITVedas</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Computer Hardware Explained: CPU, RAM, Storage and the Physical Layer","description":"A beginner's guide to computer hardware — CPUs, RAM, storage, network cards, motherboards and data centre architecture, explained simply.","keywords":"computer hardware guide, CPU explained, RAM types, NVMe SSD","author":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},"datePublished":"2026-06-20","dateModified":"2026-06-20","articleSection":"Hardware","educationalLevel":"Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#06B6D4;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}.breadcrumb a{color:var(--muted);text-decoration:none;}.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}.badge{background:#06B6D41f;border:1px solid #06B6D444;color:#06B6D4;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}article{min-width:0;}
+.tabs{display:flex;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:2rem;padding-bottom:0;}
+.tab-btn{background:none;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;padding:0.75rem 1rem;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:0 0 1rem;display:flex;align-items:center;gap:0.75rem;}article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}article p{margin-bottom:1.35rem;color:var(--sub);}article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}article li{margin-bottom:0.65rem;}article strong{color:var(--text);}article blockquote{background:linear-gradient(135deg,#06B6D410,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#06B6D4;}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0 2rem;font-size:0.92rem;}thead th{text-align:left;padding:0.75rem 0.9rem;background:var(--bg2);color:var(--text);font-family:'Space Grotesk',sans-serif;font-weight:600;border-bottom:2px solid var(--border);}tbody td{padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);color:var(--sub);}tbody tr:hover{background:rgba(255,255,255,0.02);}
+.callout{background:linear-gradient(135deg,#06B6D414,#8B5CF610);border:1px solid #06B6D433;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#06B6D414,#8B5CF614);border:1px solid #06B6D433;border-radius:20px;text-align:center;}.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}.cta p{color:var(--muted);margin-bottom:1.5rem;}.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}.sc ul{list-style:none;}.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}.sc a:hover{color:var(--accent);}.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}.chapter-list a:last-child{border:none;}.chapter-list a:hover{color:var(--accent);}.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}.fl span{color:#FF6B35;}.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}.flinks a{color:var(--muted);text-decoration:none;}.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}table{font-size:0.8rem;}thead th,tbody td{padding:0.5rem 0.5rem;}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav><a href="/" class="logo">IT<span>Vedas</span></a><a href="/articles/hardware/" class="nav-back">← Hardware</a></nav>
+<div class="hero"><div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/hardware/">Hardware</a> › Article</div><div class="badges"><span class="badge">Hardware</span><span class="badge-info">📅 2026-06-20</span><span class="badge-info">⏱ 9 min read</span><span class="badge-info">👶 Beginner friendly</span></div><h1>Computer Hardware Explained: CPU, RAM, Storage and the Physical Layer</h1></div>
+<div class="layout">
+  <article>
+    <p>Every operating system and application ultimately runs on physical hardware. This guide walks through the core components — CPU, memory, storage, networking and the data centre gear behind cloud services — using tabs so you can jump straight to the part you need.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="cpu">CPU</button>
+      <button class="tab-btn" data-tab="ram">RAM &amp; Memory</button>
+      <button class="tab-btn" data-tab="storage">Storage</button>
+      <button class="tab-btn" data-tab="network">Network Hardware</button>
+      <button class="tab-btn" data-tab="datacenter">Data Centre</button>
+      <button class="tab-btn" data-tab="lifecycle">Hardware Lifecycle</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-cpu">
+      <h2>CPU — The Processor</h2>
+      <p>The <strong>Central Processing Unit (CPU)</strong> executes instructions — the "brain" of a computer. Modern CPUs have multiple <strong>cores</strong> (independent processing units on one chip) so they can run several tasks in parallel.</p>
+      <ul>
+        <li><strong>Clock speed (GHz):</strong> how many cycles per second a core can execute — higher isn't always better since architecture and core count matter too.</li>
+        <li><strong>Cores &amp; threads:</strong> more cores mean more parallel tasks; hyper-threading/SMT lets one core handle two threads.</li>
+        <li><strong>Cache (L1/L2/L3):</strong> small, very fast memory built into the CPU that stores frequently used data, avoiding slower trips to RAM.</li>
+        <li><strong>Architecture:</strong> x86-64 (Intel/AMD) dominates servers and desktops; ARM (Apple Silicon, AWS Graviton) dominates mobile and is growing in servers for its power efficiency.</li>
+      </ul>
+      <p>For servers, core count and per-core performance both matter — database and virtualization workloads benefit from more cores, while latency-sensitive workloads benefit from higher per-core clock speed.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-ram">
+      <h2>RAM &amp; Memory</h2>
+      <p><strong>RAM (Random Access Memory)</strong> is fast, temporary storage the CPU uses to hold active programs and data. Unlike storage, RAM is wiped when the power is off.</p>
+      <table>
+        <thead><tr><th>Type</th><th>Typical Use</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>DDR4</td><td>Most desktops/servers (2024 and earlier)</td><td>Still widely deployed in production</td></tr>
+          <tr><td>DDR5</td><td>Current desktops and new servers</td><td>Higher bandwidth, lower power per bit</td></tr>
+          <tr><td>ECC RAM</td><td>Servers, workstations</td><td>Detects and corrects memory errors — critical for uptime</td></tr>
+        </tbody>
+      </table>
+      <p>Running out of RAM forces the OS to use slower disk-based <strong>swap/page files</strong>, which can dramatically slow a system — this is why memory sizing is one of the first things to check when diagnosing a sluggish server.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-storage">
+      <h2>Storage</h2>
+      <table>
+        <thead><tr><th>Type</th><th>Speed</th><th>Best For</th></tr></thead>
+        <tbody>
+          <tr><td>HDD (Hard Disk Drive)</td><td>Slowest (mechanical)</td><td>Cheap bulk/archival storage</td></tr>
+          <tr><td>SATA SSD</td><td>Fast</td><td>General-purpose upgrade over HDD</td></tr>
+          <tr><td>NVMe SSD</td><td>Fastest (PCIe-based)</td><td>Databases, OS drives, latency-sensitive workloads</td></tr>
+        </tbody>
+      </table>
+      <h3>RAID Levels (Redundancy)</h3>
+      <ul>
+        <li><strong>RAID 0:</strong> Striping for speed — no redundancy, any disk failure loses all data.</li>
+        <li><strong>RAID 1:</strong> Mirroring — full redundancy, halves usable capacity.</li>
+        <li><strong>RAID 5:</strong> Striping with parity — tolerates one disk failure, good capacity efficiency.</li>
+        <li><strong>RAID 10:</strong> Mirrored + striped — strong performance and redundancy, common in production databases.</li>
+      </ul>
+      <p>RAID protects against drive failure, but it is <strong>not a backup</strong> — it doesn't protect against accidental deletion, ransomware, or site-level disasters.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-network">
+      <h2>Network Hardware</h2>
+      <ul>
+        <li><strong>NIC (Network Interface Card):</strong> connects a device to a network; servers often run 1/10/25/100 Gbps NICs depending on workload.</li>
+        <li><strong>Switches:</strong> connect multiple devices within a network, forwarding traffic based on MAC addresses.</li>
+        <li><strong>Routers:</strong> connect different networks together and direct traffic between them, typically at Layer 3 (IP).</li>
+        <li><strong>Firewalls/load balancers:</strong> dedicated appliances (or virtual equivalents) that filter traffic and distribute load across servers.</li>
+      </ul>
+    </div>
+
+    <div class="tab-panel" id="tab-datacenter">
+      <h2>Data Centre Architecture</h2>
+      <p>Cloud and enterprise services run on racks of servers housed in data centres, built around a few core concepts:</p>
+      <ul>
+        <li><strong>Rack servers / blade servers:</strong> standardized 19-inch rack-mounted hardware for density and serviceability.</li>
+        <li><strong>Redundant power (PDU + UPS + generators):</strong> ensures uptime through power loss.</li>
+        <li><strong>Cooling:</strong> hot/cold aisle layouts and CRAC/CRAH units keep equipment within safe temperature ranges.</li>
+        <li><strong>Availability Zones/Regions:</strong> cloud providers spread hardware across physically separate facilities so one site's failure doesn't take down a whole service.</li>
+      </ul>
+      <div class="callout"><div class="callout-title">💡 Why this matters for software</div><p>Understanding the physical layer helps explain cloud concepts like availability zones, instance types, and why certain workloads (databases, GPUs) are priced and provisioned differently than others.</p></div>
+    </div>
+
+    <div class="tab-panel" id="tab-lifecycle">
+      <h2>Hardware Lifecycle &amp; Refresh</h2>
+      <p>Unlike software, hardware doesn't have a vendor-published "end-of-life support" date in the same sense — but it does wear out and become obsolete. Typical refresh cycles:</p>
+      <table>
+        <thead><tr><th>Hardware Type</th><th>Typical Refresh Cycle</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Laptops/Desktops</td><td>3–5 years</td><td>Battery wear, performance vs. newer software demands</td></tr>
+          <tr><td>Servers</td><td>5–7 years</td><td>Warranty expiry, efficiency gains, vendor support contracts ending</td></tr>
+          <tr><td>Network switches/routers</td><td>5–10 years</td><td>Firmware/security update support windows</td></tr>
+          <tr><td>SSD/HDD drives</td><td>3–5 years</td><td>Wear leveling limits (SSD) or mechanical failure risk (HDD)</td></tr>
+        </tbody>
+      </table>
+      <p>Most enterprise hardware vendors (Dell, HPE, Cisco) publish their own End-of-Service-Life (EOSL) and End-of-Support dates per model — always check the vendor's official lifecycle page before relying on hardware past its supported window, the same way you would for an operating system.</p>
+    </div>
+
+    <div class="cta"><h3>Keep Learning on ITVedas</h3><p>One of many free guides across 8 IT chapters — all in plain English.</p><a href="/" class="btn">Explore All Chapters →</a></div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#" data-jump="cpu">CPU</a></li><li><a href="#" data-jump="ram">RAM &amp; Memory</a></li><li><a href="#" data-jump="storage">Storage</a></li><li><a href="#" data-jump="network">Network Hardware</a></li><li><a href="#" data-jump="datacenter">Data Centre</a></li><li><a href="#" data-jump="lifecycle">Hardware Lifecycle</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list"><a href="/articles/networking/">🌐 Networking</a><a href="/articles/cloud/">☁️ Cloud</a><a href="/articles/security/">🔐 Security</a><a href="/articles/devops/">⚙️ DevOps</a><a href="/articles/databases/">🗄️ Databases</a><a href="/articles/linux/">🐧 Linux</a><a href="/articles/hardware/">🖥️ Hardware</a><a href="/articles/compliance/">📋 Compliance</a></div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div><p>New IT guides every Monday, Wednesday and Friday — plain English.</p><a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a></div>
+  </aside>
+</div>
+<footer><div class="fl">IT<span>Vedas</span></div><p>The complete IT knowledge hub — explained simply, for everyone.</p><div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div><p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p></footer>
+<script>
+const pb=document.getElementById('pb');addEventListener('scroll',()=>{const d=document.documentElement;const max=d.scrollHeight-d.clientHeight;pb.style.width=(max?d.scrollTop/max*100:0)+'%';},{passive:true});
+function showTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();showTab(a.dataset.jump);window.scrollTo({top:0,behavior:'smooth'});}));
+</script>
+</body>
+</html>
