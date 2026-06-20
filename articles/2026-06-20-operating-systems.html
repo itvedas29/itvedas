@@ -33,6 +33,7 @@ nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:c
 .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
 .layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}article{min-width:0;}
 .toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}.toc ul{list-style:none;}.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+.tabs{display:flex;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:2rem;}.tab-btn{background:none;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:600;padding:0.75rem 0.9rem;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}.tab-btn:hover{color:var(--text);}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}.tab-panel{display:none;}.tab-panel.active{display:block;}
 article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}article p{margin-bottom:1.35rem;color:var(--sub);}article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}article li{margin-bottom:0.65rem;}article strong{color:var(--text);}article blockquote{background:linear-gradient(135deg,#EF444410,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#EF4444;}
 table{width:100%;border-collapse:collapse;margin:1.5rem 0 2rem;font-size:0.92rem;}thead th{text-align:left;padding:0.75rem 0.9rem;background:var(--bg2);color:var(--text);font-family:'Space Grotesk',sans-serif;font-weight:600;border-bottom:2px solid var(--border);}tbody td{padding:0.75rem 0.9rem;border-bottom:1px solid var(--border);color:var(--sub);}tbody tr:hover{background:rgba(255,255,255,0.02);}.eol-past{color:#F87171;font-weight:600;}.eol-future{color:#34D399;font-weight:600;}
 .callout{background:linear-gradient(135deg,#EF444414,#8B5CF610);border:1px solid #EF444433;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
@@ -48,13 +49,22 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 <div class="hero"><div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/linux/">Linux & OS</a> › Article</div><div class="badges"><span class="badge">Linux & OS</span><span class="badge-info">📅 2026-06-20</span><span class="badge-info">⏱ 10 min read</span><span class="badge-info">👶 Beginner friendly</span></div><h1>Operating Systems Explained: Types, Versions and End-of-Life Dates</h1></div>
 <div class="layout">
   <article>
-    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-an-os">What is an Operating System?</a></li><li><a href="#types-of-os">Types of Operating Systems</a></li><li><a href="#windows-versions">Windows: Versions and EOL Dates</a></li><li><a href="#linux-distros">Linux Distributions: Versions and EOL Dates</a></li><li><a href="#macos-versions">macOS: Versions and Support</a></li><li><a href="#mobile-os">Mobile Operating Systems</a></li><li><a href="#why-eol-matters">Why End-of-Life Dates Matter</a></li><li><a href="#how-to-check">How to Check Support Dates Yourself</a></li><li><a href="#faq">Frequently Asked Questions</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
-
     <p>Every computer, server, phone and smart device runs on an <strong>operating system (OS)</strong> — the software layer that manages hardware and lets every other program run. Choosing the right OS, and knowing when it stops receiving security updates, is one of the most overlooked basics in IT.</p>
-    <p>This guide explains what an operating system actually does, the major families in use today, and — most importantly — their official <strong>start (release) dates and end-of-life (EOL) support dates</strong>, so you know exactly when a system needs to be upgraded.</p>
+    <p>This guide explains what an operating system actually does, the major families in use today, and — most importantly — their official <strong>start (release) dates and end-of-life (EOL) support dates</strong>, so you know exactly when a system needs to be upgraded. Use the tabs below to jump straight to what you need.</p>
 
-    <div class="callout"><div class="callout-title">⚠️ Important note on dates</div><p>EOL dates are set and occasionally extended by vendors. The dates below reflect officially published lifecycle data as of this article's publish date. Always confirm the current date on the vendor's official lifecycle page before making upgrade decisions — see the "How to Check" section below.</p></div>
+    <div class="callout"><div class="callout-title">⚠️ Important note on dates</div><p>EOL dates are set and occasionally extended by vendors. The dates below reflect officially published lifecycle data as of this article's publish date. Always confirm the current date on the vendor's official lifecycle page before making upgrade decisions — see the "How to Check" tab below.</p></div>
 
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="windows">Windows</button>
+      <button class="tab-btn" data-tab="linux">Linux</button>
+      <button class="tab-btn" data-tab="macos">macOS</button>
+      <button class="tab-btn" data-tab="mobile">Mobile OS</button>
+      <button class="tab-btn" data-tab="eol">Why EOL Matters</button>
+      <button class="tab-btn" data-tab="faq">FAQ</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-overview">
     <h2 id="what-is-an-os">What is an Operating System?</h2>
     <blockquote><p>An <strong>operating system</strong> is the software that manages a computer's hardware (CPU, memory, storage, network) and provides the platform on which applications run.</p></blockquote>
     <p>Without an OS, every application would need to talk directly to hardware — which is why operating systems exist: they standardize that interaction through drivers, schedulers, file systems and security models so app developers don't have to reinvent the wheel.</p>
@@ -68,7 +78,9 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
     <p>Built for phones and tablets: Android and iOS, both with their own update and support cycles.</p>
     <h3>Embedded / Real-time OS</h3>
     <p>Run on dedicated hardware like routers, IoT devices and industrial controllers: examples include embedded Linux, FreeRTOS, and VxWorks.</p>
+    </div>
 
+    <div class="tab-panel" id="tab-windows">
     <h2 id="windows-versions">Windows: Versions and EOL Dates</h2>
     <table>
       <thead><tr><th>Version</th><th>Release Date</th><th>End of Support (EOL)</th></tr></thead>
@@ -81,7 +93,9 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
       </tbody>
     </table>
     <p>Windows 10's end of support means no more free security patches — a major reason organizations still running it should plan a Windows 11 migration or pay for Extended Security Updates (ESU).</p>
+    </div>
 
+    <div class="tab-panel" id="tab-linux">
     <h2 id="linux-distros">Linux Distributions: Versions and EOL Dates</h2>
     <table>
       <thead><tr><th>Distribution</th><th>Release Date</th><th>Standard Support Ends</th><th>Extended (LTS/ESM) Ends</th></tr></thead>
@@ -98,7 +112,9 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
       </tbody>
     </table>
     <p>Note that <strong>CentOS Linux</strong> as a downstream RHEL rebuild was discontinued in favor of CentOS Stream, which is a rolling-release upstream development branch rather than a stable production OS — this is why many production servers migrated to Rocky Linux or AlmaLinux.</p>
+    </div>
 
+    <div class="tab-panel" id="tab-macos">
     <h2 id="macos-versions">macOS: Versions and Support</h2>
     <table>
       <thead><tr><th>Version</th><th>Release Date</th><th>Security Update Support</th></tr></thead>
@@ -109,11 +125,15 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
       </tbody>
     </table>
     <p>Apple typically provides security updates for the current macOS release plus the two previous versions — roughly a 3-year window per version, though Apple does not publish exact end dates the way Microsoft and Linux vendors do.</p>
+    </div>
 
+    <div class="tab-panel" id="tab-mobile">
     <h2 id="mobile-os">Mobile Operating Systems</h2>
     <p><strong>Android:</strong> Google guarantees major OS and security updates for around 3–7 years depending on the device manufacturer (Pixel and Samsung flagship devices now offer up to 7 years). Support varies significantly by phone brand and model.</p>
     <p><strong>iOS:</strong> Apple typically supports a device with the latest iOS version for around 5–6 years from release, with most recent iPhones still receiving the newest iOS update for several years after launch.</p>
+    </div>
 
+    <div class="tab-panel" id="tab-eol">
     <h2 id="why-eol-matters">Why End-of-Life Dates Matter</h2>
     <p>Once an OS reaches end-of-life, the vendor stops releasing <strong>security patches</strong>. Any new vulnerability discovered after that point remains permanently unfixed unless you pay for extended support. This makes unsupported systems a top target for attackers, and a common compliance failure in audits (PCI-DSS, ISO 27001, SOC 2 all flag unsupported OS versions).</p>
 
@@ -126,7 +146,9 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
       <li><strong>macOS:</strong> Apple's security updates page lists which versions still receive patches</li>
     </ul>
     <p>Bookmark these pages for any OS your organization runs in production — checking them once a year takes minutes and prevents running unsupported software unknowingly.</p>
+    </div>
 
+    <div class="tab-panel" id="tab-faq">
     <h2 id="faq">Frequently Asked Questions</h2>
     <h3>Can I keep using an OS after its end-of-life date?</h3>
     <p>Technically yes — the OS keeps running — but it stops receiving security patches, making it increasingly risky over time. Extended Security Update (ESU) programs exist for some products (like Windows 10) at a cost.</p>
@@ -138,16 +160,25 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
     <h2 id="conclusion">Conclusion</h2>
     <p>Understanding operating system lifecycles isn't just trivia — it directly affects security, compliance and budget planning. Whether you manage one laptop or a fleet of servers, knowing each OS's release date and end-of-life date helps you plan upgrades before they become emergencies.</p>
     <p>Make it a habit: audit your OS versions against official vendor lifecycle pages at least once a year.</p>
+    </div>
 
     <div class="cta"><h3>Keep Learning on ITVedas</h3><p>One of many free guides across 8 IT chapters — all in plain English.</p><a href="/" class="btn">Explore All Chapters →</a></div>
   </article>
   <aside>
-    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-an-os">What is an OS?</a></li><li><a href="#types-of-os">Types of OS</a></li><li><a href="#windows-versions">Windows EOL</a></li><li><a href="#linux-distros">Linux EOL</a></li><li><a href="#macos-versions">macOS</a></li><li><a href="#mobile-os">Mobile OS</a></li><li><a href="#why-eol-matters">Why It Matters</a></li><li><a href="#how-to-check">How to Check</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#" data-jump="overview">Overview</a></li><li><a href="#" data-jump="windows">Windows EOL</a></li><li><a href="#" data-jump="linux">Linux EOL</a></li><li><a href="#" data-jump="macos">macOS</a></li><li><a href="#" data-jump="mobile">Mobile OS</a></li><li><a href="#" data-jump="eol">Why It Matters</a></li><li><a href="#" data-jump="faq">FAQ</a></li></ul></div>
     <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list"><a href="/articles/networking/">🌐 Networking</a><a href="/articles/cloud/">☁️ Cloud</a><a href="/articles/security/">🔐 Security</a><a href="/articles/devops/">⚙️ DevOps</a><a href="/articles/databases/">🗄️ Databases</a><a href="/articles/linux/">🐧 Linux</a><a href="/articles/hardware/">🖥️ Hardware</a><a href="/articles/compliance/">📋 Compliance</a></div></div>
     <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div><p>New IT guides every Monday, Wednesday and Friday — plain English.</p><a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a></div>
   </aside>
 </div>
 <footer><div class="fl">IT<span>Vedas</span></div><p>The complete IT knowledge hub — explained simply, for everyone.</p><div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div><p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p></footer>
-<script>const pb=document.getElementById('pb');addEventListener('scroll',()=>{const d=document.documentElement;const max=d.scrollHeight-d.clientHeight;pb.style.width=(max?d.scrollTop/max*100:0)+'%';},{passive:true});</script>
+<script>
+const pb=document.getElementById('pb');addEventListener('scroll',()=>{const d=document.documentElement;const max=d.scrollHeight-d.clientHeight;pb.style.width=(max?d.scrollTop/max*100:0)+'%';},{passive:true});
+function showTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();showTab(a.dataset.jump);window.scrollTo({top:0,behavior:'smooth'});}));
+</script>
 </body>
 </html>
