@@ -1,0 +1,442 @@
+[package]
+name = "jcode"
+version = "0.30.2"
+description = "Possibly the greatest coding agent ever built — blazing-fast TUI, multi-model, swarm coordination, 30+ tools"
+edition = "2024"
+autobins = false
+
+[workspace]
+members = [
+    ".",
+    "crates/jcode-agent-runtime",
+    "crates/jcode-app-core",
+    "crates/jcode-base",
+    "crates/jcode-tui",
+    "crates/jcode-build-meta",
+    "crates/jcode-ambient-types",
+    "crates/jcode-auth-types",
+    "crates/jcode-embedding",
+    "crates/jcode-gateway-types",
+    "crates/jcode-import-core",
+    "crates/jcode-pdf",
+    "crates/jcode-logging",
+    "crates/jcode-background-types",
+    "crates/jcode-batch-types",
+    "crates/jcode-build-support",
+    "crates/jcode-compaction-core",
+    "crates/jcode-config-types",
+    "crates/jcode-core",
+    "crates/jcode-memory-types",
+    "crates/jcode-message-types",
+    "crates/jcode-overnight-core",
+    "crates/jcode-plan",
+    "crates/jcode-productivity-core",
+    "crates/jcode-swarm-core",
+    "crates/jcode-protocol",
+    "crates/jcode-selfdev-types",
+    "crates/jcode-session-types",
+    "crates/jcode-setup-hints",
+    "crates/jcode-storage",
+    "crates/jcode-side-panel-types",
+    "crates/jcode-azure-auth",
+    "crates/jcode-notify-email",
+    "crates/jcode-provider-metadata",
+    "crates/jcode-provider-env",
+    "crates/jcode-provider-core",
+    "crates/jcode-provider-bedrock",
+    "crates/jcode-provider-anthropic",
+    "crates/jcode-provider-antigravity",
+    "crates/jcode-provider-copilot",
+    "crates/jcode-provider-openrouter",
+    "crates/jcode-provider-openai",
+    "crates/jcode-provider-gemini",
+    "crates/jcode-tui-markdown",
+    "crates/jcode-tui-messages",
+    "crates/jcode-usage-types",
+    "crates/jcode-tui-core",
+    "crates/jcode-tui-mermaid",
+    "crates/jcode-task-types",
+    "crates/jcode-tool-core",
+    "crates/jcode-tool-types",
+    "crates/jcode-tui-account-picker",
+    "crates/jcode-tui-anim",
+    "crates/jcode-tui-render",
+    "crates/jcode-tui-visual-debug",
+    "crates/jcode-tui-session-picker",
+    "crates/jcode-tui-style",
+    "crates/jcode-tui-permissions",
+    "crates/jcode-tui-tool-display",
+    "crates/jcode-tui-usage-overlay",
+    "crates/jcode-update-core",
+    "crates/jcode-terminal-launch",
+    "crates/jcode-terminal-image",
+    "crates/jcode-telemetry-core",
+    "crates/jcode-tui-workspace",
+    "crates/jcode-mobile-core",
+    "crates/jcode-mobile-sim",
+    "crates/jcode-desktop",
+    "crates/jcode-render-core",
+]
+
+[lib]
+name = "jcode"
+path = "src/lib.rs"
+
+[[bin]]
+name = "jcode"
+path = "src/main.rs"
+
+[[bin]]
+name = "test_api"
+path = "src/bin/test_api.rs"
+
+[[bin]]
+name = "jcode-harness"
+path = "src/bin/harness.rs"
+
+[[bin]]
+name = "session_memory_bench"
+path = "src/bin/session_memory_bench.rs"
+required-features = ["dev-bins"]
+
+[[bin]]
+name = "memory_recall_bench"
+path = "src/bin/memory_recall_bench.rs"
+required-features = ["dev-bins"]
+
+[[bin]]
+name = "mermaid_side_panel_probe"
+path = "src/bin/mermaid_side_panel_probe.rs"
+required-features = ["dev-bins"]
+
+[[bin]]
+name = "tui_bench"
+path = "src/bin/tui_bench.rs"
+required-features = ["dev-bins"]
+
+[dependencies]
+# Memory allocator (reduces fragmentation for long-running server)
+tikv-jemallocator = { version = "0.6", features = ["unprefixed_malloc_on_supported_platforms"], optional = true }
+tikv-jemalloc-ctl = { version = "0.6", optional = true }
+tikv-jemalloc-sys = { version = "0.6", optional = true }
+
+# Async runtime
+tokio = { version = "1", features = ["fs", "io-std", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
+futures = "0.3"
+async-trait = "0.1"
+
+# HTTP client
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "blocking", "charset", "http2", "system-proxy", "rustls-tls", "rustls-tls-native-roots"] }
+rustls = { version = "0.23", default-features = false, features = ["aws_lc_rs"] }
+tokio-tungstenite = { version = "0.24", default-features = false, features = ["connect", "rustls-tls-native-roots"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["raw_value"] }
+serde_yaml = "0.9"
+toml = "0.8"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# File operations
+glob = "0.3"
+ignore = "0.4"           # gitignore-aware file walking
+walkdir = "2"
+similar = "2"            # diffing for edits
+
+# Utilities
+dirs = "5"               # home directory
+anyhow = "1"
+thiserror = "1"
+libc = "0.2"             # Unix system calls (flock)
+chrono = { version = "0.4", features = ["serde"] }
+regex = "1"
+urlencoding = "2"        # URL encoding for web search
+uuid = { version = "1", features = ["v4", "v5"] }
+proctitle = "0.1"
+
+# Embeddings (local inference) - behind feature flag (163 crates, slow to compile)
+jcode-embedding = { path = "crates/jcode-embedding", optional = true }
+jcode-gateway-types = { path = "crates/jcode-gateway-types" }
+jcode-import-core = { path = "crates/jcode-import-core" }
+jcode-logging = { path = "crates/jcode-logging" }
+
+# OAuth
+base64 = "0.22"
+sha2 = "0.10"
+rand = "0.9.3"
+hex = "0.4"
+url = "2"
+open = "5"               # Open URLs in browser
+jcode-auth-types = { path = "crates/jcode-auth-types" }
+jcode-azure-auth = { path = "crates/jcode-azure-auth" }
+jcode-agent-runtime = { path = "crates/jcode-agent-runtime" }
+jcode-ambient-types = { path = "crates/jcode-ambient-types" }
+jcode-notify-email = { path = "crates/jcode-notify-email" }
+jcode-provider-metadata = { path = "crates/jcode-provider-metadata" }
+jcode-provider-core = { path = "crates/jcode-provider-core" }
+jcode-provider-openai = { path = "crates/jcode-provider-openai" }
+jcode-provider-openrouter = { path = "crates/jcode-provider-openrouter" }
+jcode-provider-gemini = { path = "crates/jcode-provider-gemini" }
+jcode-tui-markdown = { path = "crates/jcode-tui-markdown" }
+jcode-tui-messages = { path = "crates/jcode-tui-messages" }
+jcode-tui-core = { path = "crates/jcode-tui-core" }
+jcode-tui-mermaid = { path = "crates/jcode-tui-mermaid" }
+jcode-tui-account-picker = { path = "crates/jcode-tui-account-picker" }
+jcode-tui-render = { path = "crates/jcode-tui-render" }
+jcode-tui-session-picker = { path = "crates/jcode-tui-session-picker", features = ["serde"] }
+jcode-tui-style = { path = "crates/jcode-tui-style" }
+jcode-tui-tool-display = { path = "crates/jcode-tui-tool-display" }
+jcode-tui-usage-overlay = { path = "crates/jcode-tui-usage-overlay" }
+jcode-update-core = { path = "crates/jcode-update-core" }
+jcode-terminal-launch = { path = "crates/jcode-terminal-launch" }
+jcode-terminal-image = { path = "crates/jcode-terminal-image" }
+jcode-tui-workspace = { path = "crates/jcode-tui-workspace" }
+jcode-usage-types = { path = "crates/jcode-usage-types" }
+
+# Streaming
+tokio-stream = "0.1"
+bytes = "1"
+
+# TUI
+ratatui = "0.30"
+crossterm = { version = "0.29", features = ["event-stream"] }
+arboard = "3"              # Clipboard support
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }  # Only PNG/JPEG (skip avif/rav1e, exr, gif, tiff, etc)
+
+# Markdown & syntax highlighting
+unicode-width = "0.2"   # Unicode character display width
+
+# PDF parsing (behind feature flag)
+jcode-pdf = { path = "crates/jcode-pdf", optional = true }
+jcode-background-types = { path = "crates/jcode-background-types" }
+jcode-batch-types = { path = "crates/jcode-batch-types" }
+jcode-build-support = { path = "crates/jcode-build-support" }
+jcode-build-meta = { path = "crates/jcode-build-meta" }
+# Presentation layer: the terminal UI (`tui`) + offline replay (`video_export`),
+# compiled as a separate rustc unit. It re-exports the application core
+# (`jcode-app-core`, which re-exports `jcode-base`), so the root crate (cli +
+# bin) re-exports everything via `pub use jcode_tui::*`. default-features=false
+# so the root feature set fully controls the downstream features (see
+# [features]).
+jcode-tui = { path = "crates/jcode-tui", default-features = false }
+jcode-compaction-core = { path = "crates/jcode-compaction-core" }
+jcode-config-types = { path = "crates/jcode-config-types" }
+jcode-core = { path = "crates/jcode-core" }
+jcode-memory-types = { path = "crates/jcode-memory-types" }
+jcode-message-types = { path = "crates/jcode-message-types" }
+jcode-overnight-core = { path = "crates/jcode-overnight-core" }
+jcode-plan = { path = "crates/jcode-plan" }
+jcode-swarm-core = { path = "crates/jcode-swarm-core" }
+jcode-protocol = { path = "crates/jcode-protocol" }
+jcode-selfdev-types = { path = "crates/jcode-selfdev-types" }
+jcode-session-types = { path = "crates/jcode-session-types" }
+jcode-setup-hints = { path = "crates/jcode-setup-hints" }
+jcode-storage = { path = "crates/jcode-storage" }
+jcode-task-types = { path = "crates/jcode-task-types" }
+jcode-tool-core = { path = "crates/jcode-tool-core" }
+jcode-tool-types = { path = "crates/jcode-tool-types" }
+jcode-side-panel-types = { path = "crates/jcode-side-panel-types" }
+
+# Archive extraction (for auto-update)
+flate2 = "1"
+tar = "0.4"
+tempfile = "3"
+agentgrep = { git = "https://github.com/1jehuang/agentgrep.git", tag = "v0.1.2" }
+qrcode = { version = "0.14.1", default-features = false }
+aws-config = "1.8.16"
+aws-credential-types = "1.2.14"
+aws-sdk-bedrockruntime = "1.130.0"
+aws-types = "1.3.15"
+aws-smithy-types = "1.4.7"
+aws-sdk-bedrock = "1.141.0"
+aws-sdk-sts = "1.103.0"
+
+[features]
+# Include local ONNX/tokenizer embeddings in default builds so memory recall,
+# semantic retrieval, and embedding-backed features work out of the box.
+# Use `JCODE_DEV_FEATURE_PROFILE=minimal` for compile-speed probes that need
+# to skip optional default feature stacks.
+default = ["pdf", "embeddings"]
+dev-bins = ["jcode-tui/dev-bins"]
+jemalloc = [
+    "dep:tikv-jemallocator",
+    "dep:tikv-jemalloc-ctl",
+    "dep:tikv-jemalloc-sys",
+    "tikv-jemallocator/stats",
+    "tikv-jemalloc-ctl/stats",
+    "jcode-tui/jemalloc",
+]
+jemalloc-prof = [
+    "jemalloc",
+    "tikv-jemallocator/profiling",
+    "tikv-jemalloc-ctl/profiling",
+    "jcode-tui/jemalloc-prof",
+]
+embeddings = ["dep:jcode-embedding", "jcode-tui/embeddings"]
+mmdr-size-api = ["jcode-tui/mmdr-size-api"]
+pdf = ["dep:jcode-pdf", "jcode-tui/pdf"]
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_System_Threading"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+global-hotkey = "0.7"
+
+[profile.release]
+opt-level = 1
+debug = 0
+codegen-units = 256
+incremental = true
+
+[profile.selfdev]
+inherits = "release"
+opt-level = 0
+
+# Full LTO release for stable/distribution builds
+[profile.release-lto]
+inherits = "release"
+lto = "thin"
+codegen-units = 16
+incremental = false
+
+[profile.dev]
+debug = 0
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 0
+
+# Keep the idle-animation math kernels fully optimized even in debug-style
+# builds. This crate is pure, dependency-free numeric code (the trig-heavy 3D
+# samplers that otherwise dominate idle CPU). Pinning it to opt-level = 3 here
+# means the optimized object is compiled once and reused across iterative
+# dev/selfdev rebuilds, since it only recompiles when the animation code itself
+# changes. The "*" glob above sets the default for dependencies; these explicit
+# package entries take precedence for this one crate in each profile.
+[profile.dev.package."jcode-tui-anim"]
+opt-level = 3
+
+[profile.selfdev.package."jcode-tui-anim"]
+opt-level = 3
+
+[profile.test.package."jcode-tui-anim"]
+opt-level = 3
+
+# Keep the text-shaping stack optimized even in dev/selfdev/test builds.
+#
+# cosmic-text + rustybuzz + ttf-parser + swash + yazi do all of the desktop
+# transcript glyph shaping. At opt-level = 0 they are 15-40x slower, which made
+# scrolling real (emoji/markdown-heavy) transcripts janky in dev/selfdev builds
+# even though the production release build was smooth. These are stable
+# third-party crates that almost never recompile, so pinning them to opt-level =
+# 3 costs a one-time compile and is then reused across every iterative jcode
+# rebuild (same rationale as jcode-tui-anim above). It does NOT slow down
+# recompiles of jcode's own crates.
+[profile.dev.package.cosmic-text]
+opt-level = 3
+[profile.selfdev.package.cosmic-text]
+opt-level = 3
+[profile.test.package.cosmic-text]
+opt-level = 3
+
+[profile.dev.package.rustybuzz]
+opt-level = 3
+[profile.selfdev.package.rustybuzz]
+opt-level = 3
+[profile.test.package.rustybuzz]
+opt-level = 3
+
+[profile.dev.package.ttf-parser]
+opt-level = 3
+[profile.selfdev.package.ttf-parser]
+opt-level = 3
+[profile.test.package.ttf-parser]
+opt-level = 3
+
+[profile.dev.package.swash]
+opt-level = 3
+[profile.selfdev.package.swash]
+opt-level = 3
+[profile.test.package.swash]
+opt-level = 3
+
+[profile.dev.package.yazi]
+opt-level = 3
+[profile.selfdev.package.yazi]
+opt-level = 3
+[profile.test.package.yazi]
+opt-level = 3
+
+[profile.dev.package.fontdb]
+opt-level = 3
+[profile.selfdev.package.fontdb]
+opt-level = 3
+[profile.test.package.fontdb]
+opt-level = 3
+
+# Keep the raster image pipeline optimized in dev/selfdev/test builds.
+#
+# Inline transcript images decode (png/zune-jpeg/fdeflate/miniz_oxide), resize
+# (image), and base64-encode (kitty transmit) at draw time; at opt-level 0 a
+# single screenshot costs 100-200ms per decode/resize, which reads as input
+# lag. These are pure pixel crates with no jcode logic, so optimizing them
+# does not hurt rebuild times for our own code.
+[profile.dev.package.image]
+opt-level = 3
+[profile.selfdev.package.image]
+opt-level = 3
+[profile.test.package.image]
+opt-level = 3
+
+[profile.dev.package.png]
+opt-level = 3
+[profile.selfdev.package.png]
+opt-level = 3
+[profile.test.package.png]
+opt-level = 3
+
+[profile.dev.package.zune-jpeg]
+opt-level = 3
+[profile.selfdev.package.zune-jpeg]
+opt-level = 3
+[profile.test.package.zune-jpeg]
+opt-level = 3
+
+[profile.dev.package.fdeflate]
+opt-level = 3
+[profile.selfdev.package.fdeflate]
+opt-level = 3
+[profile.test.package.fdeflate]
+opt-level = 3
+
+[profile.dev.package.miniz_oxide]
+opt-level = 3
+[profile.selfdev.package.miniz_oxide]
+opt-level = 3
+[profile.test.package.miniz_oxide]
+opt-level = 3
+
+[profile.dev.package.base64]
+opt-level = 3
+[profile.selfdev.package.base64]
+opt-level = 3
+[profile.test.package.base64]
+opt-level = 3
+
+[profile.test]
+debug = 0
+incremental = true
+codegen-units = 256
+
+[dev-dependencies]
+async-stream = "0.3"
+# Enables the downstream test-support helpers (storage::lock_test_env,
+# auth::test_sandbox, bus::reset_models_updated_publish_state_for_tests, the
+# ExternalAuthReviewCandidate read accessors) for the root crate's own cli test
+# target. Feature unification applies this only to test/bench/example builds,
+# never to a normal `cargo build`/release binary.
+jcode-tui = { path = "crates/jcode-tui", features = ["test-support"] }
+
+[build-dependencies]
