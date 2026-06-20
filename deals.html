@@ -117,6 +117,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 .g-discount{font-family:var(--fm);font-size:0.7rem;font-weight:600;color:var(--save);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);padding:0.15rem 0.45rem;border-radius:5px;white-space:nowrap;}
 .g-name{font-family:var(--fd);font-size:0.95rem;font-weight:600;line-height:1.3;padding-left:0.25rem;}
+.g-tags{display:flex;flex-wrap:wrap;gap:0.35rem;padding-left:0.25rem;margin-top:0.5rem;}
+.g-tag{font-size:0.68rem;font-weight:600;letter-spacing:0.04em;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.25);color:var(--db);border-radius:4px;padding:0.18rem 0.55rem;}
 .g-price-row{display:flex;align-items:baseline;gap:0.5rem;padding-left:0.25rem;margin-top:auto;}
 .g-price{font-family:var(--fm);font-size:1.55rem;font-weight:600;color:var(--db);}
 .g-was{font-family:var(--fm);font-size:0.82rem;color:var(--muted);text-decoration:line-through;}
@@ -284,7 +286,7 @@ footer a:hover{color:var(--text);}
 <div class="disclaimer">
   <div class="disclaimer-inner">
     <span style="flex-shrink:0;margin-top:0.1rem;">ℹ️</span>
-    <span>These deals are sourced from <strong style="color:var(--sub)">DigiWorld4U</strong>, an independent software reseller. ITVedas does not sell these products directly — clicking "Get Deal" takes you to digiworld4u.in. Prices may change; verify before purchase.</span>
+    <span>These deals are sourced from <strong style="color:var(--sub)">DigiWorld4U</strong>, an independent software reseller. ITVedas does not sell these products directly — clicking "Buy Now" takes you directly to checkout on digiworld4u.in. Prices may change; verify before purchase.</span>
   </div>
 </div>
 
@@ -294,105 +296,119 @@ footer a:hover{color:var(--text);}
 
 <script>
 /* ── PRODUCT DATA ──────────────────────────────────────────── */
-// [id, name, cat, family, price, was, url]
+// [id, name, cat, family, price, was, productUrl, addToCartId|null]
+// addToCartId: simple products go directly to checkout; null = variable product, links to product page
+const BASE = 'https://digiworld4u.in';
 const RAW = [
-  // Windows OS
-  ['w11h','Windows 11 Home Lifetime 32/64Bit','os','win11',294,499,'https://digiworld4u.in/product/windows-11-home-retail-license-key-32-64bit/'],
-  ['w11p','Windows 11 Pro 32/64 Bit','os','win11',299,399,'https://digiworld4u.in/product/windows-11-professional-32-64-bit-activation-key/'],
-  ['w11po','Windows 11 Pro OEM Key','os','win11',399,499,'https://digiworld4u.in/product/windows-11-pro-license-oem-key/'],
-  ['w11e','Windows 11 Enterprise Lifetime','os','win11',479,599,'https://digiworld4u.in/product/windows-11-enterprise-lifetime-license-key/'],
-  ['w11coa','Windows 11 Pro COA License Sticker','os','win11',649,950,'https://digiworld4u.in/product/windows-11-pro-key-coa-license-sticker/'],
-  ['w11iot','Windows 11 IoT Enterprise LTSC 2024','os','win11',999,1145,'https://digiworld4u.in/product/windows-11-iot-enterprise-ltsc-2024-latest-32-64-bit-lifetime-license/'],
-  ['w11dvd','Windows 11 Pro DVD-ROM Full Box','os','win11',990,1499,'https://digiworld4u.in/product/windows-11-pro-dvd-rom-full-box-pack-oem-pack-license/'],
-  ['w11ws','Windows 11 Pro for Workstations','os','win11',1899,0,'https://digiworld4u.in/product/windows-11-pro-for-workstations-license-key-lifetime-validity/'],
-
-  ['w10h','Windows 10 Home 32/64 Bit Retail','os','win10',294,399,'https://digiworld4u.in/product/windows-10-home-32-64-bit-retail-license-key/'],
-  ['w10p','Windows 10 Pro Retail Key','os','win10',298,399,'https://digiworld4u.in/product/windows-10-pro-retail-key-online-activation/'],
-  ['w10po','Windows 10 Pro OEM Key Lifetime','os','win10',399,0,'https://digiworld4u.in/product/windows-10-pro-oem-key-lifetime-validity/'],
-  ['w10e','Windows 10 Enterprise License Key','os','win10',479,599,'https://digiworld4u.in/product/windows-10-enterprise-license-key-lifetime-validity/'],
-  ['w10ltsc','Windows 10 Enterprise LTSC 2021','os','win10',799,899,'https://digiworld4u.in/product/windows-10-enterprise-ltsc-2021-online-activation-lifetime-instant-email-delivery/'],
-  ['w10dvd','Windows 10 Pro DVD-ROM Full Box','os','win10',950,1499,'https://digiworld4u.in/product/windows-10-pro-dvd-rom-full-box-pack-oem-pack-license/'],
-
-  ['w10up','Windows 10 Home to Pro Upgrade + Guide','os','winother',450,549,'https://digiworld4u.in/product/windows-10-home-to-windows-10-pro-professional-license-key-guide/'],
-  ['w1011t','Windows 10/11 Pro Transferable License','os','winother',800,999,'https://digiworld4u.in/product/windows-10-pro-license-transferable/'],
-  ['w10stk','Windows 10 Pro OEM/Retail Sticker','os','winother',649,899,'https://digiworld4u.in/product/windows-10-pro-oem-retail-sticker-license-32-64bit/'],
-  ['w81','Windows 8.1 Pro License Key','os','winother',395,499,'https://digiworld4u.in/product/windows-8-1-professional-license-key-email-delivery/'],
-  ['w7','Windows 7 Pro 32/64 Bit','os','winother',299,449,'https://digiworld4u.in/product/windows-7-professional-32-64-bit-license-key/'],
-
+  // Windows 11
+  ['w11h','Windows 11 Home Lifetime 32/64Bit','os','win11',294,499,BASE+'/product/windows-11-home-retail-license-key-32-64bit/',56594],
+  ['w11p','Windows 11 Pro 32/64 Bit','os','win11',299,399,BASE+'/product/windows-11-professional-32-64-bit-activation-key/',7195],
+  ['w11po','Windows 11 Pro OEM Key','os','win11',399,499,BASE+'/product/windows-11-pro-license-oem-key/',72425],
+  ['w11e','Windows 11 Enterprise Lifetime','os','win11',479,599,BASE+'/product/windows-11-enterprise-lifetime-license-key/',113046],
+  ['w11coa','Windows 11 Pro COA License Sticker','os','win11',649,950,BASE+'/product/windows-11-pro-key-coa-license-sticker/',166421],
+  ['w11iot','Windows 11 IoT Enterprise LTSC 2024','os','win11',999,1145,BASE+'/product/windows-11-iot-enterprise-ltsc-2024-latest-32-64-bit-lifetime-license/',172295],
+  ['w11dvd','Windows 11 Pro DVD-ROM Full Box','os','win11',990,1499,BASE+'/product/windows-11-pro-dvd-rom-full-box-pack-oem-pack-license/',56597],
+  ['w11ws','Windows 11 Pro for Workstations','os','win11',1899,0,BASE+'/product/windows-11-pro-for-workstations-license-key-lifetime-validity/',248759],
+  // Windows 10
+  ['w10h','Windows 10 Home 32/64 Bit Retail','os','win10',294,399,BASE+'/product/windows-10-home-32-64-bit-retail-license-key/',34340],
+  ['w10p','Windows 10 Pro Retail Key','os','win10',298,399,BASE+'/product/windows-10-pro-retail-key-online-activation/',6873],
+  ['w10po','Windows 10 Pro OEM Key Lifetime','os','win10',399,0,BASE+'/product/windows-10-pro-oem-key-lifetime-validity/',68643],
+  ['w10e','Windows 10 Enterprise License Key','os','win10',479,599,BASE+'/product/windows-10-enterprise-license-key-lifetime-validity/',113029],
+  ['w10ltsc','Windows 10 Enterprise LTSC 2021','os','win10',799,899,BASE+'/product/windows-10-enterprise-ltsc-2021-online-activation-lifetime-instant-email-delivery/',113054],
+  ['w10dvd','Windows 10 Pro DVD-ROM Full Box','os','win10',950,1499,BASE+'/product/windows-10-pro-dvd-rom-full-box-pack-oem-pack-license/',17320],
+  // Older Windows
+  ['w10up','Windows 10 Home to Pro Upgrade + Guide','os','winother',450,549,BASE+'/product/windows-10-home-to-windows-10-pro-professional-license-key-guide/',6889],
+  ['w1011t','Windows 10/11 Pro Transferable License','os','winother',800,999,BASE+'/product/windows-10-pro-license-transferable/',76424],
+  ['w10stk','Windows 10 Pro OEM/Retail Sticker','os','winother',649,899,BASE+'/product/windows-10-pro-oem-retail-sticker-license-32-64bit/',17326],
+  ['w81','Windows 8.1 Pro License Key','os','winother',395,499,BASE+'/product/windows-8-1-professional-license-key-email-delivery/',6887],
+  ['w7','Windows 7 Pro 32/64 Bit','os','winother',299,449,BASE+'/product/windows-7-professional-32-64-bit-license-key/',6877],
   // Windows Server
-  ['ws22','Windows Server 2022 Standard','server','winserver',999,1199,'https://digiworld4u.in/product/windows-server-2022-standard-license-key-fast-email-delivery/'],
-  ['ws19','Windows Server 2019 Standard','server','winserver',950,1099,'https://digiworld4u.in/product/windows-server-2019-standard-license-key/'],
-
-  // Microsoft Office
-  ['o365','Office 365 Pro Plus — 5 Devices','office','office365',297,549,'https://digiworld4u.in/product/office-365-professional-plus-5-devices-pc-mac/'],
-  ['o16','Office 2016 Pro Plus Lifetime','office','officeltm',289,0,'https://digiworld4u.in/product/office-2016-professional-plus-lifetime-retail-license-key-3/'],
-  ['o19','Office 2019 Pro Plus License Key','office','officeltm',349,0,'https://digiworld4u.in/product/office-professional-plus-2019-license-key-windows-only/'],
-  ['o19hb','MS Office 2019 Home & Business (Win)','office','officeltm',499,599,'https://digiworld4u.in/product/ms-office-2019-home-business-retail-license-key-for-windows/'],
-  ['o21','Office 2021 Pro Plus Retail','office','officeltm',449,749,'https://digiworld4u.in/product/office-2021-professional-plus-license-key-fast-email-delivery/'],
-  ['o21ph','Office 2021 Pro Plus Phone Activation','office','officeltm',449,549,'https://digiworld4u.in/product/office-2021-professional-plus-retail-license-key-phone-activation/'],
-  ['o21eb','Office 2021 Pro Plus Email Bind Key','office','officeltm',3599,3999,'https://digiworld4u.in/product/office-2021-professional-plus-account-bind-key-lifetime-validity/'],
-  ['o21mac','Office 2021 Home & Business for Mac','office','officeltm',3299,4599,'https://digiworld4u.in/product/office-2021-home-and-business-lifetime-valid-email-delivery/'],
-  ['o24','Office 2024 Pro Plus LTSC Lifetime','office','officeltm',680,799,'https://digiworld4u.in/product/office-2024-professional-plus-lifetime-ltsc-license-key/'],
-  ['proj21','Project 2021 Pro Plus License Key','office','officetools',580,649,'https://digiworld4u.in/product/project-2021-professional-plus-license-key/'],
-  ['visio21','Visio Professional 2021 License Key','office','officetools',580,649,'https://digiworld4u.in/product/visio-professional-2021-license-key/'],
-
-  // Bundle Deals
-  ['bnd1','Office 2019 Pro + Win 10 Pro Bundle','combo','bundles',599,799,'https://digiworld4u.in/product/office-2019-pro-and-windows-10-professional-combo-retail-license-keys-digital-delivery/'],
-  ['bnd2','Win 11 Pro + Office 2021 Pro Bundle','combo','bundles',699,749,'https://digiworld4u.in/product/windows-11-pro-ms-office-2021-pro-plus-lifetime-validity-combo-pack/'],
-  ['bnd3','Win 11 Pro + Office 2024 Pro Bundle','combo','bundles',899,979,'https://digiworld4u.in/product/windows-11-pro-ms-office-2024-pro-plus-lifetime-validity-combo-pack/'],
-
-  // Antivirus — Kaspersky
-  ['kav','Kaspersky Antivirus 1PC 1 Year','antivirus','kaspersky',289,599,'https://digiworld4u.in/product/kaspersky-antivirus-1-pc-1-year/'],
-  ['kpls','Kaspersky Plus 1 User 1 Year','antivirus','kaspersky',430,899,'https://digiworld4u.in/product/kaspersky-internet-security-1-user-1-year/'],
-  ['kts','Kaspersky Total Security 1U 1 Year','antivirus','kaspersky',499,949,'https://digiworld4u.in/product/kaspersky-total-security-1-user-1-year/'],
-  ['kav3','Kaspersky Antivirus 1PC 3 Years','antivirus','kaspersky',849,1199,'https://digiworld4u.in/product/kaspersky-antivirus-1-pc-3-year/'],
-  ['kis3','Kaspersky Internet Security 1U 3 Yrs','antivirus','kaspersky',999,1799,'https://digiworld4u.in/product/kaspersky-internet-security-1-user-3-years/'],
-  ['kts3','Kaspersky Total Security 1U 3 Years','antivirus','kaspersky',1239,3000,'https://digiworld4u.in/product/kaspersky-total-security-1-user-3-years/'],
-  ['kvpn','Kaspersky VPN Secure 5 Devices 1 Year','antivirus','kaspersky',1699,1699,'https://digiworld4u.in/product/kaspersky-vpn-secure-connection-license-key-5-devices1-year/'],
-
+  ['ws22','Windows Server 2022 Standard','server','winserver',999,1199,BASE+'/product/windows-server-2022-standard-license-key-fast-email-delivery/',6892],
+  ['ws19','Windows Server 2019 Standard','server','winserver',950,1099,BASE+'/product/windows-server-2019-standard-license-key/',34919],
+  // Office — variable products use null (must select variant on product page)
+  ['o365','Office 365 Pro Plus — 5 Devices','office','office365',297,549,BASE+'/product/office-365-professional-plus-5-devices-pc-mac/',null],
+  ['o16','Office 2016 Pro Plus Lifetime','office','officeltm',289,0,BASE+'/product/office-2016-professional-plus-lifetime-retail-license-key-3/',null],
+  ['o19','Office 2019 Pro Plus License Key','office','officeltm',349,0,BASE+'/product/office-professional-plus-2019-license-key-windows-only/',null],
+  ['o19hb','MS Office 2019 Home & Business (Win)','office','officeltm',499,599,BASE+'/product/ms-office-2019-home-business-retail-license-key-for-windows/',17344],
+  ['o21','Office 2021 Pro Plus Retail','office','officeltm',449,749,BASE+'/product/office-2021-professional-plus-license-key-fast-email-delivery/',null],
+  ['o21ph','Office 2021 Pro Plus Phone Activation','office','officeltm',449,549,BASE+'/product/office-2021-professional-plus-retail-license-key-phone-activation/',85538],
+  ['o21eb','Office 2021 Pro Plus Email Bind Key','office','officeltm',3599,3999,BASE+'/product/office-2021-professional-plus-account-bind-key-lifetime-validity/',7831],
+  ['o21mac','Office 2021 Home & Business for Mac','office','officeltm',3299,4599,BASE+'/product/office-2021-home-and-business-lifetime-valid-email-delivery/',7707],
+  ['o24','Office 2024 Pro Plus LTSC Lifetime','office','officeltm',680,799,BASE+'/product/office-2024-professional-plus-lifetime-ltsc-license-key/',161861],
+  ['proj21','Project 2021 Pro Plus License Key','office','officetools',580,649,BASE+'/product/project-2021-professional-plus-license-key/',14457],
+  ['visio21','Visio Professional 2021 License Key','office','officetools',580,649,BASE+'/product/visio-professional-2021-license-key/',14463],
+  // Bundles
+  ['bnd1','Office 2019 Pro + Win 10 Pro Bundle','combo','bundles',599,799,BASE+'/product/office-2019-pro-and-windows-10-professional-combo-retail-license-keys-digital-delivery/',6885],
+  ['bnd2','Win 11 Pro + Office 2021 Pro Bundle','combo','bundles',699,749,BASE+'/product/windows-11-pro-ms-office-2021-pro-plus-lifetime-validity-combo-pack/',null],
+  ['bnd3','Win 11 Pro + Office 2024 Pro Bundle','combo','bundles',899,979,BASE+'/product/windows-11-pro-ms-office-2024-pro-plus-lifetime-validity-combo-pack/',null],
+  // Kaspersky
+  ['kav','Kaspersky Antivirus 1PC 1 Year','antivirus','kaspersky',289,599,BASE+'/product/kaspersky-antivirus-1-pc-1-year/',80970],
+  ['kpls','Kaspersky Plus 1 User 1 Year','antivirus','kaspersky',430,899,BASE+'/product/kaspersky-internet-security-1-user-1-year/',80976],
+  ['kts','Kaspersky Total Security 1U 1 Year','antivirus','kaspersky',499,949,BASE+'/product/kaspersky-total-security-1-user-1-year/',54341],
+  ['kav3','Kaspersky Antivirus 1PC 3 Years','antivirus','kaspersky',849,1199,BASE+'/product/kaspersky-antivirus-1-pc-3-year/',80972],
+  ['kis3','Kaspersky Internet Security 1U 3 Yrs','antivirus','kaspersky',999,1799,BASE+'/product/kaspersky-internet-security-1-user-3-years/',80978],
+  ['kts3','Kaspersky Total Security 1U 3 Years','antivirus','kaspersky',1239,3000,BASE+'/product/kaspersky-total-security-1-user-3-years/',80981],
+  ['kvpn','Kaspersky VPN Secure 5 Devices 1 Year','antivirus','kaspersky',1699,1699,BASE+'/product/kaspersky-vpn-secure-connection-license-key-5-devices1-year/',232575],
   // McAfee
-  ['mav','McAfee Antivirus 1PC 1 Year','antivirus','mcafee',349,399,'https://digiworld4u.in/product/mcafee-antivirus-1-pc-1-year/'],
-  ['mis','McAfee Internet Security 1PC 1 Year','antivirus','mcafee',399,800,'https://digiworld4u.in/product/mcafee-internet-security-1-pc-1-year/'],
-  ['mtp','McAfee Total Protection 1PC 1 Year','antivirus','mcafee',599,1200,'https://digiworld4u.in/product/mcafee-total-protection-1-pc-1-year/'],
-  ['mav3','McAfee Antivirus 1 User 3 Years','antivirus','mcafee',1049,1499,'https://digiworld4u.in/product/mcafee-antivirus-1-user-3-years/'],
-  ['mtp3','McAfee Total Protection 1PC 3 Years','antivirus','mcafee',1299,2199,'https://digiworld4u.in/product/mcafee-total-protection-1-pc-3-years/'],
-
+  ['mav','McAfee Antivirus 1PC 1 Year','antivirus','mcafee',349,399,BASE+'/product/mcafee-antivirus-1-pc-1-year/',80953],
+  ['mis','McAfee Internet Security 1PC 1 Year','antivirus','mcafee',399,800,BASE+'/product/mcafee-internet-security-1-pc-1-year/',80963],
+  ['mtp','McAfee Total Protection 1PC 1 Year','antivirus','mcafee',599,1200,BASE+'/product/mcafee-total-protection-1-pc-1-year/',80965],
+  ['mav3','McAfee Antivirus 1 User 3 Years','antivirus','mcafee',1049,1499,BASE+'/product/mcafee-antivirus-1-user-3-years/',80958],
+  ['mtp3','McAfee Total Protection 1PC 3 Years','antivirus','mcafee',1299,2199,BASE+'/product/mcafee-total-protection-1-pc-3-years/',80967],
   // Norton
-  ['nav','Norton Antivirus Plus 1U 1 Year','antivirus','norton',479,1299,'https://digiworld4u.in/product/norton-antivirus-plus-1-user-1-year/'],
-  ['n360','Norton 360 Standard 1U 1 Year','antivirus','norton',899,2099,'https://digiworld4u.in/product/norton-360-standard-1-user-1-year/'],
-
+  ['nav','Norton Antivirus Plus 1U 1 Year','antivirus','norton',479,1299,BASE+'/product/norton-antivirus-plus-1-user-1-year/',81049],
+  ['n360','Norton 360 Standard 1U 1 Year','antivirus','norton',899,2099,BASE+'/product/norton-360-standard-1-user-1-year/',81052],
   // Quick Heal
-  ['qhp','Quick Heal Antivirus Pro 1PC 1 Year','antivirus','quickheal',359,999,'https://digiworld4u.in/product/quick-heal-antivirus-pro-1-pc-1-year/'],
-  ['qhis','Quick Heal Internet Security 1U 1 Year','antivirus','quickheal',649,1449,'https://digiworld4u.in/product/quick-heal-internet-security-preminum-1-user-1-year/'],
-  ['qhts','Quick Heal Total Security 1U 1 Year','antivirus','quickheal',899,1850,'https://digiworld4u.in/product/quick-heal-total-security-1-user-1-year/'],
-  ['qhts3','Quick Heal Total Security 1U 3 Years','antivirus','quickheal',1599,3508,'https://digiworld4u.in/product/quick-heal-total-security-1-user-3-years/'],
-
+  ['qhp','Quick Heal Antivirus Pro 1PC 1 Year','antivirus','quickheal',359,999,BASE+'/product/quick-heal-antivirus-pro-1-pc-1-year/',80727],
+  ['qhis','Quick Heal Internet Security 1U 1 Year','antivirus','quickheal',649,1449,BASE+'/product/quick-heal-internet-security-preminum-1-user-1-year/',80902],
+  ['qhts','Quick Heal Total Security 1U 1 Year','antivirus','quickheal',899,1850,BASE+'/product/quick-heal-total-security-1-user-1-year/',80920],
+  ['qhts3','Quick Heal Total Security 1U 3 Years','antivirus','quickheal',1599,3508,BASE+'/product/quick-heal-total-security-1-user-3-years/',80936],
   // ESET
-  ['enod','ESET NOD32 Antivirus 1PC 1 Year','antivirus','eset',349,450,'https://digiworld4u.in/product/eset-nod32-antivirus-1-pc-1-year/'],
-  ['eis','ESET Internet Security 1U 1 Year','antivirus','eset',499,1299,'https://digiworld4u.in/product/eset-internet-security-1-user-1-year/'],
-
+  ['enod','ESET NOD32 Antivirus 1PC 1 Year','antivirus','eset',349,450,BASE+'/product/eset-nod32-antivirus-1-pc-1-year/',81038],
+  ['eis','ESET Internet Security 1U 1 Year','antivirus','eset',499,1299,BASE+'/product/eset-internet-security-1-user-1-year/',81044],
   // Guardian
-  ['gns','Guardian NetSecure 1U 1 Year','antivirus','guardian',259,599,'https://digiworld4u.in/product/guardian-netsecure-1-user-1-year/'],
-  ['gis','Guardian Internet Security 1U 1 Year','antivirus','guardian',299,799,'https://digiworld4u.in/product/guardian-internet-security-1-user-1-year/'],
-  ['gts','Guardian Total Security 1U 1 Year','antivirus','guardian',389,999,'https://digiworld4u.in/product/guardian-total-security-1-user-1-year/'],
-
+  ['gns','Guardian NetSecure 1U 1 Year','antivirus','guardian',259,599,BASE+'/product/guardian-netsecure-1-user-1-year/',81031],
+  ['gis','Guardian Internet Security 1U 1 Year','antivirus','guardian',299,799,BASE+'/product/guardian-internet-security-1-user-1-year/',81034],
+  ['gts','Guardian Total Security 1U 1 Year','antivirus','guardian',389,999,BASE+'/product/guardian-total-security-1-user-1-year/',81036],
   // Net Protector
-  ['npav','Net Protector Antivirus 1U 1 Year','antivirus','netprotector',349,1400,'https://digiworld4u.in/product/net-protector-antivirus-1-user-1-year/'],
-  ['npts','Net Protector Total Security 1U 1 Year','antivirus','netprotector',399,900,'https://digiworld4u.in/product/net-protector-total-security-1-user-1-year/'],
-  ['npts3','Net Protector Total Security 1U 3 Years','antivirus','netprotector',999,1400,'https://digiworld4u.in/product/net-protector-total-security-1-user-3-year/'],
-
+  ['npav','Net Protector Antivirus 1U 1 Year','antivirus','netprotector',349,1400,BASE+'/product/net-protector-antivirus-1-user-1-year/',80987],
+  ['npts','Net Protector Total Security 1U 1 Year','antivirus','netprotector',399,900,BASE+'/product/net-protector-total-security-1-user-1-year/',80983],
+  ['npts3','Net Protector Total Security 1U 3 Years','antivirus','netprotector',999,1400,BASE+'/product/net-protector-total-security-1-user-3-year/',80990],
   // K7
-  ['k7av','K7 Antivirus Premium 1PC 1 Year','antivirus','k7',199,699,'https://digiworld4u.in/product/k7-antivirus-premium-1-pc-1-year/'],
-
+  ['k7av','K7 Antivirus Premium 1PC 1 Year','antivirus','k7',199,699,BASE+'/product/k7-antivirus-premium-1-pc-1-year/',81021],
   // Adobe
-  ['ac19','Adobe Acrobat Pro DC 2019 (Win)','adobe','adobe',498,499,'https://digiworld4u.in/product/adobe-acrobat-2019-pro-dc-for-windows-pc-pdf-editor/'],
-  ['ac20','Adobe Acrobat DC Pro 2020 Lifetime','adobe','adobe',1998,0,'https://digiworld4u.in/product/adobe-acrobat-dc-pro-2020-lifetime-serial-key-for-windows/'],
-  ['ac22','Adobe Acrobat DC Pro 2022 Lifetime','adobe','adobe',2299,0,'https://digiworld4u.in/product/adobe-acrobat-dc-pro-2022-lifetime-serial-key-for-windows/'],
+  ['ac19','Adobe Acrobat Pro DC 2019 (Win)','adobe','adobe',498,499,BASE+'/product/adobe-acrobat-2019-pro-dc-for-windows-pc-pdf-editor/',13739],
+  ['ac20','Adobe Acrobat DC Pro 2020 Lifetime','adobe','adobe',1998,0,BASE+'/product/adobe-acrobat-dc-pro-2020-lifetime-serial-key-for-windows/',211630],
+  ['ac22','Adobe Acrobat DC Pro 2022 Lifetime','adobe','adobe',2299,0,BASE+'/product/adobe-acrobat-dc-pro-2022-lifetime-serial-key-for-windows/',220288],
 ];
+
+/* Build buyUrl: simple products → direct checkout; variable → product page */
+function buyUrl(productUrl, cartId) {
+  if (cartId) return BASE + '/checkout/?add-to-cart=' + cartId + '&quantity=1';
+  return productUrl; // variable product — must select variant on product page
+}
+
+/* Auto-derive spec tags from product name */
+function getTags(name) {
+  const t = [];
+  if (/lifetime/i.test(name))       t.push('Lifetime');
+  else if (/3 year/i.test(name))    t.push('3 Years');
+  else if (/1 year/i.test(name))    t.push('1 Year');
+  if (/5 device/i.test(name))       t.push('5 Devices');
+  else if (/2 user/i.test(name))    t.push('2 Users');
+  else if (/1 pc|1 user/i.test(name)) t.push('1 Device');
+  if (/oem/i.test(name))            t.push('OEM');
+  else if (/retail/i.test(name))    t.push('Retail');
+  else if (/dvd/i.test(name))       t.push('Physical');
+  t.push('📧 Email Delivery');
+  return t;
+}
 
 const PRODUCTS = RAW.map(r=>({
   id:r[0], name:r[1], cat:r[2], family:r[3],
-  price:r[4], was:r[5], url:r[6],
+  price:r[4], was:r[5], productUrl:r[6], cartId:r[7],
+  buyUrl: buyUrl(r[6], r[7]),
+  tags: getTags(r[1]),
   disc: r[5]>0 ? Math.round((1-r[4]/r[5])*100) : 0
 }));
 
@@ -463,11 +479,12 @@ function renderGrid(products){
         ${discBadge(p)}
       </div>
       <div class="g-name">${p.name}</div>
+      <div class="g-tags">${p.tags.map(t=>`<span class="g-tag">${t}</span>`).join('')}</div>
       <div class="g-price-row">
         <span class="g-price">${priceFmt(p.price)}</span>
         ${p.was ? `<span class="g-was">${priceFmt(p.was)}</span>` : ''}
       </div>
-      <a href="${p.url}" target="_blank" rel="noopener" class="g-btn">Get Deal →</a>
+      <a href="${p.buyUrl}" target="_blank" rel="noopener" class="g-btn">Buy Now</a>
     </div>`).join('')}</div>`;
 }
 
@@ -519,7 +536,7 @@ function renderCompare(products){
             <div class="c-was">${p.was ? priceFmt(p.was) : ''}</div>
             <div class="c-save">${p.disc ? '-'+p.disc+'% off' : ''}</div>
             <div class="c-bar-wrap"><div class="c-bar" style="width:${barPct}%"></div></div>
-            <a href="${p.url}" target="_blank" rel="noopener" class="c-btn">Get Deal →</a>
+            <a href="${p.buyUrl}" target="_blank" rel="noopener" class="c-btn">Buy Now</a>
           </div>`;
         }).join('')}
       </div>
