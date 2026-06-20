@@ -8,16 +8,16 @@ Legal: transformative original content, not copying.
 Each story = own headline, own words, own analysis,
 own page on itvedas.com, with a source citation link.
 
-LLM: OpenAI writes the article body (OPENAI_API_KEY, OPENAI_MODEL).
+LLM: Claude writes the article body (ANTHROPIC_API_KEY, ANTHROPIC_MODEL).
 """
 import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from core.llm import openai_chat as _core_openai_chat
+from core.llm import claude as _core_claude
 from core.log import log as _core_log
 
-OPENAI_KEY   = os.environ.get("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "")
+ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 SITE    = "https://itvedas.com"
 
 COMPONENT = "news-agent"
@@ -48,8 +48,8 @@ NEWS_FEEDS = [
 ]
 
 def write_with_openai(prompt, max_tokens=2500):
-    return _core_openai_chat(prompt, max_tokens=max_tokens,
-                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
+    return _core_claude(prompt, max_tokens=max_tokens,
+                        api_key=ANTHROPIC_KEY, model=ANTHROPIC_MODEL, log_fn=log)
 
 def fetch_feed(url):
     items = []
@@ -382,8 +382,8 @@ def slugify(text):
 
 def main():
     print("News Agent v2 — original commentary mode")
-    if not OPENAI_KEY:
-        raise SystemExit("FATAL: OPENAI_API_KEY not set")
+    if not ANTHROPIC_KEY:
+        raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
     pathlib.Path("itvedas-brain/state").mkdir(parents=True, exist_ok=True)
 
