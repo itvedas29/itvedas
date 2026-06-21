@@ -29,13 +29,14 @@ def log(msg):
 TOPIC_COLORS = {
     "Security":"#10B981","Cloud":"#3B82F6","DevOps":"#8B5CF6",
     "Networking":"#FF6B35","Databases":"#F59E0B","Linux":"#EF4444",
-    "Hardware":"#06B6D4","Compliance":"#EC4899","AI":"#F97316","General":"#64748B"
+    "Hardware":"#06B6D4","Compliance":"#EC4899","AI":"#F97316","General":"#64748B",
+    "CVE":"#EF4444"
 }
 
 TOPIC_EMOJI = {
     "Security":"🔐","Cloud":"☁️","DevOps":"⚙️","Networking":"🌐",
     "Databases":"🗄️","Linux":"🐧","Hardware":"🖥️","Compliance":"📋",
-    "AI":"🤖","General":"📰"
+    "AI":"🤖","General":"📰","CVE":"🛡️"
 }
 
 NEWS_FEEDS = [
@@ -45,6 +46,7 @@ NEWS_FEEDS = [
     "https://aws.amazon.com/blogs/aws/feed/",
     "https://kubernetes.io/feed.xml",
     "https://cloudblogs.microsoft.com/feed/",
+    "https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss.xml",
 ]
 
 def write_with_openai(prompt, max_tokens=2500):
@@ -73,6 +75,7 @@ def fetch_feed(url):
 
 def classify(title):
     t = title.lower()
+    if re.search(r"cve-\d{4}-\d+", t): return "CVE"
     if any(w in t for w in ["hack","vuln","breach","ransomware","phish","malware","cve","exploit","attack","cyber","threat"]): return "Security"
     if any(w in t for w in ["aws","azure","gcp","cloud","serverless","s3","ec2"]): return "Cloud"
     if any(w in t for w in ["kubernetes","docker","devops","ci/cd","terraform","deploy"]): return "DevOps"
@@ -83,6 +86,14 @@ def classify(title):
     if any(w in t for w in ["gdpr","hipaa","compliance","regulation","pci"]): return "Compliance"
     if any(w in t for w in ["ai","llm","gpt","machine learning"]): return "AI"
     return "General"
+
+CVE_EXTRA = """
+This is a CVE writeup, so also make sure the body clearly covers:
+- The CVE ID (exactly as given in the headline/context)
+- Affected software/systems and versions, if mentioned in the context
+- Severity (CVSS score/rating if mentioned, otherwise describe impact plainly)
+- The fix or mitigation (patch, version to upgrade to, or workaround)
+- Never include working exploit code or step-by-step attack instructions"""
 
 def write_original_article(item):
     """OpenAI writes a COMPLETELY ORIGINAL article about the news topic."""
@@ -118,6 +129,7 @@ Structure:
 - <h2>Why you should care</h2>
 - <h2>What you can do</h2>
 - Closing: 1 sentence
+{CVE_EXTRA if topic == "CVE" else ""}
 
 Return ONLY meta block + HTML body. No html/head/body tags."""
 
