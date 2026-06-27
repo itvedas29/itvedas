@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Researchers discover attackers exploit AI coding assistants by hiding malware in legitimate-seeming GitHub projects.">
+<meta name="keywords" content="Security news, IT news, Innocent-Looking Code Repositories Used to Trick A">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Innocent-Looking Code Repositories Used to Trick AI Into Installing Dangerous Software | ITVedas News">
+<meta property="og:description" content="Researchers discover attackers exploit AI coding assistants by hiding malware in legitimate-seeming GitHub projects.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://itvedas.com/news/2026-06-27-innocent-looking-code-repositories-used-to-trick-ai-into-ins.html">
+<title>Innocent-Looking Code Repositories Used to Trick AI Into Installing Dangerous Software | ITVedas News</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"NewsArticle","headline":"Innocent-Looking Code Repositories Used to Trick AI Into Installing Dangerous Software",
+"description":"Researchers discover attackers exploit AI coding assistants by hiding malware in legitimate-seeming GitHub projects.","datePublished":"2026-06-27","dateModified":"2026-06-27",
+"author":{"@type":"Organization","name":"ITVedas"},
+"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10B98122,#10B98108);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#10B98118,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #10B98144);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news.html" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🔐</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › Security</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-06-27 · 04:41 PM IST</span>
+    <span class="badge-info">⏱ 3 min read</span>
+  </div>
+  <h1>Innocent-Looking Code Repositories Used to Trick AI Into Installing Dangerous Software</h1>
+  <p class="summary">Researchers discover attackers exploit AI coding assistants by hiding malware in legitimate-seeming GitHub projects.</p>
+</div>
+<div class="article">
+  <h2 id="the-attack-method">The Attack Method</h2>
+
+<p>Security researchers have uncovered a troubling vulnerability in how artificial intelligence systems write code. Attackers are creating seemingly harmless software repositories on GitHub—the popular platform where developers store and share code—that appear completely legitimate at first glance. However, these innocent-looking projects contain hidden instructions that trick AI coding assistants into generating and running dangerous malware on users' computers.</p>
+
+<p>Think of it like leaving a Trojan horse in a town square. The outside looks normal and helpful, but once the gates open, danger emerges. In this case, the "gates" are AI tools that developers use to speed up their programming work. These intelligent assistants analyze existing code and generate new code based on what they find. Unfortunately, they're getting fooled by the deception.</p>
+
+<h2 id="why-this-matters-for-ai-development">Why This Matters for AI Development</h2>
+
+<p>This discovery highlights a serious blind spot in artificial intelligence. Many companies are rushing to deploy AI coding assistants because they promise to make developers more productive. But these tools have a critical weakness: they can't tell the difference between trustworthy code and dangerous code the way experienced human programmers can.</p>
+
+<p>The AI systems are designed to learn from existing repositories and suggest similar code patterns. They don't truly understand what the code does—they just recognize patterns and predict what comes next. This is like having someone who can memorize entire books but doesn't understand the meaning of the words. When shown poisoned repositories, the AI simply copies the patterns, malware and all.</p>
+
+<h2 id="the-real-world-impact">The Real-World Impact</h2>
+
+<p>If you're a developer using these AI coding tools, this matters directly to your work. You might unknowingly incorporate malicious code into your projects, thinking you're using a helpful shortcut. Your end users could then download infected software without realizing it. For companies, this could mean security breaches, stolen data, or compromised systems spreading throughout their networks.</p>
+
+<p>Even if you don't personally use AI coding assistants, the fallout affects you. As more developers rely on these tools, the software you download and install—from web applications to mobile apps—could be secretly compromised through this attack method.</p>
+
+<blockquote>
+<strong>The core problem:</strong> Speed and convenience are being prioritized over security verification in the development process.
+</blockquote>
+
+<h2 id="protecting-yourself">Protecting Yourself</h2>
+
+<ul>
+<li><strong>Review AI-generated code carefully</strong> before using it, even if it comes from a trusted tool. Don't assume it's safe just because an AI created it.</li>
+<li><strong>Check the source repositories</strong> that your AI assistant learned from. Look for red flags like inactive projects, suspicious authors, or code that does more than it advertises.</li>
+<li><strong>Use security scanning tools</strong> on any code before deploying it to production environments. These can catch many types of malicious code.</li>
+<li><strong>Keep your AI tools updated</strong> so they have the latest security protections built in.</li>
+<li><strong>Report suspicious repositories</strong> to GitHub and your security team if you discover them.</li>
+</ul>
+
+<h2 id="what-s-next">What's Next</h2>
+
+<p>This discovery will likely force AI tool creators to develop better safeguards, such as analyzing code behavior rather than just patterns, or warning developers when code comes from less-established sources. However, these solutions take time to develop and deploy.</p>
+
+<p>Until AI coding assistants become significantly smarter about security, treating their output as a suggestion rather than a finished product is your best defense.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://www.bleepingcomputer.com/news/security/clean-github-repo-tricks-ai-coding-agents-into-running-malware/" target="_blank" rel="noopener nofollow">bleepingcomputer.com</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>
