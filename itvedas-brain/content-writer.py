@@ -253,7 +253,7 @@ THEN the article HTML body:
 Include at least one <div class="callout"><div class="callout-title">Pro Tip</div>…</div>.
 Use <strong> for key terms and <code> for technical terms on first mention.
 1500-2000 words. Return ONLY the META comment + HTML body. No html/head/body tags."""
-    return openai_chat(prompt, system=system, max_tokens=4000)
+    return claude(prompt, system=system, max_tokens=4000)
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 3 — self-review
@@ -719,9 +719,7 @@ def main():
     if not API_KEY:
         log("FATAL: ANTHROPIC_API_KEY not set")
         raise SystemExit(1)
-    if not OPENAI_KEY:
-        log("FATAL: OPENAI_API_KEY not set")
-        raise SystemExit(1)
+
 
     ARTICLES.mkdir(exist_ok=True)
     BRAIN_DIR.mkdir(exist_ok=True)
