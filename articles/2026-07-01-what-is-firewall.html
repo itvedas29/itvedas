@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="What is a firewall? How firewalls block hackers, filter traffic, and protect networks — explained simply with real examples. Free beginner's guide.">
+<meta name="keywords" content="what is a firewall, how does a firewall work, firewall explained, network firewall, firewall for beginners">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What is a Firewall and How Does It Work? Beginner's Guide | ITVedas">
+<meta property="og:description" content="What is a firewall? How firewalls block hackers, filter traffic, and protect networks — explained simply with real examples. Free beginner's guide.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/2026-07-01-what-is-firewall.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What is a Firewall and How Does It Work? Beginner's Guide | ITVedas">
+<meta name="twitter:description" content="What is a firewall? How firewalls block hackers, filter traffic, and protect networks — explained simply with real examples. Free beginner's guide.">
+<link rel="canonical" href="https://itvedas.com/articles/2026-07-01-what-is-firewall.html">
+<title>What is a Firewall and How Does It Work? Beginner's Guide | ITVedas</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"What is a Firewall and How Does It Work? Beginner's Guide",
+"description":"What is a firewall? How firewalls block hackers, filter traffic, and protect networks — explained simply with real examples.","keywords":"what is a firewall, how does a firewall work, firewall explained, network firewall, firewall for beginners",
+"author":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"datePublished":"2026-07-01","dateModified":"2026-07-01",
+"articleSection":"Security","educationalLevel":"Beginner",
+"url":"https://itvedas.com/articles/2026-07-01-what-is-firewall.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a firewall?","acceptedAnswer":{"@type":"Answer","text":"A firewall is a security system that monitors and controls incoming and outgoing network traffic based on predefined rules. Think of it as a security guard for your network — it decides what gets in and what gets blocked."}},
+{"@type":"Question","name":"How does a firewall work?","acceptedAnswer":{"@type":"Answer","text":"A firewall inspects every packet of data entering or leaving your network and compares it against a ruleset. If the traffic matches an allowed rule, it passes through. If it matches a blocked rule or no rule at all, it is dropped."}},
+{"@type":"Question","name":"Do I need a firewall?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every device connected to the internet should have firewall protection. Windows and macOS include built-in firewalls. Businesses need additional hardware or cloud-based firewalls for full network protection."}},
+{"@type":"Question","name":"What is the difference between a hardware and software firewall?","acceptedAnswer":{"@type":"Answer","text":"A hardware firewall is a physical device that protects an entire network — common in offices and data centres. A software firewall runs on individual computers and protects just that one device. Most home setups use both: a router firewall plus Windows/Mac firewall."}},
+{"@type":"Question","name":"Can a firewall block all attacks?","acceptedAnswer":{"@type":"Answer","text":"No. Firewalls are one layer of security. They cannot stop phishing emails, malware already inside your network, or attacks that use allowed ports. You also need antivirus, patching, and user awareness."}}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--subtle:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:transparent;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;transition:width 0.1s;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
+.logo span{color:var(--accent);}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;}
+.nav-back:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.badge-topic{background:rgba(255,107,53,0.12);border:1px solid rgba(255,107,53,0.25);color:var(--accent);padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;}
+.badge-info{color:var(--muted);font-size:0.82rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.75rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;padding:0;margin:0;}
+.toc li{margin-bottom:0.15rem;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all 0.2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;color:var(--text);}
+article p{margin-bottom:1.35rem;color:var(--subtle);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--subtle);}
+article li{margin-bottom:0.65rem;line-height:1.7;}
+article strong{color:var(--text);font-weight:600;}
+article blockquote{background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(139,92,246,0.06));border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--subtle);font-size:1.05rem;font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;font-size:0.84rem;color:#9FE1CB;line-height:1.8;}
+.callout{background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(139,92,246,0.06));border:1px solid rgba(255,107,53,0.2);border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.takeaway{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:3rem 0;}
+.takeaway h3{font-family:'Space Grotesk',sans-serif;color:var(--accent);font-size:1.05rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.takeaway ul{list-style:none;padding:0;margin:0;}
+.takeaway li{padding:0.65rem 0;border-bottom:1px solid var(--border);color:var(--subtle);font-size:0.95rem;display:flex;gap:0.75rem;align-items:flex-start;line-height:1.5;}
+.takeaway li:last-child{border:none;}
+.takeaway li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:0.1rem;}
+.cta-box{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(139,92,246,0.08));border:1px solid rgba(255,107,53,0.2);border-radius:20px;text-align:center;}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta-box p{color:var(--muted);margin-bottom:1.5rem;font-size:0.95rem;}
+.btn{display:inline-block;background:var(--accent);color:white;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;transition:transform 0.15s,opacity 0.15s;}
+.btn:hover{transform:translateY(-2px);opacity:0.9;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;padding:0;margin:0;}
+.sc li{margin-bottom:0.15rem;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color 0.2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(139,92,246,0.08));border:1px solid rgba(255,107,53,0.2);border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:var(--accent);}
+.flinks{display:flex;gap:2rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.flinks a:hover{color:var(--accent);}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  aside{display:none;}
+  .hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}
+  nav{padding:0 1.25rem;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="nav-back">← All Chapters</a>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/#chapters">Security</a>
+    <span>›</span>
+    <span style="color:var(--text);">Article</span>
+  </div>
+  <div class="badges">
+    <span class="badge-topic">Security</span>
+    <span class="badge-info">📅 2026-07-01</span>
+    <span class="badge-info">⏱ 8 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>What is a Firewall and How Does It Work? Beginner's Guide</h1>
+</div>
+
+<div class="layout">
+  <article>
+    <div class="toc">
+      <div class="toc-label">In this article</div>
+      <ul>
+        <li><a href="#what-is-a-firewall">What is a Firewall? The Simple Explanation</a></li>
+        <li><a href="#how-does-a-firewall-work">How Does a Firewall Work? Step by Step</a></li>
+        <li><a href="#types-of-firewalls">Types of Firewalls Explained</a></li>
+        <li><a href="#hardware-vs-software">Hardware vs Software Firewalls — Which Do You Need?</a></li>
+        <li><a href="#what-firewalls-block">What Firewalls Block (and What They Don't)</a></li>
+        <li><a href="#how-to-check-firewall">How to Check Your Firewall is On</a></li>
+        <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+      </ul>
+    </div>
+
+    <p>Every second, thousands of malicious connections try to reach your computer, your home router, and the servers that run the websites you use. Most of these attacks fail silently — and one of the main reasons they fail is the firewall. Yet most people have never stopped to ask: <strong>what is a firewall, exactly, and how does it actually work?</strong></p>
+
+    <p>This guide answers both questions in plain English. No networking degree required. By the time you finish reading, you will understand what a firewall is, how it inspects traffic, the different types available, and how to verify that your own devices are protected right now.</p>
+
+    <h2 id="what-is-a-firewall">What is a Firewall? The Simple Explanation</h2>
+
+    <p>A <strong>firewall is a security system that monitors and controls incoming and outgoing network traffic based on a set of predefined rules</strong>. That is the technical definition. But here is the version that actually sticks:</p>
+
+    <blockquote>
+      Think of a firewall as the security guard at the entrance to a nightclub. Every person who tries to get in is checked against a list. If your name is on the approved list, you walk straight through. If you are not on the list — or if you are on the banned list — the bouncer turns you away. No argument, no negotiation. The decision is instant and automatic.
+    </blockquote>
+
+    <p>In network terms, the "people" trying to get in are <strong>data packets</strong> — tiny chunks of information travelling across the internet. The "list" is the <strong>ruleset</strong> — a set of conditions that tell the firewall what to allow and what to block. The "bouncer" is the firewall software or hardware itself, checking every packet against those rules at high speed.</p>
+
+    <p>Firewalls sit between your device (or your entire network) and the internet. They create a controlled boundary — sometimes called a <strong>perimeter</strong> — through which all traffic must pass. Nothing gets in or out without being checked first.</p>
+
+    <p>The word "firewall" originally comes from construction: a fire wall is a physical barrier built into a building to stop fire spreading from one section to another. The same idea applies in computing — the firewall is a barrier that stops dangerous network traffic from spreading into your systems.</p>
+
+    <h2 id="how-does-a-firewall-work">How Does a Firewall Work? Step by Step</h2>
+
+    <p>Understanding how a firewall works requires a brief look at how data travels across the internet. When you visit a website, your computer does not send one big chunk of information. It breaks everything up into small pieces called <strong>packets</strong>. Each packet contains a small amount of data plus a header — a label that says where the packet is coming from, where it is going, which port it is using, and which protocol it follows.</p>
+
+    <p>A firewall reads those packet headers and decides what to do next. Here is the full process, step by step:</p>
+
+    <ol>
+      <li><strong>A packet arrives at the firewall.</strong> It might be incoming traffic from the internet trying to reach your computer, or outgoing traffic from your computer heading to a server.</li>
+      <li><strong>The firewall reads the packet header.</strong> It notes the source IP address, destination IP address, port number, and protocol (TCP, UDP, ICMP, etc.).</li>
+      <li><strong>The firewall compares the packet against its ruleset.</strong> Rules are checked in order, from top to bottom. Each rule says something like: "Allow TCP traffic on port 443 from any source" or "Block all traffic from IP address 192.0.2.99".</li>
+      <li><strong>The first matching rule wins.</strong> If the packet matches an allow rule, it passes through. If it matches a block rule, it is dropped. If it matches no rule at all, the firewall applies a default policy — usually "deny everything not explicitly allowed."</li>
+      <li><strong>The decision is logged.</strong> Most firewalls keep a record of every decision: what was allowed, what was blocked, when, and from where. These logs are invaluable for spotting attacks.</li>
+    </ol>
+
+    <blockquote>
+      Imagine a customs officer at an airport. Every passenger hands over their passport. The officer checks the document against a database: is this person allowed in? Are they on a watchlist? Is anything missing from their paperwork? Most people sail through. A few get pulled aside. A handful are turned back at the border. The firewall does exactly this — but at a rate of millions of checks per second.
+    </blockquote>
+
+    <p>Modern firewalls do far more than just check IP addresses. <strong>Stateful firewalls</strong> track the state of connections — they know whether a packet is part of an established conversation or a suspicious new request out of nowhere. <strong>Next-generation firewalls (NGFW)</strong> go even further, inspecting the actual content of packets, blocking specific applications, and integrating with threat intelligence feeds that list known malicious IP addresses in real time.</p>
+
+    <h2 id="types-of-firewalls">Types of Firewalls Explained</h2>
+
+    <p>Not all firewalls work in the same way. Here are the main types you will encounter, explained in plain terms:</p>
+
+    <h3>Packet Filtering Firewall</h3>
+    <p>The oldest and simplest type. It checks each packet in isolation — source IP, destination IP, port, and protocol — and applies rules. It is fast and lightweight but cannot see whether a packet is part of a legitimate ongoing connection or a new, suspicious one. Think of it as a bouncer who only checks the name on your wristband, not whether you actually belong to the party.</p>
+
+    <h3>Stateful Inspection Firewall</h3>
+    <p>A significant upgrade on basic packet filtering. A stateful firewall keeps track of every active network connection in a <strong>state table</strong>. It knows that if your browser opened a connection to a web server, the incoming replies from that server are legitimate — they are part of an established session. Random incoming packets that do not match any known connection get blocked. This is the standard for most modern home routers and corporate network firewalls.</p>
+
+    <h3>Application Layer Firewall (Proxy Firewall)</h3>
+    <p>This type operates at a higher level, understanding the actual content of network traffic rather than just the headers. A proxy firewall can tell the difference between legitimate HTTPS web traffic and malware that has disguised itself as HTTPS. It acts as an intermediary — your connection goes to the firewall, the firewall inspects it, then it forwards the request onward. More secure, but slower due to the extra processing.</p>
+
+    <h3>Next-Generation Firewall (NGFW)</h3>
+    <p>The current standard for enterprise environments. An NGFW combines stateful inspection with deep packet inspection (DPI), application awareness, intrusion prevention systems (IPS), and real-time threat intelligence. It can identify and block specific applications — like blocking TikTok on a corporate network — regardless of which port they use. It can also decrypt and inspect encrypted HTTPS traffic to detect hidden threats.</p>
+
+    <h3>Cloud Firewall (Firewall-as-a-Service)</h3>
+    <p>As businesses moved to the cloud, firewalls followed. A cloud firewall runs in the cloud and protects cloud infrastructure, remote workers, and distributed offices without requiring physical hardware at every location. Services like AWS Security Groups, Azure Firewall, and dedicated Firewall-as-a-Service providers (FWaaS) fall into this category.</p>
+
+    <h2 id="hardware-vs-software">Hardware vs Software Firewalls — Which Do You Need?</h2>
+
+    <p>You have almost certainly heard both terms. The difference is simpler than it sounds:</p>
+
+    <h3>Hardware Firewalls</h3>
+    <p>A <strong>hardware firewall</strong> is a dedicated physical device that sits between your internet connection and your network. Your home broadband router almost certainly has a basic hardware firewall built in — it is why random devices on the internet cannot directly connect to your laptop even if your laptop's own firewall is switched off. In offices and data centres, dedicated firewall appliances from vendors like Cisco, Palo Alto Networks, Fortinet, and Check Point protect entire networks.</p>
+
+    <p>Hardware firewalls protect <strong>every device on the network at once</strong>. A business with 500 computers does not need 500 separate firewall configurations — the hardware firewall at the network perimeter handles everything coming in and going out.</p>
+
+    <h3>Software Firewalls</h3>
+    <p>A <strong>software firewall</strong> runs directly on your computer or server. Windows has had a built-in software firewall since Windows XP Service Pack 2. macOS includes one too, although it is not enabled by default on older versions. Many antivirus suites include a software firewall component.</p>
+
+    <p>Software firewalls protect <strong>one device at a time</strong>. They are especially useful when you take your laptop outside the safety of your home network — connecting to public WiFi at a hotel or coffee shop, for example, where there is no hardware firewall between you and the internet.</p>
+
+    <div class="callout">
+      <div class="callout-title">Which do you need?</div>
+      <p>For home users: use both. Your router's built-in firewall handles inbound threats from the internet. Windows Defender Firewall (or macOS firewall) protects you on the go and catches outbound connections from malware trying to phone home. For businesses: a hardware or cloud firewall at the network perimeter is essential. Software firewalls on individual machines add a second layer of defence.</p>
+    </div>
+
+    <h2 id="what-firewalls-block">What Firewalls Block (and What They Don't)</h2>
+
+    <p>Firewalls are powerful, but they are not a magic shield against every threat. Understanding what they can and cannot do helps you make smarter security decisions.</p>
+
+    <h3>What a Firewall Can Block</h3>
+    <ul>
+      <li><strong>Unsolicited inbound connections</strong> — hackers trying to connect directly to open ports on your machine or network.</li>
+      <li><strong>Known malicious IP addresses</strong> — NGFWs with threat intelligence feeds automatically block traffic from IPs associated with botnets, ransomware command-and-control servers, and known attackers.</li>
+      <li><strong>Specific ports and protocols</strong> — an administrator can block port 23 (Telnet) entirely, forcing all remote management through the more secure SSH on port 22.</li>
+      <li><strong>Outbound connections to banned destinations</strong> — useful for blocking employees from accessing certain websites, or stopping malware from contacting external servers.</li>
+      <li><strong>Traffic from specific geographic regions</strong> — some firewalls can block all traffic originating from certain countries, a technique called geo-blocking.</li>
+      <li><strong>Denial-of-service (DoS) attacks</strong> — firewalls can detect and drop floods of junk traffic designed to overwhelm your servers.</li>
+    </ul>
+
+    <h3>What a Firewall Cannot Block</h3>
+    <ul>
+      <li><strong>Phishing emails</strong> — an email arrives over allowed port 25 (or 465/587 for secure mail). The firewall sees legitimate mail protocol traffic. It cannot read the message and spot that it is a fake login page link. You need an email security gateway or user awareness for that.</li>
+      <li><strong>Malware that uses allowed ports</strong> — if an attacker's malware communicates over port 443 (HTTPS), a basic firewall sees what looks like normal web browsing. Without deep packet inspection, it cannot tell the difference.</li>
+      <li><strong>Insider threats</strong> — if a malicious employee is already inside your network, the perimeter firewall does nothing to stop them. Zero Trust architecture addresses this problem.</li>
+      <li><strong>Social engineering attacks</strong> — if someone tricks a user into voluntarily downloading and running malware, the firewall cannot stop what the user has permitted.</li>
+      <li><strong>Vulnerabilities in allowed applications</strong> — a web server running on port 80 is permitted through the firewall. If that web server has a bug, an attacker can exploit it through the open port. The firewall does not check whether the application itself is secure.</li>
+      <li><strong>Encrypted threats (without SSL inspection)</strong> — most firewalls cannot inspect the content of encrypted HTTPS traffic without a special configuration called SSL/TLS inspection, which adds complexity.</li>
+    </ul>
+
+    <p>The key lesson: <strong>a firewall is one layer of security, not your only layer</strong>. Cybersecurity professionals talk about "defence in depth" — layering multiple controls so that if one fails, others compensate. A firewall pairs with antivirus software, security patching, user training, multi-factor authentication, and monitoring tools to form a complete defence.</p>
+
+    <h2 id="how-to-check-firewall">How to Check Your Firewall is On</h2>
+
+    <p>Most people assume their firewall is running. Here is how to verify it on the most common platforms:</p>
+
+    <h3>Windows</h3>
+    <p>Open the Start menu and search for <strong>Windows Defender Firewall</strong>. Click on it. You should see green ticks next to "Private networks" and "Public networks" with the message "Windows Defender Firewall is on." If it shows as off, click "Turn Windows Defender Firewall on or off" in the left panel and enable it for both network types.</p>
+
+    <p>Alternatively, open Command Prompt and run:</p>
+    <pre><code>netsh advfirewall show allprofiles</code></pre>
+    <p>Look for <code>State: ON</code> for the Domain, Private, and Public profiles.</p>
+
+    <h3>macOS</h3>
+    <p>Go to <strong>System Settings → Network → Firewall</strong> (on macOS Ventura and later) or <strong>System Preferences → Security &amp; Privacy → Firewall</strong> (on older versions). The firewall toggle should show as enabled. If not, click the lock icon to make changes and turn it on.</p>
+
+    <h3>Your Home Router</h3>
+    <p>Log in to your router's admin panel — usually by typing <code>192.168.1.1</code> or <code>192.168.0.1</code> into your browser's address bar. Look for a Firewall or Security section. Most routers have SPI (Stateful Packet Inspection) firewall enabled by default. If yours shows it as disabled, switch it on.</p>
+
+    <div class="callout">
+      <div class="callout-title">Quick Security Check</div>
+      <p>Run a free port scan from a site like ShieldsUP (grc.com) to see what your router is exposing to the internet. All ports should show as "Stealth" — invisible to outside scanners. If any ports show as "Open," investigate why and close them if they are not needed.</p>
+    </div>
+
+    <h3>Linux</h3>
+    <p>Most Linux distributions use <code>iptables</code> or <code>nftables</code> under the hood, often managed through a frontend like <code>ufw</code> (Uncomplicated Firewall). Check the status with:</p>
+    <pre><code>sudo ufw status</code></pre>
+    <p>If it shows <code>Status: inactive</code>, enable it with <code>sudo ufw enable</code>. Before doing so on a server, make sure you allow SSH on port 22 first to avoid locking yourself out:</p>
+    <pre><code>sudo ufw allow ssh
+sudo ufw enable</code></pre>
+
+    <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+    <h3>What is a firewall?</h3>
+    <p>A firewall is a security system that monitors and controls incoming and outgoing network traffic based on predefined rules. Think of it as a security guard for your network — it decides what gets in and what gets blocked.</p>
+
+    <h3>How does a firewall work?</h3>
+    <p>A firewall inspects every packet of data entering or leaving your network and compares it against a ruleset. If the traffic matches an allowed rule, it passes through. If it matches a blocked rule or no rule at all, it is dropped. Modern stateful firewalls also track the state of active connections, ensuring that only legitimate reply traffic is allowed back in.</p>
+
+    <h3>Do I need a firewall?</h3>
+    <p>Yes. Every device connected to the internet should have firewall protection. Windows and macOS include built-in firewalls that you should keep enabled. Your home router almost certainly has a built-in firewall too. Businesses need additional hardware or cloud-based firewalls for full network protection, along with proper rule configuration and ongoing monitoring.</p>
+
+    <h3>What is the difference between a hardware and software firewall?</h3>
+    <p>A hardware firewall is a physical device that protects an entire network — common in offices and data centres. A software firewall runs on individual computers and protects just that one device. Most home setups use both without realising it: the router provides a hardware firewall at the network edge, while Windows or macOS provides a software firewall on the device itself. Both layers together give you better protection than either alone.</p>
+
+    <h3>Can a firewall block all attacks?</h3>
+    <p>No. Firewalls are one layer of security. They cannot stop phishing emails, malware already inside your network, or attacks that use allowed ports. They also cannot protect against users who voluntarily install malicious software. You also need antivirus, regular patching, and user awareness training. Security is always a stack of multiple controls working together, not a single silver bullet.</p>
+
+    <div class="takeaway">
+      <h3>✓ What you learned</h3>
+      <ul>
+        <li>A firewall is a security guard for your network — it checks every packet against a ruleset and allows or blocks it.</li>
+        <li>Firewalls work by reading packet headers, matching them to rules, and applying the first matching rule — or a default deny if nothing matches.</li>
+        <li>There are several types: packet filtering, stateful inspection, application layer (proxy), next-generation (NGFW), and cloud firewalls.</li>
+        <li>Hardware firewalls protect entire networks; software firewalls protect individual devices. Most setups need both.</li>
+        <li>Firewalls cannot stop phishing, insider threats, or attacks through allowed ports — defence in depth is essential.</li>
+        <li>You can verify your firewall is active in seconds on Windows, macOS, Linux, and your home router.</li>
+      </ul>
+    </div>
+
+    <div class="cta-box">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>This is one of 150+ guides across 7 IT chapters — all free, all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+
+    <div style="margin-top:3rem;padding:2rem;background:#13131C;border:1px solid rgba(255,255,255,0.08);border-radius:16px;">
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FF6B35;margin-bottom:1rem;">Related Articles</div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <a href="/articles/2026-06-16-networking-1.html" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:#D0D0E8;padding:0.75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.06);transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,107,53,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:1.2rem;">🌐</span><span>How Does a VPN Work? Explained Simply</span></a>
+        <a href="/articles/2026-06-16-security.html" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:#D0D0E8;padding:0.75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.06);transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,107,53,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:1.2rem;">🔐</span><span>Zero Trust Architecture: Complete Beginner's Guide</span></a>
+        <a href="/articles/security/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:#D0D0E8;padding:0.75rem;border-radius:10px;border:1px solid rgba(255,255,255,0.06);transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,107,53,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:1.2rem;">📚</span><span>All Security Guides</span></a>
+      </div>
+    </div>
+  </article>
+
+  <aside>
+    <div class="sc">
+      <div class="sc-label">Jump to section</div>
+      <ul>
+        <li><a href="#what-is-a-firewall">What is a Firewall?</a></li>
+        <li><a href="#how-does-a-firewall-work">How Does a Firewall Work?</a></li>
+        <li><a href="#types-of-firewalls">Types of Firewalls</a></li>
+        <li><a href="#hardware-vs-software">Hardware vs Software</a></li>
+        <li><a href="#what-firewalls-block">What Firewalls Block</a></li>
+        <li><a href="#how-to-check-firewall">Check Your Firewall</a></li>
+        <li><a href="#frequently-asked-questions">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="sc">
+      <div class="sc-label">All chapters</div>
+      <div class="chapter-list">
+        <a href="/#chapters">🌐 Networking</a>
+        <a href="/#chapters">☁️ Cloud</a>
+        <a href="/#chapters">🔐 Security</a>
+        <a href="/#chapters">⚙️ DevOps</a>
+        <a href="/#chapters">🗄️ Databases</a>
+        <a href="/#chapters">🐧 Linux</a>
+        <a href="/#chapters">🖥️ Hardware</a>
+        <a href="/#chapters">📋 Compliance</a>
+      </div>
+    </div>
+    <div class="nl-sc">
+      <div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English, zero jargon.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">Chapters</a>
+    <a href="/#newsletter">Newsletter</a>
+    <a href="/sitemap.xml">Sitemap</a>
+  </div>
+  <p style="margin-top:1.25rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';
+},{passive:true});
+</script>
+</body>
+</html>
