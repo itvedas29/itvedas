@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Live cybersecurity news, attacks, breaches and CVEs — aggregated in real time and explained in plain English by ITVedas.">
+<meta name="description" content="Cybersecurity news, attacks, breaches and CVEs — original reporting, explained in plain English by ITVedas, every story on its own page.">
 <meta name="keywords" content="cybersecurity news, CVE tracker, cyber attacks, data breaches, vulnerability news, security advisories">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://itvedas.com/security-news.html">
-<title>Cybersecurity News, Attacks & CVEs — Live | ITVedas</title>
+<title>Cybersecurity News, Attacks & CVEs | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -33,23 +33,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
 .section-label{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);}
 .section-h{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;margin-top:0.35rem;}
-.section-note{font-size:0.8rem;color:var(--muted);}
 .filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
 .fb{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
 .fb:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
 .fb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.live-feed{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:4rem;}
-.lf-item{display:flex;align-items:flex-start;gap:0.9rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.9rem 1.1rem;text-decoration:none;color:inherit;transition:border-color 0.2s;}
-.lf-item:hover{border-color:rgba(255,255,255,0.2);}
-.lf-badge{flex-shrink:0;font-size:0.65rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;margin-top:0.1rem;}
-.lf-badge.cve{background:rgba(239,68,68,0.15);color:#EF4444;}
-.lf-badge.attack{background:rgba(245,158,11,0.15);color:#F59E0B;}
-.lf-badge.general{background:rgba(100,116,139,0.15);color:#94A3B8;}
-.lf-body{flex:1;min-width:0;}
-.lf-title{font-size:0.92rem;color:var(--text);line-height:1.4;margin-bottom:0.3rem;}
-.lf-meta{font-size:0.75rem;color:var(--muted);}
-.lf-loading,.lf-empty,.lf-error{color:var(--muted);font-size:0.875rem;padding:1.5rem;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+.empty{text-align:center;padding:3rem;color:var(--muted);grid-column:1/-1;}
 .nc{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}
 .nc:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}
 .nc-vis{height:140px;display:flex;align-items:center;justify-content:center;}
@@ -65,7 +54,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .cve-fact{display:flex;gap:0.5rem;font-size:0.8rem;}
 .cve-fact-label{color:var(--muted);flex-shrink:0;min-width:62px;font-weight:600;}
 .cve-fact-val{color:var(--sub);}
-.empty{text-align:center;padding:3rem;color:var(--muted);}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
 .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
 .fl span{color:var(--accent);}
@@ -82,34 +70,20 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 </nav>
 <div class="hero">
   <div class="hero-in">
-    <div class="live"><span class="dot"></span>Live updates</div>
+    <div class="live"><span class="dot"></span>Updated 05:45 AM IST</div>
     <h1>Cybersecurity News, <span>Attacks & CVEs</span></h1>
-    <p>Real-time threat headlines pulled straight from the source, plus ITVedas's own plain-English breakdowns of what happened, why it matters, and how to fix it.</p>
-    <p class="upd">Original coverage last updated: 05:45 AM IST · July 01, 2026</p>
+    <p>Every attack, breach and CVE we cover gets its own plain-English ITVedas write-up — what happened, why it matters, and how to fix it. No links out, everything's on this page.</p>
+    <p class="upd">Last updated: 05:45 AM IST · July 01, 2026</p>
   </div>
 </div>
 <div class="main">
-  <div class="section-head">
-    <div>
-      <div class="section-label">Live Threat Feed</div>
-      <h2 class="section-h">Straight from the source, updated continuously</h2>
-    </div>
-    <div class="section-note">Raw headlines, unedited — click through to the original reporting</div>
-  </div>
-  <div class="filters" id="lf-filters">
-    <button class="fb active" data-lt="all">All</button>
-    <button class="fb" data-lt="CVE">CVEs</button>
-    <button class="fb" data-lt="Attack">Attacks & Breaches</button>
-    <button class="fb" data-lt="General">General</button>
-  </div>
-  <div class="live-feed" id="live-feed"><div class="lf-loading">Loading live threat feed…</div></div>
-
   <div class="section-head">
     <div>
       <div class="section-label">ITVedas Original Coverage</div>
       <h2 class="section-h">Our own breakdowns of what happened</h2>
     </div>
   </div>
+  <div class="filters" id="filters"><button class="fb active" data-t="all">All</button><button class="fb" data-t="CVE" style="--tc:#EF4444">CVEs</button><button class="fb" data-t="Security" style="--tc:#10B981">Attacks & Breaches</button></div>
   <div class="grid" id="grid"><a href="/news/2026-06-30-aflac-confirms-breach-at-subsidiary-raising-questions-about-.html" class="nc" data-t="Security">
               <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
               <div class="nc-body">
@@ -247,6 +221,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
                 <span class="nc-link">Read full story →</span>
               </div>
             </a></div>
+  <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>
 </div>
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
@@ -255,59 +230,16 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <p style="margin-top:1rem;">© 2026 ITVedas · Original reporting</p>
 </footer>
 <script>
-(function() {
-  const feedEl = document.getElementById('live-feed');
-  let allItems = [];
-
-  function badgeClass(cat) {
-    if (cat === 'CVE') return 'cve';
-    if (cat === 'Attack') return 'attack';
-    return 'general';
-  }
-
-  function render(filter) {
-    const items = filter === 'all' ? allItems : allItems.filter(i => i.category === filter);
-    if (!items.length) {
-      feedEl.innerHTML = '<div class="lf-empty">No stories in this category right now.</div>';
-      return;
-    }
-    feedEl.innerHTML = items.map(i => {
-      const div = document.createElement('div');
-      div.textContent = i.title || '';
-      const safeTitle = div.innerHTML;
-      const div2 = document.createElement('div');
-      div2.textContent = i.source || 'source';
-      const safeSource = div2.innerHTML;
-      const safeLink = encodeURI(i.link || '#');
-      const when = i.pub_date ? new Date(i.pub_date).toLocaleString('en-US', {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
-      return `<a class="lf-item" href="${safeLink}" target="_blank" rel="noopener nofollow">
-        <span class="lf-badge ${badgeClass(i.category)}">${i.cve_id || i.category}</span>
-        <span class="lf-body">
-          <span class="lf-title">${safeTitle}</span>
-          <span class="lf-meta">${safeSource}${when ? ' · ' + when : ''}</span>
-        </span>
-      </a>`;
-    }).join('');
-  }
-
-  document.querySelectorAll('#lf-filters .fb').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#lf-filters .fb').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render(btn.dataset.lt);
-    });
+function f(t){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-t="${t}"]`).classList.add('active');
+  let v=0;
+  document.querySelectorAll('#grid .nc').forEach(c=>{
+    const s=t==='all'||c.dataset.t===t;c.style.display=s?'':'none';if(s)v++;
   });
-
-  fetch('/api/security-feed')
-    .then(r => { if (!r.ok) throw new Error('bad response'); return r.json(); })
-    .then(data => {
-      allItems = Array.isArray(data.items) ? data.items : [];
-      render('all');
-    })
-    .catch(() => {
-      feedEl.innerHTML = '<div class="lf-error">Couldn\'t load the live feed right now. Try refreshing.</div>';
-    });
-})();
+  document.getElementById('empty').style.display=v===0?'block':'none';
+}
+document.querySelectorAll('#filters .fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
 </body>
 </html>
