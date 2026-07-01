@@ -504,12 +504,10 @@ def update_homepage(state):
     for a in recent:
         c = color_for(a.get("topic", "IT"))
         items += (
-            f'<a href="/articles/{a["file"]}" style="display:flex;align-items:flex-start;gap:1rem;'
-            f'padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;">'
-            f'<span style="background:{c}1a;color:{c};font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;'
-            f'border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">{a.get("topic","IT")}</span>'
-            f'<div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">{esc(a.get("title","Article"))}</div>'
-            f'<div style="font-size:0.75rem;color:#8888A8;">{a.get("date","")} · {a.get("rt","5 min read")}</div></div></a>'
+            f'<a href="/articles/{a["file"]}" class="lac">'
+            f'<span class="lac-badge" style="background:{c}1a;color:{c};">{a.get("topic","IT")}</span>'
+            f'<div class="lac-title">{esc(a.get("title","Article"))}</div>'
+            f'<div class="lac-meta">{a.get("date","")} · {a.get("rt","5 min read")}</div></a>'
         )
     section = (
         '<!-- LATEST_ARTICLES_START -->\n'
@@ -519,7 +517,7 @@ def update_homepage(state):
         '<div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FF6B35;margin-bottom:0.75rem;">Latest Articles</div>'
         '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;">Fresh from the Knowledge Hub</h2>'
         '<p style="color:#8888A8;margin-bottom:2.5rem;max-width:500px;">New articles every Monday, Wednesday and Friday — always plain English, always free.</p>'
-        f'<div style="max-width:720px;">{items}</div></div></div>\n'
+        f'<div class="latest-articles-grid">{items}</div></div></div>\n'
         '<!-- LATEST_ARTICLES_END -->'
     )
     if '<!-- LATEST_ARTICLES_START -->' in html:
