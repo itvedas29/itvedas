@@ -89,9 +89,14 @@ nav {
   box-shadow:0 16px 32px rgba(0,0,0,0.45); z-index:200;
 }
 .nav-dropdown.open .nav-drop-menu { display:flex; }
-.nav-drop-menu a { padding:0.55rem 0.75rem; border-radius:8px; font-size:0.85rem; color:var(--muted); text-decoration:none; white-space:nowrap; }
+.nav-drop-menu a { padding:0.55rem 0.75rem; border-radius:8px; font-size:0.85rem; color:var(--muted); text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:0.5rem; }
 .nav-drop-menu a:hover { background:rgba(255,255,255,0.06); color:var(--text); }
-.nav-hamburger { display:none; background:none; border:none; color:var(--text); font-size:1.35rem; line-height:1; cursor:pointer; padding:0.2rem 0.1rem; }
+.nav-hamburger { display:none; background:none; border:none; color:var(--text); font-size:1.35rem; line-height:1; cursor:pointer; padding:0.2rem 0.1rem; align-items:center; }
+.ic { width:1em; height:1em; flex-shrink:0; }
+.nav-drop-btn .ic:first-child, .nav-drop-menu a .ic { width:1.05em; height:1.05em; }
+.chev { width:0.8em; height:0.8em; transition:transform 0.2s; }
+.nav-dropdown.open .chev { transform:rotate(180deg); }
+.nav-hamburger .ic { width:1.35rem; height:1.35rem; }
 .nav-news { color:var(--news) !important; }
 .nav-security { color:var(--sec) !important; }
 .nav-deals { color:var(--db) !important; }
@@ -116,6 +121,15 @@ nav {
     radial-gradient(ellipse 40% 30% at 20% 70%, rgba(59,130,246,0.08) 0%, transparent 60%),
     radial-gradient(ellipse 30% 25% at 80% 20%, rgba(139,92,246,0.07) 0%, transparent 60%);
 }
+.hero-network { position:absolute; inset:0; width:100%; height:100%; opacity:0.6; pointer-events:none; }
+.hero-network .hn-nodes circle { transform-box:fill-box; transform-origin:center; animation:hnPulse 3.6s ease-in-out infinite; }
+.hero-network .hn-nodes circle:nth-child(2n) { animation-delay:0.7s; }
+.hero-network .hn-nodes circle:nth-child(3n) { animation-delay:1.4s; }
+@keyframes hnPulse { 0%,100% { opacity:0.55; transform:scale(1); } 50% { opacity:1; transform:scale(1.7); } }
+@media(max-width:640px) { .hero-network { opacity:0.32; } }
+/* ── Scroll reveal ────────────────────────────────────── */
+.reveal { opacity:0; transform:translateY(18px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal-in { opacity:1; transform:translateY(0); }
 .hero-badge {
   display:inline-flex; align-items:center; gap:0.5rem;
   background:rgba(255,107,53,0.10); border:1px solid rgba(255,107,53,0.28);
@@ -255,6 +269,7 @@ nav {
   background:var(--ci); display:flex; align-items:center;
   justify-content:center; font-size:1.5rem; margin-bottom:1.25rem;
 }
+.chapter-icon svg { width:24px; height:24px; color:var(--c); }
 .chapter-num { font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--c); margin-bottom:0.4rem; }
 .chapter-title { font-family:var(--fd); font-size:1.2rem; font-weight:700; margin-bottom:0.6rem; }
 .chapter-desc { font-size:0.875rem; color:var(--muted); line-height:1.65; margin-bottom:1.25rem; }
@@ -415,19 +430,19 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   <ul class="nav-links" id="navLinks">
     <li><a href="#chapters">Chapters</a></li>
     <li class="nav-dropdown">
-      <button type="button" class="nav-drop-btn nav-news" aria-expanded="false">📰 News ▾</button>
+      <button type="button" class="nav-drop-btn nav-news" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="16" rx="1"/><path d="M17 8h4v11a2 2 0 0 1-2 2H7"/><line x1="7" y1="9" x2="13" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/><line x1="7" y1="17" x2="11" y2="17"/></svg> News <svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="nav-drop-menu">
         <a href="/news.html">All News</a>
-        <a href="/security-news.html" class="nav-security">🛡️ Security News</a>
+        <a href="/security-news.html" class="nav-security"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg> Security News</a>
       </div>
     </li>
     <li><a href="/career-paths.html">Career Paths</a></li>
     <li><a href="/quiz.html">Quiz</a></li>
     <li class="nav-dropdown">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">More ▾</button>
+      <button type="button" class="nav-drop-btn" aria-expanded="false">More <svg class="ic chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="nav-drop-menu">
         <a href="/faq.html">FAQ</a>
-        <a href="/deals.html" class="nav-deals">🔥 Deals</a>
+        <a href="/deals.html" class="nav-deals"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1.2 3-2.5 4.2-2.5 7.8a4.5 4.5 0 0 0 9 0c0-1.2-.6-2.2-1.2-2.4.4 2.2-1 3.4-2.3 3.4-1.6 0-2.8-1.4-2.3-3.4.5-2 .1-3.9-.7-5.4z"/></svg> Deals</a>
         <a href="/about.html">About</a>
         <a href="#contact">Contact</a>
       </div>
@@ -435,14 +450,41 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
   </ul>
   <div class="nav-right">
     <a href="#newsletter" class="nav-cta">Subscribe Free</a>
-    <button type="button" class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    <button type="button" class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
   </div>
 </nav>
 
 <!-- ── HERO ──────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-glow"></div>
-  <div class="hero-badge"><span class="pulse"></span>Free IT Knowledge Hub · Updated Daily</div>
+  <svg class="hero-network" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g class="hn-edges" stroke="rgba(255,255,255,0.09)" stroke-width="1" fill="none">
+      <line x1="120" y1="120" x2="340" y2="220"/>
+      <line x1="340" y1="220" x2="580" y2="140"/>
+      <line x1="580" y1="140" x2="860" y2="200"/>
+      <line x1="860" y1="200" x2="1080" y2="110"/>
+      <line x1="340" y1="220" x2="420" y2="440"/>
+      <line x1="580" y1="140" x2="640" y2="420"/>
+      <line x1="860" y1="200" x2="820" y2="460"/>
+      <line x1="120" y1="120" x2="60" y2="380"/>
+      <line x1="1080" y1="110" x2="1140" y2="360"/>
+      <line x1="420" y1="440" x2="640" y2="420"/>
+      <line x1="640" y1="420" x2="820" y2="460"/>
+    </g>
+    <g class="hn-nodes">
+      <circle cx="120" cy="120" r="4" fill="#FF6B35"/>
+      <circle cx="340" cy="220" r="3" fill="#3B82F6"/>
+      <circle cx="580" cy="140" r="4" fill="#10B981"/>
+      <circle cx="860" cy="200" r="3" fill="#8B5CF6"/>
+      <circle cx="1080" cy="110" r="4" fill="#FF6B35"/>
+      <circle cx="420" cy="440" r="3" fill="#3B82F6"/>
+      <circle cx="640" cy="420" r="4" fill="#10B981"/>
+      <circle cx="820" cy="460" r="3" fill="#8B5CF6"/>
+      <circle cx="60" cy="380" r="3" fill="#FF6B35"/>
+      <circle cx="1140" cy="360" r="3" fill="#FF6B35"/>
+    </g>
+  </svg>
+  <div class="hero-badge"><span class="pulse"></span>Free IT Knowledge Hub · Updated Hourly</div>
   <h1>
     <span class="l1">Everything IT.</span>
     <span class="l2">Explained Simply.</span>
@@ -517,7 +559,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/networking/" class="chapter-card" style="--c:var(--net);--ci:rgba(255,107,53,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">🌐</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div>
       <div class="chapter-num">Chapter 01 · Networking</div>
       <div class="chapter-title">How Networks Talk</div>
       <p class="chapter-desc">TCP/IP, DNS, subnetting, routing, VPNs, firewalls — understand exactly how data moves across the internet and your internal networks.</p>
@@ -528,7 +570,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/cloud/" class="chapter-card" style="--c:var(--cld);--ci:rgba(59,130,246,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">☁️</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h11a4 4 0 0 0 .9-7.9A5.5 5.5 0 0 0 7.2 8.5 4 4 0 0 0 6 18z"/></svg></div>
       <div class="chapter-num">Chapter 02 · Cloud Computing</div>
       <div class="chapter-title">The Cloud, Demystified</div>
       <p class="chapter-desc">AWS, Azure, GCP — IaaS, PaaS, SaaS explained. Deploy infrastructure, manage costs, and architect for scale without the confusion.</p>
@@ -539,7 +581,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/security/" class="chapter-card" style="--c:var(--sec);--ci:rgba(16,185,129,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">🔐</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <div class="chapter-num">Chapter 03 · Security</div>
       <div class="chapter-title">Defending the Stack</div>
       <p class="chapter-desc">Encryption, authentication, threat modelling, Zero Trust, OWASP — build a security-first mindset and protect what matters.</p>
@@ -550,7 +592,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/devops/" class="chapter-card" style="--c:var(--dev);--ci:rgba(139,92,246,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">⚙️</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
       <div class="chapter-num">Chapter 04 · DevOps</div>
       <div class="chapter-title">Ship Faster, Break Less</div>
       <p class="chapter-desc">Docker, Kubernetes, CI/CD, Terraform, GitHub Actions — automate everything between writing code and running it in production.</p>
@@ -561,7 +603,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/databases/" class="chapter-card" style="--c:var(--db);--ci:rgba(245,158,11,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">🗄️</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
       <div class="chapter-num">Chapter 05 · Databases</div>
       <div class="chapter-title">Data at Any Scale</div>
       <p class="chapter-desc">SQL vs NoSQL, indexing, query optimisation, replication, sharding — design and run databases that perform reliably at any size.</p>
@@ -572,7 +614,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/linux/" class="chapter-card" style="--c:var(--os);--ci:rgba(239,68,68,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">🐧</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg></div>
       <div class="chapter-num">Chapter 06 · Linux & OS</div>
       <div class="chapter-title">Own the Terminal</div>
       <p class="chapter-desc">Shell scripting, process management, file systems, systemd, permissions, cron — Linux is the foundation every IT professional needs.</p>
@@ -583,7 +625,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/hardware/" class="chapter-card" style="--c:var(--hw);--ci:rgba(6,182,212,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">🖥️</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><circle cx="7" cy="7.5" r="0.5" fill="currentColor"/><circle cx="7" cy="16.5" r="0.5" fill="currentColor"/></svg></div>
       <div class="chapter-num">Chapter 07 · Hardware</div>
       <div class="chapter-title">Silicon to System</div>
       <p class="chapter-desc">CPUs, RAM, storage, networking cards, data centre architecture — understand the physical layer that every piece of software runs on.</p>
@@ -594,7 +636,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
     <a href="/articles/compliance/" class="chapter-card" style="--c:var(--comp);--ci:rgba(236,72,153,0.10);">
       <span class="chapter-arrow">↗</span>
-      <div class="chapter-icon">📋</div>
+      <div class="chapter-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3h6v3H9z"/><path d="M9 13l2 2 4-4"/></svg></div>
       <div class="chapter-num">Chapter 08 · Compliance</div>
       <div class="chapter-title">Rules That Protect You</div>
       <p class="chapter-desc">GDPR, HIPAA, SOC 2, PCI DSS, ISO 27001 — understand the regulations that govern IT, why they exist, and how to stay compliant.</p>
@@ -897,6 +939,21 @@ navHamburger.addEventListener('click',()=>{
   navHamburger.setAttribute('aria-expanded',open?'true':'false');
   if(!open)closeDropdowns();
 });
+
+/* ── Scroll reveal ───────────────────────────────── */
+const revealEls=document.querySelectorAll('.chapter-card,.lsc,.lac,.stat');
+if('IntersectionObserver' in window){
+  revealEls.forEach(el=>el.classList.add('reveal'));
+  const revealObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('reveal-in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.15});
+  revealEls.forEach(el=>revealObserver.observe(el));
+}
 
 /* ── Subnet Calculator ───────────────────────── */
 function calcSubnet() {
