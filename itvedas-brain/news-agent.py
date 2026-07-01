@@ -635,6 +635,62 @@ def slugify(text):
     s = re.sub(r'[^a-z0-9]+','-',text.lower()).strip('-')
     return s[:60]
 
+def update_homepage_security(published):
+    """Injects the most recent Security/CVE stories into index.html's
+    LATEST_SECURITY marker block (same inject-between-markers pattern as
+    content-writer.py's update_homepage()), so the homepage surfaces the
+    hourly security pipeline instead of only linking out to
+    /security-news.html."""
+    index = pathlib.Path("index.html")
+    if not index.exists():
+        return
+    html_doc = index.read_text(encoding="utf-8")
+    recent = [a for a in published if a.get('topic') in ("Security", "CVE")][:4]
+    if not recent:
+        return
+
+    cards = ""
+    for a in recent:
+        badge_cls = "cve" if a.get('topic') == "CVE" else "security"
+        badge_txt = a.get('cve_id') or a.get('topic')
+        meta_line = f"{a.get('date','')}{(' · ' + a['time']) if a.get('time') else ''}"
+        cards += (
+            f'<a href="/news/{a["slug"]}.html" class="lsc">'
+            f'<span class="lsc-badge {badge_cls}">{esc(badge_txt)}</span>'
+            f'<div class="lsc-title">{esc(a["headline"])}</div>'
+            f'<div class="lsc-time">{meta_line}</div>'
+            f'</a>'
+        )
+    section = (
+        '<!-- LATEST_SECURITY_START -->\n'
+        '<div class="live-security">'
+        '<div class="live-security-head">'
+        '<div class="live-security-label"><span class="live-security-dot"></span>Live Security &amp; Threat Watch</div>'
+        '<a href="/security-news.html" class="live-security-link">See all security news →</a>'
+        '</div>'
+        f'<div class="live-security-grid">{cards}</div>'
+        '</div>\n'
+        '<!-- LATEST_SECURITY_END -->'
+    )
+
+    if '<!-- LATEST_SECURITY_START -->' in html_doc:
+        html_doc = re.sub(
+            r'<!-- LATEST_SECURITY_START -->.*?<!-- LATEST_SECURITY_END -->',
+            lambda _m: section, html_doc, flags=re.DOTALL,
+        )
+    else:
+        marker = '<!-- ── LATEST ARTICLES (filled by brain agent) ─────────── -->'
+        if marker not in html_doc:
+            return
+        html_doc = html_doc.replace(marker, section + '\n\n' + marker)
+
+    try:
+        index.write_text(html_doc, encoding="utf-8")
+    except Exception as e:
+        log(f"Homepage security module write error: {e}")
+        return
+    log("Homepage security module updated")
+
 def main():
     print("News Agent v2 — original commentary mode")
     if not ANTHROPIC_KEY:
@@ -714,12 +770,15 @@ def main():
     tmp2.write_text(index, encoding="utf-8")
     tmp2.replace(news_html)
 
-    # Build dedicated cybersecurity page (live feed + Security/CVE originals)
+    # Build dedicated cybersecurity page (Security/CVE originals)
     security_page = build_security_news_page(published, update_time)
     security_html = pathlib.Path("security-news.html")
     tmp3 = security_html.with_suffix(".tmp")
     tmp3.write_text(security_page, encoding="utf-8")
     tmp3.replace(security_html)
+
+    # Surface the latest Security/CVE stories on the homepage too
+    update_homepage_security(published)
 
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 
