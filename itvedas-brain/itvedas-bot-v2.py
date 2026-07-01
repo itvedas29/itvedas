@@ -38,6 +38,19 @@
 ║  • Sakaax/ux-pilot                — 376 UX rules co-pilot                   ║
 ║  • S0ulFood/design-cognition-skill— 4-role design thinking framework        ║
 ║                                                                              ║
+║  TASK MANAGEMENT (60 repos — github.com/topics/task-management)             ║
+║  • dongshuyan/compass-skills      — task-clarifier, task-forest DAG,        ║
+║  •                                  session-handoff, user-profile-keeper    ║
+║  • builderz-labs/mission-control  — multi-agent task orchestration          ║
+║  • saltbo/agent-kanban            — agent-first kanban mission control      ║
+║  • CronusL-1141/AI-company        — multi-agent team OS for Claude Code     ║
+║  • jpicklyk/task-orchestrator     — server-enforced workflow discipline      ║
+║  • cortex-tms/cortex-tms          — tiered memory system (TMS)              ║
+║  • JamesShi96/project-butler      — session logs + project documentation    ║
+║  • kanban-md/antopolskiy          — file-based kanban for agentic loops     ║
+║  • cyanheads/atlas-mcp-server     — Neo4j task graph for LLM agents         ║
+║  • L1AD/claude-task-viewer        — Kanban board for Claude Code tasks      ║
+║                                                                              ║
 ║  What this bot does every run:                                               ║
 ║  1. MEMORY CHECK  — loads brain memory, knows what articles exist           ║
 ║  2. RESEARCH      — finds trending IT topics with search gaps               ║
@@ -419,9 +432,10 @@ Reply with ONLY JSON:
 # ─────────────────────────────────────────────────────────────────────────────
 #  ARTICLE WRITER (content-writer.py + DATAGEN multi-agent pattern)
 # ─────────────────────────────────────────────────────────────────────────────
-def write_article(topic: str, chapter: str) -> dict:
+def write_article(topic: str, chapter: str, anchor_facts: list | None = None) -> dict:
     """Generate full article. Returns structured data dict."""
     log("writer", f"Writing: '{topic}' [{chapter}]")
+    anchor_facts = anchor_facts or []
 
     ch = CHAPTERS.get(chapter, CHAPTERS["networking"])
     today = datetime.date.today().isoformat()
@@ -432,7 +446,11 @@ Target audience: complete beginners to IT.
 Writing style: friendly teacher, clear examples, no jargon without explanation.
 """
 
+    pre_anchored = f"\nPre-validated anchor facts (use these):\n" + \
+        "\n".join(f"- {f}" for f in anchor_facts) if anchor_facts else ""
+
     prompt = f"""Write a complete, high-quality SEO article about: "{topic}"
+{pre_anchored}
 
 PHASE 1 — EVIDENCE ANCHORING (from dongbeixiaohuo/writing-agent):
 Before writing, identify 3-5 specific facts, numbers, or real examples that anchor this article.
@@ -953,6 +971,167 @@ def _save_locally(data: dict, html_content: str) -> bool:
 #  HEARTBEAT (second-brain-starter heartbeat pattern)
 #  Logs health + next recommended topics after every run
 # ─────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+#  TASK MANAGEMENT SYSTEM
+#  Sources: dongshuyan/compass-skills, cortex-tms, jpicklyk/task-orchestrator,
+#           saltbo/agent-kanban, builderz-labs/mission-control
+# ─────────────────────────────────────────────────────────────────────────────
+
+def task_clarifier(topic: str, chapter: str, mem: dict) -> dict:
+    """
+    compass-skills/task-clarifier pattern:
+    Aligns goals, scope, evidence, acceptance criteria, and risk boundaries
+    BEFORE writing — prevents wasted generation on bad topic choices.
+    """
+    done_count = len(mem["done_topics"])
+    chapter_articles = [a for a in mem["published_articles"] if a.get("chapter") == chapter]
+
+    prompt = f"""You are a task clarifier for an IT education content bot.
+
+Before writing an article about "{topic}" for the {chapter} chapter of ITVedas.com,
+clarify and validate this task. The site has {done_count} articles total,
+{len(chapter_articles)} in the {chapter} chapter.
+
+Evaluate:
+1. GOAL: Is "{topic}" a clear, specific topic with measurable search demand?
+2. SCOPE: Is it too broad (split into parts) or too narrow (merge with another)?
+3. EVIDENCE: What 3 specific facts/numbers can anchor this article?
+4. ACCEPTANCE: What makes this article "done"? (word count, sections, FAQ count)
+5. RISK: Any accuracy risks? (rapidly changing tech, controversial claims?)
+
+Return ONLY JSON:
+{{
+  "approved": true,
+  "refined_topic": "...(same or slightly improved topic title)",
+  "scope": "single-article or needs-split",
+  "anchor_facts": ["fact with number", "fact with name", "fact with example"],
+  "acceptance_criteria": {{"min_words": 800, "min_sections": 4, "min_faq": 3}},
+  "risk_level": "low|medium|high",
+  "risk_note": "...or null"
+}}"""
+
+    try:
+        raw = _call_claude(prompt, max_tokens=400)
+        raw = _extract_json(raw)
+        result = json.loads(raw)
+        if result.get("refined_topic") and result["refined_topic"] != topic:
+            log("task-clarifier", f"Topic refined: '{topic}' → '{result['refined_topic']}'")
+        if result.get("risk_level") == "high":
+            log("task-clarifier", f"HIGH RISK: {result.get('risk_note')}")
+        return result
+    except Exception as e:
+        log("task-clarifier", f"Skipped (non-blocking): {e}")
+        return {"approved": True, "refined_topic": topic, "anchor_facts": [],
+                "acceptance_criteria": {"min_words": 800, "min_sections": 4, "min_faq": 3}}
+
+
+def task_forest_update(mem: dict, topic: str, chapter: str, status: str,
+                       slug: str = "", notes: str = "") -> dict:
+    """
+    compass-skills/task-forest pattern:
+    Maintains a DAG of tasks with goals, subtasks, dependencies, progress,
+    deviations, decisions, and history. File: state/task-forest.json
+    """
+    forest_file = STATE_DIR / "task-forest.json"
+    forest: dict = {}
+    if forest_file.exists():
+        try:
+            forest = json.loads(forest_file.read_text())
+        except Exception:
+            pass
+
+    if "tasks" not in forest:
+        forest["tasks"] = {}
+    if "chapter_goals" not in forest:
+        forest["chapter_goals"] = {ch: f"Comprehensive {cfg['name']} coverage for beginners"
+                                    for ch, cfg in CHAPTERS.items()}
+    if "decisions" not in forest:
+        forest["decisions"] = []
+
+    task_id = f"{chapter}/{slug or topic[:30].replace(' ', '-').lower()}"
+    forest["tasks"][task_id] = {
+        "topic": topic,
+        "chapter": chapter,
+        "status": status,   # pending|in_progress|done|failed
+        "slug": slug,
+        "notes": notes,
+        "updated": datetime.datetime.utcnow().isoformat(),
+    }
+
+    # record decision log (task-orchestrator workflow discipline)
+    if status == "done":
+        forest["decisions"].append({
+            "date": datetime.date.today().isoformat(),
+            "decision": f"Published '{topic}' in {chapter}",
+            "outcome": "success",
+        })
+    elif status == "failed":
+        forest["decisions"].append({
+            "date": datetime.date.today().isoformat(),
+            "decision": f"Attempted '{topic}' in {chapter}",
+            "outcome": "failed",
+            "notes": notes,
+        })
+
+    # tiered memory summary (cortex-tms pattern)
+    forest["summary"] = {
+        "total_tasks": len(forest["tasks"]),
+        "done": sum(1 for t in forest["tasks"].values() if t["status"] == "done"),
+        "failed": sum(1 for t in forest["tasks"].values() if t["status"] == "failed"),
+        "in_progress": sum(1 for t in forest["tasks"].values() if t["status"] == "in_progress"),
+        "last_updated": datetime.datetime.utcnow().isoformat(),
+    }
+
+    forest_file.write_text(json.dumps(forest, indent=2, ensure_ascii=False))
+    return forest
+
+
+def session_handoff(mem: dict, topic: str, chapter: str, result: str) -> None:
+    """
+    compass-skills/session-handoff-prompt pattern:
+    Compresses current session state into a paste-ready prompt for next run.
+    Saves to state/session-handoff.md
+    """
+    handoff_file = STATE_DIR / "session-handoff.md"
+    recent = [a["title"] for a in mem["published_articles"][-5:]]
+    next_topics = []
+    for ch, topics in TOPIC_SEEDS.items():
+        for t in topics:
+            if not memory_has_topic(mem, t):
+                next_topics.append(f"[{ch}] {t}")
+            if len(next_topics) >= 5:
+                break
+        if len(next_topics) >= 5:
+            break
+
+    handoff = f"""# ITVedas Bot — Session Handoff
+Generated: {datetime.datetime.utcnow().isoformat()}
+
+## Last Session
+- Topic attempted: {topic}
+- Chapter: {chapter}
+- Result: {result}
+
+## Current State
+- Total articles published: {mem['stats']['total_published']}
+- Total topics done: {len(mem['done_topics'])}
+- Total failures: {mem['stats']['total_failed']}
+
+## Recent Articles (last 5)
+{chr(10).join(f'- {t}' for t in recent)}
+
+## Recommended Next Topics
+{chr(10).join(f'- {t}' for t in next_topics)}
+
+## Resume Instructions
+Run: python itvedas-brain/itvedas-bot-v2.py
+Memory auto-loads from: itvedas-brain/memory/bot_memory.json
+Task forest at: itvedas-brain/state/task-forest.json
+"""
+    handoff_file.write_text(handoff)
+    log("session-handoff", "Handoff saved for next session")
+
+
 def write_heartbeat(mem: dict, result: str, topic: str, chapter: str) -> None:
     chapter_counts = {}
     for art in mem["published_articles"]:
@@ -1089,15 +1268,24 @@ def main() -> int:
     # 3. TOPIC PICK — intelligent, never repeats
     topic, chapter = pick_topic(mem)
 
+    # 3b. TASK CLARIFIER — validate + refine topic before writing (compass-skills)
+    task_forest_update(mem, topic, chapter, "in_progress")
+    clarification = task_clarifier(topic, chapter, mem)
+    topic = clarification.get("refined_topic", topic)  # use refined topic if improved
+    anchor_facts = clarification.get("anchor_facts", [])
+    log("task", f"Clarified: '{topic}' | risk={clarification.get('risk_level','low')}")
+
     # 4. WRITE
     try:
-        data = write_article(topic, chapter)
+        data = write_article(topic, chapter, anchor_facts=anchor_facts)
     except Exception as e:
         log("writer", f"FAILED: {e}")
         mem["failed_topics"].append(topic)
         mem["stats"]["total_failed"] += 1
+        task_forest_update(mem, topic, chapter, "failed", notes=str(e))
         save_memory(mem)
         write_heartbeat(mem, "FAILED", topic, chapter)
+        session_handoff(mem, topic, chapter, "FAILED")
         return 1
 
     # 5. QA GATE
@@ -1129,8 +1317,9 @@ def main() -> int:
         return 1
 
     # 8. MEMORY UPDATE — critical: save before anything else
+    slug_full = f"{data['date']}-{data['slug']}"
     mem["published_articles"].append({
-        "slug": f"{data['date']}-{data['slug']}",
+        "slug": slug_full,
         "title": data["title"],
         "topic": topic,
         "chapter": chapter,
@@ -1140,8 +1329,12 @@ def main() -> int:
     mem["stats"]["total_published"] += 1
     save_memory(mem)
 
-    # 9. HEARTBEAT
+    # 8b. TASK FOREST UPDATE — mark done (compass-skills/task-forest)
+    task_forest_update(mem, topic, chapter, "done", slug=slug_full)
+
+    # 9. HEARTBEAT + SESSION HANDOFF
     write_heartbeat(mem, "SUCCESS", topic, chapter)
+    session_handoff(mem, topic, chapter, "SUCCESS")
 
     log("bot", f"=== DONE: '{data['title']}' published to {chapter}/ ===")
     return 0
