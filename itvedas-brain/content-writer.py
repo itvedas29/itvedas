@@ -478,7 +478,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 <script>
@@ -631,7 +631,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-glow"></div>
@@ -663,7 +663,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 </body>
@@ -683,6 +683,7 @@ def build_sitemap(state):
     today = datetime.date.today().isoformat()
     urls = [f'  <url><loc>{SITE_URL}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>',
             f'  <url><loc>{SITE_URL}/news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
+            f'  <url><loc>{SITE_URL}/security-news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
             f'  <url><loc>{SITE_URL}/career-paths.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>',
             f'  <url><loc>{SITE_URL}/faq.html</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>']
     for slug in CHAPTERS:

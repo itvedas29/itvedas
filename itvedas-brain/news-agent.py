@@ -115,7 +115,13 @@ This is a CVE writeup, so also make sure the body clearly covers:
 - Affected software/systems and versions, if mentioned in the context
 - Severity (CVSS score/rating if mentioned, otherwise describe impact plainly)
 - The fix or mitigation (patch, version to upgrade to, or workaround)
-- Never include working exploit code or step-by-step attack instructions"""
+- Never include working exploit code or step-by-step attack instructions
+
+Also add these extra lines to the META block (in addition to headline/summary/topic):
+cve_id: [the CVE ID, e.g. CVE-2026-12345]
+affected: [affected software/systems and versions, one short line]
+severity: [severity/CVSS rating or plain-impact description, one short line]
+fix: [the fix or mitigation, one short line]"""
 
 def write_original_article(item):
     """OpenAI writes a COMPLETELY ORIGINAL article about the news topic."""
@@ -158,7 +164,8 @@ Return ONLY meta block + HTML body. No html/head/body tags."""
     return write_with_openai(prompt, max_tokens=2000)
 
 def parse_article(content, item):
-    meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title'])}
+    meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title']),
+            "cve_id":"","affected":"","severity":"","fix":""}
     m = re.search(r'<!-- META(.*?)-->', content, re.DOTALL)
     if m:
         for line in m.group(1).strip().split('\n'):
@@ -285,7 +292,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
   <div class="flinks">
-    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a>
     <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
   </div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas</p>
@@ -380,7 +387,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-in">
@@ -398,7 +405,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
 </footer>
 <script>
@@ -412,6 +419,228 @@ function f(t){{
   document.getElementById('empty').style.display=v===0?'block':'none';
 }}
 document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
+</script>
+</body>
+</html>"""
+
+def build_security_news_page(articles, update_time):
+    """Dedicated cybersecurity page: a live raw-headline feed (fetched
+    client-side from /api/security-feed, no LLM rewrite — see
+    functions/api/security-feed.js) plus ITVedas's own original Security/CVE
+    commentary articles, filtered from the same `published` list build_news_index()
+    uses. CVE items with structured fields (see CVE_EXTRA / parse_article)
+    get a dedicated card layout instead of a plain summary."""
+    today = datetime.date.today().strftime("%B %d, %Y")
+    security_articles = [a for a in articles if a.get('topic') in ("Security", "CVE")]
+
+    cards = ""
+    for a in security_articles:
+        c = TOPIC_COLORS.get(a['topic'], "#64748B")
+        emoji = TOPIC_EMOJI.get(a['topic'], "🔐")
+        meta_line = f"{a['date']}{(' · ' + a['time']) if a.get('time') else ''}"
+        if a.get('topic') == 'CVE' and a.get('cve_id'):
+            facts = "".join(
+                f'<div class="cve-fact"><span class="cve-fact-label">{label}</span><span class="cve-fact-val">{esc(value)}</span></div>'
+                for label, value in (
+                    ("Affected", a.get('affected')),
+                    ("Severity", a.get('severity')),
+                    ("Fix", a.get('fix')),
+                )
+                if value
+            )
+            cards += f"""<a href="/news/{a['slug']}.html" class="nc cve-card" data-t="CVE">
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge cve-id-badge">{esc(a['cve_id'])}</span><span class="nc-time">{meta_line}</span></div>
+                <h3 class="nc-title">{esc(a['headline'])}</h3>
+                <div class="cve-facts">{facts}</div>
+                <span class="nc-link">Full writeup →</span>
+              </div>
+            </a>"""
+        else:
+            cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
+              <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{meta_line}</span></div>
+                <h3 class="nc-title">{esc(a['headline'])}</h3>
+                <p class="nc-sum">{esc(a['summary'])}</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Live cybersecurity news, attacks, breaches and CVEs — aggregated in real time and explained in plain English by ITVedas.">
+<meta name="keywords" content="cybersecurity news, CVE tracker, cyber attacks, data breaches, vulnerability news, security advisories">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="{SITE}/security-news.html">
+<title>Cybersecurity News, Attacks & CVEs — Live | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}}
+*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
+html{{scroll-behavior:smooth;}}
+body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}}
+nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
+.logo{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}}
+.logo span{{color:var(--accent);}}
+.nav-links{{display:flex;gap:1.5rem;}}
+.nav-links a{{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s;}}
+.nav-links a:hover,.nav-links a.active{{color:var(--text);}}
+.hero{{padding:6rem 2rem 2.5rem;background:linear-gradient(180deg,rgba(16,185,129,0.06),transparent);border-bottom:1px solid var(--border);}}
+.hero-in{{max-width:1200px;margin:0 auto;}}
+.live{{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}}
+.dot{{width:6px;height:6px;background:#10B981;border-radius:50%;animation:b 1.5s infinite;}}
+@keyframes b{{0%,100%{{opacity:1}}50%{{opacity:0.3}}}}
+.hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}}
+.hero h1 span{{background:linear-gradient(135deg,#10B981,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}}
+.hero p{{color:var(--muted);max-width:640px;}}
+.upd{{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}}
+.main{{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;}}
+.section-head{{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}}
+.section-label{{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);}}
+.section-h{{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;margin-top:0.35rem;}}
+.section-note{{font-size:0.8rem;color:var(--muted);}}
+.filters{{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}}
+.fb{{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}}
+.fb:hover{{color:var(--text);border-color:rgba(255,255,255,0.2);}}
+.fb.active{{background:var(--accent);border-color:var(--accent);color:#fff;}}
+.live-feed{{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:4rem;}}
+.lf-item{{display:flex;align-items:flex-start;gap:0.9rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.9rem 1.1rem;text-decoration:none;color:inherit;transition:border-color 0.2s;}}
+.lf-item:hover{{border-color:rgba(255,255,255,0.2);}}
+.lf-badge{{flex-shrink:0;font-size:0.65rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;margin-top:0.1rem;}}
+.lf-badge.cve{{background:rgba(239,68,68,0.15);color:#EF4444;}}
+.lf-badge.attack{{background:rgba(245,158,11,0.15);color:#F59E0B;}}
+.lf-badge.general{{background:rgba(100,116,139,0.15);color:#94A3B8;}}
+.lf-body{{flex:1;min-width:0;}}
+.lf-title{{font-size:0.92rem;color:var(--text);line-height:1.4;margin-bottom:0.3rem;}}
+.lf-meta{{font-size:0.75rem;color:var(--muted);}}
+.lf-loading,.lf-empty,.lf-error{{color:var(--muted);font-size:0.875rem;padding:1.5rem;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}}
+.nc{{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}}
+.nc:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}}
+.nc-vis{{height:140px;display:flex;align-items:center;justify-content:center;}}
+.nc-body{{padding:1.35rem;}}
+.nc-top{{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}}
+.nc-badge{{font-size:0.68rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}}
+.cve-id-badge{{background:rgba(239,68,68,0.15);color:#EF4444;font-family:monospace;}}
+.nc-time{{font-size:0.75rem;color:var(--muted);}}
+.nc-title{{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:0.6rem;color:var(--text);}}
+.nc-sum{{font-size:0.875rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}}
+.nc-link{{font-size:0.8rem;color:var(--accent);font-weight:600;}}
+.cve-facts{{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;padding:0.75rem;background:var(--bg3);border-radius:8px;}}
+.cve-fact{{display:flex;gap:0.5rem;font-size:0.8rem;}}
+.cve-fact-label{{color:var(--muted);flex-shrink:0;min-width:62px;font-weight:600;}}
+.cve-fact-val{{color:var(--sub);}}
+.empty{{text-align:center;padding:3rem;color:var(--muted);}}
+footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}}
+.fl{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}}
+.fl span{{color:var(--accent);}}
+.flinks{{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}}
+.flinks a{{color:var(--muted);text-decoration:none;}}
+.flinks a:hover{{color:var(--accent);}}
+@media(max-width:768px){{nav{{padding:0 1.25rem;}}.nav-links{{display:none;}}.hero,.main{{padding-left:1.25rem;padding-right:1.25rem;}}.grid{{grid-template-columns:1fr;}}}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html" class="active" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+</nav>
+<div class="hero">
+  <div class="hero-in">
+    <div class="live"><span class="dot"></span>Live updates</div>
+    <h1>Cybersecurity News, <span>Attacks & CVEs</span></h1>
+    <p>Real-time threat headlines pulled straight from the source, plus ITVedas's own plain-English breakdowns of what happened, why it matters, and how to fix it.</p>
+    <p class="upd">Original coverage last updated: {update_time} · {today}</p>
+  </div>
+</div>
+<div class="main">
+  <div class="section-head">
+    <div>
+      <div class="section-label">Live Threat Feed</div>
+      <h2 class="section-h">Straight from the source, updated continuously</h2>
+    </div>
+    <div class="section-note">Raw headlines, unedited — click through to the original reporting</div>
+  </div>
+  <div class="filters" id="lf-filters">
+    <button class="fb active" data-lt="all">All</button>
+    <button class="fb" data-lt="CVE">CVEs</button>
+    <button class="fb" data-lt="Attack">Attacks & Breaches</button>
+    <button class="fb" data-lt="General">General</button>
+  </div>
+  <div class="live-feed" id="live-feed"><div class="lf-loading">Loading live threat feed…</div></div>
+
+  <div class="section-head">
+    <div>
+      <div class="section-label">ITVedas Original Coverage</div>
+      <h2 class="section-h">Our own breakdowns of what happened</h2>
+    </div>
+  </div>
+  <div class="grid" id="grid">{cards or '<div class="empty">No original security coverage published yet — check back soon.</div>'}</div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">All News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
+</footer>
+<script>
+(function() {{
+  const feedEl = document.getElementById('live-feed');
+  let allItems = [];
+
+  function badgeClass(cat) {{
+    if (cat === 'CVE') return 'cve';
+    if (cat === 'Attack') return 'attack';
+    return 'general';
+  }}
+
+  function render(filter) {{
+    const items = filter === 'all' ? allItems : allItems.filter(i => i.category === filter);
+    if (!items.length) {{
+      feedEl.innerHTML = '<div class="lf-empty">No stories in this category right now.</div>';
+      return;
+    }}
+    feedEl.innerHTML = items.map(i => {{
+      const div = document.createElement('div');
+      div.textContent = i.title || '';
+      const safeTitle = div.innerHTML;
+      const div2 = document.createElement('div');
+      div2.textContent = i.source || 'source';
+      const safeSource = div2.innerHTML;
+      const safeLink = encodeURI(i.link || '#');
+      const when = i.pub_date ? new Date(i.pub_date).toLocaleString('en-US', {{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}}) : '';
+      return `<a class="lf-item" href="${{safeLink}}" target="_blank" rel="noopener nofollow">
+        <span class="lf-badge ${{badgeClass(i.category)}}">${{i.cve_id || i.category}}</span>
+        <span class="lf-body">
+          <span class="lf-title">${{safeTitle}}</span>
+          <span class="lf-meta">${{safeSource}}${{when ? ' · ' + when : ''}}</span>
+        </span>
+      </a>`;
+    }}).join('');
+  }}
+
+  document.querySelectorAll('#lf-filters .fb').forEach(btn => {{
+    btn.addEventListener('click', () => {{
+      document.querySelectorAll('#lf-filters .fb').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.lt);
+    }});
+  }});
+
+  fetch('/api/security-feed')
+    .then(r => {{ if (!r.ok) throw new Error('bad response'); return r.json(); }})
+    .then(data => {{
+      allItems = Array.isArray(data.items) ? data.items : [];
+      render('all');
+    }})
+    .catch(() => {{
+      feedEl.innerHTML = '<div class="lf-error">Couldn\\'t load the live feed right now. Try refreshing.</div>';
+    }});
+}})();
 </script>
 </body>
 </html>"""
@@ -470,7 +699,9 @@ def main():
         published.insert(0, {
             "slug": slug, "headline": meta['headline'],
             "summary": meta['summary'], "topic": meta['topic'],
-            "date": today, "time": update_time, "orig_title": item['title']
+            "date": today, "time": update_time, "orig_title": item['title'],
+            "cve_id": meta['cve_id'], "affected": meta['affected'],
+            "severity": meta['severity'], "fix": meta['fix'],
         })
         written += 1
         print(f"  → news/{slug}.html")
@@ -486,6 +717,14 @@ def main():
     tmp2 = news_html.with_suffix(".tmp")
     tmp2.write_text(index, encoding="utf-8")
     tmp2.replace(news_html)
+
+    # Build dedicated cybersecurity page (live feed + Security/CVE originals)
+    security_page = build_security_news_page(published, update_time)
+    security_html = pathlib.Path("security-news.html")
+    tmp3 = security_html.with_suffix(".tmp")
+    tmp3.write_text(security_page, encoding="utf-8")
+    tmp3.replace(security_html)
+
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 
 if __name__ == "__main__":
