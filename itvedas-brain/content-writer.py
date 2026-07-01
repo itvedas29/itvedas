@@ -30,13 +30,28 @@
 ═══════════════════════════════════════════════════════════════════
 """
 
-import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request
+import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request, html
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
 from core.log import log as _core_log
+
+
+def esc(value):
+    """HTML-escape LLM-generated title/description text before it goes
+    into an attribute, <script type="application/ld+json"> block, or
+    text node — the article body/title/description are Claude's free-form
+    output, not developer-controlled strings."""
+    return html.escape(str(value), quote=True)
+
+
+def json_ld(obj):
+    """Serialize obj for a <script type="application/ld+json"> block,
+    guarding against a literal "</script>" in LLM output ending the
+    script element early (json.dumps() escapes quotes but not that)."""
+    return json.dumps(obj, ensure_ascii=True).replace("</", "<\\/")
 
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
@@ -298,8 +313,10 @@ def extract_meta(content, keyword, topic):
 # ─────────────────────────────────────────────────────────────────
 def build_page(content, meta, date_str):
     topic   = meta["topic"]
-    title   = meta["title"]
-    desc    = meta["description"]
+    # title/description are Claude's free-form output — escape before
+    # embedding in an attribute or text node.
+    title   = esc(meta["title"])
+    desc    = esc(meta["description"])
     keyword = meta["keyword"]
     color   = color_for(topic)
 
@@ -337,12 +354,14 @@ def build_page(content, meta, date_str):
 <link rel="canonical" href="{url}">
 <title>{title} | {SITE_NAME}</title>
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"Article","headline":"{title}",
-"description":"{desc}","keywords":"{keyword}",
-"author":{{"@type":"Organization","name":"{SITE_NAME}","url":"{SITE_URL}"}},
-"publisher":{{"@type":"Organization","name":"{SITE_NAME}","url":"{SITE_URL}"}},
-"datePublished":"{date_str}","dateModified":"{date_str}",
-"articleSection":"{topic}","educationalLevel":"Beginner"}}
+{json_ld({
+    "@context": "https://schema.org", "@type": "Article", "headline": meta["title"],
+    "description": meta["description"], "keywords": keyword,
+    "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+    "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+    "datePublished": date_str, "dateModified": date_str,
+    "articleSection": topic, "educationalLevel": "Beginner",
+})}
 </script>
 {ga4_snippet()}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -489,7 +508,7 @@ def update_homepage(state):
             f'padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;">'
             f'<span style="background:{c}1a;color:{c};font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;'
             f'border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">{a.get("topic","IT")}</span>'
-            f'<div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">{a.get("title","Article")}</div>'
+            f'<div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">{esc(a.get("title","Article"))}</div>'
             f'<div style="font-size:0.75rem;color:#8888A8;">{a.get("date","")} · {a.get("rt","5 min read")}</div></div></a>'
         )
     section = (
@@ -529,7 +548,7 @@ def build_chapter_pages(state):
             cards = "".join(
                 f'<a href="/articles/{a["file"]}" class="art">'
                 f'<div class="art-meta"><span>📅 {a.get("date","")}</span><span>⏱ {a.get("rt","5 min read")}</span></div>'
-                f'<h3 class="art-title">{a.get("title","Article")}</h3>'
+                f'<h3 class="art-title">{esc(a.get("title","Article"))}</h3>'
                 f'<span class="art-link">Read article →</span></a>'
                 for a in arts)
             body = f'<div class="art-list">{cards}</div>'

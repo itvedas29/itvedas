@@ -10,7 +10,7 @@ own page on itvedas.com, with a source citation link.
 
 LLM: Claude writes the article body (ANTHROPIC_API_KEY, ANTHROPIC_MODEL).
 """
-import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys
+import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys, html
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude
@@ -25,6 +25,28 @@ COMPONENT = "news-agent"
 
 def log(msg):
     _core_log(COMPONENT, msg)
+
+
+def esc(value):
+    """HTML-escape text before it goes into an attribute or text node.
+
+    Needed because headline/summary/source/link ultimately trace back to
+    external RSS feed content (regex-parsed, not sanitized) that passes
+    through the LLM and is otherwise interpolated raw into generated pages.
+    """
+    return html.escape(str(value), quote=True)
+
+
+def json_ld(obj):
+    """Serialize obj for a <script type="application/ld+json"> block.
+
+    json.dumps() escapes quotes/backslashes/control chars, but not
+    "</script>" — a literal closing tag in any field (e.g. a hostile
+    RSS headline) would otherwise end the script element early and let
+    the rest be parsed as raw HTML. Splitting the slash prevents that
+    while remaining valid JSON.
+    """
+    return json.dumps(obj, ensure_ascii=True).replace("</", "<\\/")
 
 TOPIC_COLORS = {
     "Security":"#10B981","Cloud":"#3B82F6","DevOps":"#8B5CF6",
@@ -151,10 +173,12 @@ def build_article_page(meta, body, item, date_str, slug, time_str=""):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
     emoji = TOPIC_EMOJI.get(topic,"📰")
-    headline = meta['headline']
-    summary = meta['summary']
-    source = item.get('source','source')
-    source_link = item.get('link','#')
+    # headline/summary/source/source_link trace back to external RSS feed
+    # content (regex-parsed, unsanitized) — escape before embedding in HTML.
+    headline = esc(meta['headline'])
+    summary = esc(meta['summary'])
+    source = esc(item.get('source','source'))
+    source_link = esc(item.get('link','#'))
     words = len(re.sub(r'<[^>]+>','',body).split())
     rt = f"{max(1,round(words/200))} min read"
 
@@ -178,10 +202,12 @@ def build_article_page(meta, body, item, date_str, slug, time_str=""):
 <link rel="canonical" href="{SITE}/news/{slug}.html">
 <title>{headline} | ITVedas News</title>
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"NewsArticle","headline":"{headline}",
-"description":"{summary}","datePublished":"{date_str}","dateModified":"{date_str}",
-"author":{{"@type":"Organization","name":"ITVedas"}},
-"publisher":{{"@type":"Organization","name":"ITVedas","url":"{SITE}"}}}}
+{json_ld({
+    "@context": "https://schema.org", "@type": "NewsArticle", "headline": meta['headline'],
+    "description": meta['summary'], "datePublished": date_str, "dateModified": date_str,
+    "author": {"@type": "Organization", "name": "ITVedas"},
+    "publisher": {"@type": "Organization", "name": "ITVedas", "url": SITE},
+})}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -282,12 +308,14 @@ def build_news_index(articles, update_time):
     for a in articles:
         c = TOPIC_COLORS.get(a['topic'],"#64748B")
         emoji = TOPIC_EMOJI.get(a['topic'],"📰")
+        # a['headline']/a['summary'] were persisted from meta['headline']/
+        # meta['summary'] (RSS/LLM-derived) in a prior run — escape here too.
         cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
           <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}{(' · ' + a['time']) if a.get('time') else ''}</span></div>
-            <h3 class="nc-title">{a['headline']}</h3>
-            <p class="nc-sum">{a['summary']}</p>
+            <h3 class="nc-title">{esc(a['headline'])}</h3>
+            <p class="nc-sum">{esc(a['summary'])}</p>
             <span class="nc-link">Read full story →</span>
           </div>
         </a>"""
