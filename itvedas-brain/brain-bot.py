@@ -1103,9 +1103,15 @@ def build_article_html(data: dict, internal_links: list[dict]) -> str:
     read_t   = estimate_reading_time(data)
 
     try:
-        dfmt = datetime.date.fromisoformat(date_s).strftime("%B %d, %Y")
+        pub_date = datetime.date.fromisoformat(date_s)
+        dfmt     = pub_date.strftime("%B %d, %Y")
+        days_old = (datetime.date.today() - pub_date).days
+        is_new   = days_old <= 7
     except Exception:
-        dfmt = date_s
+        dfmt     = date_s
+        is_new   = False
+
+    new_badge_html = '<span class="new-badge">NEW</span>' if is_new else ''
 
     faq_items = data.get("faq", [])
 
@@ -1230,7 +1236,9 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .breadcrumb a:hover{{color:var(--accent);}}
 .ch-badge{{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}}
 .hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}}
-.hero-meta{{display:flex;gap:1.25rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}}
+.hero-meta{{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}}
+.pub-date{{color:var(--sub);font-weight:500;}}
+.new-badge{{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2em .55em;border-radius:4px;line-height:1;}}
 .hero p.intro{{font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;}}
 .wrap{{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}}
 .art{{min-width:0;}}
@@ -1301,7 +1309,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/{chapter}/">{ch_name}</a> › {esc_t}</div>
   <div class="ch-badge">{ch_emoji} {ch_name}</div>
   <h1>{esc_t}</h1>
-  <div class="hero-meta"><span>{dfmt}</span><span>{read_t} min read</span><span>ITVedas</span></div>
+  <div class="hero-meta"><span class="pub-date">📅 {dfmt}</span>{new_badge_html}<span>{read_t} min read</span><span>ITVedas</span></div>
   <p class="intro">{et(data['intro'])}</p>
 </div>
 <div class="wrap">
@@ -1356,17 +1364,22 @@ def build_chapter_index(chapter: str, articles: list[dict]) -> str:
     sorted_ = sorted(articles, key=lambda a: a.get("date",""), reverse=True)
 
     cards = ""
+    today = datetime.date.today()
     for art in sorted_[:60]:
         title = html_mod.escape(art.get("title",""))
         slug  = art.get("slug","")
         adate = art.get("date","")
         try:
-            dfmt = datetime.date.fromisoformat(adate[:10]).strftime("%b %d, %Y")
+            pub_date  = datetime.date.fromisoformat(adate[:10])
+            dfmt      = pub_date.strftime("%b %d, %Y")
+            card_new  = (today - pub_date).days <= 7
         except Exception:
-            dfmt = adate
+            dfmt     = adate
+            card_new = False
+        badge = '<span class="card-new">NEW</span>' if card_new else ''
         url = f"/articles/{chapter}/{slug}.html"
         cards += f"""<a href="{url}" class="card">
-  <div class="card-date">{dfmt}</div>
+  <div class="card-meta"><span class="card-date">📅 {dfmt}</span>{badge}</div>
   <h2>{title}</h2>
   <span class="card-arrow">Read →</span>
 </a>
@@ -1406,7 +1419,9 @@ h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.75rem);f
 .count{{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}}
 .card{{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:.85rem;text-decoration:none;transition:border-color .2s,transform .2s;cursor:pointer;}}
 .card:hover{{border-color:var(--accent);transform:translateX(4px);}}
-.card-date{{font-size:.78rem;color:var(--muted);margin-bottom:.4rem;}}
+.card-meta{{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;}}
+.card-date{{font-size:.78rem;color:var(--sub);font-weight:500;}}
+.card-new{{display:inline-flex;align-items:center;background:{color};color:#fff;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.15em .45em;border-radius:3px;line-height:1;}}
 .card h2{{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:.4rem;}}
 .card-arrow{{font-size:.8rem;color:var(--accent);}}
 footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}}
