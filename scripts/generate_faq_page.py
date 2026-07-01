@@ -148,6 +148,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/news.html">📰 News</a></li>
+    <li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li>
     <li><a href="/#chapters">Chapters</a></li>
     <li><a href="/career-paths.html">Career Paths</a></li>
     <li><a href="/faq.html" class="active">FAQ</a></li>
@@ -175,6 +176,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
   <div class="flinks">
     <a href="/">Home</a>
     <a href="/news.html">News</a>
+    <a href="/security-news.html">Security News</a>
     <a href="/#chapters">Chapters</a>
     <a href="/career-paths.html">Career Paths</a>
     <a href="/faq.html">FAQ</a>

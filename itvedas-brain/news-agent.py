@@ -10,11 +10,12 @@ own page on itvedas.com, with a source citation link.
 
 LLM: Claude writes the article body (ANTHROPIC_API_KEY, ANTHROPIC_MODEL).
 """
-import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys
+import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys, html
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude
 from core.log import log as _core_log
+from core.indexnow import submit as _indexnow_submit
 
 ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "")
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
@@ -25,6 +26,28 @@ COMPONENT = "news-agent"
 
 def log(msg):
     _core_log(COMPONENT, msg)
+
+
+def esc(value):
+    """HTML-escape text before it goes into an attribute or text node.
+
+    Needed because headline/summary/source/link ultimately trace back to
+    external RSS feed content (regex-parsed, not sanitized) that passes
+    through the LLM and is otherwise interpolated raw into generated pages.
+    """
+    return html.escape(str(value), quote=True)
+
+
+def json_ld(obj):
+    """Serialize obj for a <script type="application/ld+json"> block.
+
+    json.dumps() escapes quotes/backslashes/control chars, but not
+    "</script>" — a literal closing tag in any field (e.g. a hostile
+    RSS headline) would otherwise end the script element early and let
+    the rest be parsed as raw HTML. Splitting the slash prevents that
+    while remaining valid JSON.
+    """
+    return json.dumps(obj, ensure_ascii=True).replace("</", "<\\/")
 
 TOPIC_COLORS = {
     "Security":"#10B981","Cloud":"#3B82F6","DevOps":"#8B5CF6",
@@ -48,6 +71,12 @@ NEWS_FEEDS = [
     "https://cloudblogs.microsoft.com/feed/",
     "https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss.xml",
 ]
+
+# Every fresh headline gets a full original ITVedas article — no story is
+# left linking out to the source. Still capped (well above what a normal
+# run sees) so a pathological feed dump can't trigger unbounded Claude
+# calls / runtime in a single run.
+MAX_NEW_ARTICLES_PER_RUN = 25
 
 def write_with_openai(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
@@ -93,7 +122,13 @@ This is a CVE writeup, so also make sure the body clearly covers:
 - Affected software/systems and versions, if mentioned in the context
 - Severity (CVSS score/rating if mentioned, otherwise describe impact plainly)
 - The fix or mitigation (patch, version to upgrade to, or workaround)
-- Never include working exploit code or step-by-step attack instructions"""
+- Never include working exploit code or step-by-step attack instructions
+
+Also add these extra lines to the META block (in addition to headline/summary/topic):
+cve_id: [the CVE ID, e.g. CVE-2026-12345]
+affected: [affected software/systems and versions, one short line]
+severity: [severity/CVSS rating or plain-impact description, one short line]
+fix: [the fix or mitigation, one short line]"""
 
 def write_original_article(item):
     """OpenAI writes a COMPLETELY ORIGINAL article about the news topic."""
@@ -136,7 +171,8 @@ Return ONLY meta block + HTML body. No html/head/body tags."""
     return write_with_openai(prompt, max_tokens=2000)
 
 def parse_article(content, item):
-    meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title'])}
+    meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title']),
+            "cve_id":"","affected":"","severity":"","fix":""}
     m = re.search(r'<!-- META(.*?)-->', content, re.DOTALL)
     if m:
         for line in m.group(1).strip().split('\n'):
@@ -147,14 +183,57 @@ def parse_article(content, item):
     body = re.sub(r'<!-- META.*?-->','',content,flags=re.DOTALL).strip()
     return meta, body
 
+def review_article(body, item, meta):
+    """Self-review gate before publishing, mirroring content-writer.py's
+    review(): score the article, REWRITE once if it's weak, then publish
+    regardless (so a story is never silently dropped over a review call
+    failing or staying under the bar after one retry)."""
+    cve_block = ""
+    if meta.get('topic') == 'CVE' and meta.get('cve_id'):
+        cve_block = f"""
+This is a CVE story — also check the article body doesn't contradict these
+extracted fields (flag it if it does):
+CVE ID: {meta.get('cve_id')}
+Affected: {meta.get('affected')}
+Severity: {meta.get('severity')}
+Fix: {meta.get('fix')}"""
+    prompt = f"""Review this news article before it's published.
+
+SOURCE HEADLINE: {item['title']}
+SOURCE CONTEXT: {item['desc']}
+{cve_block}
+Score 0-100 on:
+- Factual accuracy vs the source above (60): every claim should be supported by
+  the source headline/context, with no invented specifics (numbers, names,
+  dates, technical details) that aren't in it{" or in the CVE fields" if cve_block else ""}.
+- No leaked scaffolding (20): no stray markdown code fences, unfilled
+  placeholders, or a leftover META block in the visible body.
+- Clarity/structure (20): reads as a complete, coherent article.
+
+Reply with ONLY JSON: {{"score":85,"verdict":"PUBLISH","fix":"short note"}}
+verdict = PUBLISH if score >= 75 else REWRITE.
+Article body (first 2500 chars): {body[:2500]}"""
+    try:
+        reply = write_with_openai(prompt, max_tokens=200)
+        m = re.search(r'\{[^{}]+\}', reply, re.DOTALL)
+        if m:
+            r = json.loads(m.group())
+            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} ({item['title'][:50]})")
+            return r
+    except Exception as e:
+        log(f"Review parse error: {e}")
+    return {"score": 80, "verdict": "PUBLISH"}
+
 def build_article_page(meta, body, item, date_str, slug, time_str=""):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
     emoji = TOPIC_EMOJI.get(topic,"📰")
-    headline = meta['headline']
-    summary = meta['summary']
-    source = item.get('source','source')
-    source_link = item.get('link','#')
+    # headline/summary/source/source_link trace back to external RSS feed
+    # content (regex-parsed, unsanitized) — escape before embedding in HTML.
+    headline = esc(meta['headline'])
+    summary = esc(meta['summary'])
+    source = esc(item.get('source','source'))
+    source_link = esc(item.get('link','#'))
     words = len(re.sub(r'<[^>]+>','',body).split())
     rt = f"{max(1,round(words/200))} min read"
 
@@ -178,10 +257,12 @@ def build_article_page(meta, body, item, date_str, slug, time_str=""):
 <link rel="canonical" href="{SITE}/news/{slug}.html">
 <title>{headline} | ITVedas News</title>
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"NewsArticle","headline":"{headline}",
-"description":"{summary}","datePublished":"{date_str}","dateModified":"{date_str}",
-"author":{{"@type":"Organization","name":"ITVedas"}},
-"publisher":{{"@type":"Organization","name":"ITVedas","url":"{SITE}"}}}}
+{json_ld({
+    "@context": "https://schema.org", "@type": "NewsArticle", "headline": meta['headline'],
+    "description": meta['summary'], "datePublished": date_str, "dateModified": date_str,
+    "author": {"@type": "Organization", "name": "ITVedas"},
+    "publisher": {"@type": "Organization", "name": "ITVedas", "url": SITE},
+})}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -259,7 +340,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
   <div class="flinks">
-    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a>
     <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
   </div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas</p>
@@ -282,12 +363,14 @@ def build_news_index(articles, update_time):
     for a in articles:
         c = TOPIC_COLORS.get(a['topic'],"#64748B")
         emoji = TOPIC_EMOJI.get(a['topic'],"📰")
+        # a['headline']/a['summary'] were persisted from meta['headline']/
+        # meta['summary'] (RSS/LLM-derived) in a prior run — escape here too.
         cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
           <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{a['date']}{(' · ' + a['time']) if a.get('time') else ''}</span></div>
-            <h3 class="nc-title">{a['headline']}</h3>
-            <p class="nc-sum">{a['summary']}</p>
+            <h3 class="nc-title">{esc(a['headline'])}</h3>
+            <p class="nc-sum">{esc(a['summary'])}</p>
             <span class="nc-link">Read full story →</span>
           </div>
         </a>"""
@@ -352,7 +435,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-in">
@@ -370,7 +453,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
 </footer>
 <script>
@@ -388,9 +471,226 @@ document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.d
 </body>
 </html>"""
 
+def build_security_news_page(articles, update_time):
+    """Dedicated cybersecurity page: every item here is an ITVedas original
+    article with its own on-site page (/news/<slug>.html) — nothing links
+    out to an external source. Filtered from the same `published` list
+    build_news_index() uses. CVE items with structured fields (see
+    CVE_EXTRA / parse_article) get a dedicated card layout instead of a
+    plain summary."""
+    today = datetime.date.today().strftime("%B %d, %Y")
+    security_articles = [a for a in articles if a.get('topic') in ("Security", "CVE")]
+
+    cards = ""
+    for a in security_articles:
+        c = TOPIC_COLORS.get(a['topic'], "#64748B")
+        emoji = TOPIC_EMOJI.get(a['topic'], "🔐")
+        meta_line = f"{a['date']}{(' · ' + a['time']) if a.get('time') else ''}"
+        if a.get('topic') == 'CVE' and a.get('cve_id'):
+            facts = "".join(
+                f'<div class="cve-fact"><span class="cve-fact-label">{label}</span><span class="cve-fact-val">{esc(value)}</span></div>'
+                for label, value in (
+                    ("Affected", a.get('affected')),
+                    ("Severity", a.get('severity')),
+                    ("Fix", a.get('fix')),
+                )
+                if value
+            )
+            cards += f"""<a href="/news/{a['slug']}.html" class="nc cve-card" data-t="CVE">
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge cve-id-badge">{esc(a['cve_id'])}</span><span class="nc-time">{meta_line}</span></div>
+                <h3 class="nc-title">{esc(a['headline'])}</h3>
+                <div class="cve-facts">{facts}</div>
+                <span class="nc-link">Full writeup →</span>
+              </div>
+            </a>"""
+        else:
+            cards += f"""<a href="/news/{a['slug']}.html" class="nc" data-t="{a['topic']}">
+              <div class="nc-vis" style="background:linear-gradient(135deg,{c}22,{c}08);"><span style="font-size:2.5rem;">{emoji}</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:{c}1f;color:{c};">{a['topic']}</span><span class="nc-time">{meta_line}</span></div>
+                <h3 class="nc-title">{esc(a['headline'])}</h3>
+                <p class="nc-sum">{esc(a['summary'])}</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a>"""
+
+    filter_btns = '<button class="fb active" data-t="all">All</button>'
+    for t in ("CVE", "Security"):
+        if any(a.get('topic') == t for a in security_articles):
+            c = TOPIC_COLORS.get(t, "#64748B")
+            label = "CVEs" if t == "CVE" else "Attacks & Breaches"
+            filter_btns += f'<button class="fb" data-t="{t}" style="--tc:{c}">{label}</button>'
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Cybersecurity news, attacks, breaches and CVEs — original reporting, explained in plain English by ITVedas, every story on its own page.">
+<meta name="keywords" content="cybersecurity news, CVE tracker, cyber attacks, data breaches, vulnerability news, security advisories">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="{SITE}/security-news.html">
+<title>Cybersecurity News, Attacks & CVEs | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}}
+*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
+html{{scroll-behavior:smooth;}}
+body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}}
+nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
+.logo{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}}
+.logo span{{color:var(--accent);}}
+.nav-links{{display:flex;gap:1.5rem;}}
+.nav-links a{{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s;}}
+.nav-links a:hover,.nav-links a.active{{color:var(--text);}}
+.hero{{padding:6rem 2rem 2.5rem;background:linear-gradient(180deg,rgba(16,185,129,0.06),transparent);border-bottom:1px solid var(--border);}}
+.hero-in{{max-width:1200px;margin:0 auto;}}
+.live{{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}}
+.dot{{width:6px;height:6px;background:#10B981;border-radius:50%;animation:b 1.5s infinite;}}
+@keyframes b{{0%,100%{{opacity:1}}50%{{opacity:0.3}}}}
+.hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}}
+.hero h1 span{{background:linear-gradient(135deg,#10B981,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}}
+.hero p{{color:var(--muted);max-width:640px;}}
+.upd{{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}}
+.main{{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;}}
+.section-head{{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}}
+.section-label{{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);}}
+.section-h{{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;margin-top:0.35rem;}}
+.filters{{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}}
+.fb{{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}}
+.fb:hover{{color:var(--text);border-color:rgba(255,255,255,0.2);}}
+.fb.active{{background:var(--accent);border-color:var(--accent);color:#fff;}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}}
+.empty{{text-align:center;padding:3rem;color:var(--muted);grid-column:1/-1;}}
+.nc{{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}}
+.nc:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}}
+.nc-vis{{height:140px;display:flex;align-items:center;justify-content:center;}}
+.nc-body{{padding:1.35rem;}}
+.nc-top{{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}}
+.nc-badge{{font-size:0.68rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}}
+.cve-id-badge{{background:rgba(239,68,68,0.15);color:#EF4444;font-family:monospace;}}
+.nc-time{{font-size:0.75rem;color:var(--muted);}}
+.nc-title{{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:0.6rem;color:var(--text);}}
+.nc-sum{{font-size:0.875rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}}
+.nc-link{{font-size:0.8rem;color:var(--accent);font-weight:600;}}
+.cve-facts{{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;padding:0.75rem;background:var(--bg3);border-radius:8px;}}
+.cve-fact{{display:flex;gap:0.5rem;font-size:0.8rem;}}
+.cve-fact-label{{color:var(--muted);flex-shrink:0;min-width:62px;font-weight:600;}}
+.cve-fact-val{{color:var(--sub);}}
+footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}}
+.fl{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}}
+.fl span{{color:var(--accent);}}
+.flinks{{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}}
+.flinks a{{color:var(--muted);text-decoration:none;}}
+.flinks a:hover{{color:var(--accent);}}
+@media(max-width:768px){{nav{{padding:0 1.25rem;}}.nav-links{{display:none;}}.hero,.main{{padding-left:1.25rem;padding-right:1.25rem;}}.grid{{grid-template-columns:1fr;}}}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html" class="active" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+</nav>
+<div class="hero">
+  <div class="hero-in">
+    <div class="live"><span class="dot"></span>Updated {update_time}</div>
+    <h1>Cybersecurity News, <span>Attacks & CVEs</span></h1>
+    <p>Every attack, breach and CVE we cover gets its own plain-English ITVedas write-up — what happened, why it matters, and how to fix it. No links out, everything's on this page.</p>
+    <p class="upd">Last updated: {update_time} · {today}</p>
+  </div>
+</div>
+<div class="main">
+  <div class="section-head">
+    <div>
+      <div class="section-label">ITVedas Original Coverage</div>
+      <h2 class="section-h">Our own breakdowns of what happened</h2>
+    </div>
+  </div>
+  <div class="filters" id="filters">{filter_btns}</div>
+  <div class="grid" id="grid">{cards or '<div class="empty">No security coverage published yet — check back soon.</div>'}</div>
+  <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">All News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
+</footer>
+<script>
+function f(t){{
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-t="${{t}}"]`).classList.add('active');
+  let v=0;
+  document.querySelectorAll('#grid .nc').forEach(c=>{{
+    const s=t==='all'||c.dataset.t===t;c.style.display=s?'':'none';if(s)v++;
+  }});
+  document.getElementById('empty').style.display=v===0?'block':'none';
+}}
+document.querySelectorAll('#filters .fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
+</script>
+</body>
+</html>"""
+
 def slugify(text):
     s = re.sub(r'[^a-z0-9]+','-',text.lower()).strip('-')
     return s[:60]
+
+def update_homepage_security(published):
+    """Injects the most recent Security/CVE stories into index.html's
+    LATEST_SECURITY marker block (same inject-between-markers pattern as
+    content-writer.py's update_homepage()), so the homepage surfaces the
+    hourly security pipeline instead of only linking out to
+    /security-news.html."""
+    index = pathlib.Path("index.html")
+    if not index.exists():
+        return
+    html_doc = index.read_text(encoding="utf-8")
+    recent = [a for a in published if a.get('topic') in ("Security", "CVE")][:4]
+    if not recent:
+        return
+
+    cards = ""
+    for a in recent:
+        badge_cls = "cve" if a.get('topic') == "CVE" else "security"
+        badge_txt = a.get('cve_id') or a.get('topic')
+        meta_line = f"{a.get('date','')}{(' · ' + a['time']) if a.get('time') else ''}"
+        cards += (
+            f'<a href="/news/{a["slug"]}.html" class="lsc">'
+            f'<span class="lsc-badge {badge_cls}">{esc(badge_txt)}</span>'
+            f'<div class="lsc-title">{esc(a["headline"])}</div>'
+            f'<div class="lsc-time">{meta_line}</div>'
+            f'</a>'
+        )
+    section = (
+        '<!-- LATEST_SECURITY_START -->\n'
+        '<div class="live-security">'
+        '<div class="live-security-head">'
+        '<div class="live-security-label"><span class="live-security-dot"></span>Live Security &amp; Threat Watch</div>'
+        '<a href="/security-news.html" class="live-security-link">See all security news →</a>'
+        '</div>'
+        f'<div class="live-security-grid">{cards}</div>'
+        '</div>\n'
+        '<!-- LATEST_SECURITY_END -->'
+    )
+
+    if '<!-- LATEST_SECURITY_START -->' in html_doc:
+        html_doc = re.sub(
+            r'<!-- LATEST_SECURITY_START -->.*?<!-- LATEST_SECURITY_END -->',
+            lambda _m: section, html_doc, flags=re.DOTALL,
+        )
+    else:
+        marker = '<!-- ── LATEST ARTICLES (filled by brain agent) ─────────── -->'
+        if marker not in html_doc:
+            return
+        html_doc = html_doc.replace(marker, section + '\n\n' + marker)
+
+    try:
+        index.write_text(html_doc, encoding="utf-8")
+    except Exception as e:
+        log(f"Homepage security module write error: {e}")
+        return
+    log("Homepage security module updated")
 
 def main():
     print("News Agent v2 — original commentary mode")
@@ -428,12 +728,23 @@ def main():
             seen.add(key)
             new_items.append(item)
 
-    # Write original articles for up to 4 fresh stories per run
+    # Write an original article for every fresh story this run (bounded by
+    # MAX_NEW_ARTICLES_PER_RUN as a cost/runtime safety cap).
     written = 0
-    for item in new_items[:4]:
+    new_urls = []
+    for item in new_items[:MAX_NEW_ARTICLES_PER_RUN]:
         print(f"Writing original article: {item['title'][:50]}...")
         content = write_original_article(item)
         meta, body = parse_article(content, item)
+
+        review = review_article(body, item, meta)
+        score = review.get('score', 80)
+        if review.get('verdict') == 'REWRITE':
+            log(f"Rewriting (low score): {item['title'][:50]}")
+            content = write_original_article(item)
+            meta, body = parse_article(content, item)
+            score = 80
+
         slug = f"{today}-{slugify(meta['headline'])}"
         if any(p['slug']==slug for p in published):
             slug += "-" + hashlib.md5(item['title'].encode()).hexdigest()[:4]
@@ -442,9 +753,12 @@ def main():
         published.insert(0, {
             "slug": slug, "headline": meta['headline'],
             "summary": meta['summary'], "topic": meta['topic'],
-            "date": today, "time": update_time, "orig_title": item['title']
+            "date": today, "time": update_time, "orig_title": item['title'],
+            "cve_id": meta['cve_id'], "affected": meta['affected'],
+            "severity": meta['severity'], "fix": meta['fix'], "score": score,
         })
         written += 1
+        new_urls.append(f"/news/{slug}.html")
         print(f"  → news/{slug}.html")
 
     published = published[:40]  # keep last 40
@@ -458,6 +772,22 @@ def main():
     tmp2 = news_html.with_suffix(".tmp")
     tmp2.write_text(index, encoding="utf-8")
     tmp2.replace(news_html)
+
+    # Build dedicated cybersecurity page (Security/CVE originals)
+    security_page = build_security_news_page(published, update_time)
+    security_html = pathlib.Path("security-news.html")
+    tmp3 = security_html.with_suffix(".tmp")
+    tmp3.write_text(security_page, encoding="utf-8")
+    tmp3.replace(security_html)
+
+    # Surface the latest Security/CVE stories on the homepage too
+    update_homepage_security(published)
+
+    # Tell Bing/Yandex about anything new now instead of waiting for their
+    # next crawl (only worth pinging if this run actually published something)
+    if new_urls:
+        _indexnow_submit(new_urls + ["/news.html", "/security-news.html", "/"], log_fn=log)
+
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 
 if __name__ == "__main__":

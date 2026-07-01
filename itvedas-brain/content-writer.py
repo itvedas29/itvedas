@@ -30,13 +30,29 @@
 ═══════════════════════════════════════════════════════════════════
 """
 
-import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request
+import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request, html
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
 from core.log import log as _core_log
+from core.indexnow import submit as _indexnow_submit
+
+
+def esc(value):
+    """HTML-escape LLM-generated title/description text before it goes
+    into an attribute, <script type="application/ld+json"> block, or
+    text node — the article body/title/description are Claude's free-form
+    output, not developer-controlled strings."""
+    return html.escape(str(value), quote=True)
+
+
+def json_ld(obj):
+    """Serialize obj for a <script type="application/ld+json"> block,
+    guarding against a literal "</script>" in LLM output ending the
+    script element early (json.dumps() escapes quotes but not that)."""
+    return json.dumps(obj, ensure_ascii=True).replace("</", "<\\/")
 
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
@@ -202,15 +218,33 @@ def slugify(text, maxlen=60):
 #  STEP 1 — pick keyword
 # ─────────────────────────────────────────────────────────────────
 def pick_keyword(state):
+    """Returns (keyword, topic, is_refresh, existing_entry).
+
+    is_refresh is True once every calendar keyword already has a published
+    article. Previously this reset used_keywords and started the calendar
+    over, publishing a second page targeting the same exact-match keyword
+    as an existing one — keyword cannibalization, splitting ranking signal
+    across two competing URLs instead of concentrating it. Refreshing the
+    oldest article in place (same URL, new content, dateModified bumped)
+    is a freshness signal instead of a duplicate-content liability.
+    """
     used = state.get("used_keywords", [])
     remaining = [(k, t) for (k, t) in CALENDAR if k not in used]
-    if not remaining:
-        log("Calendar complete — restarting cycle")
-        state["used_keywords"] = []
-        remaining = CALENDAR
-    keyword, topic = remaining[0]
-    log(f"Keyword: {keyword}  [{topic}]")
-    return keyword, topic
+    if remaining:
+        keyword, topic = remaining[0]
+        log(f"Keyword: {keyword}  [{topic}]")
+        return keyword, topic, False, None
+
+    log("Calendar complete — refreshing oldest article instead of duplicating")
+    calendar_keywords = {k for k, _ in CALENDAR}
+    candidates = [a for a in state.get("published", []) if a.get("keyword") in calendar_keywords]
+    if not candidates:
+        keyword, topic = CALENDAR[0]
+        log(f"Keyword: {keyword}  [{topic}]")
+        return keyword, topic, False, None
+    oldest = candidates[0]
+    log(f"Refreshing: {oldest['keyword']}  [{oldest['topic']}]  (articles/{oldest['file']})")
+    return oldest["keyword"], oldest["topic"], True, oldest
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 2 — write article
@@ -296,12 +330,15 @@ def extract_meta(content, keyword, topic):
 # ─────────────────────────────────────────────────────────────────
 #  STEP 5 — build full article page
 # ─────────────────────────────────────────────────────────────────
-def build_page(content, meta, date_str):
+def build_page(content, meta, date_str, modified_date=None, filename=None):
     topic   = meta["topic"]
-    title   = meta["title"]
-    desc    = meta["description"]
+    # title/description are Claude's free-form output — escape before
+    # embedding in an attribute or text node.
+    title   = esc(meta["title"])
+    desc    = esc(meta["description"])
     keyword = meta["keyword"]
     color   = color_for(topic)
+    modified_date = modified_date or date_str
 
     body = re.sub(r'<!-- META.*?-->', '', content, flags=re.DOTALL)
     body = body.replace('[AFFILIATE]', '').strip()
@@ -320,7 +357,7 @@ def build_page(content, meta, date_str):
                       f'<h2\\1 id="{anc}">{h}</h2>', body, count=1)
 
     rt = reading_time(body)
-    url = f"{SITE_URL}/articles/{date_str}-{topic.lower()}.html"
+    url = f"{SITE_URL}/articles/{filename or f'{date_str}-{topic.lower()}.html'}"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -337,12 +374,14 @@ def build_page(content, meta, date_str):
 <link rel="canonical" href="{url}">
 <title>{title} | {SITE_NAME}</title>
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"Article","headline":"{title}",
-"description":"{desc}","keywords":"{keyword}",
-"author":{{"@type":"Organization","name":"{SITE_NAME}","url":"{SITE_URL}"}},
-"publisher":{{"@type":"Organization","name":"{SITE_NAME}","url":"{SITE_URL}"}},
-"datePublished":"{date_str}","dateModified":"{date_str}",
-"articleSection":"{topic}","educationalLevel":"Beginner"}}
+{json_ld({
+    "@context": "https://schema.org", "@type": "Article", "headline": meta["title"],
+    "description": meta["description"], "keywords": keyword,
+    "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+    "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+    "datePublished": date_str, "dateModified": modified_date,
+    "articleSection": topic, "educationalLevel": "Beginner",
+})}
 </script>
 {ga4_snippet()}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -423,6 +462,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
   <div class="badges">
     <span class="badge">{topic}</span>
     <span class="badge-info">📅 {date_str}</span>
+    {f'<span class="badge-info">🔄 Updated {modified_date}</span>' if modified_date != date_str else ''}
     <span class="badge-info">⏱ {rt}</span>
     <span class="badge-info">👶 Beginner friendly</span>
   </div>
@@ -459,7 +499,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 <script>
@@ -485,12 +525,10 @@ def update_homepage(state):
     for a in recent:
         c = color_for(a.get("topic", "IT"))
         items += (
-            f'<a href="/articles/{a["file"]}" style="display:flex;align-items:flex-start;gap:1rem;'
-            f'padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06);text-decoration:none;color:inherit;">'
-            f'<span style="background:{c}1a;color:{c};font-size:0.68rem;font-weight:700;padding:0.25rem 0.6rem;'
-            f'border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;flex-shrink:0;">{a.get("topic","IT")}</span>'
-            f'<div><div style="font-size:0.95rem;color:#D0D0E8;line-height:1.45;margin-bottom:0.2rem;">{a.get("title","Article")}</div>'
-            f'<div style="font-size:0.75rem;color:#8888A8;">{a.get("date","")} · {a.get("rt","5 min read")}</div></div></a>'
+            f'<a href="/articles/{a["file"]}" class="lac">'
+            f'<span class="lac-badge" style="background:{c}1a;color:{c};">{a.get("topic","IT")}</span>'
+            f'<div class="lac-title">{esc(a.get("title","Article"))}</div>'
+            f'<div class="lac-meta">{a.get("date","")} · {a.get("rt","5 min read")}</div></a>'
         )
     section = (
         '<!-- LATEST_ARTICLES_START -->\n'
@@ -500,7 +538,7 @@ def update_homepage(state):
         '<div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FF6B35;margin-bottom:0.75rem;">Latest Articles</div>'
         '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;">Fresh from the Knowledge Hub</h2>'
         '<p style="color:#8888A8;margin-bottom:2.5rem;max-width:500px;">New articles every Monday, Wednesday and Friday — always plain English, always free.</p>'
-        f'<div style="max-width:720px;">{items}</div></div></div>\n'
+        f'<div class="latest-articles-grid">{items}</div></div></div>\n'
         '<!-- LATEST_ARTICLES_END -->'
     )
     if '<!-- LATEST_ARTICLES_START -->' in html:
@@ -529,7 +567,7 @@ def build_chapter_pages(state):
             cards = "".join(
                 f'<a href="/articles/{a["file"]}" class="art">'
                 f'<div class="art-meta"><span>📅 {a.get("date","")}</span><span>⏱ {a.get("rt","5 min read")}</span></div>'
-                f'<h3 class="art-title">{a.get("title","Article")}</h3>'
+                f'<h3 class="art-title">{esc(a.get("title","Article"))}</h3>'
                 f'<span class="art-link">Read article →</span></a>'
                 for a in arts)
             body = f'<div class="art-list">{cards}</div>'
@@ -612,7 +650,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-glow"></div>
@@ -644,7 +682,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 </body>
@@ -664,12 +702,14 @@ def build_sitemap(state):
     today = datetime.date.today().isoformat()
     urls = [f'  <url><loc>{SITE_URL}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>',
             f'  <url><loc>{SITE_URL}/news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
+            f'  <url><loc>{SITE_URL}/security-news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
             f'  <url><loc>{SITE_URL}/career-paths.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>',
             f'  <url><loc>{SITE_URL}/faq.html</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>']
     for slug in CHAPTERS:
         urls.append(f'  <url><loc>{SITE_URL}/articles/{slug}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>')
     for a in state.get("published", []):
-        urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{a.get("date",today)}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
+        lastmod = a.get("updated") or a.get("date", today)
+        urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
     try:
         (ROOT / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -726,8 +766,9 @@ def main():
     state = load_state()
     state["last_run"] = datetime.datetime.now().isoformat()
 
-    # 1. keyword
-    keyword, topic = pick_keyword(state)
+    # 1. keyword (or, once the calendar is fully covered, the oldest
+    #    article to refresh in place instead of duplicating)
+    keyword, topic, is_refresh, existing = pick_keyword(state)
     # 2. write
     content = write_article(keyword, topic)
     # 3. review (one rewrite if weak)
@@ -742,28 +783,49 @@ def main():
     log(f"Title: {meta['title']}")
     # 5. build page
     today = datetime.date.today().isoformat()
-    page = build_page(content, meta, today)
-    fname = f"{today}-{topic.lower()}.html"
-    out = ARTICLES / fname
-    n = 1
-    while out.exists():
-        fname = f"{today}-{topic.lower()}-{n}.html"
-        out = ARTICLES / fname
-        n += 1
-    try:
-        out.write_text(page, encoding="utf-8")
-    except Exception as e:
-        log(f"Article write error: {e}")
-        raise
-    log(f"Published: articles/{fname}")
-    # 6. update state
     rt = reading_time(content)
-    state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-60:]
-    state["topic_counts"][topic] = state.get("topic_counts", {}).get(topic, 0) + 1
-    state["total"] = state.get("total", 0) + 1
-    state["published"] = (state.get("published", []) + [{
-        "file": fname, "title": meta["title"], "topic": topic,
-        "keyword": keyword, "date": today, "score": score, "rt": rt}])[-60:]
+
+    if is_refresh:
+        fname = existing["file"]
+        original_date = existing.get("date", today)
+        page = build_page(content, meta, original_date, modified_date=today, filename=fname)
+        out = ARTICLES / fname
+        try:
+            out.write_text(page, encoding="utf-8")
+        except Exception as e:
+            log(f"Article write error: {e}")
+            raise
+        log(f"Refreshed: articles/{fname}")
+        # 6. update state — same URL, updated in place, moved to the end
+        # so it shows up as "latest" (it just got fresher content).
+        existing.update({
+            "title": meta["title"], "topic": topic, "keyword": keyword,
+            "score": score, "rt": rt, "updated": today,
+        })
+        state["published"] = [a for a in state["published"] if a is not existing] + [existing]
+        state["total"] = state.get("total", 0) + 1
+    else:
+        fname = f"{today}-{topic.lower()}.html"
+        out = ARTICLES / fname
+        n = 1
+        while out.exists():
+            fname = f"{today}-{topic.lower()}-{n}.html"
+            out = ARTICLES / fname
+            n += 1
+        page = build_page(content, meta, today, filename=fname)
+        try:
+            out.write_text(page, encoding="utf-8")
+        except Exception as e:
+            log(f"Article write error: {e}")
+            raise
+        log(f"Published: articles/{fname}")
+        # 6. update state
+        state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-60:]
+        state["topic_counts"][topic] = state.get("topic_counts", {}).get(topic, 0) + 1
+        state["total"] = state.get("total", 0) + 1
+        state["published"] = (state.get("published", []) + [{
+            "file": fname, "title": meta["title"], "topic": topic,
+            "keyword": keyword, "date": today, "score": score, "rt": rt}])[-60:]
     # 7. homepage, chapters, sitemap
     update_homepage(state)
     build_chapter_pages(state)
@@ -771,6 +833,8 @@ def main():
     save_state(state)
     # 8. email
     send_email(meta, fname, score)
+    # 9. tell Bing/Yandex about it now instead of waiting for their next crawl
+    _indexnow_submit(["/", f"/articles/{fname}", f"/articles/{TOPIC_TO_SLUG.get(topic, topic.lower())}/"], log_fn=log)
 
     log(f"DONE. Article #{state['total']}: {meta['title']} ({score}/100)")
     log("=" * 55)

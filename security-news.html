@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Cybersecurity news, attacks, breaches and CVEs — original reporting, explained in plain English by ITVedas, every story on its own page.">
+<meta name="keywords" content="cybersecurity news, CVE tracker, cyber attacks, data breaches, vulnerability news, security advisories">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://itvedas.com/security-news.html">
+<title>Cybersecurity News, Attacks & CVEs | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.hero{padding:6rem 2rem 2.5rem;background:linear-gradient(180deg,rgba(16,185,129,0.06),transparent);border-bottom:1px solid var(--border);}
+.hero-in{max-width:1200px;margin:0 auto;}
+.live{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}
+.dot{width:6px;height:6px;background:#10B981;border-radius:50%;animation:b 1.5s infinite;}
+@keyframes b{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}
+.hero h1 span{background:linear-gradient(135deg,#10B981,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:var(--muted);max-width:640px;}
+.upd{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}
+.main{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+.section-label{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);}
+.section-h{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;margin-top:0.35rem;}
+.filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.fb{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
+.fb:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.fb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+.empty{text-align:center;padding:3rem;color:var(--muted);grid-column:1/-1;}
+.nc{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}
+.nc:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}
+.nc-vis{height:140px;display:flex;align-items:center;justify-content:center;}
+.nc-body{padding:1.35rem;}
+.nc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+.nc-badge{font-size:0.68rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.cve-id-badge{background:rgba(239,68,68,0.15);color:#EF4444;font-family:monospace;}
+.nc-time{font-size:0.75rem;color:var(--muted);}
+.nc-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:0.6rem;color:var(--text);}
+.nc-sum{font-size:0.875rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}
+.nc-link{font-size:0.8rem;color:var(--accent);font-weight:600;}
+.cve-facts{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;padding:0.75rem;background:var(--bg3);border-radius:8px;}
+.cve-fact{display:flex;gap:0.5rem;font-size:0.8rem;}
+.cve-fact-label{color:var(--muted);flex-shrink:0;min-width:62px;font-weight:600;}
+.cve-fact-val{color:var(--sub);}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:var(--accent);}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:var(--accent);}
+@media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.main{padding-left:1.25rem;padding-right:1.25rem;}.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html" class="active" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+</nav>
+<div class="hero">
+  <div class="hero-in">
+    <div class="live"><span class="dot"></span>Updated 05:45 AM IST</div>
+    <h1>Cybersecurity News, <span>Attacks & CVEs</span></h1>
+    <p>Every attack, breach and CVE we cover gets its own plain-English ITVedas write-up — what happened, why it matters, and how to fix it. No links out, everything's on this page.</p>
+    <p class="upd">Last updated: 05:45 AM IST · July 01, 2026</p>
+  </div>
+</div>
+<div class="main">
+  <div class="section-head">
+    <div>
+      <div class="section-label">ITVedas Original Coverage</div>
+      <h2 class="section-h">Our own breakdowns of what happened</h2>
+    </div>
+  </div>
+  <div class="filters" id="filters"><button class="fb active" data-t="all">All</button><button class="fb" data-t="CVE" style="--tc:#EF4444">CVEs</button><button class="fb" data-t="Security" style="--tc:#10B981">Attacks & Breaches</button></div>
+  <div class="grid" id="grid"><a href="/news/2026-06-30-aflac-confirms-breach-at-subsidiary-raising-questions-about-.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 06:25 PM IST</span></div>
+                <h3 class="nc-title">Aflac Confirms Breach at Subsidiary, Raising Questions About Corporate Data Security</h3>
+                <p class="nc-sum">Insurance company Aflac revealed that criminals accessed sensitive information through a hacked subsidiary, spotlighting vulnerabilities in business networks.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-hackers-exploit-popular-ai-workflow-tool-to-secretly-mine-cr.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 06:25 PM IST</span></div>
+                <h3 class="nc-title">Hackers Exploit Popular AI Workflow Tool to Secretly Mine Cryptocurrency on Unprotected Servers</h3>
+                <p class="nc-sum">Cybercriminals are leveraging a critical vulnerability in Langflow to compromise AI systems and install coin-mining malware.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-two-thirds-of-iphone-ai-apps-leave-premium-features-unprotec.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 04:29 PM IST</span></div>
+                <h3 class="nc-title">Two-Thirds of iPhone AI Apps Leave Premium Features Unprotected, Study Reveals</h3>
+                <p class="nc-sum">Researchers found 282 out of 444 AI chatbot apps for iPhone exposed payment credentials through insecure coding practices.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-critical-security-hole-in-progress-kemp-loadmaster-puts-user.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 11:58 AM IST</span></div>
+                <h3 class="nc-title">Critical Security Hole in Progress Kemp LoadMaster Puts User Passwords at Risk Without Authentication</h3>
+                <p class="nc-sum">A dangerous vulnerability allows attackers to execute commands with full system access on unpatched servers.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-researchers-discover-critical-flaws-in-apple-and-google-s-wi.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 11:58 AM IST</span></div>
+                <h3 class="nc-title">Researchers Discover Critical Flaws in Apple and Google&#x27;s Wireless File Sharing Systems</h3>
+                <p class="nc-sum">Security researchers found six vulnerabilities in AirDrop and Quick Share that allow nearby attackers to crash services and potentially steal data.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-popular-remote-support-software-under-active-attack-as-crimi.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 11:58 AM IST</span></div>
+                <h3 class="nc-title">Popular Remote Support Software Under Active Attack as Criminals Deploy New Stealing Malware</h3>
+                <p class="nc-sum">Hackers exploit critical flaw in SimpleHelp to install dangerous malware that steals data from business computers.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-simplehelp-software-vulnerability-under-active-attack-as-cri.html" class="nc" data-t="CVE">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#EF444422,#EF444408);"><span style="font-size:2.5rem;">🛡️</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#EF44441f;color:#EF4444;">CVE</span><span class="nc-time">2026-06-30 · 11:58 AM IST</span></div>
+                <h3 class="nc-title">SimpleHelp Software Vulnerability Under Active Attack as Criminals Deploy Malware</h3>
+                <p class="nc-sum">Security flaw CVE-2026-48558 in SimpleHelp is being exploited to install harmful software on victim computers.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-hidden-code-traps-found-in-github-repositories-can-secretly-.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 04:55 AM IST</span></div>
+                <h3 class="nc-title">Hidden Code Traps Found in GitHub Repositories Can Secretly Compromise Developer Computers</h3>
+                <p class="nc-sum">Security researchers uncovered how malicious instructions buried in code repositories can trick AI assistants into installing backdoors on machines.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-nissan-employees-hit-by-major-data-leak-through-outdated-sof.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 04:55 AM IST</span></div>
+                <h3 class="nc-title">Nissan Employees Hit by Major Data Leak Through Outdated Software Flaw</h3>
+                <p class="nc-sum">Nissan confirms hackers stole worker data by exploiting a known weakness in enterprise software used by the automaker.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-30-nissan-s-customer-information-exposed-through-weakness-in-or.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-30 · 04:55 AM IST</span></div>
+                <h3 class="nc-title">Nissan&#x27;s Customer Information Exposed Through Weakness in Oracle Software</h3>
+                <p class="nc-sum">Nissan revealed a security breach affecting employee records after attackers exploited a flaw in Oracle systems.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-simplehelp-software-vulnerability-becomes-gateway-for-data-s.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 07:22 PM IST</span></div>
+                <h3 class="nc-title">SimpleHelp Software Vulnerability Becomes Gateway for Data-Stealing Attacks</h3>
+                <p class="nc-sum">A serious security weakness in remote support software is being weaponized to install malicious programs that steal sensitive information from businesses.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-u-s-bounty-targets-russian-hacking-groups-as-ai-security-gap.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 05:22 PM IST</span></div>
+                <h3 class="nc-title">U.S. Bounty Targets Russian Hacking Groups as AI Security Gaps Widen</h3>
+                <p class="nc-sum">State Department offers $10M reward for intel on Russian-linked hacker groups exploiting artificial intelligence vulnerabilities.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-u-s-government-places-10-million-bounty-on-criminals-exploit.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 05:22 PM IST</span></div>
+                <h3 class="nc-title">U.S. Government Places $10 Million Bounty on Criminals Exploiting Encrypted Messaging Apps</h3>
+                <p class="nc-sum">Federal authorities offer major reward for information leading to hackers targeting WhatsApp and Signal users worldwide.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-quarter-million-websites-hijacked-in-massive-cryptocurrency-.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 04:40 PM IST</span></div>
+                <h3 class="nc-title">Quarter Million Websites Hijacked in Massive Cryptocurrency and Identity Theft Campaign</h3>
+                <p class="nc-sum">Over 236,000 sites built on DCloud platform compromised for scams, phishing attacks, and digital wallet theft.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-chinese-backed-hackers-target-india-s-power-infrastructure-u.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 04:40 PM IST</span></div>
+                <h3 class="nc-title">Chinese-Backed Hackers Target India&#x27;s Power Infrastructure Using Cloud Services as Cover</h3>
+                <p class="nc-sum">State-sponsored group exploits legitimate cloud platforms to infiltrate Indian government and energy facilities with custom malware.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-29-chinese-hackers-exploit-cloud-storage-tool-to-attack-indian-.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-29 · 04:40 PM IST</span></div>
+                <h3 class="nc-title">Chinese Hackers Exploit Cloud Storage Tool to Attack Indian Government Offices</h3>
+                <p class="nc-sum">Mustang Panda group weaponizes Zoho WorkDrive in sophisticated cyber attacks targeting Indian state institutions.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a><a href="/news/2026-06-28-major-isp-credentials-compromised-in-massive-security-incide.html" class="nc" data-t="Security">
+              <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
+              <div class="nc-body">
+                <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-06-28 · 04:44 PM IST</span></div>
+                <h3 class="nc-title">Major ISP Credentials Compromised in Massive Security Incident Affecting Millions</h3>
+                <p class="nc-sum">Hackers gained access to login credentials for 14.2 million users across six internet providers in a significant breach.</p>
+                <span class="nc-link">Read full story →</span>
+              </div>
+            </a></div>
+  <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">All News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Original reporting</p>
+</footer>
+<script>
+function f(t){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-t="${t}"]`).classList.add('active');
+  let v=0;
+  document.querySelectorAll('#grid .nc').forEach(c=>{
+    const s=t==='all'||c.dataset.t===t;c.style.display=s?'':'none';if(s)v++;
+  });
+  document.getElementById('empty').style.display=v===0?'block':'none';
+}
+document.querySelectorAll('#filters .fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
+</script>
+</body>
+</html>
