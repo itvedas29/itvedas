@@ -113,6 +113,14 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .nav-links{{display:flex;gap:1.5rem;align-items:center;list-style:none;}}
 .nav-links a{{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color .2s;}}
 .nav-links a:hover,.nav-links a.active{{color:var(--text);}}
+.nav-dropdown{{position:relative;}}
+.nav-drop-btn{{background:none;border:none;color:var(--muted);font-size:0.875rem;font-family:'Inter',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:0.2rem;}}
+.nav-drop-btn:hover,.nav-dropdown.open .nav-drop-btn{{color:var(--text);}}
+.nav-drop-menu{{position:absolute;top:calc(100% + 0.9rem);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.4rem;min-width:170px;display:none;flex-direction:column;gap:0.15rem;box-shadow:0 16px 32px rgba(0,0,0,0.45);z-index:200;}}
+.nav-dropdown.open .nav-drop-menu{{display:flex;}}
+.nav-drop-menu a{{padding:0.55rem 0.75rem;border-radius:8px;font-size:0.85rem;color:var(--muted);text-decoration:none;white-space:nowrap;}}
+.nav-drop-menu a:hover{{background:rgba(255,255,255,0.06);color:var(--text);}}
+.nav-hamburger{{display:none;background:none;border:none;color:var(--text);font-size:1.35rem;line-height:1;cursor:pointer;padding:0.2rem 0.1rem;}}
 .hero{{padding:8rem 2rem 3rem;max-width:820px;margin:0 auto;position:relative;}}
 .hero-glow{{position:absolute;top:5rem;left:50%;transform:translateX(-50%);width:700px;height:380px;background:radial-gradient(ellipse,rgba(255,107,53,0.10),transparent 70%);pointer-events:none;}}
 .eyebrow{{display:inline-block;font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--net);margin-bottom:1.25rem;position:relative;}}
@@ -136,8 +144,13 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
 .flinks a:hover{{color:var(--net);}}
 @media(max-width:640px){{
   nav{{padding:0 1.25rem;}}
-  .nav-links{{gap:1rem;}}
-  .nav-links a:not(.active){{display:none;}}
+  .nav-hamburger{{display:block;}}
+  .nav-links{{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:flex-start;gap:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.5rem 1.25rem 1rem;}}
+  .nav-links.open{{display:flex;}}
+  .nav-links>li{{width:100%;}}
+  .nav-links>li>a,.nav-drop-btn{{width:100%;padding:0.75rem 0;}}
+  .nav-drop-menu{{position:static;transform:none;display:none;border:none;background:none;padding:0 0 0.25rem 1rem;box-shadow:none;}}
+  .nav-dropdown.open .nav-drop-menu{{display:flex;}}
   .hero,.content{{padding-left:1.25rem;padding-right:1.25rem;}}
 }}
 </style>
@@ -145,15 +158,21 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="/">Home</a></li>
-    <li><a href="/news.html">📰 News</a></li>
-    <li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li>
     <li><a href="/#chapters">Chapters</a></li>
+    <li class="nav-dropdown">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">📰 News ▾</button>
+      <div class="nav-drop-menu">
+        <a href="/news.html">All News</a>
+        <a href="/security-news.html" style="color:var(--sec)">🛡️ Security News</a>
+      </div>
+    </li>
     <li><a href="/career-paths.html">Career Paths</a></li>
     <li><a href="/faq.html" class="active">FAQ</a></li>
     <li><a href="/about.html">About</a></li>
   </ul>
+  <button type="button" class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
 </nav>
 
 <section class="hero">
@@ -184,6 +203,30 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
   </div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
 </footer>
+
+<script>
+function closeDropdowns(){{document.querySelectorAll('.nav-dropdown.open').forEach(li=>{{li.classList.remove('open');li.querySelector('.nav-drop-btn').setAttribute('aria-expanded','false');}});}}
+document.querySelectorAll('.nav-dropdown > .nav-drop-btn').forEach(btn=>{{
+  btn.addEventListener('click',e=>{{
+    e.stopPropagation();
+    const li=btn.closest('.nav-dropdown');
+    const wasOpen=li.classList.contains('open');
+    closeDropdowns();
+    if(!wasOpen){{li.classList.add('open');btn.setAttribute('aria-expanded','true');}}
+  }});
+}});
+document.addEventListener('click',e=>{{if(!e.target.closest('.nav-dropdown'))closeDropdowns();}});
+document.addEventListener('keydown',e=>{{if(e.key==='Escape')closeDropdowns();}});
+const navHamburger=document.getElementById('navHamburger');
+const navLinks=document.getElementById('navLinks');
+if(navHamburger&&navLinks){{
+  navHamburger.addEventListener('click',()=>{{
+    const open=navLinks.classList.toggle('open');
+    navHamburger.setAttribute('aria-expanded',open?'true':'false');
+    if(!open)closeDropdowns();
+  }});
+}}
+</script>
 
 </body>
 </html>

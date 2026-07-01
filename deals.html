@@ -1361,6 +1361,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color 0.2s;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-deals{color:var(--db)!important;font-weight:600;}
+.nav-dropdown{position:relative;}
+.nav-drop-btn{background:none;border:none;color:var(--muted);font-size:0.875rem;font-family:'Inter',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:0.2rem;}
+.nav-drop-btn:hover,.nav-dropdown.open .nav-drop-btn{color:var(--text);}
+.nav-drop-menu{position:absolute;top:calc(100% + 0.9rem);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.4rem;min-width:170px;display:none;flex-direction:column;gap:0.15rem;box-shadow:0 16px 32px rgba(0,0,0,0.45);z-index:200;}
+.nav-dropdown.open .nav-drop-menu{display:flex;}
+.nav-drop-menu a{padding:0.55rem 0.75rem;border-radius:8px;font-size:0.85rem;color:var(--muted);text-decoration:none;white-space:nowrap;}
+.nav-drop-menu a:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.35rem;line-height:1;cursor:pointer;padding:0.2rem 0.1rem;}
 
 /* ── HERO ─────────────────────────────── */
 .hero{
@@ -1528,7 +1536,13 @@ footer a:hover{color:var(--text);}
 
 /* ── RESPONSIVE ───────────────────────── */
 @media(max-width:760px){
-  .nav-links{display:none;}
+  .nav-hamburger{display:block;}
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:flex-start;gap:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0.5rem 1.25rem 1rem;}
+  .nav-links.open{display:flex;}
+  .nav-links>li{width:100%;}
+  .nav-links>li>a,.nav-drop-btn{width:100%;padding:0.75rem 0;}
+  .nav-drop-menu{position:static;transform:none;display:none;border:none;background:none;padding:0 0 0.25rem 1rem;box-shadow:none;}
+  .nav-dropdown.open .nav-drop-menu{display:flex;}
   .hero{padding:5.5rem 1rem 2rem;}
   .controls{padding:1.25rem 1rem 0;}
   .filters{padding:1rem 1rem 0;}
@@ -1549,16 +1563,27 @@ footer a:hover{color:var(--text);}
 <!-- ── NAV ──────────────────────────── -->
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="/">Home</a></li>
-    <li><a href="/news.html">News</a></li>
-    <li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li>
     <li><a href="/#chapters">Chapters</a></li>
+    <li class="nav-dropdown">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">News ▾</button>
+      <div class="nav-drop-menu">
+        <a href="/news.html">All News</a>
+        <a href="/security-news.html" style="color:var(--sec)">🛡️ Security News</a>
+      </div>
+    </li>
     <li><a href="/career-paths.html">Career Paths</a></li>
-    <li><a href="/faq.html">FAQ</a></li>
     <li><a href="/deals.html" class="active nav-deals">🔥 Deals</a></li>
-    <li><a href="/about.html">About</a></li>
+    <li class="nav-dropdown">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">More ▾</button>
+      <div class="nav-drop-menu">
+        <a href="/faq.html">FAQ</a>
+        <a href="/about.html">About</a>
+      </div>
+    </li>
   </ul>
+  <button type="button" class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
 </nav>
 
 <!-- ── HERO ─────────────────────────── -->
@@ -1621,6 +1646,27 @@ footer a:hover{color:var(--text);}
 </footer>
 
 <script>
+function closeDropdowns(){document.querySelectorAll('.nav-dropdown.open').forEach(li=>{li.classList.remove('open');li.querySelector('.nav-drop-btn').setAttribute('aria-expanded','false');});}
+document.querySelectorAll('.nav-dropdown > .nav-drop-btn').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const li=btn.closest('.nav-dropdown');
+    const wasOpen=li.classList.contains('open');
+    closeDropdowns();
+    if(!wasOpen){li.classList.add('open');btn.setAttribute('aria-expanded','true');}
+  });
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))closeDropdowns();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDropdowns();});
+const navHamburger=document.getElementById('navHamburger');
+const navLinks=document.getElementById('navLinks');
+if(navHamburger&&navLinks){
+  navHamburger.addEventListener('click',()=>{
+    const open=navLinks.classList.toggle('open');
+    navHamburger.setAttribute('aria-expanded',open?'true':'false');
+    if(!open)closeDropdowns();
+  });
+}
 /* ── PRODUCT DATA ──────────────────────────────────────────── */
 // [id, name, cat, family, price, was, productUrl, addToCartId|null]
 // addToCartId: simple products go directly to checkout; null = variable product, links to product page
