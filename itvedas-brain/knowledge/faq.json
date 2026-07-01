@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-01T11:43:46Z",
+  "generated_at": "2026-07-01T11:45:44Z",
   "source_repository": "itvedas29/itvedas",
   "items": [
     {
@@ -359,6 +359,132 @@
       "answer": "A: On your personal computer, very unlikely. Most dangerous commands require sudo (admin password). On servers, yes\u2014be careful. That's why companies have backups. Start learning on a practice server (Virtual Machine) before touching real systems.",
       "source_path": "articles/2026-06-30-linux.html",
       "related_course_id": "linux"
+    },
+    {
+      "id": "faq_4c0bea0307d7",
+      "question": "How does encryption work?",
+      "answer": "Encryption scrambles data using a mathematical algorithm and a key, turning readable text into unreadable ciphertext. Only someone with the correct decryption key can unscramble it back to the original. The same algorithm produces completely different results depending on the key used, which is why keeping your key secret is so important.",
+      "source_path": "articles/2026-07-01-how-does-encryption-work.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_668c8705a6d9",
+      "question": "What is AES encryption?",
+      "answer": "AES (Advanced Encryption Standard) is the most widely used encryption algorithm in the world. It was adopted by the US government in 2001 and is now the global standard. AES-256 uses a 256-bit key \u2014 that means there are 2 256 possible key combinations, roughly 10 77 . It is considered unbreakable with current technology. It would take longer than the age of the universe to crack it by brute force, even with the fastest supercomputers on Earth.",
+      "source_path": "articles/2026-07-01-how-does-encryption-work.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_2842c3ace273",
+      "question": "What is SSL/TLS?",
+      "answer": "SSL/TLS is the encryption protocol that secures websites. When you see HTTPS and a padlock in your browser's address bar, SSL/TLS is actively encrypting the connection between your browser and the website. It prevents anyone \u2014 hackers, internet providers, governments \u2014 from intercepting and reading the data you send and receive. Every major website uses TLS today.",
+      "source_path": "articles/2026-07-01-how-does-encryption-work.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_c60cfa049076",
+      "question": "What is end-to-end encryption?",
+      "answer": "End-to-end encryption means only the sender and recipient can read the message. The data is encrypted on the sender's device and can only be decrypted on the recipient's device. Even the app provider cannot see the contents \u2014 their servers only ever see unreadable ciphertext. WhatsApp, Signal, and iMessage all use end-to-end encryption for messages.",
+      "source_path": "articles/2026-07-01-how-does-encryption-work.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_49ecec25358d",
+      "question": "Is encrypted data completely safe?",
+      "answer": "Encryption is extremely strong, but it is not the only security layer you need. Encrypted data can still be compromised if the encryption key is stolen, if your device is hacked or has malware, or if the software implementing encryption has vulnerabilities. Encryption protects data in transit and at rest, but it cannot protect you from weak passwords, phishing attacks, or compromised devices. Use encryption alongside strong, unique passwords, software updates, and cautious online behaviour for the best protection.",
+      "source_path": "articles/2026-07-01-how-does-encryption-work.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_dfd863f55c2f",
+      "question": "What is DNS in Simple Terms?",
+      "answer": "Every time you type a website address into your browser \u2014 say google.com or youtube.com \u2014 something remarkable happens behind the scenes in a fraction of a second. Your computer does not actually know where \"google.com\" lives. It needs a number. Computers on the internet communicate using numerical addresses called IP addresses , which look something like 142.250.80.46 . DNS is the system that translates the human-friendly name into that number.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_d4e56da4fc3a",
+      "question": "What is DNS on WiFi \u2014 and Why Does It Matter?",
+      "answer": "When you connect your phone or laptop to a WiFi network \u2014 whether at home, in a coffee shop, or at the office \u2014 your device does not just get an IP address. It also receives the address of a DNS server to use. This happens automatically through a protocol called DHCP (Dynamic Host Configuration Protocol), which is the system your router uses to hand out network settings to every device that connects.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_ef16500e5ae4",
+      "question": "Why Does Your WiFi DNS Server Matter?",
+      "answer": "There are three main reasons the DNS server assigned by your WiFi network matters to you as an everyday user:",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_513675875443",
+      "question": "What is DNS on WiFi?",
+      "answer": "When you connect to WiFi, your router automatically assigns your device a DNS server to use \u2014 usually one operated by your ISP. Every domain name your device looks up (for websites, apps, email, etc.) goes through this DNS server. You can change it to a faster or more private option like Cloudflare's 1.1.1.1 , either on your router (for all devices) or on individual devices.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_37b5111c6690",
+      "question": "What is a DNS server?",
+      "answer": "A DNS server is a computer that maintains a directory of domain names and their corresponding IP addresses. When you type a URL in your browser, your device contacts a DNS server to ask \"what is the IP address for this domain?\" The server either answers from its own records or looks up the answer from other DNS servers and relays it back to you.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_cbe4b573146c",
+      "question": "What happens if DNS fails?",
+      "answer": "If your DNS server fails or becomes unreachable, you cannot reach websites by name. Your browser will display errors like DNS_PROBE_FINISHED_NXDOMAIN , \"This site can't be reached,\" or \"Server not found.\" The underlying internet connection is still working \u2014 packets can still travel \u2014 but your device cannot translate domain names into IP addresses, so no websites load.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_38d92a9eadfe",
+      "question": "How do I find my DNS server?",
+      "answer": "On Windows : open Command Prompt and run ipconfig /all , then look for the \"DNS Servers\" line under your active network adapter. On Mac : go to System Settings \u2192 Network \u2192 your connection \u2192 Details \u2192 DNS tab. On Android/iOS : check your WiFi connection settings \u2014 some versions show DNS directly; otherwise use a DNS lookup app or check your router's admin page.",
+      "source_path": "articles/2026-07-01-what-is-dns.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_f26c45487351",
+      "question": "Hardware vs Software Firewalls \u2014 Which Do You Need?",
+      "answer": "You have almost certainly heard both terms. The difference is simpler than it sounds:",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_f633f8811168",
+      "question": "What is a firewall?",
+      "answer": "A firewall is a security system that monitors and controls incoming and outgoing network traffic based on predefined rules. Think of it as a security guard for your network \u2014 it decides what gets in and what gets blocked.",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_4b901aa6c7a3",
+      "question": "How does a firewall work?",
+      "answer": "A firewall inspects every packet of data entering or leaving your network and compares it against a ruleset. If the traffic matches an allowed rule, it passes through. If it matches a blocked rule or no rule at all, it is dropped. Modern stateful firewalls also track the state of active connections, ensuring that only legitimate reply traffic is allowed back in.",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_73d065d0f2a8",
+      "question": "Do I need a firewall?",
+      "answer": "Yes. Every device connected to the internet should have firewall protection. Windows and macOS include built-in firewalls that you should keep enabled. Your home router almost certainly has a built-in firewall too. Businesses need additional hardware or cloud-based firewalls for full network protection, along with proper rule configuration and ongoing monitoring.",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_2d7bad31564b",
+      "question": "What is the difference between a hardware and software firewall?",
+      "answer": "A hardware firewall is a physical device that protects an entire network \u2014 common in offices and data centres. A software firewall runs on individual computers and protects just that one device. Most home setups use both without realising it: the router provides a hardware firewall at the network edge, while Windows or macOS provides a software firewall on the device itself. Both layers together give you better protection than either alone.",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_570021ff6230",
+      "question": "Can a firewall block all attacks?",
+      "answer": "No. Firewalls are one layer of security. They cannot stop phishing emails, malware already inside your network, or attacks that use allowed ports. They also cannot protect against users who voluntarily install malicious software. You also need antivirus, regular patching, and user awareness training. Security is always a stack of multiple controls working together, not a single silver bullet.",
+      "source_path": "articles/2026-07-01-what-is-firewall.html",
+      "related_course_id": "networking"
     },
     {
       "id": "faq_002fb4255cf2",
