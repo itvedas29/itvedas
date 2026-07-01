@@ -10,6 +10,10 @@
 ║  • starpig1129/DATAGEN            — multi-agent research + report writing   ║
 ║  • kaymen99/AI-Sales-agent        — product recommendation patterns         ║
 ║  • sitechat/raksbisht             — website content RAG                     ║
+║  • bitjaru/styleseed              — 74 design rules, spatial rhythm, cards  ║
+║  • Laith0003/ux-skill             — 152 anti-AI-slop rules + linter         ║
+║  • frhscopex/design-skill-os      — 161 rules from design masters           ║
+║  • funboy322/avoid-ai-design      — anti-pattern detection + rewrite        ║
 ║                                                                              ║
 ║  What this bot does every run:                                               ║
 ║  1. MEMORY CHECK  — loads brain memory, knows what articles exist           ║
@@ -83,6 +87,15 @@ Communication style:
 - Direct, warm, teacher-like tone
 - Short paragraphs, real examples, clear structure
 - Always include: what it is, how it works, why it matters, real-world example
+
+Design intelligence (styleseed + ux-skill + design-skill-os):
+- Lead with the answer — never open with "In today's digital world..."
+- Short paragraphs: 2-4 sentences max, active voice only
+- Specific examples with real product/company names and numbers
+- NEVER use filler words: elevate, seamless, powerful, revolutionary, game-changer, leverage, utilize
+- Vary section lengths — density increases through the article (sparse → detailed)
+- Code examples in <code> tags, terminal commands in <pre><code> blocks
+- NO emoji bullets in content lists — use plain <ul>/<li> instead
 
 Memory discipline:
 - ALWAYS check existing articles before picking a topic
@@ -438,6 +451,181 @@ Return ONLY JSON:
         log("qa", f"QA review failed (publishing anyway): {e}")
 
     return data
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  DESIGN INTELLIGENCE SYSTEM
+#  Sources: bitjaru/styleseed, Laith0003/ux-skill, frhscopex/design-skill-os,
+#           funboy322/avoid-ai-design, rohitg00/awesome-claude-design
+# ─────────────────────────────────────────────────────────────────────────────
+
+DESIGN_RULES = """
+=== ITVedas Design Intelligence (from ai-design repos) ===
+
+TYPOGRAPHY RULES (styleseed + design-skill-os):
+- Use Space Grotesk for headings ONLY — not body text (avoid Inter as display font)
+- Body text: Inter at 16px min, line-height 1.7 (golden ratio: 1.618)
+- Heading scale uses modular scale (1.25x ratio): h1→2.75rem, h2→1.45rem, h3→1.15rem
+- Negative letter-spacing on headings: -0.025em (tight, intentional)
+- Max line length: 70 characters (860px max-width container)
+- Tabular numbers for stats/dates to prevent width jitter
+
+COLOR RULES (styleseed + ux-skill 60-30-10 rule):
+- 60% background: #0A0A0F (near-black, NOT pure #000 — refined black)
+- 30% surface: #13131C (cards, panels)
+- 10% accent: chapter color (single accent per page, everything else grayscale)
+- Muted text: #8888A8 (never use gray-400 or lighter — contrast violation)
+- Sub text: #D0D0E8 (body copy — passes 4.5:1 contrast ratio)
+- NO purple-to-blue gradients (AI-slop tell #1)
+- NO gradient text with bg-clip-text (AI-slop tell #2)
+- Status/severity only for color — normal states stay neutral
+
+SPATIAL RHYTHM (styleseed 8px grid):
+- All spacing multiples of 8px: 8, 16, 24, 32, 48, 64, 80, 96
+- Group gaps matter MORE than interior padding
+- Information density increases downward (hero: sparse, content: dense)
+- Never repeat same section type consecutively — alternate tall + compact
+- Inner border-radius = outer radius minus padding (nested-radius law)
+
+CARD RULES (styleseed):
+- All content lives in cards with consistent border: 1px solid rgba(255,255,255,0.08)
+- One corner radius personality per design: 12-14px for cards, 6px for inline
+- Layered box-shadow at ≤8% opacity, lit from single direction (top-left)
+- Cards must VARY in presentation — never 3 or 4 identical cards in a row
+- Hover: translateY(-4px) + accent border-color (no scale transforms)
+
+FORBIDDEN PATTERNS (ux-skill 152 rules + avoid-ai-design):
+- NO emoji as UI icons — use text/unicode sparingly, SVG preferred
+- NO pure emoji bullets in content lists
+- NO "rounded-2xl shadow-lg" applied uniformly to everything
+- NO reflexive glassmorphism (backdrop-blur for decoration only)
+- NO generic CTAs: "Get Started", "Learn More", "Click Here"
+- NO filler copy: "Elevate", "Seamless", "Powerful", "Revolutionary"
+- NO Lorem ipsum anywhere
+- NO bouncing arrow animations on CTAs
+- NO default 300ms timing on all transitions — vary: 150ms micro, 250ms standard
+- NO four identical KPI/feature cards in a row
+- NO centered hero + three equal feature cards (the template tell)
+- NO inline styles in output HTML
+- NO console.log in scripts
+- MUST have alt text on images
+- MUST have aria-labels on icon-only buttons
+- MUST NOT skip heading levels (h1 → h2 → h3, no jumps)
+- MUST use cursor:pointer on all interactive elements
+
+CONTENT QUALITY (design-skill-os + avoid-ai-design):
+- Lead with the answer, not a definition ("DNS is..." not "In today's world...")
+- Real examples with specific names/numbers — no vague "some companies"
+- Code examples in <code> tags, terminal commands in <pre><code>
+- Short paragraphs: 2-4 sentences max
+- Vary section lengths — not all sections equal height
+- Active voice: "DNS resolves names" not "names are resolved by DNS"
+- Specificity beats generality: "saves 200ms" beats "saves time"
+
+ACCESSIBILITY (ux-skill a11y rules):
+- All images need alt text
+- All interactive elements keyboard-navigable
+- Focus rings visible (outline on :focus-visible)
+- Color is never the ONLY indicator of meaning
+- WCAG 2.1 AA minimum: 4.5:1 for normal text, 3:1 for large text
+"""
+
+def design_qa(html_content: str, data: dict) -> tuple[str, list[str]]:
+    """
+    Anti-AI-slop linter inspired by Laith0003/ux-skill.
+    Checks for forbidden patterns and logs violations.
+    Does NOT modify HTML — just reports issues for the record.
+    """
+    violations = []
+
+    checks = [
+        (r"#000000|#000(?![0-9a-fA-F])", "Pure black color used — use #2A2A2A or #0A0A0F instead"),
+        (r"Lorem ipsum", "Lorem ipsum placeholder text detected"),
+        (r"rounded-full.*rounded-full.*rounded-full", "Excessive rounded-full usage"),
+        (r"console\.log", "console.log detected in output"),
+        (r"(Elevate|Seamless|Powerful|Revolutionary|Game-changer|Next-level)", "AI-slop filler copy detected"),
+        (r"Get Started|Click Here|Learn More", "Generic CTA copy detected"),
+        (r"<img(?![^>]*alt=)", "Image missing alt text"),
+        (r"style=\"[^\"]{50,}\"", "Long inline style detected — use CSS classes"),
+        (r"background:\s*linear-gradient.*purple.*blue|background:\s*linear-gradient.*#[89abcdef].*#[34567]", "Purple-to-blue gradient (AI-slop tell)"),
+    ]
+
+    for pattern, msg in checks:
+        if re.search(pattern, html_content, re.IGNORECASE):
+            violations.append(msg)
+
+    if violations:
+        log("design-qa", f"{len(violations)} violation(s): {'; '.join(violations)}")
+    else:
+        log("design-qa", "All design rules passed")
+
+    return html_content, violations
+
+
+def apply_design_intelligence(data: dict) -> dict:
+    """
+    Uses Claude to apply design rules to article content before HTML generation.
+    Inspired by styleseed judgment layer + design-skill-os red team audit.
+    """
+    if not ANTHROPIC_KEY:
+        return data
+
+    intro = data.get("intro", "")
+    sections = data.get("sections", [])
+
+    # Check for AI-slop tells in content
+    slop_words = ["elevate", "seamless", "powerful", "revolutionary", "game-changer",
+                  "next-level", "cutting-edge", "leverage", "utilize", "paradigm"]
+    content_text = intro + " ".join(s.get("content","") for s in sections)
+    found_slop = [w for w in slop_words if w.lower() in content_text.lower()]
+
+    if not found_slop and len(sections) >= 3:
+        log("design", "Content passes design check — no rewrite needed")
+        return data
+
+    log("design", f"Applying design intelligence (slop words found: {found_slop})")
+
+    # Build a targeted prompt to fix only the issues found
+    issues = []
+    if found_slop:
+        issues.append(f"Remove filler words: {found_slop}. Replace with specific, concrete language.")
+    if len(sections) < 3:
+        issues.append("Add more sections — minimum 4 for a complete article.")
+
+    sections_json = json.dumps([{"heading": s["heading"], "content": s["content"]} for s in sections])
+
+    prompt = f"""You are a design-aware content editor. Fix these issues in the article content:
+
+Issues to fix:
+{chr(10).join(f'- {i}' for i in issues)}
+
+Design rules to follow:
+- Lead with the answer immediately — no "In today's digital world..." intros
+- Short paragraphs: 2-4 sentences max
+- Active voice only
+- Specific examples with real names/numbers
+- NO filler words: elevate, seamless, powerful, revolutionary, game-changer
+- Vary section lengths — not all equal
+
+Current intro: {intro}
+
+Current sections (JSON):
+{sections_json}
+
+Return ONLY JSON with fixed content:
+{{"intro": "...", "sections": [{{"heading": "...", "content": "..."}}]}}"""
+
+    try:
+        raw = _call_claude(prompt, max_tokens=3000)
+        raw = _extract_json(raw)
+        fixed = json.loads(raw)
+        data["intro"] = fixed.get("intro", intro)
+        data["sections"] = fixed.get("sections", sections)
+        log("design", "Content improved by design intelligence layer")
+    except Exception as e:
+        log("design", f"Design rewrite skipped: {e}")
+
+    return data
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  HTML BUILDER
@@ -830,8 +1018,20 @@ def main() -> int:
     # 5. QA GATE
     data = qa_review(data)
 
+    # 5b. DESIGN INTELLIGENCE — anti-AI-slop + design rules
+    data = apply_design_intelligence(data)
+
     # 6. BUILD HTML
     html_content = build_html(data)
+
+    # 6b. DESIGN QA — lint the final HTML
+    html_content, violations = design_qa(html_content, data)
+    if violations:
+        mem["decisions"].append({
+            "date": datetime.date.today().isoformat(),
+            "topic": topic,
+            "design_violations": violations,
+        })
 
     # 7. PUBLISH
     ok = publish_to_github(data, html_content)
