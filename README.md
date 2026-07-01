@@ -32,9 +32,12 @@ Two scripts run unattended on a schedule (`.github/workflows/write-article.yml`)
   styled HTML page, publishes it to `articles/`, refreshes the homepage
   "Latest Articles" section and chapter landing pages, and regenerates
   `sitemap.xml`. Runs Mon/Wed/Fri.
-- **`itvedas-brain/news-agent.py`** — fetches RSS headlines, generates
-  original commentary with Claude, and publishes to `news/`. Runs three
-  times daily.
+- **`itvedas-brain/news-agent.py`** — fetches RSS headlines (including
+  security/CVE feeds), generates original commentary with Claude for every
+  fresh story (capped at `MAX_NEW_ARTICLES_PER_RUN`), and publishes to
+  `news/`. Runs hourly so new stories — especially CVEs, attacks and
+  breaches surfaced on `/security-news.html` — go live within about an
+  hour of being published upstream.
 
 Both scripts require `ANTHROPIC_API_KEY` and exit immediately if it's
 missing. Optional env vars (`GA4_ID`, `NOTIFY_EMAIL`, `SMTP_FROM`,
