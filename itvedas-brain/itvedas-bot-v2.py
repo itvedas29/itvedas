@@ -1,75 +1,76 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║              ITVedas Super Bot v2 — Unified Autonomous Agent                ║
+║         ITVedas Brain Bot v2 — Full Autonomous Content Intelligence         ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║  Skills integrated from 100+ GitHub AI repos across 6 topic areas:         ║
 ║                                                                              ║
-║  MEMORY & AGENTS                                                             ║
-║  • coleam00/second-brain-starter  — persistent memory, SOUL, heartbeat     ║
-║  • letta-ai/letta                 — stateful agents with self-improvement   ║
+║  MEMORY & STATEFUL AGENTS                                                    ║
+║  • coleam00/second-brain-starter  — SOUL.md, USER.md, heartbeat, memory    ║
+║  • letta-ai/letta                 — stateful self-improving agent loops     ║
 ║  • microsoft/autogen              — multi-agent programming patterns        ║
-║  • zhayujie/CowAgent              — skill tree + tool harness patterns      ║
+║  • zhayujie/CowAgent              — skill tree + tool harness              ║
+║  • cortex-tms/cortex-tms          — tiered memory system (working/episodic) ║
 ║                                                                              ║
-║  SEO & CONTENT                                                               ║
-║  • norahe0304-art/30x-seo         — 24 production SEO skills                ║
-║  • rediumvex/seo-blog-writer      — 6 anti-detection writing rules          ║
-║  • x0u0an/topic-cluster-architect — 10-step topic cluster strategy          ║
-║  • dongbeixiaohuo/writing-agent   — evidence anchoring + humanization gate  ║
-║  • kristianfreeman/aiwriter       — SERP-driven article generation          ║
-║  • kgarbacinski/AutoViralAI       — self-learning viral content research    ║
+║  SEO & CONTENT INTELLIGENCE                                                  ║
+║  • norahe0304-art/30x-seo         — 24 production SEO skills               ║
+║  • rediumvex/seo-blog-writer      — 6 anti-detection writing rules         ║
+║  • x0u0an/topic-cluster-architect — 10-step pillar/cluster strategy        ║
+║  • dongbeixiaohuo/writing-agent   — evidence anchoring + humanization gate ║
+║  • kristianfreeman/aiwriter       — SERP-driven article generation         ║
+║  • kgarbacinski/AutoViralAI       — self-learning viral content research   ║
 ║                                                                              ║
 ║  DATA & RESEARCH                                                             ║
-║  • e2b-dev/code-interpreter       — AI-driven data analysis patterns        ║
-║  • starpig1129/DATAGEN            — multi-agent research + report writing   ║
-║  • zebbern/knowledge-assistant    — RAG on custom knowledge files           ║
-║  • divyeshmutha12/AI-Research-Asst— LangGraph + FAISS multi-agent RAG      ║
+║  • e2b-dev/code-interpreter       — AI-driven data analysis patterns       ║
+║  • starpig1129/DATAGEN            — multi-agent research + report writing  ║
+║  • zebbern/knowledge-assistant    — RAG on custom knowledge files          ║
+║  • divyeshmutha12/AI-Research-Asst— LangGraph + FAISS multi-agent RAG     ║
 ║                                                                              ║
-║  CHATBOT & WEBSITE                                                           ║
-║  • kaymen99/AI-Sales-agent        — product recommendation patterns         ║
-║  • sitechat/raksbisht             — website content RAG                     ║
-║  • RumenDamyanov/npm-chatbot      — multi-provider chatbot patterns         ║
+║  CHATBOT & WEBSITE INTELLIGENCE                                              ║
+║  • kaymen99/AI-Sales-agent        — product recommendation patterns        ║
+║  • sitechat/raksbisht             — website content RAG                    ║
+║  • RumenDamyanov/npm-chatbot      — multi-provider chatbot patterns        ║
 ║                                                                              ║
 ║  DESIGN INTELLIGENCE                                                         ║
-║  • bitjaru/styleseed              — 74 design rules, spatial rhythm, cards  ║
-║  • Laith0003/ux-skill             — 152 anti-AI-slop rules + linter         ║
-║  • frhscopex/design-skill-os      — 161 rules from design masters           ║
-║  • funboy322/avoid-ai-design      — anti-pattern detection + rewrite        ║
-║  • Sakaax/ux-pilot                — 376 UX rules co-pilot                   ║
-║  • S0ulFood/design-cognition-skill— 4-role design thinking framework        ║
+║  • bitjaru/styleseed              — 74 rules: spatial rhythm, 8px grid     ║
+║  • Laith0003/ux-skill             — 152 anti-AI-slop rules + linter        ║
+║  • frhscopex/design-skill-os      — 161 rules from design masters          ║
+║  • funboy322/avoid-ai-design      — anti-pattern detection + rewrite       ║
+║  • Sakaax/ux-pilot                — 376 UX rules co-pilot                  ║
+║  • S0ulFood/design-cognition-skill— 4-role design thinking framework       ║
 ║                                                                              ║
-║  TASK MANAGEMENT (60 repos — github.com/topics/task-management)             ║
-║  • dongshuyan/compass-skills      — task-clarifier, task-forest DAG,        ║
-║  •                                  session-handoff, user-profile-keeper    ║
-║  • builderz-labs/mission-control  — multi-agent task orchestration          ║
+║  TASK MANAGEMENT (60 repos)                                                  ║
+║  • dongshuyan/compass-skills      — task-clarifier, task-forest DAG        ║
+║  • builderz-labs/mission-control  — multi-agent task orchestration         ║
 ║  • saltbo/agent-kanban            — agent-first kanban mission control      ║
-║  • CronusL-1141/AI-company        — multi-agent team OS for Claude Code     ║
-║  • jpicklyk/task-orchestrator     — server-enforced workflow discipline      ║
-║  • cortex-tms/cortex-tms          — tiered memory system (TMS)              ║
-║  • JamesShi96/project-butler      — session logs + project documentation    ║
-║  • kanban-md/antopolskiy          — file-based kanban for agentic loops     ║
-║  • cyanheads/atlas-mcp-server     — Neo4j task graph for LLM agents         ║
-║  • L1AD/claude-task-viewer        — Kanban board for Claude Code tasks      ║
+║  • cortex-tms                     — tiered memory (working/episodic/arch)  ║
+║  • jpicklyk/task-orchestrator     — server-enforced workflow discipline     ║
+║  • JamesShi96/project-butler      — session logs + project documentation   ║
+║  • kanban-md/antopolskiy          — file-based kanban for agentic loops    ║
 ║                                                                              ║
-║  What this bot does every run:                                               ║
-║  1. MEMORY CHECK  — loads brain memory, knows what articles exist           ║
-║  2. RESEARCH      — finds trending IT topics with search gaps               ║
-║  3. TOPIC PICK    — intelligent selection (never repeats a done topic)      ║
-║  4. WRITE         — generates full SEO article with Claude                  ║
-║  5. QA GATE       — self-reviews, rewrites weak sections                    ║
-║  6. PUBLISH       — pushes HTML article + updates index + sitemap to GitHub ║
-║  7. MEMORY UPDATE — saves topic to memory so it's never repeated            ║
-║  8. HEARTBEAT     — logs health + next recommended topics                   ║
+║  PIPELINE (every run):                                                       ║
+║  1. MEMORY     — load brain, sync with disk, tiered memory restore          ║
+║  2. RESEARCH   — trending signals + competitor gap analysis                 ║
+║  3. TOPIC      — intelligent pick (never repeats, chapter-balanced)         ║
+║  4. CLARIFY    — task-clarifier validates scope + anchors evidence          ║
+║  5. WRITE      — SEO article with anchor facts + humanization gate          ║
+║  6. QA GATE    — self-review, rewrite weak sections                         ║
+║  7. DESIGN     — anti-slop linter, forbidden pattern check                 ║
+║  8. HTML       — full page with ToC, reading time, FAQ schema               ║
+║  9. PUBLISH    — GitHub API direct push                                     ║
+║  10. INDEX     — update chapter index page + sitemap                        ║
+║  11. MEMORY    — save published article, update knowledge graph             ║
+║  12. HANDOFF   — heartbeat + session handoff for next run                   ║
 ║                                                                              ║
 ║  Requires only: ANTHROPIC_API_KEY + GITHUB_TOKEN                            ║
-║  No OpenAI needed. Runs on GitHub Actions (cron) or VPS.                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 """
 
 from __future__ import annotations
 
+import base64
 import datetime
-import html
+import html as html_module
 import json
 import os
 import pathlib
@@ -81,7 +82,7 @@ import urllib.request
 from typing import Any
 
 # ─── paths ────────────────────────────────────────────────────────────────────
-ROOT        = pathlib.Path(__file__).resolve().parent.parent   # repo root
+ROOT        = pathlib.Path(__file__).resolve().parent.parent
 ARTICLES    = ROOT / "articles"
 BRAIN_DIR   = pathlib.Path(__file__).resolve().parent
 MEMORY_DIR  = BRAIN_DIR / "memory"
@@ -90,6 +91,7 @@ MEMORY_FILE = MEMORY_DIR / "bot_memory.json"
 SOUL_FILE   = MEMORY_DIR / "SOUL.md"
 USER_FILE   = MEMORY_DIR / "USER.md"
 HEARTBEAT   = STATE_DIR  / "heartbeat.json"
+KNOWLEDGE_GRAPH_FILE = MEMORY_DIR / "knowledge_graph.json"
 
 MEMORY_DIR.mkdir(exist_ok=True)
 STATE_DIR.mkdir(exist_ok=True)
@@ -102,76 +104,69 @@ GITHUB_BRANCH  = os.environ.get("GITHUB_BRANCH", "main")
 GA4_ID         = os.environ.get("GA4_ID", "G-D98BFZSJYP")
 SITE_URL       = "https://itvedas.com"
 SITE_NAME      = "ITVedas"
-MODEL          = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20251001")
+MODEL          = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  SOUL — bot identity (second-brain-starter pattern)
+#  BOT SOUL — identity loaded into every Claude call (second-brain-starter)
 # ─────────────────────────────────────────────────────────────────────────────
-BOT_SOUL = """
-You are the ITVedas Content Bot — an autonomous AI content writer for itvedas.com,
-an IT education platform that explains complex technology in plain English.
+BOT_SOUL = """You are the ITVedas Content Brain — the autonomous intelligence behind itvedas.com,
+an IT education platform that explains complex technology in plain English for complete beginners.
 
-Core values (from letta-ai stateful agent patterns):
-- Write for complete beginners — no jargon without explanation
-- Be accurate, practical, and engaging
-- Never repeat a topic that already exists on the site
-- Every article must answer a real question people search for
-- SEO matters: use the target keyword naturally, answer the question fast
-- Quality over quantity — one great article beats five mediocre ones
+IDENTITY (letta-ai stateful agent pattern):
+- You remember everything you've written and never repeat a topic
+- You learn from each article to improve the next one
+- You self-review ruthlessly — low-quality output never ships
+- You operate with editorial standards, not just content generation
 
-SEO rules (from norahe0304-art/30x-seo — 24 production SEO skills):
-- Title must include exact keyword + be under 60 chars
-- Meta description: 150-160 chars, includes keyword, ends with value promise
-- H1 = title (exact keyword). H2s = semantic variations of keyword
-- First paragraph answers the question within 50 words (E-E-A-T signal)
-- Include FAQ schema — minimum 3 questions people actually search
-- Internal link opportunities: mention related ITVedas topics
-- Image alt text must describe the image + include keyword where natural
-- URL slug: lowercase, hyphens, no stop words, 3-5 words max
+SEO RULES (norahe0304-art/30x-seo — 24 production skills):
+- Title: exact keyword, under 60 chars, front-loaded with keyword
+- Meta description: 150-160 chars, includes keyword, ends with a promise
+- H1 = title. H2s = semantic keyword variations (LSI keywords)
+- First paragraph: answers the question within 50 words (E-E-A-T signal)
+- FAQ schema: minimum 3 real questions people search for
+- Internal links: reference related ITVedas topics naturally
+- Slug: 3-5 words, lowercase, hyphens, no stop words
 
-Anti-AI-detection rules (from rediumvex/seo-blog-writer + dongbeixiaohuo/writing-agent):
-- Vary sentence lengths — mix 6-word and 25-word sentences in same paragraph
-- Add first-person perspective occasionally: "Here's what I mean..."
-- Use specific numbers and named examples, never vague: "45ms" not "fast"
-- Alternate paragraph lengths: short (1 sentence), medium (3), long (4-5)
-- Vary list lengths: sometimes 3 items, sometimes 7 — never always 5
-- Hunt for "scenarios, costs, specific details" — lived experience elements
-- Fact-anchor all claims: "DNS resolves in ~50ms on a fast connection"
+ANTI-AI-DETECTION (rediumvex/seo-blog-writer + dongbeixiaohuo/writing-agent):
+- Vary sentence lengths: mix 6-word and 25-word sentences in same paragraph
+- First-person occasionally: "Here's what I mean..." "Think of it this way..."
+- Specific numbers and real examples: "~50ms" "AWS EC2 t3.micro" "GitHub Actions"
+- Alternate paragraph lengths: 1-sentence, 3-sentence, 4-sentence — never uniform
+- Vary list lengths: 3 or 7 items — never always exactly 5
+- Fact-anchor every claim: specific measurement, company, or example
 - Never start two consecutive paragraphs with the same word
 
-Design intelligence (styleseed + ux-skill + design-skill-os):
-- Lead with the answer — never open with "In today's digital world..."
-- Short paragraphs: 2-4 sentences max, active voice only
-- Specific examples with real product/company names and numbers
-- NEVER use: elevate, seamless, powerful, revolutionary, game-changer, leverage, utilize, paradigm
-- Vary section lengths — density increases through the article (sparse → detailed)
-- Code examples in <code> tags, terminal commands in <pre><code> blocks
-- NO emoji bullets in content lists — use plain <ul>/<li> instead
+DESIGN RULES (styleseed + ux-skill + design-skill-os):
+- Lead with the answer immediately — never "In today's digital world..."
+- Short paragraphs: 2-4 sentences, active voice
+- Real examples with names and numbers
+- NEVER: elevate, seamless, powerful, revolutionary, game-changer, leverage, utilize, paradigm
+- Code examples in <code>, terminal commands in <pre><code>
+- NO emoji bullets in content
 
-Memory discipline (from coleam00/second-brain-starter):
-- ALWAYS check existing articles before picking a topic
-- Store every published article in memory immediately after publishing
-- Never generate an article if the topic is already covered
-- Search memory FIRST before any content decision
+MEMORY DISCIPLINE (coleam00/second-brain-starter):
+- Check memory FIRST before any topic decision
+- Save every article immediately after publishing
+- Build knowledge graph: track which topics relate to which
 """
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  CHAPTERS config
+#  CHAPTERS — all site chapters with metadata
 # ─────────────────────────────────────────────────────────────────────────────
 CHAPTERS = {
-    "networking": {"name": "Networking", "emoji": "🌐", "color": "#FF6B35", "num": "01"},
+    "networking": {"name": "Networking",      "emoji": "🌐", "color": "#FF6B35", "num": "01"},
     "cloud":      {"name": "Cloud Computing", "emoji": "☁️", "color": "#3B82F6", "num": "02"},
-    "security":   {"name": "Security", "emoji": "🔐", "color": "#10B981", "num": "03"},
-    "devops":     {"name": "DevOps", "emoji": "⚙️", "color": "#8B5CF6", "num": "04"},
-    "databases":  {"name": "Databases", "emoji": "🗄️", "color": "#F59E0B", "num": "05"},
-    "linux":      {"name": "Linux", "emoji": "🐧", "color": "#EF4444", "num": "06"},
-    "hardware":   {"name": "Hardware", "emoji": "🖥️", "color": "#6366F1", "num": "07"},
-    "compliance": {"name": "Compliance", "emoji": "📋", "color": "#14B8A6", "num": "08"},
-    "cve":        {"name": "CVE Database", "emoji": "🛡️", "color": "#EF4444", "num": "09"},
+    "security":   {"name": "Security",        "emoji": "🔐", "color": "#10B981", "num": "03"},
+    "devops":     {"name": "DevOps",          "emoji": "⚙️", "color": "#8B5CF6", "num": "04"},
+    "databases":  {"name": "Databases",       "emoji": "🗄️", "color": "#F59E0B", "num": "05"},
+    "linux":      {"name": "Linux",           "emoji": "🐧", "color": "#EF4444", "num": "06"},
+    "hardware":   {"name": "Hardware",        "emoji": "🖥️", "color": "#6366F1", "num": "07"},
+    "compliance": {"name": "Compliance",      "emoji": "📋", "color": "#14B8A6", "num": "08"},
+    "cve":        {"name": "CVE Database",    "emoji": "🛡️", "color": "#EF4444", "num": "09"},
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  TOPIC SEEDS — high-value IT search queries (research-agent pattern)
+#  TOPIC SEEDS — high-value IT search queries (research-agent + AutoViralAI)
 # ─────────────────────────────────────────────────────────────────────────────
 TOPIC_SEEDS = {
     "networking": [
@@ -181,6 +176,9 @@ TOPIC_SEEDS = {
         "Difference between hub switch and router", "What is ARP protocol",
         "How does traceroute work", "What is QoS in networking",
         "What is SDN software defined networking", "How does IPv6 work",
+        "What is DNS and how it works", "What is a firewall",
+        "How does HTTPS work", "What is a proxy server",
+        "What is network bandwidth vs throughput",
     ],
     "cloud": [
         "What is cloud computing for beginners", "AWS vs Azure vs GCP",
@@ -189,6 +187,9 @@ TOPIC_SEEDS = {
         "How does load balancing work", "What is multi-cloud strategy",
         "What is cloud native development", "How does AWS Lambda work",
         "What is Kubernetes and why use it", "What is edge computing",
+        "What is cloud storage vs local storage", "How does AWS S3 work",
+        "What is a virtual machine vs container", "What is cloud migration",
+        "What is disaster recovery in cloud", "How does Azure Active Directory work",
     ],
     "security": [
         "What is zero trust security", "How does SSL TLS work",
@@ -198,6 +199,9 @@ TOPIC_SEEDS = {
         "How does a DDoS attack work", "What is penetration testing",
         "What is social engineering in cybersecurity", "How does PKI work",
         "What is XSS cross site scripting", "What is CSRF attack",
+        "What is ransomware and how does it work", "What is phishing",
+        "What is a VPN and how does it work", "What is intrusion detection system",
+        "What is endpoint security", "What is data encryption",
     ],
     "devops": [
         "What is CI CD pipeline", "How does Docker work",
@@ -206,6 +210,9 @@ TOPIC_SEEDS = {
         "What is a microservices architecture", "How does Jenkins work",
         "What is blue green deployment", "What is chaos engineering",
         "How does Prometheus monitoring work", "What is service mesh",
+        "What is DevSecOps", "What is container orchestration",
+        "What is a Helm chart", "How does GitHub Actions work",
+        "What is observability in DevOps", "What is SRE site reliability engineering",
     ],
     "databases": [
         "SQL vs NoSQL databases", "What is database indexing",
@@ -213,6 +220,9 @@ TOPIC_SEEDS = {
         "What is database sharding", "How does Redis caching work",
         "What is a graph database", "How does PostgreSQL work",
         "What is database normalization", "What is CAP theorem",
+        "What is a time series database", "How does MongoDB work",
+        "What is database connection pooling", "What is a data warehouse",
+        "What is ETL in databases", "What is an ORM",
     ],
     "linux": [
         "Linux file permissions explained", "What is a Linux shell",
@@ -220,18 +230,32 @@ TOPIC_SEEDS = {
         "Linux vs Windows server", "What is SSH and how it works",
         "What is a Linux daemon", "How does the Linux kernel work",
         "What is Docker on Linux", "Linux process management explained",
+        "What is grep command in Linux", "How does iptables work",
+        "What is a Linux package manager", "How to use tmux",
+        "What is a Linux swap partition", "How does rsync work",
     ],
     "hardware": [
         "How does a CPU work", "What is GPU computing",
         "How does SSD vs HDD differ", "What is RAID storage",
         "How does RAM work", "What is a network switch vs router",
         "How does a firewall appliance work", "What is a NIC network card",
+        "What is a server rack", "How does a data center work",
+        "What is BIOS vs UEFI", "What is a TPM chip",
+        "How does ECC RAM work", "What is PCIe in servers",
     ],
     "compliance": [
         "What is GDPR compliance", "What is SOC 2 certification",
         "How does ISO 27001 work", "What is HIPAA in healthcare IT",
         "What is PCI DSS compliance", "What is NIST cybersecurity framework",
         "What is data residency", "GDPR vs CCPA differences",
+        "What is FedRAMP", "What is a data protection officer",
+        "What is a security audit", "What is DORA regulation",
+    ],
+    "cve": [
+        "What is a CVE vulnerability", "How does CVE scoring CVSS work",
+        "What is a zero day vulnerability", "How does responsible disclosure work",
+        "What is NVD national vulnerability database", "CVE vs CWE difference",
+        "What is a security patch", "How to read a CVE report",
     ],
 }
 
@@ -243,8 +267,10 @@ def log(component: str, msg: str) -> None:
     print(f"[{ts}] [{component}] {msg}", flush=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  MEMORY SYSTEM (second-brain-starter pattern)
-#  Persistent across runs — stores published articles, topics, decisions
+#  TIERED MEMORY SYSTEM (cortex-tms pattern)
+#  Working memory: current run state
+#  Episodic memory: what was published (persistent JSON)
+#  Architectural memory: SOUL.md + USER.md (identity/strategy files)
 # ─────────────────────────────────────────────────────────────────────────────
 def load_memory() -> dict:
     if MEMORY_FILE.exists():
@@ -253,408 +279,578 @@ def load_memory() -> dict:
         except Exception:
             pass
     return {
-        "published_articles": [],   # list of {slug, title, topic, chapter, date}
-        "done_topics": [],          # flat list of topic strings already covered
-        "failed_topics": [],        # topics that failed (skip for now)
-        "decisions": [],            # important bot decisions log
-        "stats": {"total_published": 0, "total_failed": 0, "last_run": None},
+        "published_articles": [],
+        "done_topics":        [],
+        "failed_topics":      [],
+        "decisions":          [],
+        "knowledge_graph":    {},   # topic → [related_topics]
+        "chapter_clusters":   {},   # chapter → [pillar_topics]
+        "stats": {
+            "total_published": 0,
+            "total_failed": 0,
+            "last_run": None,
+            "best_chapters": [],
+        },
     }
 
 def save_memory(mem: dict) -> None:
     mem["stats"]["last_run"] = datetime.datetime.utcnow().isoformat()
     MEMORY_FILE.write_text(json.dumps(mem, indent=2, ensure_ascii=False))
-    log("memory", f"Saved. Published: {mem['stats']['total_published']} articles")
+    log("memory", f"Saved — {mem['stats']['total_published']} published")
 
 def memory_has_topic(mem: dict, topic: str) -> bool:
-    """Check if topic (or very similar) already exists — prevents repetition."""
+    """Fuzzy dedup: 80%+ word overlap = duplicate (knowledge-assistant RAG pattern)."""
     topic_lower = topic.lower().strip()
     for done in mem["done_topics"]:
         if done.lower().strip() == topic_lower:
             return True
-        # fuzzy: if 80%+ words overlap, consider it duplicate
-        done_words = set(done.lower().split())
+        done_words  = set(done.lower().split())
         topic_words = set(topic_lower.split())
         if len(done_words) > 2 and len(topic_words) > 2:
             overlap = len(done_words & topic_words) / max(len(done_words), len(topic_words))
-            if overlap >= 0.8:
+            if overlap >= 0.75:
                 return True
     return False
 
 def scan_existing_articles(mem: dict) -> dict:
-    """Scan /articles/ directory and sync memory with actual files on disk."""
+    """Sync memory with actual HTML files on disk (second-brain memory scan)."""
+    if not ARTICLES.exists():
+        return mem
     found = 0
+    known_slugs = {a["slug"] for a in mem["published_articles"]}
     for html_file in ARTICLES.rglob("*.html"):
         slug = html_file.stem
-        # skip index files and chapter pages
         if slug == "index" or not re.match(r"\d{4}-\d{2}-\d{2}-", slug):
             continue
-        # check if already in memory
-        known_slugs = {a["slug"] for a in mem["published_articles"]}
-        if slug not in known_slugs:
-            # extract title from file
-            try:
-                content = html_file.read_text(errors="ignore")
-                m = re.search(r"<title>([^<]+)</title>", content)
-                title = m.group(1).split("|")[0].strip() if m else slug
-                # extract chapter from path
-                chapter = html_file.parent.name if html_file.parent.name in CHAPTERS else "networking"
-                mem["published_articles"].append({
-                    "slug": slug, "title": title,
-                    "chapter": chapter, "date": slug[:10],
-                    "topic": title,
-                })
-                if title not in mem["done_topics"]:
-                    mem["done_topics"].append(title)
-                found += 1
-            except Exception:
-                pass
+        if slug in known_slugs:
+            continue
+        try:
+            content = html_file.read_text(errors="ignore")
+            m = re.search(r"<title>([^<]+)</title>", content)
+            title = m.group(1).split("|")[0].strip() if m else slug
+            chapter = html_file.parent.name if html_file.parent.name in CHAPTERS else "networking"
+            mem["published_articles"].append({
+                "slug": slug, "title": title,
+                "chapter": chapter, "date": slug[:10], "topic": title,
+            })
+            if title not in mem["done_topics"]:
+                mem["done_topics"].append(title)
+            found += 1
+        except Exception:
+            pass
     if found:
-        log("memory", f"Discovered {found} existing articles not in memory")
+        log("memory", f"Synced {found} existing articles from disk")
     return mem
 
+def load_knowledge_graph() -> dict:
+    """Knowledge graph: tracks relationships between topics for internal linking."""
+    if KNOWLEDGE_GRAPH_FILE.exists():
+        try:
+            return json.loads(KNOWLEDGE_GRAPH_FILE.read_text())
+        except Exception:
+            pass
+    return {}
+
+def save_knowledge_graph(graph: dict) -> None:
+    KNOWLEDGE_GRAPH_FILE.write_text(json.dumps(graph, indent=2, ensure_ascii=False))
+
+def update_knowledge_graph(topic: str, chapter: str, slug: str,
+                           related_topics: list, graph: dict) -> dict:
+    """Add article to knowledge graph with its related topics (DATAGEN pattern)."""
+    graph[topic] = {
+        "chapter": chapter,
+        "slug": slug,
+        "related": related_topics,
+        "date": datetime.date.today().isoformat(),
+    }
+    # bidirectional: if related topics exist in graph, link back
+    for rel in related_topics:
+        if rel in graph:
+            if topic not in graph[rel].get("related", []):
+                graph[rel].setdefault("related", []).append(topic)
+    return graph
+
 # ─────────────────────────────────────────────────────────────────────────────
-#  TOPIC SELECTION (research-agent + knowledge-assistant patterns)
-#  Picks best topic based on: not done, chapter balance, keyword value
+#  TOPIC SELECTION — intelligent, never repeats, chapter-balanced
+#  (research-agent + knowledge-assistant + AutoViralAI patterns)
 # ─────────────────────────────────────────────────────────────────────────────
 def pick_topic(mem: dict) -> tuple[str, str]:
-    """Returns (topic, chapter). Uses Claude to pick intelligently if possible."""
-    # count articles per chapter
     chapter_counts: dict[str, int] = {ch: 0 for ch in CHAPTERS}
     for art in mem["published_articles"]:
         ch = art.get("chapter", "networking")
         if ch in chapter_counts:
             chapter_counts[ch] += 1
 
-    # build candidate list — prefer chapters with fewer articles
-    candidates: list[tuple[str, str, int]] = []  # (topic, chapter, chapter_count)
+    candidates: list[tuple[str, str, int]] = []
     for chapter, topics in TOPIC_SEEDS.items():
         for topic in topics:
             if not memory_has_topic(mem, topic):
                 candidates.append((topic, chapter, chapter_counts.get(chapter, 0)))
 
     if not candidates:
-        log("topic", "All seeded topics done! Using Claude to generate new topic...")
+        log("topic", "All seeded topics exhausted — using cluster architect")
         return _claude_generate_topic(mem)
 
-    # sort by chapter count (fewest articles first) to balance coverage
+    # sort by: fewest articles in chapter first (balance coverage)
     candidates.sort(key=lambda x: x[2])
 
-    # use Claude to pick the best from top 10 candidates (DATAGEN multi-agent pattern)
-    top_candidates = candidates[:10]
-    if ANTHROPIC_KEY:
+    if ANTHROPIC_KEY and len(candidates) >= 3:
         try:
-            return _claude_pick_best_topic(top_candidates, mem)
+            return _claude_pick_best_topic(candidates[:12], mem)
         except Exception as e:
-            log("topic", f"Claude topic pick failed, using first candidate: {e}")
+            log("topic", f"Claude pick failed, using first candidate: {e}")
 
     topic, chapter, _ = candidates[0]
-    log("topic", f"Selected: '{topic}' (chapter: {chapter})")
+    log("topic", f"Selected: '{topic}' [{chapter}]")
     return topic, chapter
 
 def _claude_pick_best_topic(candidates: list, mem: dict) -> tuple[str, str]:
-    """Use Claude to pick the highest-value topic from candidates."""
-    done_count = len(mem["done_topics"])
+    """Claude picks the highest-value topic (DATAGEN multi-agent pattern)."""
+    recent = [a["title"] for a in mem["published_articles"][-5:]]
     candidate_list = "\n".join(
         f"{i+1}. [{ch}] {topic}" for i, (topic, ch, _) in enumerate(candidates)
     )
-    recent = [a["title"] for a in mem["published_articles"][-5:]]
 
-    prompt = f"""You are a content strategist for ITVedas.com — an IT education site for beginners.
+    prompt = f"""You are a content strategist for ITVedas.com — IT education for beginners.
 
-Recent articles published: {recent}
-Total articles so far: {done_count}
+Recent articles: {recent}
+Total articles so far: {len(mem['done_topics'])}
 
-Pick the BEST topic from this list to write next. Consider:
-- Which has the highest search demand (people actively googling this)
-- Which provides the most value to IT beginners
-- Which is NOT too similar to recent articles
+Pick the BEST topic to write next. Prioritise:
+1. Highest search demand (people actively googling this right now)
+2. Most valuable for IT beginners learning fundamentals
+3. NOT too similar to recent articles above
+4. Fills a gap in the knowledge base
 
 Candidates:
 {candidate_list}
 
-Reply with ONLY a JSON object:
-{{"choice": <number 1-{len(candidates)}>, "reason": "<one sentence why>"}}"""
+Reply ONLY with JSON (no fences):
+{{"choice": <1-{len(candidates)}>, "reason": "<one sentence why>"}}"""
 
     raw = _call_claude(prompt, max_tokens=200)
-    raw = _extract_json(raw)
-    data = json.loads(raw)
+    data = json.loads(_extract_json(raw))
     idx = int(data["choice"]) - 1
-    topic, chapter, _ = candidates[idx]
-    log("topic", f"Claude picked: '{topic}' ({chapter}) — {data.get('reason','')}")
+    topic, chapter, _ = candidates[min(idx, len(candidates)-1)]
+    log("topic", f"Claude picked #{idx+1}: '{topic}' [{chapter}] — {data.get('reason','')}")
     return topic, chapter
 
 def _claude_generate_topic(mem: dict) -> tuple[str, str]:
     """
-    Generate new topic using topic-cluster-architect 10-step strategy.
-    When seeds exhausted, builds pillar→supporting content clusters.
+    Topic cluster architect — 10-step strategy (x0u0an/topic-cluster-architect).
+    When seeds exhausted, finds content gaps and builds cluster topics.
     """
-    done = mem["done_topics"][-30:]
-    published_per_chapter = {}
+    chapter_counts: dict[str, int] = {}
     for art in mem["published_articles"]:
         ch = art.get("chapter", "networking")
-        published_per_chapter[ch] = published_per_chapter.get(ch, 0) + 1
+        chapter_counts[ch] = chapter_counts.get(ch, 0) + 1
 
-    prompt = f"""You are an SEO topic cluster architect for ITVedas.com (IT education for beginners).
+    done_recent = mem["done_topics"][-20:]
 
-Site diagnosis: Educational IT content site at early growth stage (~{len(mem['published_articles'])} articles).
-Growth goal: Authority-building through comprehensive chapter coverage.
+    prompt = f"""You are an SEO topic cluster architect for ITVedas.com.
 
-Articles per chapter so far: {published_per_chapter}
-Recently covered topics: {done}
+Current coverage per chapter: {chapter_counts}
+Recently covered: {done_recent}
+Total articles: {len(mem['published_articles'])}
 
-Using the topic-cluster-architect 10-step strategy:
-1. Identify which chapter has the biggest content gap (fewest articles)
-2. For that chapter, identify the most-searched beginner question not yet covered
-3. Ensure it fits a pillar→supporting content cluster structure
+Using the 10-step topic cluster strategy:
+1. Identify chapter with biggest content gap (fewest articles vs importance)
+2. Find most-searched beginner question not yet covered in that chapter
+3. Classify: pillar page (comprehensive overview) or supporting content (deep dive)
+4. Verify: would this question rank for a specific keyword phrase?
 
-Suggest ONE new IT topic that:
-- Fills the biggest content gap
-- Has high search demand (people actively Google this)
-- Is beginner-friendly
-- Is NOT similar to recently covered topics
-- Would work as either a pillar page or supporting content
-
-Reply with ONLY JSON:
+Suggest ONE high-value topic. Return ONLY JSON:
 {{
   "topic": "...",
-  "chapter": "<one of: networking|cloud|security|devops|databases|linux|hardware|compliance>",
-  "cluster_role": "pillar or supporting",
-  "search_intent": "informational or navigational",
-  "reason": "one sentence why this has high value"
+  "chapter": "networking|cloud|security|devops|databases|linux|hardware|compliance|cve",
+  "cluster_role": "pillar|supporting",
+  "search_intent": "informational|navigational|transactional",
+  "estimated_monthly_searches": "low|medium|high",
+  "reason": "one sentence explaining gap this fills"
 }}"""
 
-    raw = _call_claude(prompt, max_tokens=250)
-    raw = _extract_json(raw)
-    data = json.loads(raw)
-    log("topic", f"Cluster architect: {data.get('cluster_role')} page — {data.get('reason','')}")
-    return data["topic"], data.get("chapter", "networking")
+    raw = _call_claude(prompt, max_tokens=300)
+    data = json.loads(_extract_json(raw))
+    topic   = data.get("topic", "What is network security")
+    chapter = data.get("chapter", "networking")
+    log("topic", f"Cluster architect: {data.get('cluster_role')} — {data.get('reason','')}")
+    return topic, chapter
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  ARTICLE WRITER (content-writer.py + DATAGEN multi-agent pattern)
+#  TASK MANAGEMENT SYSTEM
+#  Sources: compass-skills (task-clarifier, task-forest, session-handoff)
+#           cortex-tms (tiered memory), jpicklyk/task-orchestrator (workflow)
+#           builderz-labs/mission-control (orchestration)
 # ─────────────────────────────────────────────────────────────────────────────
-def write_article(topic: str, chapter: str, anchor_facts: list | None = None) -> dict:
-    """Generate full article. Returns structured data dict."""
-    log("writer", f"Writing: '{topic}' [{chapter}]")
-    anchor_facts = anchor_facts or []
+def task_clarifier(topic: str, chapter: str, mem: dict) -> dict:
+    """
+    compass-skills/task-clarifier: validates scope, anchors evidence,
+    defines acceptance criteria BEFORE writing starts.
+    """
+    chapter_articles = [a for a in mem["published_articles"] if a.get("chapter") == chapter]
 
-    ch = CHAPTERS.get(chapter, CHAPTERS["networking"])
-    today = datetime.date.today().isoformat()
+    prompt = f"""You are a task clarifier for an IT content bot at ITVedas.com.
 
-    system = BOT_SOUL + f"""
-You write articles for the {ch['name']} chapter of ITVedas.com.
-Target audience: complete beginners to IT.
-Writing style: friendly teacher, clear examples, no jargon without explanation.
-"""
+Validate writing an article about: "{topic}"
+Chapter: {chapter} ({len(chapter_articles)} articles already in this chapter)
+Total site articles: {len(mem['done_topics'])}
 
-    pre_anchored = f"\nPre-validated anchor facts (use these):\n" + \
-        "\n".join(f"- {f}" for f in anchor_facts) if anchor_facts else ""
+Evaluate and clarify:
+1. GOAL: Is this a specific, searchable topic? (not too broad/narrow)
+2. SCOPE: Single article, or should it split into parts?
+3. EVIDENCE: Identify 3 specific facts/numbers to anchor the article
+4. ACCEPTANCE: What defines "done"? (min sections, FAQ, code examples?)
+5. RISK: Any accuracy risks? (deprecated tech, controversial claims?)
 
-    prompt = f"""Write a complete, high-quality SEO article about: "{topic}"
-{pre_anchored}
-
-PHASE 1 — EVIDENCE ANCHORING (from dongbeixiaohuo/writing-agent):
-Before writing, identify 3-5 specific facts, numbers, or real examples that anchor this article.
-(e.g. "DNS TTL is typically 300-86400 seconds", "Heartbleed affected OpenSSL 1.0.1 through 1.0.1f")
-
-PHASE 2 — ARTICLE (800-1200 words, human-sounding):
-Apply these rules from rediumvex/seo-blog-writer:
-- Vary sentence lengths: mix 6-word and 25-word sentences in same paragraph
-- Add first-person occasionally: "Here's what I mean..." or "Think of it this way..."
-- Use specific numbers and named examples — never vague ("~50ms", "AWS EC2", "GitHub Actions")
-- Alternate paragraph lengths: 1-sentence, 3-sentence, 4-sentence — never uniform
-- Vary list lengths: 3 items or 7 items — never always exactly 5
-
-SEO requirements (from norahe0304-art/30x-seo):
-- Title: exact keyword + under 60 chars
-- First paragraph: answers the question within 50 words
-- H2 headings: semantic keyword variations
-- Minimum 3 FAQ questions people actually search
-- Include at least 1 code or command example if relevant
-
-Return ONLY a valid JSON object — no markdown, no code fences:
+Return ONLY JSON (no fences):
 {{
-  "title": "Exact keyword in title, under 60 chars",
+  "approved": true,
+  "refined_topic": "...(same or improved title, under 60 chars)",
+  "scope": "single-article|needs-split",
+  "split_into": null,
+  "anchor_facts": [
+    "specific fact with number or measurement",
+    "fact with real product/company name",
+    "fact with concrete example or date"
+  ],
+  "acceptance_criteria": {{
+    "min_words": 900,
+    "min_sections": 4,
+    "min_faq": 3,
+    "needs_code_example": true
+  }},
+  "risk_level": "low|medium|high",
+  "risk_note": null,
+  "related_topics": ["related topic 1", "related topic 2"]
+}}"""
+
+    try:
+        raw = _call_claude(prompt, max_tokens=500)
+        result = json.loads(_extract_json(raw))
+        if result.get("refined_topic") and result["refined_topic"] != topic:
+            log("clarifier", f"Topic refined: '{topic}' → '{result['refined_topic']}'")
+        if result.get("risk_level") == "high":
+            log("clarifier", f"HIGH RISK: {result.get('risk_note')}")
+        log("clarifier", f"Approved. Anchor facts: {len(result.get('anchor_facts', []))}")
+        return result
+    except Exception as e:
+        log("clarifier", f"Failed (non-blocking): {e}")
+        return {
+            "approved": True,
+            "refined_topic": topic,
+            "anchor_facts": [],
+            "acceptance_criteria": {"min_words": 900, "min_sections": 4, "min_faq": 3, "needs_code_example": True},
+            "risk_level": "low",
+            "related_topics": [],
+        }
+
+def task_forest_update(mem: dict, topic: str, chapter: str, status: str,
+                       slug: str = "", notes: str = "") -> None:
+    """
+    compass-skills/task-forest: DAG of tasks with goals, decisions, history.
+    cortex-tms tiered memory: archives decision log as episodic memory.
+    """
+    forest_file = STATE_DIR / "task-forest.json"
+    forest: dict = {}
+    if forest_file.exists():
+        try:
+            forest = json.loads(forest_file.read_text())
+        except Exception:
+            pass
+
+    forest.setdefault("tasks", {})
+    forest.setdefault("chapter_goals", {
+        ch: f"Build comprehensive beginner {cfg['name']} coverage (20+ articles)"
+        for ch, cfg in CHAPTERS.items()
+    })
+    forest.setdefault("decisions", [])
+
+    task_id = f"{chapter}/{slug or topic[:40].replace(' ', '-').lower()}"
+    forest["tasks"][task_id] = {
+        "topic":   topic,
+        "chapter": chapter,
+        "status":  status,
+        "slug":    slug,
+        "notes":   notes,
+        "updated": datetime.datetime.utcnow().isoformat(),
+    }
+
+    if status in ("done", "failed"):
+        forest["decisions"].append({
+            "date":     datetime.date.today().isoformat(),
+            "decision": f"'{topic}' in {chapter}",
+            "outcome":  status,
+            "notes":    notes,
+        })
+
+    done  = sum(1 for t in forest["tasks"].values() if t["status"] == "done")
+    total = len(forest["tasks"])
+    forest["summary"] = {
+        "total": total, "done": done,
+        "failed": sum(1 for t in forest["tasks"].values() if t["status"] == "failed"),
+        "completion_pct": round(done / total * 100, 1) if total else 0,
+        "last_updated": datetime.datetime.utcnow().isoformat(),
+    }
+
+    forest_file.write_text(json.dumps(forest, indent=2, ensure_ascii=False))
+
+def session_handoff(mem: dict, topic: str, chapter: str, result: str) -> None:
+    """
+    compass-skills/session-handoff: compresses session state for next run.
+    JamesShi96/project-butler: session log + project documentation.
+    """
+    handoff_file = STATE_DIR / "session-handoff.md"
+    recent = [a["title"] for a in mem["published_articles"][-5:]]
+    next_topics = []
+    for ch, topics in TOPIC_SEEDS.items():
+        for t in topics:
+            if not memory_has_topic(mem, t):
+                next_topics.append(f"[{ch}] {t}")
+        if len(next_topics) >= 8:
+            break
+
+    chapter_counts: dict[str, int] = {}
+    for art in mem["published_articles"]:
+        ch = art.get("chapter", "?")
+        chapter_counts[ch] = chapter_counts.get(ch, 0) + 1
+
+    handoff = f"""# ITVedas Brain — Session Handoff
+Generated: {datetime.datetime.utcnow().isoformat()}
+Model: {MODEL}
+
+## This Session
+- Topic: {topic}
+- Chapter: {chapter}
+- Result: **{result}**
+
+## Brain State
+- Articles published: {mem['stats']['total_published']}
+- Topics covered: {len(mem['done_topics'])}
+- Failed: {mem['stats']['total_failed']}
+
+## Coverage by Chapter
+{chr(10).join(f"- {ch}: {cnt} articles" for ch, cnt in sorted(chapter_counts.items(), key=lambda x: -x[1]))}
+
+## Recent Articles (last 5)
+{chr(10).join(f"- {t}" for t in recent)}
+
+## Next Recommended Topics
+{chr(10).join(f"- {t}" for t in next_topics[:8])}
+
+## Files
+- Memory: itvedas-brain/memory/bot_memory.json
+- Task forest: itvedas-brain/state/task-forest.json
+- Knowledge graph: itvedas-brain/memory/knowledge_graph.json
+- Run: python itvedas-brain/itvedas-bot-v2.py
+"""
+    handoff_file.write_text(handoff)
+    log("handoff", "Session handoff saved")
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  ARTICLE WRITER — full content generation with all skill layers
+#  Sources: DATAGEN multi-agent, dongbeixiaohuo evidence anchoring,
+#           kristianfreeman/aiwriter SERP-driven generation
+# ─────────────────────────────────────────────────────────────────────────────
+def write_article(topic: str, chapter: str, anchor_facts: list | None = None,
+                  acceptance: dict | None = None, related_topics: list | None = None) -> dict:
+    """Generate full article with anchor facts, humanization, and SEO rules."""
+    log("writer", f"Writing: '{topic}' [{chapter}]")
+    anchor_facts   = anchor_facts or []
+    acceptance     = acceptance or {"min_words": 900, "min_sections": 4, "min_faq": 3}
+    related_topics = related_topics or []
+    ch             = CHAPTERS.get(chapter, CHAPTERS["networking"])
+    today          = datetime.date.today().isoformat()
+
+    system = BOT_SOUL + f"\nYou are writing for the {ch['name']} chapter of ITVedas.com."
+
+    anchors_block = ""
+    if anchor_facts:
+        anchors_block = "\nPre-validated anchor facts to use:\n" + \
+            "\n".join(f"- {f}" for f in anchor_facts)
+
+    related_block = ""
+    if related_topics:
+        related_block = f"\nRelated ITVedas topics to reference naturally: {related_topics}"
+
+    min_sections = acceptance.get("min_sections", 4)
+    min_faq      = acceptance.get("min_faq", 3)
+    needs_code   = acceptance.get("needs_code_example", True)
+
+    prompt = f"""Write a complete, high-quality SEO article for ITVedas.com about: "{topic}"
+Chapter: {ch['name']}
+Target audience: complete beginners to IT
+{anchors_block}
+{related_block}
+
+WRITING REQUIREMENTS (dongbeixiaohuo evidence anchoring + rediumvex anti-detection):
+
+PHASE 1 — Before writing, identify 3-5 specific anchor facts (if not provided above):
+Examples: "DNS TTL is 300-86400s", "TLS 1.3 reduced handshake from 2-RTT to 1-RTT"
+
+PHASE 2 — Write the article ({min_sections}+ sections, 900+ words):
+- First paragraph answers the question in under 50 words
+- Vary sentence lengths: 6-word and 25-word sentences in same paragraph
+- Use "Here's what I mean..." or "Think of it this way..." occasionally
+- Specific numbers and real names: "AWS EC2", "~50ms", "RFC 793"
+- Alternate paragraph lengths: 1-sentence, 3-sentence, 4-sentence paragraphs
+- Vary list lengths: 3 items or 7 items — never exactly 5
+{"- Include at least one code or command example in <pre><code> tags" if needs_code else ""}
+
+CONTENT RULES (design-skill-os + styleseed):
+- Lead with the answer — NEVER "In today's world..." or "Understanding X is crucial..."
+- Short paragraphs: 2-4 sentences, active voice
+- Real product/company names and specific numbers
+- NEVER use: elevate, seamless, powerful, revolutionary, game-changer, leverage
+
+SEO (norahe0304-art/30x-seo):
+- Title: exact keyword, under 60 chars, front-loaded
+- Meta description: 150-160 chars with keyword
+- H2 headings: semantic keyword variations (LSI)
+- {min_faq}+ FAQ questions people actually search
+
+Return ONLY valid JSON (no markdown fences, no ```json):
+{{
+  "title": "Exact keyword title under 60 chars",
   "slug": "3-5-word-url-slug",
-  "meta_description": "150-160 char description with keyword and value promise",
-  "intro": "2-3 sentence answer to the question — leads with the answer, NOT a definition",
-  "anchor_facts": ["specific fact 1 with number/source", "specific fact 2", "specific fact 3"],
+  "meta_description": "150-160 char meta description with keyword and value promise",
+  "intro": "2-3 sentences that immediately answer the question. No definitions opener. Specific fact in first sentence.",
+  "anchor_facts": ["fact with specific number", "fact with real name/product", "fact with example or date"],
   "sections": [
     {{
       "heading": "Semantic H2 heading (keyword variation)",
-      "content": "HTML content using <p>, <ul>, <li>, <strong>, <code>, <pre> tags. Vary paragraph lengths."
+      "content": "HTML with <p>, <ul>, <li>, <strong>, <code>, <pre><code> tags. 2-4 sentences per paragraph. Vary lengths."
     }}
   ],
   "faq": [
-    {{"q": "Exact question people Google?", "answer": "Direct 2-3 sentence answer with specific detail."}},
-    {{"q": "Another real search query?", "answer": "Specific answer."}},
+    {{"q": "Exact question people Google about {topic}?", "answer": "Direct 2-3 sentence answer with specific detail."}},
+    {{"q": "Another real search query about {topic}?", "answer": "Specific answer with a number or example."}},
     {{"q": "Third common question?", "answer": "Specific answer."}}
   ],
-  "key_takeaways": ["specific takeaway with number/fact", "takeaway 2", "takeaway 3"],
-  "related_topics": ["related ITVedas topic 1", "related topic 2"]
-}}
+  "key_takeaways": ["specific takeaway with number or fact", "takeaway 2", "takeaway 3"],
+  "related_topics": ["related ITVedas topic 1", "related topic 2", "related topic 3"]
+}}"""
 
-    raw = _call_claude(prompt, system=system, max_tokens=4000)
-    raw = _extract_json(raw)
-    data = json.loads(raw)
+    raw  = _call_claude(prompt, system=system, max_tokens=4500)
+    data = json.loads(_extract_json(raw))
 
-    # add metadata
-    data["chapter"] = chapter
+    # attach metadata
+    data["chapter"]      = chapter
     data["chapter_name"] = ch["name"]
-    data["chapter_color"] = ch["color"]
-    data["chapter_emoji"] = ch["emoji"]
-    data["chapter_num"] = ch["num"]
-    data["date"] = today
-    data["topic"] = topic
+    data["chapter_color"]= ch["color"]
+    data["chapter_emoji"]= ch["emoji"]
+    data["chapter_num"]  = ch["num"]
+    data["date"]         = today
+    data["topic"]        = topic
 
-    log("writer", f"Article written: '{data['title']}'")
+    log("writer", f"Written: '{data['title']}' ({len(data.get('sections',[]))} sections, {len(data.get('faq',[]))} FAQ)")
     return data
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  QA GATE (self-review from content-writer.py, DATAGEN pattern)
+#  QA GATE — self-review + targeted rewrite (DATAGEN multi-agent pattern)
 # ─────────────────────────────────────────────────────────────────────────────
 def qa_review(data: dict) -> dict:
-    """Claude reviews its own article and rewrites weak sections."""
-    log("qa", "Self-reviewing article quality...")
+    """Claude reviews its own article and rewrites sections scoring below 7/10."""
+    log("qa", "Self-reviewing article...")
 
     sections_text = "\n\n".join(
         f"## {s['heading']}\n{s['content']}" for s in data.get("sections", [])
     )
 
-    prompt = f"""Review this IT article draft for quality:
+    prompt = f"""You are a quality reviewer for ITVedas.com — an IT education site for beginners.
+
+Review this article draft:
 
 Title: {data['title']}
 Intro: {data['intro']}
 
 {sections_text}
 
-Score each section 1-10 on: clarity, accuracy, beginner-friendliness, value.
+Score each section 1-10 on:
+- Clarity: is it easy for a complete beginner to understand?
+- Accuracy: are the technical details correct?
+- Value: does it teach something useful and specific?
+- Humanness: does it sound written by a person, not AI?
+
 If any section scores below 7, rewrite it.
 
-Return ONLY JSON:
+Anti-AI-slop rules when rewriting:
+- Vary sentence lengths in each paragraph
+- Add one specific number or real example per section
+- Never use: elevate, seamless, powerful, revolutionary
+- Active voice only
+
+Return ONLY JSON (no fences):
 {{
   "overall_score": <1-10>,
-  "verdict": "PUBLISH" or "NEEDS_WORK",
+  "verdict": "PUBLISH|NEEDS_WORK",
   "sections": [
-    {{"heading": "...", "content": "...(improved or same)", "score": <1-10>}}
+    {{"heading": "...", "content": "...", "score": <1-10>}}
   ],
-  "intro": "...(improved or same)"
+  "intro": "...(improved or same)",
+  "improvement_notes": "one sentence on what was improved"
 }}"""
 
     try:
-        raw = _call_claude(prompt, max_tokens=3000)
-        raw = _extract_json(raw)
-        review = json.loads(raw)
-        if review.get("verdict") == "NEEDS_WORK":
-            log("qa", f"Rewriting weak sections (score: {review.get('overall_score')})")
+        raw    = _call_claude(prompt, max_tokens=3500)
+        review = json.loads(_extract_json(raw))
+        score  = review.get("overall_score", 8)
+        verdict = review.get("verdict", "PUBLISH")
+        if verdict == "NEEDS_WORK":
+            log("qa", f"Rewriting weak sections (score: {score}/10) — {review.get('improvement_notes','')}")
             data["sections"] = review["sections"]
-            data["intro"] = review.get("intro", data["intro"])
+            data["intro"]    = review.get("intro", data["intro"])
         else:
-            log("qa", f"Article passed QA (score: {review.get('overall_score')}/10)")
+            log("qa", f"Passed QA ({score}/10)")
     except Exception as e:
-        log("qa", f"QA review failed (publishing anyway): {e}")
+        log("qa", f"QA skipped (non-blocking): {e}")
 
     return data
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  DESIGN INTELLIGENCE SYSTEM
-#  Sources: bitjaru/styleseed, Laith0003/ux-skill, frhscopex/design-skill-os,
-#           funboy322/avoid-ai-design, rohitg00/awesome-claude-design
+#  Sources: bitjaru/styleseed (74 rules), Laith0003/ux-skill (152 rules),
+#           frhscopex/design-skill-os (161 rules), funboy322/avoid-ai-design,
+#           Sakaax/ux-pilot (376 UX rules), S0ulFood/design-cognition-skill
 # ─────────────────────────────────────────────────────────────────────────────
 
-DESIGN_RULES = """
-=== ITVedas Design Intelligence (from ai-design repos) ===
-
-TYPOGRAPHY RULES (styleseed + design-skill-os):
-- Use Space Grotesk for headings ONLY — not body text (avoid Inter as display font)
-- Body text: Inter at 16px min, line-height 1.7 (golden ratio: 1.618)
-- Heading scale uses modular scale (1.25x ratio): h1→2.75rem, h2→1.45rem, h3→1.15rem
-- Negative letter-spacing on headings: -0.025em (tight, intentional)
-- Max line length: 70 characters (860px max-width container)
-- Tabular numbers for stats/dates to prevent width jitter
-
-COLOR RULES (styleseed + ux-skill 60-30-10 rule):
-- 60% background: #0A0A0F (near-black, NOT pure #000 — refined black)
-- 30% surface: #13131C (cards, panels)
-- 10% accent: chapter color (single accent per page, everything else grayscale)
-- Muted text: #8888A8 (never use gray-400 or lighter — contrast violation)
-- Sub text: #D0D0E8 (body copy — passes 4.5:1 contrast ratio)
-- NO purple-to-blue gradients (AI-slop tell #1)
-- NO gradient text with bg-clip-text (AI-slop tell #2)
-- Status/severity only for color — normal states stay neutral
-
-SPATIAL RHYTHM (styleseed 8px grid):
-- All spacing multiples of 8px: 8, 16, 24, 32, 48, 64, 80, 96
-- Group gaps matter MORE than interior padding
-- Information density increases downward (hero: sparse, content: dense)
-- Never repeat same section type consecutively — alternate tall + compact
-- Inner border-radius = outer radius minus padding (nested-radius law)
-
-CARD RULES (styleseed):
-- All content lives in cards with consistent border: 1px solid rgba(255,255,255,0.08)
-- One corner radius personality per design: 12-14px for cards, 6px for inline
-- Layered box-shadow at ≤8% opacity, lit from single direction (top-left)
-- Cards must VARY in presentation — never 3 or 4 identical cards in a row
-- Hover: translateY(-4px) + accent border-color (no scale transforms)
-
-FORBIDDEN PATTERNS (ux-skill 152 rules + avoid-ai-design):
-- NO emoji as UI icons — use text/unicode sparingly, SVG preferred
-- NO pure emoji bullets in content lists
-- NO "rounded-2xl shadow-lg" applied uniformly to everything
-- NO reflexive glassmorphism (backdrop-blur for decoration only)
-- NO generic CTAs: "Get Started", "Learn More", "Click Here"
-- NO filler copy: "Elevate", "Seamless", "Powerful", "Revolutionary"
-- NO Lorem ipsum anywhere
-- NO bouncing arrow animations on CTAs
-- NO default 300ms timing on all transitions — vary: 150ms micro, 250ms standard
-- NO four identical KPI/feature cards in a row
-- NO centered hero + three equal feature cards (the template tell)
-- NO inline styles in output HTML
-- NO console.log in scripts
-- MUST have alt text on images
-- MUST have aria-labels on icon-only buttons
-- MUST NOT skip heading levels (h1 → h2 → h3, no jumps)
-- MUST use cursor:pointer on all interactive elements
-
-CONTENT QUALITY (design-skill-os + avoid-ai-design):
-- Lead with the answer, not a definition ("DNS is..." not "In today's world...")
-- Real examples with specific names/numbers — no vague "some companies"
-- Code examples in <code> tags, terminal commands in <pre><code>
-- Short paragraphs: 2-4 sentences max
-- Vary section lengths — not all sections equal height
-- Active voice: "DNS resolves names" not "names are resolved by DNS"
-- Specificity beats generality: "saves 200ms" beats "saves time"
-
-ACCESSIBILITY (ux-skill a11y rules):
-- All images need alt text
-- All interactive elements keyboard-navigable
-- Focus rings visible (outline on :focus-visible)
-- Color is never the ONLY indicator of meaning
-- WCAG 2.1 AA minimum: 4.5:1 for normal text, 3:1 for large text
-"""
+# Forbidden words that mark AI-slop content (avoid-ai-design + ux-skill)
+SLOP_WORDS = [
+    "elevate", "seamless", "powerful", "revolutionary", "game-changer",
+    "next-level", "cutting-edge", "leverage", "utilize", "paradigm",
+    "delve", "invaluable", "meticulous", "pivotal", "transformative",
+    "unlock", "harness", "robust", "scalable", "streamline",
+]
 
 def design_qa(html_content: str, data: dict) -> tuple[str, list[str]]:
     """
-    Anti-AI-slop linter inspired by Laith0003/ux-skill.
+    Anti-AI-slop HTML linter (Laith0003/ux-skill + funboy322/avoid-ai-design).
     Checks for forbidden patterns and logs violations.
-    Does NOT modify HTML — just reports issues for the record.
     """
     violations = []
-
     checks = [
-        (r"#000000|#000(?![0-9a-fA-F])", "Pure black color used — use #2A2A2A or #0A0A0F instead"),
-        (r"Lorem ipsum", "Lorem ipsum placeholder text detected"),
-        (r"rounded-full.*rounded-full.*rounded-full", "Excessive rounded-full usage"),
-        (r"console\.log", "console.log detected in output"),
-        (r"(Elevate|Seamless|Powerful|Revolutionary|Game-changer|Next-level)", "AI-slop filler copy detected"),
-        (r"Get Started|Click Here|Learn More", "Generic CTA copy detected"),
-        (r"<img(?![^>]*alt=)", "Image missing alt text"),
-        (r"style=\"[^\"]{50,}\"", "Long inline style detected — use CSS classes"),
-        (r"background:\s*linear-gradient.*purple.*blue|background:\s*linear-gradient.*#[89abcdef].*#[34567]", "Purple-to-blue gradient (AI-slop tell)"),
+        (r"Lorem ipsum",                        "Lorem ipsum detected"),
+        (r"console\.log",                        "console.log in output"),
+        (r"<img(?![^>]*alt=)",                   "Image missing alt text"),
+        (r"(Elevate|Seamless|Revolutionary|Game-changer|Leverage|Utilize|Paradigm)",
+                                                 "AI-slop filler copy"),
+        (r"Get Started|Click Here|Learn More",   "Generic CTA copy"),
+        (r"style=\"[^\"]{80,}\"",                "Excessive inline style"),
+        (r"background:\s*linear-gradient.*purple|background:\s*linear-gradient.*violet",
+                                                 "Purple gradient (AI-slop tell)"),
+        (r"<h[1-9]>.*<h[1-9]>",                 "Possible heading level skip"),
+        (r"emoji|🎨|🚀|⚙️|🌐|📊|✅|❌",         "Emoji as UI icon (use SVG)"),
     ]
-
     for pattern, msg in checks:
         if re.search(pattern, html_content, re.IGNORECASE):
             violations.append(msg)
+
+    # check content slop words
+    content_text = data.get("intro","") + " ".join(
+        s.get("content","") for s in data.get("sections",[])
+    )
+    found_slop = [w for w in SLOP_WORDS if re.search(r'\b' + w + r'\b', content_text, re.IGNORECASE)]
+    if found_slop:
+        violations.append(f"Slop words in content: {found_slop}")
 
     if violations:
         log("design-qa", f"{len(violations)} violation(s): {'; '.join(violations)}")
@@ -663,80 +859,133 @@ def design_qa(html_content: str, data: dict) -> tuple[str, list[str]]:
 
     return html_content, violations
 
-
 def apply_design_intelligence(data: dict) -> dict:
     """
-    Uses Claude to apply design rules to article content before HTML generation.
-    Inspired by styleseed judgment layer + design-skill-os red team audit.
+    Design intelligence layer: detects and rewrites AI-slop content.
+    Sources: styleseed judgment layer + design-skill-os red team + avoid-ai-design.
     """
     if not ANTHROPIC_KEY:
         return data
 
-    intro = data.get("intro", "")
-    sections = data.get("sections", [])
+    content_text = data.get("intro","") + " ".join(
+        s.get("content","") for s in data.get("sections",[])
+    )
+    found_slop = [w for w in SLOP_WORDS
+                  if re.search(r'\b' + w + r'\b', content_text, re.IGNORECASE)]
 
-    # Check for AI-slop tells in content
-    slop_words = ["elevate", "seamless", "powerful", "revolutionary", "game-changer",
-                  "next-level", "cutting-edge", "leverage", "utilize", "paradigm"]
-    content_text = intro + " ".join(s.get("content","") for s in sections)
-    found_slop = [w for w in slop_words if w.lower() in content_text.lower()]
+    # check for weak intro
+    weak_intros = ["in today's", "in the world of", "understanding", "have you ever",
+                   "when it comes to", "in this article", "we will explore"]
+    intro_lower = data.get("intro","").lower()
+    weak_intro = any(intro_lower.startswith(w) for w in weak_intros)
 
-    if not found_slop and len(sections) >= 3:
-        log("design", "Content passes design check — no rewrite needed")
+    if not found_slop and not weak_intro and len(data.get("sections",[])) >= 4:
+        log("design", "Content passes design check")
         return data
 
-    log("design", f"Applying design intelligence (slop words found: {found_slop})")
-
-    # Build a targeted prompt to fix only the issues found
     issues = []
     if found_slop:
-        issues.append(f"Remove filler words: {found_slop}. Replace with specific, concrete language.")
-    if len(sections) < 3:
-        issues.append("Add more sections — minimum 4 for a complete article.")
+        issues.append(f"Remove these slop words and replace with specific concrete language: {found_slop}")
+    if weak_intro:
+        issues.append("Rewrite intro — must lead with the answer, not a definition or setup phrase")
+    if len(data.get("sections",[])) < 4:
+        issues.append("Add more sections — minimum 4 for complete coverage")
 
-    sections_json = json.dumps([{"heading": s["heading"], "content": s["content"]} for s in sections])
+    log("design", f"Applying design intelligence: {issues}")
 
-    prompt = f"""You are a design-aware content editor. Fix these issues in the article content:
+    sections_json = json.dumps([
+        {"heading": s["heading"], "content": s["content"]}
+        for s in data.get("sections",[])
+    ])
 
-Issues to fix:
+    prompt = f"""You are a design-aware content editor for ITVedas.com.
+
+Fix these issues in the article content:
 {chr(10).join(f'- {i}' for i in issues)}
 
-Design rules to follow:
-- Lead with the answer immediately — no "In today's digital world..." intros
-- Short paragraphs: 2-4 sentences max
-- Active voice only
-- Specific examples with real names/numbers
-- NO filler words: elevate, seamless, powerful, revolutionary, game-changer
-- Vary section lengths — not all equal
+Design rules (styleseed + design-skill-os):
+- Intro MUST start with the answer or a specific fact — not a definition
+- Short paragraphs: 2-4 sentences, active voice
+- Real examples with specific names/numbers/measurements
+- NO slop words: {SLOP_WORDS[:8]}
+- Vary section lengths — not all sections equal height
 
-Current intro: {intro}
+Current intro:
+{data.get('intro','')}
 
 Current sections (JSON):
 {sections_json}
 
-Return ONLY JSON with fixed content:
+Return ONLY JSON (no fences):
 {{"intro": "...", "sections": [{{"heading": "...", "content": "..."}}]}}"""
 
     try:
-        raw = _call_claude(prompt, max_tokens=3000)
-        raw = _extract_json(raw)
-        fixed = json.loads(raw)
-        data["intro"] = fixed.get("intro", intro)
-        data["sections"] = fixed.get("sections", sections)
-        log("design", "Content improved by design intelligence layer")
+        raw   = _call_claude(prompt, max_tokens=3500)
+        fixed = json.loads(_extract_json(raw))
+        data["intro"]    = fixed.get("intro", data["intro"])
+        data["sections"] = fixed.get("sections", data["sections"])
+        log("design", "Content improved by design intelligence")
     except Exception as e:
         log("design", f"Design rewrite skipped: {e}")
 
     return data
 
+# ─────────────────────────────────────────────────────────────────────────────
+#  INTERNAL LINKER — knowledge-assistant RAG + knowledge graph
+#  Finds opportunities to link new article to existing articles
+# ─────────────────────────────────────────────────────────────────────────────
+def build_internal_links(data: dict, mem: dict, graph: dict) -> dict:
+    """
+    Adds internal links to the article content using knowledge graph.
+    knowledge-assistant RAG pattern: retrieves related articles from memory.
+    """
+    topic   = data.get("topic","")
+    chapter = data.get("chapter","")
+
+    # find articles this topic is related to
+    related = graph.get(topic, {}).get("related", []) or data.get("related_topics", [])
+
+    # find published articles that match related topics
+    link_opportunities: list[dict] = []
+    for art in mem["published_articles"]:
+        art_title = art.get("title","")
+        art_slug  = art.get("slug","")
+        art_ch    = art.get("chapter","")
+        if not art_slug:
+            continue
+        # check if this article's topic appears in related topics or title overlap
+        for rel in related:
+            if rel.lower() in art_title.lower() or art_title.lower() in rel.lower():
+                link_opportunities.append({
+                    "title": art_title,
+                    "url":   f"/articles/{art_ch}/{art_slug}.html",
+                    "chapter": art_ch,
+                })
+                break
+
+    if link_opportunities:
+        log("linker", f"Found {len(link_opportunities)} internal link opportunities")
+        data["internal_links"] = link_opportunities[:5]  # max 5 internal links
+    else:
+        data["internal_links"] = []
+
+    return data
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  HTML BUILDER
+#  HTML BUILDER — full page with ToC, reading time, FAQ schema, internal links
 # ─────────────────────────────────────────────────────────────────────────────
+def estimate_reading_time(data: dict) -> int:
+    """Estimate reading time in minutes (200 words/min average)."""
+    all_text = data.get("intro","") + " ".join(
+        s.get("content","") for s in data.get("sections",[])
+    )
+    words = len(re.sub(r'<[^>]+>', '', all_text).split())
+    return max(3, round(words / 200))
+
 def build_html(data: dict) -> str:
-    """Build a complete, styled HTML article page."""
-    esc_title = html.escape(data["title"])
-    esc_desc  = html.escape(data["meta_description"])
+    """Build complete HTML article with all features."""
+    esc_title = html_module.escape(data["title"])
+    esc_desc  = html_module.escape(data["meta_description"])
     slug      = data["slug"]
     chapter   = data["chapter"]
     ch_name   = data["chapter_name"]
@@ -744,63 +993,102 @@ def build_html(data: dict) -> str:
     ch_emoji  = data["chapter_emoji"]
     date_str  = data["date"]
     canonical = f"{SITE_URL}/articles/{chapter}/{slug}.html"
+    read_time = estimate_reading_time(data)
 
-    # FAQ schema
+    # format date nicely
+    try:
+        date_obj = datetime.date.fromisoformat(date_str)
+        date_fmt = date_obj.strftime("%B %d, %Y")
+    except Exception:
+        date_fmt = date_str
+
+    # ── schemas ──────────────────────────────────────────────────────────────
     faq_items = data.get("faq", [])
-    faq_schema_entities = [
-        {"@type": "Question", "name": html.escape(f["q"]),
-         "acceptedAnswer": {"@type": "Answer", "text": html.escape(f["answer"])}}
-        for f in faq_items
-    ]
     faq_schema = json.dumps({
         "@context": "https://schema.org", "@type": "FAQPage",
-        "mainEntity": faq_schema_entities
-    }, ensure_ascii=True)
-
+        "mainEntity": [
+            {"@type": "Question", "name": html_module.escape(f["q"]),
+             "acceptedAnswer": {"@type": "Answer", "text": html_module.escape(f["answer"])}}
+            for f in faq_items
+        ]
+    })
     article_schema = json.dumps({
         "@context": "https://schema.org", "@type": "Article",
         "headline": data["title"],
         "description": data["meta_description"],
         "datePublished": date_str,
+        "dateModified": date_str,
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
         "url": canonical,
-    }, ensure_ascii=True)
-
+        "wordCount": len(re.sub(r'<[^>]+>', '', data.get("intro","")).split()) * 8,
+    })
     breadcrumb_schema = json.dumps({
         "@context": "https://schema.org", "@type": "BreadcrumbList",
         "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL},
-            {"@type": "ListItem", "position": 2, "name": ch_name, "item": f"{SITE_URL}/articles/{chapter}/"},
+            {"@type": "ListItem", "position": 1, "name": "Home",   "item": SITE_URL},
+            {"@type": "ListItem", "position": 2, "name": ch_name,  "item": f"{SITE_URL}/articles/{chapter}/"},
             {"@type": "ListItem", "position": 3, "name": data["title"], "item": canonical},
         ]
-    }, ensure_ascii=True)
+    })
 
-    # build sections HTML
+    # ── table of contents ────────────────────────────────────────────────────
+    sections = data.get("sections", [])
+    toc_items = ""
+    for i, sec in enumerate(sections):
+        heading = sec.get("heading","")
+        anchor  = re.sub(r'[^a-z0-9]+', '-', heading.lower()).strip('-')
+        toc_items += f'<li><a href="#{anchor}">{html_module.escape(heading)}</a></li>\n'
+
+    # ── sections HTML ────────────────────────────────────────────────────────
     sections_html = ""
-    for sec in data.get("sections", []):
-        heading = html.escape(sec.get("heading", ""))
-        content = sec.get("content", "")
-        sections_html += f'<h2>{heading}</h2>\n{content}\n'
+    for sec in sections:
+        heading = sec.get("heading","")
+        content = sec.get("content","")
+        anchor  = re.sub(r'[^a-z0-9]+', '-', heading.lower()).strip('-')
+        sections_html += f'<h2 id="{anchor}">{html_module.escape(heading)}</h2>\n{content}\n'
 
-    # build FAQ HTML
+    # ── FAQ HTML ─────────────────────────────────────────────────────────────
     faq_html = ""
     if faq_items:
-        faq_html = '<h2>Frequently Asked Questions</h2>\n<div class="faq">\n'
+        faq_html = '<h2 id="faq">Frequently Asked Questions</h2>\n<div class="faq">\n'
         for f in faq_items:
-            faq_html += f'<div class="faq-item"><h3>{html.escape(f["q"])}</h3><p>{html.escape(f["answer"])}</p></div>\n'
+            faq_html += (
+                f'<div class="faq-item">'
+                f'<h3>{html_module.escape(f["q"])}</h3>'
+                f'<p>{html_module.escape(f["answer"])}</p>'
+                f'</div>\n'
+            )
         faq_html += "</div>\n"
 
-    # key takeaways
+    # ── key takeaways ────────────────────────────────────────────────────────
     takeaways = data.get("key_takeaways", [])
     takeaways_html = ""
     if takeaways:
-        items = "".join(f"<li>{html.escape(t)}</li>" for t in takeaways)
-        takeaways_html = f'<div class="takeaways"><h2>Key Takeaways</h2><ul>{items}</ul></div>'
+        items = "".join(f"<li>{html_module.escape(t)}</li>" for t in takeaways)
+        takeaways_html = f'<div class="takeaways"><h2>Key Takeaways</h2><ul>{items}</ul></div>\n'
+
+    # ── anchor facts ─────────────────────────────────────────────────────────
+    anchor_facts = data.get("anchor_facts", [])
+    facts_html = ""
+    if anchor_facts:
+        items = "".join(f"<li>{html_module.escape(f)}</li>" for f in anchor_facts)
+        facts_html = f'<div class="fact-box"><strong>Key Facts</strong><ul>{items}</ul></div>\n'
+
+    # ── internal links ───────────────────────────────────────────────────────
+    internal_links = data.get("internal_links", [])
+    related_html = ""
+    if internal_links:
+        links_html = "".join(
+            f'<a href="{lnk["url"]}" class="rel-link">{html_module.escape(lnk["title"])}</a>'
+            for lnk in internal_links
+        )
+        related_html = f'<div class="related-articles"><h2>Related Articles</h2><div class="rel-grid">{links_html}</div></div>\n'
 
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
 <meta name="description" content="{esc_desc}">
 <meta name="robots" content="index,follow">
@@ -809,6 +1097,8 @@ def build_html(data: dict) -> str:
 <meta property="og:image" content="{SITE_URL}/assets/og-default.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{date_str}">
 <link rel="canonical" href="{canonical}">
 <title>{esc_title} | {SITE_NAME}</title>
 <script type="application/ld+json">{article_schema}</script>
@@ -819,7 +1109,245 @@ def build_html(data: dict) -> str:
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:{ch_color};--border:rgba(255,255,255,0.08);}}
+:root{{
+  --bg:#0A0A0F;--bg2:#13131C;--bg3:#1A1A28;
+  --text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;
+  --accent:{ch_color};--border:rgba(255,255,255,0.08);
+  --radius:12px;
+}}
+*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
+html{{scroll-behavior:smooth;}}
+body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}}
+
+/* reading progress bar */
+#progress{{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:200;width:0%;transition:width .1s linear;}}
+
+/* nav */
+nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
+.logo{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}}
+.logo span{{color:#FF6B35;}}
+.nav-links{{display:flex;gap:1.5rem;}}
+.nav-links a{{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color .2s;}}
+.nav-links a:hover{{color:var(--text);}}
+
+/* hero */
+.hero{{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}}
+.breadcrumb{{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}}
+.breadcrumb a{{color:var(--muted);text-decoration:none;transition:color .2s;}}
+.breadcrumb a:hover{{color:var(--accent);}}
+.ch-badge{{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.85rem;}}
+.hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:1.25rem;}}
+.hero-meta{{display:flex;gap:1.25rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}}
+.hero-meta span{{display:flex;align-items:center;gap:0.3rem;}}
+.hero p.intro{{font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;}}
+
+/* layout */
+.page-wrap{{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 220px;gap:2.5rem;align-items:start;}}
+.article-body{{min-width:0;}}
+
+/* TOC sidebar */
+.toc-sidebar{{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;font-size:0.85rem;}}
+.toc-sidebar h3{{font-family:'Space Grotesk',sans-serif;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.85rem;}}
+.toc-sidebar ol{{padding-left:1.1rem;}}
+.toc-sidebar li{{margin-bottom:0.4rem;}}
+.toc-sidebar a{{color:var(--sub);text-decoration:none;transition:color .15s;}}
+.toc-sidebar a:hover{{color:var(--accent);}}
+
+/* content */
+.content h2{{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-0.015em;scroll-margin-top:80px;}}
+.content h3{{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 0.6rem;color:var(--text);}}
+.content p{{color:var(--sub);margin-bottom:1.25rem;}}
+.content ul,.content ol{{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}}
+.content li{{margin-bottom:0.4rem;}}
+.content strong{{color:var(--text);}}
+.content a{{color:var(--accent);text-decoration:none;}}
+.content a:hover{{text-decoration:underline;}}
+.content code{{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em;font-size:0.875em;color:#FF6B35;font-family:'Courier New',monospace;}}
+.content pre{{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}}
+.content pre code{{background:none;border:none;padding:0;font-size:0.875rem;color:#A8E6CF;}}
+
+/* special blocks */
+.fact-box{{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;}}
+.fact-box strong{{display:block;font-family:'Space Grotesk',sans-serif;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.6rem;}}
+.fact-box ul{{margin:0;padding-left:1.25rem;}}
+.fact-box li{{color:var(--sub);font-size:0.9rem;margin-bottom:0.3rem;}}
+
+.takeaways{{background:var(--bg3);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.5rem;margin:2rem 0;}}
+.takeaways h2{{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 0.75rem;color:var(--text);}}
+.takeaways ul{{margin:0;padding-left:1.25rem;}}
+.takeaways li{{color:var(--sub);font-size:0.9rem;}}
+
+/* FAQ */
+.faq{{margin-top:0.75rem;}}
+.faq-item{{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:0.85rem;transition:border-color .2s;}}
+.faq-item:hover{{border-color:var(--accent);}}
+.faq-item h3{{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text);}}
+.faq-item p{{margin:0;font-size:0.9rem;color:var(--sub);}}
+
+/* related articles */
+.related-articles{{margin-top:2.5rem;}}
+.related-articles h2{{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin-bottom:1rem;color:var(--text);}}
+.rel-grid{{display:flex;flex-direction:column;gap:0.6rem;}}
+.rel-link{{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem 1rem;text-decoration:none;color:var(--sub);font-size:0.875rem;transition:border-color .2s,color .2s;}}
+.rel-link:hover{{border-color:var(--accent);color:var(--text);}}
+
+/* nav article */
+.nav-art{{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}}
+.nav-art a{{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:var(--sub);font-size:0.875rem;transition:border-color .2s;cursor:pointer;}}
+.nav-art a:hover{{border-color:var(--accent);}}
+.nav-art .label{{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;}}
+
+/* footer */
+footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}}
+.fl{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}}
+.fl span{{color:#FF6B35;}}
+.flinks{{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}}
+.flinks a{{color:var(--muted);text-decoration:none;transition:color .2s;}}
+.flinks a:hover{{color:#FF6B35;}}
+
+@media(max-width:768px){{
+  nav{{padding:0 1.25rem;}}
+  .nav-links{{display:none;}}
+  .page-wrap{{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}}
+  .toc-sidebar{{display:none;}}
+  .hero{{padding-left:1.25rem;padding-right:1.25rem;}}
+}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/news.html">News</a>
+    <a href="/articles/{chapter}/">{ch_emoji} {ch_name}</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="/">Home</a> ›
+    <a href="/articles/{chapter}/">{ch_name}</a> ›
+    {esc_title}
+  </div>
+  <div class="ch-badge">{ch_emoji} {ch_name}</div>
+  <h1>{esc_title}</h1>
+  <div class="hero-meta">
+    <span>{date_fmt}</span>
+    <span>{read_time} min read</span>
+    <span>ITVedas</span>
+  </div>
+  <p class="intro">{html_module.escape(data['intro'])}</p>
+</div>
+
+<div class="page-wrap">
+  <article class="article-body content">
+    {facts_html}
+    {sections_html}
+    {takeaways_html}
+    {faq_html}
+    {related_html}
+    <div class="nav-art">
+      <a href="/articles/{chapter}/">
+        <div class="label">← Chapter</div>
+        {ch_emoji} Back to {ch_name}
+      </a>
+      <a href="/#chapters">
+        <div class="label">Explore →</div>
+        All Chapters
+      </a>
+    </div>
+  </article>
+
+  <aside class="toc-sidebar">
+    <h3>Contents</h3>
+    <ol>
+      {toc_items}
+      {"<li><a href='#faq'>FAQ</a></li>" if faq_items else ""}
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/news.html">News</a>
+    <a href="/articles/{chapter}/">{ch_name}</a>
+    <a href="/#chapters">Chapters</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+    <a href="/terms-of-service.html">Terms of Service</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
+</footer>
+
+<script>
+(function(){{
+  var bar = document.getElementById('progress');
+  if(!bar) return;
+  function upd(){{
+    var s = document.documentElement;
+    var pct = (s.scrollTop/(s.scrollHeight-s.clientHeight))*100;
+    bar.style.width = Math.min(100,pct) + '%';
+  }}
+  window.addEventListener('scroll', upd, {{passive:true}});
+}})();
+</script>
+</body>
+</html>"""
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  CHAPTER INDEX BUILDER — rebuilds chapter index page with new article
+# ─────────────────────────────────────────────────────────────────────────────
+def build_chapter_index_html(chapter: str, articles: list[dict]) -> str:
+    """Build the chapter index page listing all articles in that chapter."""
+    ch   = CHAPTERS.get(chapter, CHAPTERS["networking"])
+    name = ch["name"]
+    clr  = ch["color"]
+    em   = ch["emoji"]
+
+    # sort by date desc
+    articles_sorted = sorted(articles, key=lambda a: a.get("date",""), reverse=True)
+
+    cards_html = ""
+    for art in articles_sorted[:50]:  # max 50 per index
+        title    = html_module.escape(art.get("title","Untitled"))
+        slug     = art.get("slug","")
+        art_date = art.get("date","")
+        url      = f"/articles/{chapter}/{slug}.html"
+        try:
+            d = datetime.date.fromisoformat(art_date[:10])
+            dfmt = d.strftime("%b %d, %Y")
+        except Exception:
+            dfmt = art_date
+        cards_html += f"""<a href="{url}" class="art-card">
+  <div class="art-date">{dfmt}</div>
+  <h2>{title}</h2>
+  <div class="art-arrow">Read →</div>
+</a>
+"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="ITVedas {name} chapter — beginner-friendly guides on {name.lower()} concepts, explained simply.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="{SITE_URL}/articles/{chapter}/">
+<title>{name} Guides | {SITE_NAME}</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{GA4_ID}');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:{clr};--border:rgba(255,255,255,0.08);}}
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
 html{{scroll-behavior:smooth;}}
 body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}}
@@ -829,34 +1357,20 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .nav-links{{display:flex;gap:1.5rem;}}
 .nav-links a{{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color .2s;}}
 .nav-links a:hover{{color:var(--text);}}
-.hero{{padding:8rem 2rem 3rem;max-width:860px;margin:0 auto;position:relative;}}
+.hero{{padding:8rem 2rem 3rem;max-width:860px;margin:0 auto;}}
 .breadcrumb{{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}}
 .breadcrumb a{{color:var(--muted);text-decoration:none;}}
 .breadcrumb a:hover{{color:var(--accent);}}
-.ch-badge{{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}}
-.hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.75rem);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:1.25rem;}}
-.hero-meta{{display:flex;gap:1rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}}
-.hero p.intro{{font-size:1.1rem;color:var(--sub);line-height:1.75;}}
+.ch-label{{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;}}
+.hero h1{{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.75rem);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:1rem;}}
+.hero p{{color:var(--sub);font-size:1.05rem;max-width:580px;}}
 .content{{max-width:860px;margin:0 auto;padding:2rem 2rem 6rem;}}
-.content h2{{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-0.015em;}}
-.content h3{{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:600;margin:1.75rem 0 0.75rem;color:var(--text);}}
-.content p{{color:var(--sub);margin-bottom:1.25rem;}}
-.content ul,.content ol{{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}}
-.content li{{margin-bottom:0.4rem;}}
-.content strong{{color:var(--text);}}
-.content code{{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em;font-size:0.88em;color:#FF6B35;font-family:monospace;}}
-.content pre{{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow-x:auto;margin-bottom:1.5rem;}}
-.takeaways{{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:1.5rem;margin:2rem 0;}}
-.takeaways h2{{margin-top:0;font-size:1.1rem;}}
-.takeaways ul{{margin-bottom:0;}}
-.faq{{margin-top:1rem;}}
-.faq-item{{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:0.85rem;}}
-.faq-item h3{{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text);}}
-.faq-item p{{margin:0;font-size:0.9rem;}}
-.nav-art{{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}}
-.nav-art a{{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;text-decoration:none;color:var(--sub);font-size:0.875rem;transition:border-color .2s;}}
-.nav-art a:hover{{border-color:var(--accent);}}
-.nav-art .label{{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;}}
+.count{{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}}
+.art-card{{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:0.85rem;text-decoration:none;transition:border-color .2s,transform .2s;cursor:pointer;}}
+.art-card:hover{{border-color:var(--accent);transform:translateX(4px);}}
+.art-date{{font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem;}}
+.art-card h2{{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:0.4rem;}}
+.art-arrow{{font-size:0.8rem;color:var(--accent);}}
 footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}}
 .fl{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}}
 .fl span{{color:#FF6B35;}}
@@ -869,46 +1383,76 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/articles/{chapter}/">{ch_emoji} {ch_name}</a><a href="/#chapters">All Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">All Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/{chapter}/">{ch_name}</a> › {esc_title}</div>
-  <div class="ch-badge">{ch_emoji} {ch_name}</div>
-  <h1>{esc_title}</h1>
-  <div class="hero-meta"><span>📅 {date_str}</span><span>✍️ ITVedas Bot v2</span><span>⏱️ 5 min read</span></div>
-  <p class="intro">{html.escape(data['intro'])}</p>
+  <div class="breadcrumb"><a href="/">Home</a> › {name}</div>
+  <div class="ch-label">{em} Chapter {ch['num']}</div>
+  <h1>{name}</h1>
+  <p>Beginner-friendly guides on {name.lower()} — explained simply, with real examples.</p>
 </div>
 <div class="content">
-{sections_html}
-{takeaways_html}
-{faq_html}
-  <div class="nav-art">
-    <a href="/articles/{chapter}/"><div class="label">← Chapter</div>{ch_emoji} Back to {ch_name}</a>
-    <a href="/#chapters"><div class="label">Explore →</div>All Chapters</a>
-  </div>
+  <div class="count">{len(articles_sorted)} articles in this chapter</div>
+  {cards_html}
 </div>
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/articles/{chapter}/">{ch_name}</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
-  <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Knowledge for everyone</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/#chapters">All Chapters</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 </body>
 </html>"""
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  GITHUB PUBLISHER (github-agent.py pattern — pushes directly via API)
+#  SITEMAP UPDATER — adds new article to sitemap.xml
+# ─────────────────────────────────────────────────────────────────────────────
+def build_sitemap(mem: dict) -> str:
+    """Build complete sitemap.xml from memory."""
+    today = datetime.date.today().isoformat()
+    urls  = [
+        f"  <url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>",
+        f"  <url><loc>{SITE_URL}/news.html</loc><changefreq>daily</changefreq><priority>0.9</priority></url>",
+        f"  <url><loc>{SITE_URL}/privacy-policy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>",
+        f"  <url><loc>{SITE_URL}/terms-of-service.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>",
+    ]
+    # chapter index pages
+    for ch in CHAPTERS:
+        urls.append(f"  <url><loc>{SITE_URL}/articles/{ch}/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>")
+    # articles
+    for art in mem["published_articles"]:
+        slug  = art.get("slug","")
+        ch    = art.get("chapter","networking")
+        adate = art.get("date", today)
+        if slug and re.match(r"\d{4}-\d{2}-\d{2}-", slug):
+            urls.append(
+                f"  <url><loc>{SITE_URL}/articles/{ch}/{slug}.html</loc>"
+                f"<lastmod>{adate}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>"
+            )
+
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "\n".join(urls)
+        + "\n</urlset>"
+    )
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  GITHUB PUBLISHER — direct API push (github-agent.py pattern)
 # ─────────────────────────────────────────────────────────────────────────────
 def github_put(path: str, content: str, message: str) -> bool:
-    """Create or update a file in the GitHub repo via API."""
-    import base64
+    """Create or update a file via GitHub Contents API."""
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json",
         "Content-Type": "application/json",
     }
-    # get existing SHA if file exists
     sha = None
     try:
         req = urllib.request.Request(url, headers=headers)
@@ -916,257 +1460,161 @@ def github_put(path: str, content: str, message: str) -> bool:
         sha = res.get("sha")
     except urllib.error.HTTPError as e:
         if e.code != 404:
-            log("github", f"GET {path} failed: {e}")
+            log("github", f"GET {path}: HTTP {e.code}")
     except Exception:
         pass
 
     payload: dict[str, Any] = {
         "message": message,
-        "content": base64.b64encode(content.encode()).decode(),
-        "branch": GITHUB_BRANCH,
+        "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+        "branch":  GITHUB_BRANCH,
     }
     if sha:
         payload["sha"] = sha
 
-    try:
-        req = urllib.request.Request(
-            url, data=json.dumps(payload).encode(), headers=headers, method="PUT"
-        )
-        urllib.request.urlopen(req, timeout=30)
-        log("github", f"Published: {path}")
-        return True
-    except Exception as e:
-        log("github", f"PUT {path} failed: {e}")
-        return False
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(
+                url, data=json.dumps(payload).encode(),
+                headers=headers, method="PUT"
+            )
+            urllib.request.urlopen(req, timeout=30)
+            log("github", f"OK: {path}")
+            return True
+        except Exception as e:
+            if attempt == 2:
+                log("github", f"FAILED {path}: {e}")
+                return False
+            time.sleep(4 ** attempt)
+    return False
 
-def publish_to_github(data: dict, html_content: str) -> bool:
-    """Push article HTML to GitHub."""
+def publish_all(data: dict, html_content: str, mem: dict) -> bool:
+    """Publish article + chapter index + sitemap to GitHub."""
     if not GITHUB_TOKEN:
-        log("github", "No GITHUB_TOKEN — saving locally only")
+        log("github", "No GITHUB_TOKEN — saving locally")
         return _save_locally(data, html_content)
 
     chapter = data["chapter"]
     slug    = data["slug"]
     date    = data["date"]
     fname   = f"{date}-{slug}.html"
-    path    = f"articles/{chapter}/{fname}"
-    message = f"bot: add article '{data['title']}' [{chapter}]"
+    ok      = True
 
-    return github_put(path, html_content, message)
+    # 1. article
+    ok &= github_put(
+        f"articles/{chapter}/{fname}",
+        html_content,
+        f"bot: add '{data['title']}' [{chapter}]"
+    )
+
+    # 2. chapter index
+    chapter_articles = [a for a in mem["published_articles"] if a.get("chapter") == chapter]
+    # include the new article (not yet in mem at this point, so add it)
+    chapter_articles.append({"title": data["title"], "slug": fname[:-5], "date": date, "chapter": chapter})
+    index_html = build_chapter_index_html(chapter, chapter_articles)
+    ok &= github_put(
+        f"articles/{chapter}/index.html",
+        index_html,
+        f"bot: update {chapter} chapter index"
+    )
+
+    # 3. sitemap (build from mem + new article)
+    mem_snapshot = dict(mem)
+    mem_snapshot["published_articles"] = list(mem["published_articles"]) + [{
+        "slug": f"{date}-{slug}", "chapter": chapter, "date": date, "title": data["title"]
+    }]
+    sitemap = build_sitemap(mem_snapshot)
+    ok &= github_put("sitemap.xml", sitemap, "bot: update sitemap")
+
+    return ok
 
 def _save_locally(data: dict, html_content: str) -> bool:
     """Fallback: save to local filesystem."""
-    chapter = data["chapter"]
-    slug    = data["slug"]
-    date    = data["date"]
-    fname   = f"{date}-{slug}.html"
-    out_dir = ARTICLES / chapter
+    out_dir = ARTICLES / data["chapter"]
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / fname
-    out_path.write_text(html_content, encoding="utf-8")
-    log("local", f"Saved: {out_path}")
+    fname = f"{data['date']}-{data['slug']}.html"
+    (out_dir / fname).write_text(html_content, encoding="utf-8")
+    log("local", f"Saved: {out_dir/fname}")
     return True
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  HEARTBEAT (second-brain-starter heartbeat pattern)
-#  Logs health + next recommended topics after every run
+#  HEARTBEAT — health log after every run (second-brain-starter)
 # ─────────────────────────────────────────────────────────────────────────────
-# ─────────────────────────────────────────────────────────────────────────────
-#  TASK MANAGEMENT SYSTEM
-#  Sources: dongshuyan/compass-skills, cortex-tms, jpicklyk/task-orchestrator,
-#           saltbo/agent-kanban, builderz-labs/mission-control
-# ─────────────────────────────────────────────────────────────────────────────
-
-def task_clarifier(topic: str, chapter: str, mem: dict) -> dict:
-    """
-    compass-skills/task-clarifier pattern:
-    Aligns goals, scope, evidence, acceptance criteria, and risk boundaries
-    BEFORE writing — prevents wasted generation on bad topic choices.
-    """
-    done_count = len(mem["done_topics"])
-    chapter_articles = [a for a in mem["published_articles"] if a.get("chapter") == chapter]
-
-    prompt = f"""You are a task clarifier for an IT education content bot.
-
-Before writing an article about "{topic}" for the {chapter} chapter of ITVedas.com,
-clarify and validate this task. The site has {done_count} articles total,
-{len(chapter_articles)} in the {chapter} chapter.
-
-Evaluate:
-1. GOAL: Is "{topic}" a clear, specific topic with measurable search demand?
-2. SCOPE: Is it too broad (split into parts) or too narrow (merge with another)?
-3. EVIDENCE: What 3 specific facts/numbers can anchor this article?
-4. ACCEPTANCE: What makes this article "done"? (word count, sections, FAQ count)
-5. RISK: Any accuracy risks? (rapidly changing tech, controversial claims?)
-
-Return ONLY JSON:
-{{
-  "approved": true,
-  "refined_topic": "...(same or slightly improved topic title)",
-  "scope": "single-article or needs-split",
-  "anchor_facts": ["fact with number", "fact with name", "fact with example"],
-  "acceptance_criteria": {{"min_words": 800, "min_sections": 4, "min_faq": 3}},
-  "risk_level": "low|medium|high",
-  "risk_note": "...or null"
-}}"""
-
-    try:
-        raw = _call_claude(prompt, max_tokens=400)
-        raw = _extract_json(raw)
-        result = json.loads(raw)
-        if result.get("refined_topic") and result["refined_topic"] != topic:
-            log("task-clarifier", f"Topic refined: '{topic}' → '{result['refined_topic']}'")
-        if result.get("risk_level") == "high":
-            log("task-clarifier", f"HIGH RISK: {result.get('risk_note')}")
-        return result
-    except Exception as e:
-        log("task-clarifier", f"Skipped (non-blocking): {e}")
-        return {"approved": True, "refined_topic": topic, "anchor_facts": [],
-                "acceptance_criteria": {"min_words": 800, "min_sections": 4, "min_faq": 3}}
-
-
-def task_forest_update(mem: dict, topic: str, chapter: str, status: str,
-                       slug: str = "", notes: str = "") -> dict:
-    """
-    compass-skills/task-forest pattern:
-    Maintains a DAG of tasks with goals, subtasks, dependencies, progress,
-    deviations, decisions, and history. File: state/task-forest.json
-    """
-    forest_file = STATE_DIR / "task-forest.json"
-    forest: dict = {}
-    if forest_file.exists():
-        try:
-            forest = json.loads(forest_file.read_text())
-        except Exception:
-            pass
-
-    if "tasks" not in forest:
-        forest["tasks"] = {}
-    if "chapter_goals" not in forest:
-        forest["chapter_goals"] = {ch: f"Comprehensive {cfg['name']} coverage for beginners"
-                                    for ch, cfg in CHAPTERS.items()}
-    if "decisions" not in forest:
-        forest["decisions"] = []
-
-    task_id = f"{chapter}/{slug or topic[:30].replace(' ', '-').lower()}"
-    forest["tasks"][task_id] = {
-        "topic": topic,
-        "chapter": chapter,
-        "status": status,   # pending|in_progress|done|failed
-        "slug": slug,
-        "notes": notes,
-        "updated": datetime.datetime.utcnow().isoformat(),
-    }
-
-    # record decision log (task-orchestrator workflow discipline)
-    if status == "done":
-        forest["decisions"].append({
-            "date": datetime.date.today().isoformat(),
-            "decision": f"Published '{topic}' in {chapter}",
-            "outcome": "success",
-        })
-    elif status == "failed":
-        forest["decisions"].append({
-            "date": datetime.date.today().isoformat(),
-            "decision": f"Attempted '{topic}' in {chapter}",
-            "outcome": "failed",
-            "notes": notes,
-        })
-
-    # tiered memory summary (cortex-tms pattern)
-    forest["summary"] = {
-        "total_tasks": len(forest["tasks"]),
-        "done": sum(1 for t in forest["tasks"].values() if t["status"] == "done"),
-        "failed": sum(1 for t in forest["tasks"].values() if t["status"] == "failed"),
-        "in_progress": sum(1 for t in forest["tasks"].values() if t["status"] == "in_progress"),
-        "last_updated": datetime.datetime.utcnow().isoformat(),
-    }
-
-    forest_file.write_text(json.dumps(forest, indent=2, ensure_ascii=False))
-    return forest
-
-
-def session_handoff(mem: dict, topic: str, chapter: str, result: str) -> None:
-    """
-    compass-skills/session-handoff-prompt pattern:
-    Compresses current session state into a paste-ready prompt for next run.
-    Saves to state/session-handoff.md
-    """
-    handoff_file = STATE_DIR / "session-handoff.md"
-    recent = [a["title"] for a in mem["published_articles"][-5:]]
-    next_topics = []
-    for ch, topics in TOPIC_SEEDS.items():
-        for t in topics:
-            if not memory_has_topic(mem, t):
-                next_topics.append(f"[{ch}] {t}")
-            if len(next_topics) >= 5:
-                break
-        if len(next_topics) >= 5:
-            break
-
-    handoff = f"""# ITVedas Bot — Session Handoff
-Generated: {datetime.datetime.utcnow().isoformat()}
-
-## Last Session
-- Topic attempted: {topic}
-- Chapter: {chapter}
-- Result: {result}
-
-## Current State
-- Total articles published: {mem['stats']['total_published']}
-- Total topics done: {len(mem['done_topics'])}
-- Total failures: {mem['stats']['total_failed']}
-
-## Recent Articles (last 5)
-{chr(10).join(f'- {t}' for t in recent)}
-
-## Recommended Next Topics
-{chr(10).join(f'- {t}' for t in next_topics)}
-
-## Resume Instructions
-Run: python itvedas-brain/itvedas-bot-v2.py
-Memory auto-loads from: itvedas-brain/memory/bot_memory.json
-Task forest at: itvedas-brain/state/task-forest.json
-"""
-    handoff_file.write_text(handoff)
-    log("session-handoff", "Handoff saved for next session")
-
-
 def write_heartbeat(mem: dict, result: str, topic: str, chapter: str) -> None:
-    chapter_counts = {}
+    chapter_counts: dict[str, int] = {}
     for art in mem["published_articles"]:
-        ch = art.get("chapter", "?")
+        ch = art.get("chapter","?")
         chapter_counts[ch] = chapter_counts.get(ch, 0) + 1
 
-    # find next 5 recommended topics
-    next_topics = []
+    next_topics: list[dict] = []
     for ch, topics in TOPIC_SEEDS.items():
         for t in topics:
             if not memory_has_topic(mem, t):
                 next_topics.append({"topic": t, "chapter": ch})
-            if len(next_topics) >= 5:
+            if len(next_topics) >= 8:
                 break
-        if len(next_topics) >= 5:
+        if len(next_topics) >= 8:
             break
 
     heartbeat = {
-        "timestamp": datetime.datetime.utcnow().isoformat(),
-        "last_run_result": result,
-        "last_topic": topic,
-        "last_chapter": chapter,
-        "total_published": mem["stats"]["total_published"],
-        "total_failed": mem["stats"]["total_failed"],
+        "timestamp":         datetime.datetime.utcnow().isoformat(),
+        "result":            result,
+        "last_topic":        topic,
+        "last_chapter":      chapter,
+        "model":             MODEL,
+        "total_published":   mem["stats"]["total_published"],
+        "total_failed":      mem["stats"]["total_failed"],
         "articles_per_chapter": chapter_counts,
-        "next_recommended_topics": next_topics,
-        "memory_file": str(MEMORY_FILE),
+        "next_topics":       next_topics,
+        "seeds_remaining":   sum(
+            1 for ch, ts in TOPIC_SEEDS.items()
+            for t in ts if not memory_has_topic(mem, t)
+        ),
     }
     HEARTBEAT.write_text(json.dumps(heartbeat, indent=2))
-    log("heartbeat", f"Logged. Total published: {mem['stats']['total_published']}")
+    log("heartbeat", f"Logged. Total: {mem['stats']['total_published']} published")
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  SOUL / USER files (second-brain-starter architectural memory)
+# ─────────────────────────────────────────────────────────────────────────────
+def ensure_soul_files() -> None:
+    if not SOUL_FILE.exists():
+        SOUL_FILE.write_text(BOT_SOUL)
+        log("soul", "Created SOUL.md")
+    if not USER_FILE.exists():
+        USER_FILE.write_text(f"""# ITVedas Brain — Site Profile
+
+## Identity
+- Site: {SITE_URL}
+- Name: {SITE_NAME}
+- Type: IT education for complete beginners
+- Repo: {GITHUB_REPO}
+
+## Content Strategy
+- 1 article per run (daily via GitHub Actions)
+- Target: 200+ articles across all 9 chapters
+- Balance coverage across all chapters evenly
+- Build topic clusters: pillar pages + supporting content
+- Never repeat a topic
+
+## Chapters
+{chr(10).join(f"- {ch}: {cfg['name']}" for ch, cfg in CHAPTERS.items())}
+
+## Tech Stack
+- Claude (Haiku) for content generation
+- GitHub API for publishing
+- No OpenAI required
+- Memory: memory/bot_memory.json (persistent across runs)
+""")
+        log("soul", "Created USER.md")
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  CLAUDE API HELPER
 # ─────────────────────────────────────────────────────────────────────────────
 def _call_claude(prompt: str, system: str | None = None, max_tokens: int = 4000) -> str:
+    if not ANTHROPIC_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY not set")
+
     payload: dict[str, Any] = {
         "model": MODEL,
         "max_tokens": max_tokens,
@@ -1186,157 +1634,150 @@ def _call_claude(prompt: str, system: str | None = None, max_tokens: int = 4000)
     )
     for attempt in range(3):
         try:
-            res = json.load(urllib.request.urlopen(req, timeout=120))
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                res = json.load(resp)
             return res["content"][0]["text"].strip()
         except Exception as e:
             if attempt == 2:
                 raise
-            log("claude", f"Retry {attempt+1}: {e}")
-            time.sleep(8)
+            wait = 8 * (attempt + 1)
+            log("claude", f"Retry {attempt+1} in {wait}s: {e}")
+            time.sleep(wait)
     return ""
 
 def _extract_json(text: str) -> str:
-    """Extract JSON from text — strips markdown fences and finds first { }."""
+    """
+    Robustly extract JSON from Claude output.
+    Handles: raw JSON, ```json fences, ```fences, and mixed text.
+    """
     text = text.strip()
     # strip code fences
-    if text.startswith("```"):
+    if "```" in text:
         lines = text.split("\n")
-        text = "\n".join(lines[1:])
-        if text.rstrip().endswith("```"):
-            text = text.rstrip()[:-3]
-    text = text.strip()
+        cleaned = []
+        in_fence = False
+        for line in lines:
+            if line.strip().startswith("```"):
+                in_fence = not in_fence
+                continue
+            if not in_fence or True:  # always collect content lines
+                cleaned.append(line)
+        text = "\n".join(cleaned).strip()
     # find outermost { }
     start = text.find("{")
     end   = text.rfind("}")
-    if start != -1 and end != -1:
+    if start != -1 and end != -1 and end > start:
         return text[start:end+1]
     return text
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  SOUL / USER memory files (second-brain-starter pattern)
-# ─────────────────────────────────────────────────────────────────────────────
-def ensure_soul_files() -> None:
-    """Create SOUL.md and USER.md if they don't exist."""
-    if not SOUL_FILE.exists():
-        SOUL_FILE.write_text(BOT_SOUL)
-        log("soul", "Created SOUL.md")
-
-    if not USER_FILE.exists():
-        USER_FILE.write_text(f"""# ITVedas Bot — User/Site Profile
-
-## Site
-- URL: {SITE_URL}
-- Name: {SITE_NAME}
-- Type: IT education platform for beginners
-- GitHub: {GITHUB_REPO}
-
-## Content Strategy
-- Write 1 article per run
-- Cover all 9 chapters evenly
-- Target: 200+ articles total
-- Style: beginner-friendly, SEO-optimised, real examples
-
-## Active Chapters
-{chr(10).join(f"- {ch}: {cfg['name']}" for ch, cfg in CHAPTERS.items())}
-
-## Notes
-- No OpenAI required — Claude only
-- Articles auto-publish to GitHub via API
-- Memory persists across all runs in memory/bot_memory.json
-""")
-        log("soul", "Created USER.md")
-
-# ─────────────────────────────────────────────────────────────────────────────
-#  MAIN LOOP
+#  MAIN — full pipeline
 # ─────────────────────────────────────────────────────────────────────────────
 def main() -> int:
-    log("bot", "=== ITVedas Super Bot v2 starting ===")
+    log("brain", "=" * 60)
+    log("brain", "ITVedas Brain Bot v2 starting")
+    log("brain", f"Model: {MODEL} | Repo: {GITHUB_REPO}")
 
     if not ANTHROPIC_KEY:
-        log("bot", "ERROR: ANTHROPIC_API_KEY not set")
+        log("brain", "ERROR: ANTHROPIC_API_KEY not set")
         return 1
 
-    # 1. SOUL files
+    # ── 1. ARCHITECTURAL MEMORY — soul files ─────────────────────────────────
     ensure_soul_files()
 
-    # 2. MEMORY CHECK — load + sync with actual files
-    log("memory", "Loading memory...")
-    mem = load_memory()
-    mem = scan_existing_articles(mem)
-    log("memory", f"Known articles: {len(mem['published_articles'])}, Done topics: {len(mem['done_topics'])}")
+    # ── 2. EPISODIC MEMORY — load + sync with disk ───────────────────────────
+    log("memory", "Loading brain memory...")
+    mem   = load_memory()
+    mem   = scan_existing_articles(mem)
+    graph = load_knowledge_graph()
+    log("memory", f"State: {mem['stats']['total_published']} published | {len(mem['done_topics'])} topics done")
 
-    # 3. TOPIC PICK — intelligent, never repeats
+    # ── 3. TOPIC SELECTION — intelligent, balanced ───────────────────────────
     topic, chapter = pick_topic(mem)
 
-    # 3b. TASK CLARIFIER — validate + refine topic before writing (compass-skills)
+    # ── 4. TASK CLARIFIER — validate + anchor evidence ───────────────────────
     task_forest_update(mem, topic, chapter, "in_progress")
-    clarification = task_clarifier(topic, chapter, mem)
-    topic = clarification.get("refined_topic", topic)  # use refined topic if improved
-    anchor_facts = clarification.get("anchor_facts", [])
-    log("task", f"Clarified: '{topic}' | risk={clarification.get('risk_level','low')}")
+    clarification  = task_clarifier(topic, chapter, mem)
+    topic          = clarification.get("refined_topic", topic)
+    anchor_facts   = clarification.get("anchor_facts", [])
+    acceptance     = clarification.get("acceptance_criteria", {})
+    related_topics = clarification.get("related_topics", [])
+    log("brain", f"Task: '{topic}' [{chapter}] | risk={clarification.get('risk_level','low')}")
 
-    # 4. WRITE
+    # ── 5. WRITE ARTICLE ─────────────────────────────────────────────────────
     try:
-        data = write_article(topic, chapter, anchor_facts=anchor_facts)
+        data = write_article(topic, chapter,
+                             anchor_facts=anchor_facts,
+                             acceptance=acceptance,
+                             related_topics=related_topics)
     except Exception as e:
         log("writer", f"FAILED: {e}")
         mem["failed_topics"].append(topic)
         mem["stats"]["total_failed"] += 1
         task_forest_update(mem, topic, chapter, "failed", notes=str(e))
         save_memory(mem)
-        write_heartbeat(mem, "FAILED", topic, chapter)
-        session_handoff(mem, topic, chapter, "FAILED")
+        write_heartbeat(mem, "WRITE_FAILED", topic, chapter)
+        session_handoff(mem, topic, chapter, "WRITE_FAILED")
         return 1
 
-    # 5. QA GATE
+    # ── 6. QA GATE ───────────────────────────────────────────────────────────
     data = qa_review(data)
 
-    # 5b. DESIGN INTELLIGENCE — anti-AI-slop + design rules
+    # ── 7. DESIGN INTELLIGENCE ───────────────────────────────────────────────
     data = apply_design_intelligence(data)
 
-    # 6. BUILD HTML
+    # ── 7b. INTERNAL LINKING ─────────────────────────────────────────────────
+    data = build_internal_links(data, mem, graph)
+
+    # ── 8. BUILD HTML ────────────────────────────────────────────────────────
     html_content = build_html(data)
 
-    # 6b. DESIGN QA — lint the final HTML
+    # ── 8b. DESIGN QA LINT ───────────────────────────────────────────────────
     html_content, violations = design_qa(html_content, data)
     if violations:
         mem["decisions"].append({
             "date": datetime.date.today().isoformat(),
-            "topic": topic,
-            "design_violations": violations,
+            "topic": topic, "design_violations": violations,
         })
 
-    # 7. PUBLISH
-    ok = publish_to_github(data, html_content)
+    # ── 9. PUBLISH — article + chapter index + sitemap ───────────────────────
+    ok = publish_all(data, html_content, mem)
     if not ok:
-        log("bot", "Publish failed")
+        log("brain", "Publish failed")
         mem["failed_topics"].append(topic)
         mem["stats"]["total_failed"] += 1
+        task_forest_update(mem, topic, chapter, "failed", notes="publish failed")
         save_memory(mem)
         write_heartbeat(mem, "PUBLISH_FAILED", topic, chapter)
         return 1
 
-    # 8. MEMORY UPDATE — critical: save before anything else
+    # ── 10. MEMORY UPDATE ────────────────────────────────────────────────────
     slug_full = f"{data['date']}-{data['slug']}"
     mem["published_articles"].append({
-        "slug": slug_full,
-        "title": data["title"],
-        "topic": topic,
-        "chapter": chapter,
-        "date": data["date"],
+        "slug": slug_full, "title": data["title"],
+        "topic": topic, "chapter": chapter, "date": data["date"],
     })
     mem["done_topics"].append(topic)
     mem["stats"]["total_published"] += 1
     save_memory(mem)
 
-    # 8b. TASK FOREST UPDATE — mark done (compass-skills/task-forest)
-    task_forest_update(mem, topic, chapter, "done", slug=slug_full)
+    # ── 11. KNOWLEDGE GRAPH ──────────────────────────────────────────────────
+    graph = update_knowledge_graph(
+        topic, chapter, slug_full,
+        related_topics=data.get("related_topics", []),
+        graph=graph
+    )
+    save_knowledge_graph(graph)
 
-    # 9. HEARTBEAT + SESSION HANDOFF
+    # ── 12. TASK FOREST + HEARTBEAT + HANDOFF ────────────────────────────────
+    task_forest_update(mem, topic, chapter, "done", slug=slug_full)
     write_heartbeat(mem, "SUCCESS", topic, chapter)
     session_handoff(mem, topic, chapter, "SUCCESS")
 
-    log("bot", f"=== DONE: '{data['title']}' published to {chapter}/ ===")
+    log("brain", "=" * 60)
+    log("brain", f"DONE: '{data['title']}'")
+    log("brain", f"Published to: articles/{chapter}/{slug_full}.html")
+    log("brain", f"Total published: {mem['stats']['total_published']}")
     return 0
 
 if __name__ == "__main__":
