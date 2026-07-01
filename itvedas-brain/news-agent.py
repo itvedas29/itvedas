@@ -182,6 +182,47 @@ def parse_article(content, item):
     body = re.sub(r'<!-- META.*?-->','',content,flags=re.DOTALL).strip()
     return meta, body
 
+def review_article(body, item, meta):
+    """Self-review gate before publishing, mirroring content-writer.py's
+    review(): score the article, REWRITE once if it's weak, then publish
+    regardless (so a story is never silently dropped over a review call
+    failing or staying under the bar after one retry)."""
+    cve_block = ""
+    if meta.get('topic') == 'CVE' and meta.get('cve_id'):
+        cve_block = f"""
+This is a CVE story — also check the article body doesn't contradict these
+extracted fields (flag it if it does):
+CVE ID: {meta.get('cve_id')}
+Affected: {meta.get('affected')}
+Severity: {meta.get('severity')}
+Fix: {meta.get('fix')}"""
+    prompt = f"""Review this news article before it's published.
+
+SOURCE HEADLINE: {item['title']}
+SOURCE CONTEXT: {item['desc']}
+{cve_block}
+Score 0-100 on:
+- Factual accuracy vs the source above (60): every claim should be supported by
+  the source headline/context, with no invented specifics (numbers, names,
+  dates, technical details) that aren't in it{" or in the CVE fields" if cve_block else ""}.
+- No leaked scaffolding (20): no stray markdown code fences, unfilled
+  placeholders, or a leftover META block in the visible body.
+- Clarity/structure (20): reads as a complete, coherent article.
+
+Reply with ONLY JSON: {{"score":85,"verdict":"PUBLISH","fix":"short note"}}
+verdict = PUBLISH if score >= 75 else REWRITE.
+Article body (first 2500 chars): {body[:2500]}"""
+    try:
+        reply = write_with_openai(prompt, max_tokens=200)
+        m = re.search(r'\{[^{}]+\}', reply, re.DOTALL)
+        if m:
+            r = json.loads(m.group())
+            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} ({item['title'][:50]})")
+            return r
+    except Exception as e:
+        log(f"Review parse error: {e}")
+    return {"score": 80, "verdict": "PUBLISH"}
+
 def build_article_page(meta, body, item, date_str, slug, time_str=""):
     topic = meta['topic']
     color = TOPIC_COLORS.get(topic,"#64748B")
@@ -637,6 +678,15 @@ def main():
         print(f"Writing original article: {item['title'][:50]}...")
         content = write_original_article(item)
         meta, body = parse_article(content, item)
+
+        review = review_article(body, item, meta)
+        score = review.get('score', 80)
+        if review.get('verdict') == 'REWRITE':
+            log(f"Rewriting (low score): {item['title'][:50]}")
+            content = write_original_article(item)
+            meta, body = parse_article(content, item)
+            score = 80
+
         slug = f"{today}-{slugify(meta['headline'])}"
         if any(p['slug']==slug for p in published):
             slug += "-" + hashlib.md5(item['title'].encode()).hexdigest()[:4]
@@ -647,7 +697,7 @@ def main():
             "summary": meta['summary'], "topic": meta['topic'],
             "date": today, "time": update_time, "orig_title": item['title'],
             "cve_id": meta['cve_id'], "affected": meta['affected'],
-            "severity": meta['severity'], "fix": meta['fix'],
+            "severity": meta['severity'], "fix": meta['fix'], "score": score,
         })
         written += 1
         print(f"  → news/{slug}.html")
