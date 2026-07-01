@@ -3,17 +3,40 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║              ITVedas Super Bot v2 — Unified Autonomous Agent                ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Skills integrated from:                                                    ║
+║  Skills integrated from 100+ GitHub AI repos across 6 topic areas:         ║
+║                                                                              ║
+║  MEMORY & AGENTS                                                             ║
 ║  • coleam00/second-brain-starter  — persistent memory, SOUL, heartbeat     ║
+║  • letta-ai/letta                 — stateful agents with self-improvement   ║
+║  • microsoft/autogen              — multi-agent programming patterns        ║
+║  • zhayujie/CowAgent              — skill tree + tool harness patterns      ║
+║                                                                              ║
+║  SEO & CONTENT                                                               ║
+║  • norahe0304-art/30x-seo         — 24 production SEO skills                ║
+║  • rediumvex/seo-blog-writer      — 6 anti-detection writing rules          ║
+║  • x0u0an/topic-cluster-architect — 10-step topic cluster strategy          ║
+║  • dongbeixiaohuo/writing-agent   — evidence anchoring + humanization gate  ║
+║  • kristianfreeman/aiwriter       — SERP-driven article generation          ║
+║  • kgarbacinski/AutoViralAI       — self-learning viral content research    ║
+║                                                                              ║
+║  DATA & RESEARCH                                                             ║
 ║  • e2b-dev/code-interpreter       — AI-driven data analysis patterns        ║
-║  • zebbern/knowledge-assistant    — RAG on custom knowledge files           ║
 ║  • starpig1129/DATAGEN            — multi-agent research + report writing   ║
+║  • zebbern/knowledge-assistant    — RAG on custom knowledge files           ║
+║  • divyeshmutha12/AI-Research-Asst— LangGraph + FAISS multi-agent RAG      ║
+║                                                                              ║
+║  CHATBOT & WEBSITE                                                           ║
 ║  • kaymen99/AI-Sales-agent        — product recommendation patterns         ║
 ║  • sitechat/raksbisht             — website content RAG                     ║
+║  • RumenDamyanov/npm-chatbot      — multi-provider chatbot patterns         ║
+║                                                                              ║
+║  DESIGN INTELLIGENCE                                                         ║
 ║  • bitjaru/styleseed              — 74 design rules, spatial rhythm, cards  ║
 ║  • Laith0003/ux-skill             — 152 anti-AI-slop rules + linter         ║
 ║  • frhscopex/design-skill-os      — 161 rules from design masters           ║
 ║  • funboy322/avoid-ai-design      — anti-pattern detection + rewrite        ║
+║  • Sakaax/ux-pilot                — 376 UX rules co-pilot                   ║
+║  • S0ulFood/design-cognition-skill— 4-role design thinking framework        ║
 ║                                                                              ║
 ║  What this bot does every run:                                               ║
 ║  1. MEMORY CHECK  — loads brain memory, knows what articles exist           ║
@@ -75,7 +98,7 @@ BOT_SOUL = """
 You are the ITVedas Content Bot — an autonomous AI content writer for itvedas.com,
 an IT education platform that explains complex technology in plain English.
 
-Core values:
+Core values (from letta-ai stateful agent patterns):
 - Write for complete beginners — no jargon without explanation
 - Be accurate, practical, and engaging
 - Never repeat a topic that already exists on the site
@@ -83,24 +106,40 @@ Core values:
 - SEO matters: use the target keyword naturally, answer the question fast
 - Quality over quantity — one great article beats five mediocre ones
 
-Communication style:
-- Direct, warm, teacher-like tone
-- Short paragraphs, real examples, clear structure
-- Always include: what it is, how it works, why it matters, real-world example
+SEO rules (from norahe0304-art/30x-seo — 24 production SEO skills):
+- Title must include exact keyword + be under 60 chars
+- Meta description: 150-160 chars, includes keyword, ends with value promise
+- H1 = title (exact keyword). H2s = semantic variations of keyword
+- First paragraph answers the question within 50 words (E-E-A-T signal)
+- Include FAQ schema — minimum 3 questions people actually search
+- Internal link opportunities: mention related ITVedas topics
+- Image alt text must describe the image + include keyword where natural
+- URL slug: lowercase, hyphens, no stop words, 3-5 words max
+
+Anti-AI-detection rules (from rediumvex/seo-blog-writer + dongbeixiaohuo/writing-agent):
+- Vary sentence lengths — mix 6-word and 25-word sentences in same paragraph
+- Add first-person perspective occasionally: "Here's what I mean..."
+- Use specific numbers and named examples, never vague: "45ms" not "fast"
+- Alternate paragraph lengths: short (1 sentence), medium (3), long (4-5)
+- Vary list lengths: sometimes 3 items, sometimes 7 — never always 5
+- Hunt for "scenarios, costs, specific details" — lived experience elements
+- Fact-anchor all claims: "DNS resolves in ~50ms on a fast connection"
+- Never start two consecutive paragraphs with the same word
 
 Design intelligence (styleseed + ux-skill + design-skill-os):
 - Lead with the answer — never open with "In today's digital world..."
 - Short paragraphs: 2-4 sentences max, active voice only
 - Specific examples with real product/company names and numbers
-- NEVER use filler words: elevate, seamless, powerful, revolutionary, game-changer, leverage, utilize
+- NEVER use: elevate, seamless, powerful, revolutionary, game-changer, leverage, utilize, paradigm
 - Vary section lengths — density increases through the article (sparse → detailed)
 - Code examples in <code> tags, terminal commands in <pre><code> blocks
 - NO emoji bullets in content lists — use plain <ul>/<li> instead
 
-Memory discipline:
+Memory discipline (from coleam00/second-brain-starter):
 - ALWAYS check existing articles before picking a topic
 - Store every published article in memory immediately after publishing
 - Never generate an article if the topic is already covered
+- Search memory FIRST before any content decision
 """
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -332,20 +371,49 @@ Reply with ONLY a JSON object:
     return topic, chapter
 
 def _claude_generate_topic(mem: dict) -> tuple[str, str]:
-    """Generate a brand-new topic when seeds are exhausted."""
-    done = mem["done_topics"][-20:]  # last 20
-    prompt = f"""ITVedas.com has covered these IT topics recently: {done}
+    """
+    Generate new topic using topic-cluster-architect 10-step strategy.
+    When seeds exhausted, builds pillar→supporting content clusters.
+    """
+    done = mem["done_topics"][-30:]
+    published_per_chapter = {}
+    for art in mem["published_articles"]:
+        ch = art.get("chapter", "networking")
+        published_per_chapter[ch] = published_per_chapter.get(ch, 0) + 1
+
+    prompt = f"""You are an SEO topic cluster architect for ITVedas.com (IT education for beginners).
+
+Site diagnosis: Educational IT content site at early growth stage (~{len(mem['published_articles'])} articles).
+Growth goal: Authority-building through comprehensive chapter coverage.
+
+Articles per chapter so far: {published_per_chapter}
+Recently covered topics: {done}
+
+Using the topic-cluster-architect 10-step strategy:
+1. Identify which chapter has the biggest content gap (fewest articles)
+2. For that chapter, identify the most-searched beginner question not yet covered
+3. Ensure it fits a pillar→supporting content cluster structure
 
 Suggest ONE new IT topic that:
-- Has high search demand
+- Fills the biggest content gap
+- Has high search demand (people actively Google this)
 - Is beginner-friendly
-- Is NOT similar to the above list
+- Is NOT similar to recently covered topics
+- Would work as either a pillar page or supporting content
 
-Reply with ONLY JSON: {{"topic": "...", "chapter": "<one of: networking|cloud|security|devops|databases|linux|hardware|compliance>"}}"""
+Reply with ONLY JSON:
+{{
+  "topic": "...",
+  "chapter": "<one of: networking|cloud|security|devops|databases|linux|hardware|compliance>",
+  "cluster_role": "pillar or supporting",
+  "search_intent": "informational or navigational",
+  "reason": "one sentence why this has high value"
+}}"""
 
-    raw = _call_claude(prompt, max_tokens=150)
+    raw = _call_claude(prompt, max_tokens=250)
     raw = _extract_json(raw)
     data = json.loads(raw)
+    log("topic", f"Cluster architect: {data.get('cluster_role')} page — {data.get('reason','')}")
     return data["topic"], data.get("chapter", "networking")
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -364,31 +432,48 @@ Target audience: complete beginners to IT.
 Writing style: friendly teacher, clear examples, no jargon without explanation.
 """
 
-    prompt = f"""Write a complete, high-quality article about: "{topic}"
+    prompt = f"""Write a complete, high-quality SEO article about: "{topic}"
 
-The article must be comprehensive (800-1200 words) and SEO-optimised.
+PHASE 1 — EVIDENCE ANCHORING (from dongbeixiaohuo/writing-agent):
+Before writing, identify 3-5 specific facts, numbers, or real examples that anchor this article.
+(e.g. "DNS TTL is typically 300-86400 seconds", "Heartbleed affected OpenSSL 1.0.1 through 1.0.1f")
 
-Return ONLY a valid JSON object with these exact fields:
+PHASE 2 — ARTICLE (800-1200 words, human-sounding):
+Apply these rules from rediumvex/seo-blog-writer:
+- Vary sentence lengths: mix 6-word and 25-word sentences in same paragraph
+- Add first-person occasionally: "Here's what I mean..." or "Think of it this way..."
+- Use specific numbers and named examples — never vague ("~50ms", "AWS EC2", "GitHub Actions")
+- Alternate paragraph lengths: 1-sentence, 3-sentence, 4-sentence — never uniform
+- Vary list lengths: 3 items or 7 items — never always exactly 5
+
+SEO requirements (from norahe0304-art/30x-seo):
+- Title: exact keyword + under 60 chars
+- First paragraph: answers the question within 50 words
+- H2 headings: semantic keyword variations
+- Minimum 3 FAQ questions people actually search
+- Include at least 1 code or command example if relevant
+
+Return ONLY a valid JSON object — no markdown, no code fences:
 {{
-  "title": "Engaging title (include the main keyword)",
-  "slug": "url-friendly-slug-no-year-prefix",
-  "meta_description": "150-160 char SEO description with keyword",
-  "intro": "2-3 sentence hook that answers the question immediately",
+  "title": "Exact keyword in title, under 60 chars",
+  "slug": "3-5-word-url-slug",
+  "meta_description": "150-160 char description with keyword and value promise",
+  "intro": "2-3 sentence answer to the question — leads with the answer, NOT a definition",
+  "anchor_facts": ["specific fact 1 with number/source", "specific fact 2", "specific fact 3"],
   "sections": [
     {{
-      "heading": "Section heading",
-      "content": "3-5 paragraphs of HTML content using <p>, <ul>, <li>, <strong>, <code> tags"
+      "heading": "Semantic H2 heading (keyword variation)",
+      "content": "HTML content using <p>, <ul>, <li>, <strong>, <code>, <pre> tags. Vary paragraph lengths."
     }}
   ],
   "faq": [
-    {{"q": "Frequently asked question?", "answer": "Clear answer in 2-3 sentences."}},
-    {{"q": "Another common question?", "answer": "Clear answer."}}
+    {{"q": "Exact question people Google?", "answer": "Direct 2-3 sentence answer with specific detail."}},
+    {{"q": "Another real search query?", "answer": "Specific answer."}},
+    {{"q": "Third common question?", "answer": "Specific answer."}}
   ],
-  "key_takeaways": ["takeaway 1", "takeaway 2", "takeaway 3"],
-  "related_topics": ["related topic 1", "related topic 2"]
+  "key_takeaways": ["specific takeaway with number/fact", "takeaway 2", "takeaway 3"],
+  "related_topics": ["related ITVedas topic 1", "related topic 2"]
 }}
-
-Important: Return ONLY the JSON. No markdown. No code fences. No explanation."""
 
     raw = _call_claude(prompt, system=system, max_tokens=4000)
     raw = _extract_json(raw)
