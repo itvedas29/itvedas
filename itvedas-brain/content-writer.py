@@ -37,6 +37,7 @@ from email.mime.text import MIMEText
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
 from core.log import log as _core_log
+from core.indexnow import submit as _indexnow_submit
 
 
 def esc(value):
@@ -217,15 +218,33 @@ def slugify(text, maxlen=60):
 #  STEP 1 — pick keyword
 # ─────────────────────────────────────────────────────────────────
 def pick_keyword(state):
+    """Returns (keyword, topic, is_refresh, existing_entry).
+
+    is_refresh is True once every calendar keyword already has a published
+    article. Previously this reset used_keywords and started the calendar
+    over, publishing a second page targeting the same exact-match keyword
+    as an existing one — keyword cannibalization, splitting ranking signal
+    across two competing URLs instead of concentrating it. Refreshing the
+    oldest article in place (same URL, new content, dateModified bumped)
+    is a freshness signal instead of a duplicate-content liability.
+    """
     used = state.get("used_keywords", [])
     remaining = [(k, t) for (k, t) in CALENDAR if k not in used]
-    if not remaining:
-        log("Calendar complete — restarting cycle")
-        state["used_keywords"] = []
-        remaining = CALENDAR
-    keyword, topic = remaining[0]
-    log(f"Keyword: {keyword}  [{topic}]")
-    return keyword, topic
+    if remaining:
+        keyword, topic = remaining[0]
+        log(f"Keyword: {keyword}  [{topic}]")
+        return keyword, topic, False, None
+
+    log("Calendar complete — refreshing oldest article instead of duplicating")
+    calendar_keywords = {k for k, _ in CALENDAR}
+    candidates = [a for a in state.get("published", []) if a.get("keyword") in calendar_keywords]
+    if not candidates:
+        keyword, topic = CALENDAR[0]
+        log(f"Keyword: {keyword}  [{topic}]")
+        return keyword, topic, False, None
+    oldest = candidates[0]
+    log(f"Refreshing: {oldest['keyword']}  [{oldest['topic']}]  (articles/{oldest['file']})")
+    return oldest["keyword"], oldest["topic"], True, oldest
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 2 — write article
@@ -311,7 +330,7 @@ def extract_meta(content, keyword, topic):
 # ─────────────────────────────────────────────────────────────────
 #  STEP 5 — build full article page
 # ─────────────────────────────────────────────────────────────────
-def build_page(content, meta, date_str):
+def build_page(content, meta, date_str, modified_date=None, filename=None):
     topic   = meta["topic"]
     # title/description are Claude's free-form output — escape before
     # embedding in an attribute or text node.
@@ -319,6 +338,7 @@ def build_page(content, meta, date_str):
     desc    = esc(meta["description"])
     keyword = meta["keyword"]
     color   = color_for(topic)
+    modified_date = modified_date or date_str
 
     body = re.sub(r'<!-- META.*?-->', '', content, flags=re.DOTALL)
     body = body.replace('[AFFILIATE]', '').strip()
@@ -337,7 +357,7 @@ def build_page(content, meta, date_str):
                       f'<h2\\1 id="{anc}">{h}</h2>', body, count=1)
 
     rt = reading_time(body)
-    url = f"{SITE_URL}/articles/{date_str}-{topic.lower()}.html"
+    url = f"{SITE_URL}/articles/{filename or f'{date_str}-{topic.lower()}.html'}"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -359,7 +379,7 @@ def build_page(content, meta, date_str):
     "description": meta["description"], "keywords": keyword,
     "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
-    "datePublished": date_str, "dateModified": date_str,
+    "datePublished": date_str, "dateModified": modified_date,
     "articleSection": topic, "educationalLevel": "Beginner",
 })}
 </script>
@@ -442,6 +462,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
   <div class="badges">
     <span class="badge">{topic}</span>
     <span class="badge-info">📅 {date_str}</span>
+    {f'<span class="badge-info">🔄 Updated {modified_date}</span>' if modified_date != date_str else ''}
     <span class="badge-info">⏱ {rt}</span>
     <span class="badge-info">👶 Beginner friendly</span>
   </div>
@@ -687,7 +708,8 @@ def build_sitemap(state):
     for slug in CHAPTERS:
         urls.append(f'  <url><loc>{SITE_URL}/articles/{slug}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>')
     for a in state.get("published", []):
-        urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{a.get("date",today)}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
+        lastmod = a.get("updated") or a.get("date", today)
+        urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
     try:
         (ROOT / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -744,8 +766,9 @@ def main():
     state = load_state()
     state["last_run"] = datetime.datetime.now().isoformat()
 
-    # 1. keyword
-    keyword, topic = pick_keyword(state)
+    # 1. keyword (or, once the calendar is fully covered, the oldest
+    #    article to refresh in place instead of duplicating)
+    keyword, topic, is_refresh, existing = pick_keyword(state)
     # 2. write
     content = write_article(keyword, topic)
     # 3. review (one rewrite if weak)
@@ -760,28 +783,49 @@ def main():
     log(f"Title: {meta['title']}")
     # 5. build page
     today = datetime.date.today().isoformat()
-    page = build_page(content, meta, today)
-    fname = f"{today}-{topic.lower()}.html"
-    out = ARTICLES / fname
-    n = 1
-    while out.exists():
-        fname = f"{today}-{topic.lower()}-{n}.html"
-        out = ARTICLES / fname
-        n += 1
-    try:
-        out.write_text(page, encoding="utf-8")
-    except Exception as e:
-        log(f"Article write error: {e}")
-        raise
-    log(f"Published: articles/{fname}")
-    # 6. update state
     rt = reading_time(content)
-    state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-60:]
-    state["topic_counts"][topic] = state.get("topic_counts", {}).get(topic, 0) + 1
-    state["total"] = state.get("total", 0) + 1
-    state["published"] = (state.get("published", []) + [{
-        "file": fname, "title": meta["title"], "topic": topic,
-        "keyword": keyword, "date": today, "score": score, "rt": rt}])[-60:]
+
+    if is_refresh:
+        fname = existing["file"]
+        original_date = existing.get("date", today)
+        page = build_page(content, meta, original_date, modified_date=today, filename=fname)
+        out = ARTICLES / fname
+        try:
+            out.write_text(page, encoding="utf-8")
+        except Exception as e:
+            log(f"Article write error: {e}")
+            raise
+        log(f"Refreshed: articles/{fname}")
+        # 6. update state — same URL, updated in place, moved to the end
+        # so it shows up as "latest" (it just got fresher content).
+        existing.update({
+            "title": meta["title"], "topic": topic, "keyword": keyword,
+            "score": score, "rt": rt, "updated": today,
+        })
+        state["published"] = [a for a in state["published"] if a is not existing] + [existing]
+        state["total"] = state.get("total", 0) + 1
+    else:
+        fname = f"{today}-{topic.lower()}.html"
+        out = ARTICLES / fname
+        n = 1
+        while out.exists():
+            fname = f"{today}-{topic.lower()}-{n}.html"
+            out = ARTICLES / fname
+            n += 1
+        page = build_page(content, meta, today, filename=fname)
+        try:
+            out.write_text(page, encoding="utf-8")
+        except Exception as e:
+            log(f"Article write error: {e}")
+            raise
+        log(f"Published: articles/{fname}")
+        # 6. update state
+        state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-60:]
+        state["topic_counts"][topic] = state.get("topic_counts", {}).get(topic, 0) + 1
+        state["total"] = state.get("total", 0) + 1
+        state["published"] = (state.get("published", []) + [{
+            "file": fname, "title": meta["title"], "topic": topic,
+            "keyword": keyword, "date": today, "score": score, "rt": rt}])[-60:]
     # 7. homepage, chapters, sitemap
     update_homepage(state)
     build_chapter_pages(state)
@@ -789,6 +833,8 @@ def main():
     save_state(state)
     # 8. email
     send_email(meta, fname, score)
+    # 9. tell Bing/Yandex about it now instead of waiting for their next crawl
+    _indexnow_submit(["/", f"/articles/{fname}", f"/articles/{TOPIC_TO_SLUG.get(topic, topic.lower())}/"], log_fn=log)
 
     log(f"DONE. Article #{state['total']}: {meta['title']} ({score}/100)")
     log("=" * 55)

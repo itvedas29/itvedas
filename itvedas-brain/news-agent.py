@@ -15,6 +15,7 @@ import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys, html
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude
 from core.log import log as _core_log
+from core.indexnow import submit as _indexnow_submit
 
 ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "")
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
@@ -730,6 +731,7 @@ def main():
     # Write an original article for every fresh story this run (bounded by
     # MAX_NEW_ARTICLES_PER_RUN as a cost/runtime safety cap).
     written = 0
+    new_urls = []
     for item in new_items[:MAX_NEW_ARTICLES_PER_RUN]:
         print(f"Writing original article: {item['title'][:50]}...")
         content = write_original_article(item)
@@ -756,6 +758,7 @@ def main():
             "severity": meta['severity'], "fix": meta['fix'], "score": score,
         })
         written += 1
+        new_urls.append(f"/news/{slug}.html")
         print(f"  → news/{slug}.html")
 
     published = published[:40]  # keep last 40
@@ -779,6 +782,11 @@ def main():
 
     # Surface the latest Security/CVE stories on the homepage too
     update_homepage_security(published)
+
+    # Tell Bing/Yandex about anything new now instead of waiting for their
+    # next crawl (only worth pinging if this run actually published something)
+    if new_urls:
+        _indexnow_submit(new_urls + ["/news.html", "/security-news.html", "/"], log_fn=log)
 
     print(f"Done. Wrote {written} new articles. Index has {len(published)} stories.")
 

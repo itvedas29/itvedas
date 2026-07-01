@@ -31,7 +31,11 @@ Two scripts run unattended on a schedule (`.github/workflows/write-article.yml`)
   calendar, writes a full article with Claude, self-reviews it, builds the
   styled HTML page, publishes it to `articles/`, refreshes the homepage
   "Latest Articles" section and chapter landing pages, and regenerates
-  `sitemap.xml`. Runs Mon/Wed/Fri.
+  `sitemap.xml`. Runs Mon/Wed/Fri. Once every calendar keyword already has
+  a published article, it stops publishing new pages for keywords it
+  already ranks for and instead refreshes the oldest article in place
+  (same URL, new content, `dateModified` bumped) — a freshness signal
+  instead of a second page competing for the same exact-match keyword.
 - **`itvedas-brain/news-agent.py`** — fetches RSS headlines (including
   security/CVE feeds), generates original commentary with Claude for every
   fresh story (capped at `MAX_NEW_ARTICLES_PER_RUN`), and publishes to
@@ -42,6 +46,13 @@ Two scripts run unattended on a schedule (`.github/workflows/write-article.yml`)
 Both scripts require `ANTHROPIC_API_KEY` and exit immediately if it's
 missing. Optional env vars (`GA4_ID`, `NOTIFY_EMAIL`, `SMTP_FROM`,
 `SMTP_PASS`) are documented in the docstring at the top of `content-writer.py`.
+
+Both scripts also ping [IndexNow](https://www.indexnow.org) (`itvedas-brain/core/indexnow.py`)
+after publishing, so Bing/Yandex pick up new or refreshed pages immediately
+instead of waiting for their next crawl. `<KEY>.txt` at the repo root is the
+public ownership-verification file IndexNow requires — it's not a secret.
+Google has no equivalent public instant-indexing API, so this doesn't cover
+Google; discovery there still relies on `sitemap.xml` + normal crawling.
 
 Workflow cron schedules are in UTC; comments in
 `.github/workflows/write-article.yml` note the equivalent IST time.
