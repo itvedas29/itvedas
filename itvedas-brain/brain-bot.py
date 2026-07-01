@@ -308,13 +308,22 @@ class BrainMemory:
     def ensure_soul(self) -> None:
         """Create architectural memory files if missing (second-brain pattern)."""
         soul = f"""# ITVedas Brain — SOUL
-You are the ITVedas Content Brain: autonomous, quality-obsessed, memory-persistent.
+You are the ITVedas Content Brain: autonomous, traffic-obsessed, memory-persistent.
 
-Mission: build the most comprehensive beginner IT education site in plain English.
-One article per run. Never repeat. Always improve. Write for humans, not bots.
+PRIMARY MISSION: Drive as much organic web traffic to itvedas.com as possible.
+Every article must target a real search query people type into Google.
+Quality matters only because quality = rankings = traffic. Write to rank, not to impress.
 
-Principles:
-- Answer the question in the first sentence, not the 50th word
+Traffic-first principles:
+- Target keywords with high search volume (beginner "what is X" and "how does X work" queries)
+- Title must be the exact phrase someone searches — front-load the keyword
+- Answer the question in the FIRST sentence — Google rewards direct answers (featured snippets)
+- 900–1500 words minimum — longer content ranks higher for competitive keywords
+- FAQ section targets "People Also Ask" boxes — major traffic multiplier
+- Internal links pass authority and keep visitors on site longer
+- Every article should be the BEST result for its keyword on Google
+
+Writing principles:
 - Specific numbers beat vague claims ("~50ms" beats "fast")
 - Real names beat generics ("AWS Lambda" beats "a serverless platform")
 - Short paragraphs beat walls of text
@@ -324,10 +333,16 @@ Principles:
 Site: {SITE_URL}
 Repo: {GITHUB_REPO}
 Type: IT education for complete beginners
-Goal: 200+ articles covering all 9 chapters
+Primary Goal: MAXIMIZE ORGANIC SEARCH TRAFFIC — more visitors, higher rankings
+Secondary Goal: Build 200+ articles covering all 9 chapters
 
 Chapters: {list(CHAPTERS.keys())}
-Strategy: balance coverage, build clusters (pillar + supporting)
+Traffic strategy:
+- Prioritise HIGH SEARCH VOLUME topics first (beginner questions get most searches)
+- Build topic clusters: one pillar article + 3-5 supporting articles per cluster
+- Target "People Also Ask" with FAQ sections on every article
+- Internal linking between related articles boosts all pages
+- Aim for featured snippets: direct answers within first 50 words
 """
         if not self._soul_file.exists():
             self._soul_file.write_text(soul)
@@ -568,15 +583,18 @@ def task_clarifier(topic: str, chapter: str, mem: BrainMemory) -> dict:
 
     prompt = f"""Task clarifier for ITVedas.com content bot.
 
+PRIMARY GOAL: Validate that writing about "{topic}" will drive organic Google traffic.
+
 Validate writing an article about: "{topic}"
 Chapter: {chapter} | Articles in chapter: {len(ch_articles)} | Total articles: {len(mem.done_topics)}
 
 Assess:
-1. GOAL — Is "{topic}" specific and searchable? What exact question does it answer?
-2. SCOPE — Single article or needs to be split? (split if 2+ distinct sub-topics)
-3. EVIDENCE — Identify 3 specific anchor facts with numbers/names/dates
-4. ACCEPTANCE — Define "done": min sections, FAQ count, code example needed?
-5. RISK — Accuracy risks? (deprecated tech, evolving standards, controversial claims?)
+1. TRAFFIC — Is "{topic}" a phrase people search on Google? Estimate search intent and volume.
+2. GOAL — What exact question does this answer? Refine title to match search query exactly.
+3. SCOPE — Single article or needs to be split? (split if 2+ distinct sub-topics)
+4. EVIDENCE — Identify 3 specific anchor facts with numbers/names/dates
+5. ACCEPTANCE — Define "done": min sections, FAQ count (FAQ = People Also Ask traffic), code example?
+6. RISK — Accuracy risks? (deprecated tech, evolving standards, controversial claims?)
 
 Return ONLY JSON (no markdown, no fences):
 {{
@@ -684,15 +702,20 @@ python itvedas-brain/brain-bot.py
 
 WRITING_SYSTEM = """You are the ITVedas Content Brain — the autonomous writer behind itvedas.com.
 
-TARGET: Complete beginners in IT. They may not know what a server is. Explain everything.
+PRIMARY GOAL: Write articles that RANK ON GOOGLE and drive organic traffic.
+Every word, heading, and sentence serves one purpose: get this article to page 1 for its keyword.
 
-SEO RULES (30x-seo — 24 production skills):
-- Title: exact keyword, under 60 chars, keyword front-loaded
-- Meta description: 150-160 chars, includes keyword, ends with value promise
-- H1 = title. H2s = semantic keyword variations (LSI — different ways people search the same thing)
-- First paragraph: answers the question within 50 words — E-E-A-T signal
-- FAQ: real questions people search, not made-up questions
-- Slug: 3-5 words, lowercase, hyphens, no stop words, no dates
+TARGET READER: Complete beginners in IT. They may not know what a server is. Explain everything.
+
+TRAFFIC & SEO RULES (30x-seo — 24 production skills):
+- Title: the EXACT phrase people search on Google, under 60 chars, keyword first
+- Meta description: 150-160 chars, includes keyword, ends with a value promise — affects click-through rate
+- H1 = title exactly. H2s = semantic variations (LSI) — other ways people search the same question
+- First 50 words MUST directly answer the question — targets Google Featured Snippet (huge traffic boost)
+- FAQ section = targets "People Also Ask" boxes on Google — each FAQ is a traffic entry point
+- Slug: 3-5 words, lowercase, hyphens, no stop words — clean URLs rank better
+- Word count: 900–1500 words minimum — longer content wins for competitive keywords
+- Internal links: mention related ITVedas topics naturally — keeps visitors on site, passes authority
 
 ANTI-AI-DETECTION (seo-blog-writer — 6 rules + writing-agent humanization):
 1. Vary sentence lengths: mix 6-word and 25-word sentences in the SAME paragraph
@@ -708,7 +731,7 @@ FORBIDDEN (design-skill-os + avoid-ai-design 161 rules):
              delve, invaluable, meticulous, pivotal, transformative, unlock, harness, robust
 - NO uniform paragraphs — vary density through the article
 - NO vague claims — every claim needs a number, name, or example
-- Lead with the answer, not a definition
+- Lead with the answer, not a definition — definitions are for encyclopedias, not search results
 """
 
 def pick_topic(mem: BrainMemory) -> tuple[str, str]:
@@ -749,18 +772,24 @@ def _claude_pick(candidates: list, mem: BrainMemory) -> tuple[str, str]:
     recent = [a["title"] for a in mem.published[-5:]]
     clist  = "\n".join(f"{i+1}. [{ch}] {t}" for i,(t,ch,_) in enumerate(candidates))
 
-    prompt = f"""Content strategist for ITVedas.com — IT education for beginners.
+    prompt = f"""Traffic strategist for ITVedas.com — IT education for beginners.
+
+PRIMARY GOAL: Maximise organic Google search traffic to itvedas.com.
 
 Recent articles: {recent}
 Total: {len(mem.done_topics)} topics done
 
-Pick the BEST topic to write next from these candidates.
-Prioritise: highest search demand + fills content gap + not similar to recent articles.
+Pick the topic with the HIGHEST ESTIMATED MONTHLY SEARCH VOLUME from these candidates.
+Criteria in order of priority:
+1. Most people search for this exact phrase on Google every month
+2. Beginner-friendly "what is X" or "how does X work" queries get the most searches
+3. Not too similar to recent articles (avoid cannibalisation)
+4. Can realistically rank on page 1 for a beginner IT education site
 
 {clist}
 
 Return ONLY JSON (no fences):
-{{"choice": <1-{len(candidates)}>, "reason": "<one sentence why>"}}"""
+{{"choice": <1-{len(candidates)}>, "reason": "<one sentence on why this has highest search demand>"}}"""
 
     raw  = _call_claude(prompt, max_tokens=200)
     data = json.loads(_extract_json(raw))
@@ -779,26 +808,29 @@ def _cluster_architect(mem: BrainMemory) -> tuple[str, str]:
         ch = art.get("chapter","networking")
         counts[ch] = counts.get(ch,0) + 1
 
-    prompt = f"""SEO topic cluster architect for ITVedas.com.
+    prompt = f"""Traffic-focused SEO topic architect for ITVedas.com.
+
+PRIMARY GOAL: Find the topic that will bring the most new visitors from Google search.
 
 Coverage per chapter: {counts}
 Recently done: {mem.done_topics[-15:]}
 Total articles: {len(mem.published)}
 
-10-step cluster strategy:
-1. Identify chapter with biggest gap (fewest articles vs importance)
-2. Find most-searched beginner question NOT yet covered
-3. Classify: pillar (comprehensive overview) or supporting (deep dive specific aspect)
-4. Verify: specific keyword phrase people search?
+Traffic-first cluster strategy:
+1. Identify the beginner IT question with the HIGHEST MONTHLY SEARCH VOLUME not yet covered
+2. Prefer "what is X", "how does X work", "X vs Y" formats — these dominate search volume
+3. Classify: pillar (high-volume overview, 1500+ words) or supporting (long-tail specific)
+4. The topic must be something real beginners Google — not an expert concept
 
-Suggest ONE high-value topic.
+Suggest ONE topic that will drive maximum organic traffic when it ranks.
 
 Return ONLY JSON (no fences):
 {{
   "topic": "...",
   "chapter": "networking|cloud|security|devops|databases|linux|hardware|compliance|cve",
   "cluster_role": "pillar|supporting",
-  "reason": "one sentence gap this fills"
+  "estimated_search_intent": "informational|navigational",
+  "reason": "one sentence on why this keyword has high traffic potential"
 }}"""
 
     raw  = _call_claude(prompt, max_tokens=300)
