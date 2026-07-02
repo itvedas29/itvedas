@@ -918,8 +918,18 @@ Return ONLY valid JSON — no markdown fences, no ```json, just raw JSON:
   "related_topics": ["related IT topic 1", "related topic 2", "related topic 3"]
 }}"""
 
-    raw  = _call_claude(prompt, system=WRITING_SYSTEM, max_tokens=4500)
-    data = json.loads(_extract_json(raw))
+    # Retry up to 3 times — Haiku occasionally returns malformed JSON
+    data = None
+    for attempt in range(3):
+        try:
+            raw  = _call_claude(prompt, system=WRITING_SYSTEM, max_tokens=4500)
+            data = _parse_json_safe(raw)
+            break
+        except Exception as e:
+            log("writer", f"JSON parse attempt {attempt+1}/3 failed: {e}")
+            if attempt == 2:
+                raise
+            time.sleep(3)
 
     data["chapter"]       = wm.chapter
     data["chapter_name"]  = ch["name"]
@@ -1837,6 +1847,30 @@ def _extract_json(text: str) -> str:
     return text
 
 
+def _parse_json_safe(text: str) -> dict:
+    """Parse JSON with auto-repair for common Claude output issues."""
+    raw = _extract_json(text)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    # Attempt repair: remove trailing commas before ] or }
+    import re as _re
+    fixed = _re.sub(r',\s*([}\]])', r'\1', raw)
+    try:
+        return json.loads(fixed)
+    except json.JSONDecodeError:
+        pass
+    # Last resort: truncate at last valid closing brace
+    for i in range(len(fixed) - 1, 0, -1):
+        if fixed[i] == '}':
+            try:
+                return json.loads(fixed[:i+1])
+            except json.JSONDecodeError:
+                continue
+    raise ValueError(f"Could not parse JSON from Claude response (length={len(text)})")
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #  BURST MODE AUTO-STOP
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1950,13 +1984,13 @@ def main() -> int:
     try:
         wm.article_data = write_article(wm, cve_data=cve_data)
     except Exception as e:
-        log("writer", f"FAILED: {e}")
+        log("writer", f"FAILED: {e} — skipping topic, next run will pick a different one")
         mem.record_failure(wm.topic, str(e))
         forest.update(wm.topic, wm.chapter, "failed", notes=str(e))
         mem.save()
         write_heartbeat(mem, "WRITE_FAILED", wm)
         session_handoff(mem, wm, "WRITE_FAILED", forest)
-        return 1
+        return 0  # exit 0 so the commit step still runs and memory is saved
 
     # ── QA GATE ──────────────────────────────────────────────────────────────
     wm.article_data = qa_review(wm.article_data)
