@@ -1838,6 +1838,51 @@ def _extract_json(text: str) -> str:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  BURST MODE AUTO-STOP
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _switch_cron_to_daily() -> None:
+    """
+    Once all seed topics are published, patch brain-bot.yml cron back to
+    daily (0 8 * * *) so the bot stops running every 15 minutes.
+    """
+    wf_path = ".github/workflows/brain-bot.yml"
+    url     = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{wf_path}"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+    }
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        res = json.load(urllib.request.urlopen(req, timeout=30))
+        sha     = res.get("sha")
+        content = base64.b64decode(res["content"]).decode("utf-8")
+
+        if "*/15 * * * *" not in content:
+            log("cron", "Already on daily schedule — skipping patch")
+            return
+
+        updated = content.replace(
+            "- cron: '*/15 * * * *'   # every 15 minutes — burst mode to publish all seeds fast",
+            "- cron: '0 8 * * *'   # daily at 8am UTC — all seeds published"
+        )
+        payload = {
+            "message": "bot: burst complete — switch cron back to daily [skip ci]",
+            "content": base64.b64encode(updated.encode("utf-8")).decode("ascii"),
+            "branch":  GITHUB_BRANCH,
+            "sha":     sha,
+        }
+        req = urllib.request.Request(
+            url, data=json.dumps(payload).encode(), headers=headers, method="PUT"
+        )
+        urllib.request.urlopen(req, timeout=30)
+        log("cron", "Cron switched to daily — burst mode complete!")
+    except Exception as e:
+        log("cron", f"Could not patch cron (non-blocking): {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  MAIN — FULL PIPELINE
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1858,6 +1903,16 @@ def main() -> int:
     mem.load()
     mem.sync_disk()
     mem.ensure_soul()
+
+    # ── BURST MODE: auto-switch to daily once all seeds are done ─────────────
+    seeds_remaining = sum(
+        1 for ch, topics in TOPIC_SEEDS.items()
+        for t in topics if not mem.has_topic(t)
+    )
+    log("brain", f"Seeds remaining: {seeds_remaining}")
+    if seeds_remaining == 0:
+        log("brain", "All seeds published — switching cron back to daily (0 8 * * *)")
+        _switch_cron_to_daily()
 
     # ── AUDIT MODE ───────────────────────────────────────────────────────────
     if RUN_MODE == "audit":
