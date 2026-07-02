@@ -62,7 +62,7 @@ GITHUB_BRANCH   = os.environ.get("GITHUB_BRANCH", "main")
 MODEL = "claude-sonnet-4-5"
 THINKING_BUDGET = 8000          # tokens for extended thinking
 MAX_ITERATIONS  = 30
-PORT            = int(os.environ.get("PORT", 5000))
+PORT            = int(os.environ.get("PORT", 5001))
 
 ROOT      = pathlib.Path(__file__).resolve().parent.parent
 BRAIN_DIR = pathlib.Path(__file__).resolve().parent
@@ -678,32 +678,56 @@ def agentic_loop_stream(user_message: str, history: list) -> Generator[str, None
 #  FLASK WEB APP
 # ═══════════════════════════════════════════════════════════════════════════════
 if FLASK_OK:
+    import hashlib, secrets
+    from flask import Flask, Response, request, stream_with_context, session, redirect, url_for
+
     app = Flask(__name__, static_folder=None)
-    # In-memory conversation history per session (simple: single user)
+    app.secret_key = os.environ.get("FLASK_SECRET", secrets.token_hex(32))
+
+    # Password protection — set AGENT_PASSWORD env var (defaults to "itvedas")
+    AGENT_PASSWORD = os.environ.get("AGENT_PASSWORD", "itvedas")
+
+    def _check_auth() -> bool:
+        return session.get("authed") is True
+
+    # In-memory conversation history per session (single user)
     _history: list = []
+
+    @app.route("/login", methods=["GET", "POST"])
+    def login():
+        error = ""
+        if request.method == "POST":
+            pw = request.form.get("password", "")
+            if pw == AGENT_PASSWORD:
+                session["authed"] = True
+                return redirect("/")
+            error = "Wrong password"
+        err_html = f'<div class="error">{error}</div>' if error else ""
+        return Response(LOGIN_HTML.replace("{{ERROR}}", err_html), mimetype="text/html")
+
+    @app.route("/logout")
+    def logout():
+        session.clear()
+        return redirect("/login")
 
     @app.route("/")
     def index():
+        if not _check_auth():
+            return redirect("/login")
         return Response(CHAT_HTML, mimetype="text/html")
 
     @app.route("/chat", methods=["POST"])
     def chat():
+        if not _check_auth():
+            return {"error": "unauthorized"}, 401
         global _history
         data = request.get_json()
         msg = (data or {}).get("message", "").strip()
         if not msg:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
-        def generate():
-            for chunk in agentic_loop_stream(msg, _history):
-                yield chunk
-
-        # We need to update history after streaming — do it via the full call approach
-        # For simplicity, use non-streaming to update history, stream to UI
         def generate_and_track():
-            # Collect what the agent emitted and update history after
             all_chunks = list(agentic_loop_stream(msg, _history))
-            # Update history with just the user/final-answer pair (keep it simple)
             assistant_text = ""
             for chunk in all_chunks:
                 try:
@@ -715,7 +739,6 @@ if FLASK_OK:
             if assistant_text:
                 _history.append({"role": "user", "content": msg})
                 _history.append({"role": "assistant", "content": assistant_text})
-                # Keep last 20 turns
                 if len(_history) > 40:
                     _history = _history[-40:]
             for chunk in all_chunks:
@@ -729,6 +752,8 @@ if FLASK_OK:
 
     @app.route("/clear", methods=["POST"])
     def clear():
+        if not _check_auth():
+            return {"error": "unauthorized"}, 401
         global _history
         _history = []
         return {"ok": True}
@@ -736,6 +761,47 @@ if FLASK_OK:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  CHAT UI HTML
 # ═══════════════════════════════════════════════════════════════════════════════
+LOGIN_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ITVedas Agent — Login</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#0A0A0F;display:flex;align-items:center;justify-content:center;font-family:'Inter',-apple-system,sans-serif}
+.card{background:#12121A;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:40px;width:360px}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo-icon{width:44px;height:44px;background:#FF6B35;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+h1{font-size:20px;font-weight:700;color:#E8E8F0}
+p{font-size:13px;color:#8888A8;margin-top:4px}
+label{display:block;font-size:12px;color:#8888A8;margin:20px 0 6px}
+input{width:100%;background:#1A1A26;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;color:#E8E8F0;font-size:14px;outline:none}
+input:focus{border-color:rgba(255,107,53,.5)}
+.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:8px 12px;font-size:13px;color:#FCA5A5;margin-top:12px}
+button{width:100%;background:#FF6B35;border:none;border-radius:10px;padding:13px;color:white;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px}
+button:hover{opacity:.9}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div>
+      <h1>ITVedas Agent</h1>
+      <p>Private AI — site owner only</p>
+    </div>
+  </div>
+  <form method="POST">
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Enter password" autofocus autocomplete="current-password">
+    {{ERROR}}
+    <button type="submit">Sign In</button>
+  </form>
+</div>
+</body>
+</html>"""
+
 CHAT_HTML = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1216,6 +1282,8 @@ function renderMarkdown(s) {
 if FLASK_OK:
     @app.route("/stream")
     def stream():
+        if not _check_auth():
+            return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
         global _history
         msg = request.args.get("msg", "").strip()
         if not msg:

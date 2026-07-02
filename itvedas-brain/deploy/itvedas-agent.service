@@ -1,0 +1,17 @@
+[Unit]
+Description=ITVedas AI Agent
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/itvedas/itvedas-brain
+EnvironmentFile=/root/itvedas/itvedas-brain/.env
+ExecStart=/root/itvedas/itvedas-brain/venv/bin/python3 agent.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
