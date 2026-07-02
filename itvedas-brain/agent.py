@@ -727,9 +727,10 @@ if FLASK_OK:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
         def generate_and_track():
-            all_chunks = list(agentic_loop_stream(msg, _history))
+            global _history
+            chunks = list(agentic_loop_stream(msg, _history))
             assistant_text = ""
-            for chunk in all_chunks:
+            for chunk in chunks:
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
@@ -741,8 +742,7 @@ if FLASK_OK:
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            for chunk in all_chunks:
-                yield chunk
+            yield from chunks
 
         return Response(
             stream_with_context(generate_and_track()),
@@ -1290,9 +1290,10 @@ if FLASK_OK:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
         def generate_and_track():
-            all_chunks = list(agentic_loop_stream(msg, _history))
+            global _history
+            chunks = list(agentic_loop_stream(msg, _history))
             assistant_text = ""
-            for chunk in all_chunks:
+            for chunk in chunks:
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
@@ -1304,8 +1305,7 @@ if FLASK_OK:
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            for chunk in all_chunks:
-                yield chunk
+            yield from chunks
 
         return Response(
             stream_with_context(generate_and_track()),
