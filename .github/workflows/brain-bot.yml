@@ -2,7 +2,7 @@ name: ITVedas Brain Bot — Autonomous Content Publisher
 
 on:
   schedule:
-    - cron: '0 8 * * *'   # every day at 8am UTC
+    - cron: '*/15 * * * *'   # every 15 minutes — burst mode to publish all seeds fast
   workflow_dispatch:
     inputs:
       bot_mode:
