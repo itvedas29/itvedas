@@ -1487,7 +1487,7 @@ YOUR MISSION THIS RUN:
    - GA4 tracking: G-D98BFZSJYP
 4. Save the article to the correct chapters/CHAPTER/SLUG.html path in GitHub
 5. Read the chapter's index file and add the new article to the article list
-6. Update itvedas-brain/state/heartbeat.json with timestamp and publish count
+6. Update itvedas-brain/memory/heartbeat.json with timestamp and publish count
 7. Update itvedas-brain/memory/brain_memory.json to mark the topic as published
 
 CONTENT RULES:
