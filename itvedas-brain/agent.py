@@ -1130,12 +1130,7 @@ function streamResponse(message) {
     return textBubble;
   }
 
-  const es = new EventSource(`/stream?msg=${encodeURIComponent(message)}`);
-
-  es.onmessage = (e) => {
-    let obj;
-    try { obj = JSON.parse(e.data); } catch { return; }
-
+  function handleChunk(obj) {
     if (obj.type === 'thinking') {
       if (!thinkingDiv) {
         thinkingDiv = document.createElement('div');
@@ -1169,7 +1164,7 @@ function streamResponse(message) {
           <span class="tool-status">running</span>
         </div>
         <div class="tool-args">${escHtml(argsStr)}</div>
-        <div class="tool-result" id="tr-${Date.now()}"></div>`;
+        <div class="tool-result"></div>`;
       body.appendChild(currentToolDiv);
       scrollBottom();
     }
@@ -1190,7 +1185,6 @@ function streamResponse(message) {
       scrollBottom();
     }
     else if (obj.type === 'done') {
-      es.close();
       if (textBubble) {
         textBubble.innerHTML = renderMarkdown(escHtml(textContent));
       }
@@ -1204,16 +1198,39 @@ function streamResponse(message) {
       thinkingEl.classList.remove('active');
       scrollBottom();
     }
-  };
+  }
 
-  es.onerror = () => {
-    es.close();
+  fetch('/stream', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({msg: message})
+  }).then(resp => {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    function read() {
+      reader.read().then(({done, value}) => {
+        if (done) return;
+        buf += decoder.decode(value, {stream: true});
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try { handleChunk(JSON.parse(line.slice(6))); } catch {}
+        }
+        read();
+      });
+    }
+    read();
+  }).catch(() => {
     const bubble = getTextBubble();
     if (!textContent) bubble.textContent = '⚠️ Connection error. Is the agent server running?';
     isGenerating = false;
     sendBtn.disabled = false;
     thinkingEl.classList.remove('active');
-  };
+  });
 }
 
 // ── SSE via GET for EventSource
@@ -1280,12 +1297,15 @@ function renderMarkdown(s) {
 
 # SSE route via GET for EventSource compatibility
 if FLASK_OK:
-    @app.route("/stream")
+    @app.route("/stream", methods=["GET", "POST"])
     def stream():
         if not _check_auth():
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
         global _history
-        msg = request.args.get("msg", "").strip()
+        if request.method == "POST":
+            msg = (request.json or {}).get("msg", "").strip()
+        else:
+            msg = request.args.get("msg", "").strip()
         if not msg:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
