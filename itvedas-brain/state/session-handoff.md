@@ -1,5 +1,5 @@
 # ITVedas Brain — Session Handoff
-Generated: 2026-07-03T15:58:38.748427
+Generated: 2026-07-03T20:36:54.241514
 Model: claude-haiku-4-5-20251001
 
 ## This Session
@@ -11,8 +11,8 @@ Model: claude-haiku-4-5-20251001
 ## Brain State
 - Articles published: 111
 - Topics covered: 114
-- Failed: 2
-- Runs: 78
+- Failed: 3
+- Runs: 79
 
 ## Coverage
 - networking: 28
