@@ -58,11 +58,10 @@ GITHUB_TOKEN    = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO     = os.environ.get("GITHUB_REPOSITORY", "itvedas29/itvedas")
 GITHUB_BRANCH   = os.environ.get("GITHUB_BRANCH", "main")
 
-# Use Sonnet for "think advanced" — with extended thinking enabled
-MODEL = "claude-sonnet-4-5"
-THINKING_BUDGET = 8000          # tokens for extended thinking
-MAX_ITERATIONS  = 30
+MODEL = "claude-haiku-4-5-20251001"
+MAX_ITERATIONS  = 20
 PORT            = int(os.environ.get("PORT", 5001))
+AUTO_INTERVAL   = int(os.environ.get("AUTO_INTERVAL", 900))  # seconds between autonomous runs (default 15 min)
 
 ROOT      = pathlib.Path(__file__).resolve().parent.parent
 BRAIN_DIR = pathlib.Path(__file__).resolve().parent
@@ -565,34 +564,28 @@ def dispatch_tool(name: str, args: dict) -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ANTHROPIC CLIENT (raw HTTP — no SDK dependency)
 # ═══════════════════════════════════════════════════════════════════════════════
-def _claude(messages: list, stream: bool = False) -> Any:
+def _claude(messages: list) -> Any:
     payload = {
         "model": MODEL,
-        "max_tokens": 16000,
+        "max_tokens": 4096,
         "system": SYSTEM,
         "tools": TOOLS,
         "messages": messages,
-        "thinking": {"type": "enabled", "budget_tokens": THINKING_BUDGET},
     }
     body = json.dumps(payload).encode()
     headers = {
         "x-api-key": ANTHROPIC_KEY,
         "anthropic-version": "2023-06-01",
-        "anthropic-beta": "interleaved-thinking-2025-05-14",
         "content-type": "application/json",
     }
-    if stream:
-        payload["stream"] = True
-        headers["accept"] = "text/event-stream"
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=body, headers=headers, method="POST"
     )
-    return urllib.request.urlopen(req, timeout=120)
+    return urllib.request.urlopen(req, timeout=60)
 
 def call_claude_full(messages: list) -> dict:
-    """Non-streaming call — returns full response dict."""
-    with _claude(messages, stream=False) as r:
+    with _claude(messages) as r:
         return json.loads(r.read())
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -727,22 +720,21 @@ if FLASK_OK:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
         def generate_and_track():
-            all_chunks = list(agentic_loop_stream(msg, _history))
+            global _history
             assistant_text = ""
-            for chunk in all_chunks:
+            for chunk in agentic_loop_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
                         assistant_text += obj.get("text", "")
                 except Exception:
                     pass
+                yield chunk
             if assistant_text:
                 _history.append({"role": "user", "content": msg})
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            for chunk in all_chunks:
-                yield chunk
 
         return Response(
             stream_with_context(generate_and_track()),
@@ -757,6 +749,24 @@ if FLASK_OK:
         global _history
         _history = []
         return {"ok": True}
+
+    @app.route("/auto-log")
+    def auto_log():
+        if not _check_auth():
+            return redirect("/login")
+        entries = list(reversed(_auto_log[-20:]))
+        rows = "".join(
+            f'<div style="border-bottom:1px solid #1A1A26;padding:14px 0"><div style="font-size:11px;color:#8888A8;margin-bottom:6px">{e["time"]}</div>'
+            f'<div style="font-size:13px;color:#E8E8F0;line-height:1.6">{html.escape(e["summary"])}</div></div>'
+            for e in entries
+        ) or '<div style="color:#8888A8;padding:20px 0">No autonomous runs yet — first run starts 30s after startup.</div>'
+        page = f"""<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Auto Log — ITVedas Agent</title>
+<style>*{{box-sizing:border-box;margin:0;padding:0}}body{{background:#0A0A0F;color:#E8E8F0;font-family:Inter,sans-serif;padding:32px;max-width:860px;margin:0 auto}}
+h1{{font-size:20px;font-weight:700;margin-bottom:4px}}p{{color:#8888A8;font-size:13px;margin-bottom:24px}}
+a{{color:#FF6B35;text-decoration:none;font-size:13px}}</style></head>
+<body><h1>Autonomous Agent Log</h1><p>Last {len(entries)} runs · refreshes manually · <a href="/">← Back to chat</a></p>{rows}</body></html>"""
+        return Response(page, mimetype="text/html")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  CHAT UI HTML
@@ -869,18 +879,20 @@ code,pre,kbd{font-family:'JetBrains Mono',monospace}
 #messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
 /* Message rows */
-.msg-row{display:flex;gap:12px;max-width:820px;width:100%;animation:slidein .2s ease}
+#messages{display:flex;flex-direction:column;align-items:stretch}
+.msg-row{display:flex;gap:12px;animation:slidein .2s ease;max-width:780px;width:fit-content}
 @keyframes slidein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msg-row.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-row.user{flex-direction:row-reverse;align-self:flex-end;margin-left:auto}
 .msg-row.assistant{align-self:flex-start}
 .avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
 .msg-row.user .avatar{background:rgba(100,100,220,.25);border:1px solid rgba(100,100,220,.3)}
 .msg-row.assistant .avatar{background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.25)}
-.msg-body{flex:1;min-width:0}
-.bubble{padding:14px 18px;border-radius:var(--radius);font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.msg-body{min-width:0;max-width:680px}
+.msg-row.user .msg-body{max-width:580px}
+.bubble{padding:12px 16px;border-radius:var(--radius);font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .msg-row.user .bubble{background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.25);border-bottom-right-radius:4px}
 .msg-row.assistant .bubble{background:var(--s1);border:1px solid var(--border);border-bottom-left-radius:4px}
-.msg-meta{font-size:11px;color:var(--muted);margin-top:6px;padding:0 2px}
+.msg-meta{font-size:11px;color:var(--muted);margin-top:5px;padding:0 2px}
 .msg-row.user .msg-meta{text-align:right}
 
 /* Thinking block */
@@ -986,10 +998,13 @@ code,pre,kbd{font-family:'JetBrains Mono',monospace}
     <button class="quick-item" onclick="quickSend('List open pull requests and recent workflow runs')">
       <div class="qi-icon" style="background:rgba(251,191,36,.1);color:#FBB724">⚙️</div>GitHub
     </button>
+    <a href="/auto-log" target="_blank" class="quick-item" style="text-decoration:none">
+      <div class="qi-icon" style="background:rgba(34,197,94,.1);color:#22C55E">🤖</div>Auto Log
+    </a>
 
     <div class="sidebar-footer">
       <div>Powered by Claude</div>
-      <div class="model-badge"><span class="model-dot"></span>Extended Thinking</div>
+      <div class="model-badge"><span class="model-dot"></span>claude-haiku-4-5</div>
     </div>
   </div>
 
@@ -1109,9 +1124,14 @@ function streamResponse(message) {
   // Create assistant row
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
-  row.innerHTML = `<div class="avatar">⚡</div><div class="msg-body" id="resp-body"></div>`;
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  const avatarEl = document.createElement('div');
+  avatarEl.className = 'avatar';
+  avatarEl.textContent = '⚡';
+  row.appendChild(avatarEl);
+  row.appendChild(body);
   messagesEl.appendChild(row);
-  const body = document.getElementById('resp-body');
   scrollBottom();
 
   // Containers
@@ -1130,12 +1150,7 @@ function streamResponse(message) {
     return textBubble;
   }
 
-  const es = new EventSource(`/stream?msg=${encodeURIComponent(message)}`);
-
-  es.onmessage = (e) => {
-    let obj;
-    try { obj = JSON.parse(e.data); } catch { return; }
-
+  function handleChunk(obj) {
     if (obj.type === 'thinking') {
       if (!thinkingDiv) {
         thinkingDiv = document.createElement('div');
@@ -1169,7 +1184,7 @@ function streamResponse(message) {
           <span class="tool-status">running</span>
         </div>
         <div class="tool-args">${escHtml(argsStr)}</div>
-        <div class="tool-result" id="tr-${Date.now()}"></div>`;
+        <div class="tool-result"></div>`;
       body.appendChild(currentToolDiv);
       scrollBottom();
     }
@@ -1190,7 +1205,6 @@ function streamResponse(message) {
       scrollBottom();
     }
     else if (obj.type === 'done') {
-      es.close();
       if (textBubble) {
         textBubble.innerHTML = renderMarkdown(escHtml(textContent));
       }
@@ -1204,16 +1218,39 @@ function streamResponse(message) {
       thinkingEl.classList.remove('active');
       scrollBottom();
     }
-  };
+  }
 
-  es.onerror = () => {
-    es.close();
+  fetch('/chat', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({message: message})
+  }).then(resp => {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    function read() {
+      reader.read().then(({done, value}) => {
+        if (done) return;
+        buf += decoder.decode(value, {stream: true});
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try { handleChunk(JSON.parse(line.slice(6))); } catch {}
+        }
+        read();
+      });
+    }
+    read();
+  }).catch(() => {
     const bubble = getTextBubble();
     if (!textContent) bubble.textContent = '⚠️ Connection error. Is the agent server running?';
     isGenerating = false;
     sendBtn.disabled = false;
     thinkingEl.classList.remove('active');
-  };
+  });
 }
 
 // ── SSE via GET for EventSource
@@ -1280,32 +1317,36 @@ function renderMarkdown(s) {
 
 # SSE route via GET for EventSource compatibility
 if FLASK_OK:
-    @app.route("/stream")
+    # /stream kept for backward compat — delegates to same logic as /chat
+    @app.route("/stream", methods=["GET", "POST"])
     def stream():
         if not _check_auth():
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
         global _history
-        msg = request.args.get("msg", "").strip()
+        if request.method == "POST":
+            data = request.get_json() or {}
+            msg = (data.get("msg") or data.get("message") or "").strip()
+        else:
+            msg = request.args.get("msg", "").strip()
         if not msg:
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
 
         def generate_and_track():
-            all_chunks = list(agentic_loop_stream(msg, _history))
+            global _history
             assistant_text = ""
-            for chunk in all_chunks:
+            for chunk in agentic_loop_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
                         assistant_text += obj.get("text", "")
                 except Exception:
                     pass
+                yield chunk
             if assistant_text:
                 _history.append({"role": "user", "content": msg})
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            for chunk in all_chunks:
-                yield chunk
 
         return Response(
             stream_with_context(generate_and_track()),
@@ -1316,6 +1357,60 @@ if FLASK_OK:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+#  AUTONOMOUS AGENT LOOP
+# ═══════════════════════════════════════════════════════════════════════════════
+import threading
+
+_auto_log: list = []   # recent autonomous actions visible in chat
+
+AUTONOMOUS_PROMPT = """You are running in autonomous mode. Your job right now:
+
+1. Check brain status: read itvedas-brain/state/heartbeat.json and itvedas-brain/memory/brain_memory.json from GitHub
+2. Pick the next unpublished topic from the seed list in itvedas-brain/memory/brain_memory.json
+3. Write a full SEO-optimised HTML article for that topic (use the same style as existing articles)
+4. Commit it to the correct chapter folder in the GitHub repo (e.g. chapters/networking/slug.html)
+5. Update the chapter index file to include the new article link
+6. Update itvedas-brain/state/heartbeat.json with the new publish count and timestamp
+7. Report what you did in 2-3 sentences
+
+Follow the existing article HTML structure. Target 800-1200 words. Use real technical content, no filler.
+Focus on SEO: include the keyword in the title, first paragraph, and at least 3 subheadings."""
+
+def _log(msg: str):
+    print(msg, flush=True)
+    sys.stdout.flush()
+
+def _run_autonomous():
+    import time as _time
+    _log("[AUTO] Thread started — first run in 30s")
+    _time.sleep(30)
+    while True:
+        ts = _time.strftime("%Y-%m-%d %H:%M:%S UTC")
+        _log(f"[AUTO] Starting run at {ts}")
+        try:
+            result_text = ""
+            for chunk in agentic_loop_stream(AUTONOMOUS_PROMPT, []):
+                try:
+                    obj = json.loads(chunk.replace("data: ", "").strip())
+                    if obj.get("type") == "text":
+                        result_text += obj.get("text", "")
+                    elif obj.get("type") == "tool_start":
+                        _log(f"[AUTO] Tool: {obj.get('name')}")
+                except Exception:
+                    pass
+            summary = result_text.strip()[:500] if result_text.strip() else "No output"
+            entry = {"time": ts, "summary": summary}
+            _auto_log.append(entry)
+            if len(_auto_log) > 50:
+                _auto_log.pop(0)
+            _log(f"[AUTO] Done: {summary[:200]}")
+        except Exception as e:
+            import traceback
+            _log(f"[AUTO] Error: {e}\n{traceback.format_exc()}")
+        _log(f"[AUTO] Sleeping {AUTO_INTERVAL}s until next run")
+        _time.sleep(AUTO_INTERVAL)
+
 def check_deps():
     missing = []
     if not FLASK_OK: missing.append("flask")
@@ -1331,12 +1426,17 @@ def main():
     if not ANTHROPIC_KEY:
         print("❌ ANTHROPIC_API_KEY not set")
         sys.exit(1)
+
+    # Start autonomous publishing loop in background
+    t = threading.Thread(target=_run_autonomous, daemon=True)
+    t.start()
+
     print(f"""
 ╔═══════════════════════════════════════╗
-║      ITVedas AI Agent  ⚡            ║
+║      ITVedas AI Agent  v2            ║
 ║  Open: http://localhost:{PORT}          ║
-║  Model: {MODEL}  ║
-║  Extended thinking: ON               ║
+║  Model: {MODEL}        ║
+║  Auto-publish: every {AUTO_INTERVAL}s        ║
 ╚═══════════════════════════════════════╝
 """)
     app.run(host="0.0.0.0", port=PORT, debug=False, threaded=True)
