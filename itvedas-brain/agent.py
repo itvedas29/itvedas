@@ -58,9 +58,10 @@ GITHUB_TOKEN    = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO     = os.environ.get("GITHUB_REPOSITORY", "itvedas29/itvedas")
 GITHUB_BRANCH   = os.environ.get("GITHUB_BRANCH", "main")
 
-MODEL = "claude-haiku-4-5-20251001"   # fast + cheap for chat; change to sonnet for deeper work
+MODEL = "claude-haiku-4-5-20251001"
 MAX_ITERATIONS  = 20
 PORT            = int(os.environ.get("PORT", 5001))
+AUTO_INTERVAL   = int(os.environ.get("AUTO_INTERVAL", 900))  # seconds between autonomous runs (default 15 min)
 
 ROOT      = pathlib.Path(__file__).resolve().parent.parent
 BRAIN_DIR = pathlib.Path(__file__).resolve().parent
@@ -749,6 +750,24 @@ if FLASK_OK:
         _history = []
         return {"ok": True}
 
+    @app.route("/auto-log")
+    def auto_log():
+        if not _check_auth():
+            return redirect("/login")
+        entries = list(reversed(_auto_log[-20:]))
+        rows = "".join(
+            f'<div style="border-bottom:1px solid #1A1A26;padding:14px 0"><div style="font-size:11px;color:#8888A8;margin-bottom:6px">{e["time"]}</div>'
+            f'<div style="font-size:13px;color:#E8E8F0;line-height:1.6">{html.escape(e["summary"])}</div></div>'
+            for e in entries
+        ) or '<div style="color:#8888A8;padding:20px 0">No autonomous runs yet — first run starts 30s after startup.</div>'
+        page = f"""<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Auto Log — ITVedas Agent</title>
+<style>*{{box-sizing:border-box;margin:0;padding:0}}body{{background:#0A0A0F;color:#E8E8F0;font-family:Inter,sans-serif;padding:32px;max-width:860px;margin:0 auto}}
+h1{{font-size:20px;font-weight:700;margin-bottom:4px}}p{{color:#8888A8;font-size:13px;margin-bottom:24px}}
+a{{color:#FF6B35;text-decoration:none;font-size:13px}}</style></head>
+<body><h1>Autonomous Agent Log</h1><p>Last {len(entries)} runs · refreshes manually · <a href="/">← Back to chat</a></p>{rows}</body></html>"""
+        return Response(page, mimetype="text/html")
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #  CHAT UI HTML
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -979,6 +998,9 @@ code,pre,kbd{font-family:'JetBrains Mono',monospace}
     <button class="quick-item" onclick="quickSend('List open pull requests and recent workflow runs')">
       <div class="qi-icon" style="background:rgba(251,191,36,.1);color:#FBB724">⚙️</div>GitHub
     </button>
+    <a href="/auto-log" target="_blank" class="quick-item" style="text-decoration:none">
+      <div class="qi-icon" style="background:rgba(34,197,94,.1);color:#22C55E">🤖</div>Auto Log
+    </a>
 
     <div class="sidebar-footer">
       <div>Powered by Claude</div>
@@ -1335,6 +1357,52 @@ if FLASK_OK:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+#  AUTONOMOUS AGENT LOOP
+# ═══════════════════════════════════════════════════════════════════════════════
+import threading
+
+_auto_log: list = []   # recent autonomous actions visible in chat
+
+AUTONOMOUS_PROMPT = """You are running in autonomous mode. Your job right now:
+
+1. Check brain status: read itvedas-brain/state/heartbeat.json and itvedas-brain/memory/brain_memory.json from GitHub
+2. Pick the next unpublished topic from the seed list in itvedas-brain/memory/brain_memory.json
+3. Write a full SEO-optimised HTML article for that topic (use the same style as existing articles)
+4. Commit it to the correct chapter folder in the GitHub repo (e.g. chapters/networking/slug.html)
+5. Update the chapter index file to include the new article link
+6. Update itvedas-brain/state/heartbeat.json with the new publish count and timestamp
+7. Report what you did in 2-3 sentences
+
+Follow the existing article HTML structure. Target 800-1200 words. Use real technical content, no filler.
+Focus on SEO: include the keyword in the title, first paragraph, and at least 3 subheadings."""
+
+def _run_autonomous():
+    """Called in background thread every AUTO_INTERVAL seconds."""
+    import time as _time
+    _time.sleep(30)  # wait 30s after startup before first run
+    while True:
+        try:
+            ts = _time.strftime("%Y-%m-%d %H:%M:%S UTC")
+            print(f"[AUTO] Starting autonomous run at {ts}")
+            result_text = ""
+            for chunk in agentic_loop_stream(AUTONOMOUS_PROMPT, []):
+                try:
+                    obj = json.loads(chunk.replace("data: ", "").strip())
+                    if obj.get("type") == "text":
+                        result_text += obj.get("text", "")
+                except Exception:
+                    pass
+            summary = result_text.strip()[:500] if result_text.strip() else "No output"
+            entry = {"time": ts, "summary": summary}
+            _auto_log.append(entry)
+            if len(_auto_log) > 50:
+                _auto_log.pop(0)
+            print(f"[AUTO] Done: {summary[:120]}")
+        except Exception as e:
+            print(f"[AUTO] Error: {e}")
+        _time.sleep(AUTO_INTERVAL)
+
 def check_deps():
     missing = []
     if not FLASK_OK: missing.append("flask")
@@ -1350,11 +1418,17 @@ def main():
     if not ANTHROPIC_KEY:
         print("❌ ANTHROPIC_API_KEY not set")
         sys.exit(1)
+
+    # Start autonomous publishing loop in background
+    t = threading.Thread(target=_run_autonomous, daemon=True)
+    t.start()
+
     print(f"""
 ╔═══════════════════════════════════════╗
 ║      ITVedas AI Agent  v2            ║
 ║  Open: http://localhost:{PORT}          ║
 ║  Model: {MODEL}        ║
+║  Auto-publish: every {AUTO_INTERVAL}s        ║
 ╚═══════════════════════════════════════╝
 """)
     app.run(host="0.0.0.0", port=PORT, debug=False, threaded=True)
