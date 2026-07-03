@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenkins CI/CD Pipeline: Complete Beginner's Guide</title>
+  <meta name="description" content="Master Jenkins CI/CD pipelines from scratch. Learn pipeline creation, configuration, best practices & automation. Start building today with ITVedas.">
+  <link rel="canonical" href="https://itvedas.com/chapters/devops/2026-07-03-jenkins-cicd-pipeline-complete-beginners-guide.html">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Jenkins CI/CD Pipeline: Complete Beginner's Guide",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/devops/" class="back">← Back to DevOps</a>
+  <h1>Jenkins CI/CD Pipeline: Complete Beginner's Guide</h1>
+
+  <p>Jenkins is an open-source automation server that streamlines continuous integration and continuous deployment. It automates parts of software development like building, testing, and deploying applications, reducing manual work and catching bugs early.</p>
+
+  <h2>What Is Jenkins and Why Does It Matter?</h2>
+  <p>Jenkins has been the backbone of CI/CD automation for over a decade. It's free, extensible, and works with virtually every development stack. When you push code to your repository, Jenkins automatically triggers builds, runs tests, and can deploy to production—all without human intervention.</p>
+  <p>Without Jenkins or similar tools, developers manually build, test, and deploy code. This approach is slow, error-prone, and doesn't scale. Jenkins eliminates these bottlenecks by automating the entire workflow. Teams using CI/CD pipelines catch integration issues within minutes instead of days, and they deploy code multiple times per day with confidence.</p>
+  <p>The core value proposition: faster feedback, fewer bugs, quicker releases, and happier teams.</p>
+
+  <h2>Understanding CI/CD Fundamentals</h2>
+  <p>Before diving into Jenkins specifics, you need to understand the concepts it orchestrates.</p>
+  
+  <h3>Continuous Integration (CI)</h3>
+  <p>CI means developers integrate code into a shared repository frequently—often multiple times per day. Each integration triggers automated builds and tests. If something breaks, the team knows immediately. This prevents the "integration hell" that happens when teams work in isolation for weeks.</p>
+
+  <h3>Continuous Deployment (CD)</h3>
+  <p>CD takes integration further. Every successful build automatically deploys to production (or staging). Your code goes from developer's laptop to live servers in minutes. Some teams use "Continuous Delivery" instead, which means code is *ready* to deploy but requires manual approval first.</p>
+
+  <h3>Continuous Delivery vs. Continuous Deployment</h3>
+  <p>Continuous Delivery stops before production—a human clicks a button to deploy. Continuous Deployment goes all the way. Jenkins supports both patterns, and you'll configure whichever matches your risk tolerance.</p>
+
+  <h2>Getting Started: Jenkins Installation and Setup</h2>
+  <p>Installing Jenkins is straightforward. Here's what you need to know.</p>
+
+  <h3>System Requirements</h3>
+  <p>Jenkins runs on Linux, Windows, and macOS. It needs Java 11 or higher. For development, 512MB RAM is minimum; production requires 1-2GB+. Disk space depends on your artifact storage needs—plan for at least 10GB.</p>
+
+  <h3>Docker Installation (Recommended for Learning)</h3>
+  <p>The fastest way to start learning is Docker:</p>
+  <pre><code>docker run -d -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  jenkins/jenkins:lts</code></pre>
+  <p>This starts Jenkins on <code>http://localhost:8080</code>. The first run generates an admin password displayed in the logs.</p>
+
+  <h3>Traditional Installation on Linux</h3>
+  <pre><code>wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins
+sudo systemctl start jenkins</code></pre>
+  <p>After installation, Jenkins starts on port 8080. Navigate to <code>localhost:8080</code> and retrieve the initial admin password from <code>/var/lib/jenkins/secrets/initialAdminPassword</code>.</p>
+
+  <h3>Initial Configuration</h3>
+  <p>During first setup, Jenkins prompts you to install recommended plugins. Accept this—it includes Git integration, pipeline support, and essential tools. You'll then create an admin account and configure the Jenkins URL (important for webhook callbacks from GitHub/GitLab).</p>
+
+  <h2>Building Your First Jenkins Pipeline</h2>
+  <p>Jenkins supports two pipeline styles: Declarative and Scripted. Declarative is friendlier for beginners.</p>
+
+  <h3>Creating a Declarative Pipeline</h3>
+  <p>Go to Jenkins homepage → New Item → Pipeline. Name it "HelloWorld" and paste this:</p>
+  <pre><code>pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out code...'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+                sh 'echo "Build successful!"'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'echo "Tests passed!"'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to production...'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
+</code></pre>
+  <p>Click "Build Now" and watch Jenkins execute each stage. The <code>post</code> section runs after all stages, with branches for success/failure scenarios.</p>
+
+  <h3>Connecting to a Real Git Repository</h3>
+  <p>Most pipelines start by pulling code from Git. Modify the Checkout stage:</p>
+  <pre><code>stage('Checkout') {
+    steps {
+        git branch: 'main', 
+            url: 'https://github.com/yourusername/yourrepo.git'
+    }
+}</code></pre>
+  <p>If your repo is private, you'll need to add credentials in Jenkins (Manage Jenkins → Manage Credentials) and reference them:</p>
+  <pre><code>stage('Checkout') {
+    steps {
+        git branch: 'main',
+            credentialsId: 'github-credentials',
+            url: 'https://github.com/yourusername/yourrepo.git'
+    }
+}</code></pre>
+
+  <h3>Running Tests in the Pipeline</h3>
+  <p>The Test stage is where automated tests run. For a Node.js project:</p>
+  <pre><code>stage('Test') {
+    steps {
+        sh 'npm install'
+        sh 'npm test'
+    }
+}</code></pre>
+  <p>For Python:</p>
+  <pre><code>stage('Test') {
+    steps {
+        sh 'pip install -r requirements.txt'
+        sh 'pytest'
+    }
+}</code></pre>
+  <p>If tests fail, Jenkins stops the pipeline and marks it red. This prevents broken code from reaching production.</p>
+
+  <h2>Triggering Pipelines Automatically</h2>
+  <p>Manually clicking "Build Now" doesn't scale. Real CI/CD is event-driven.</p>
+
+  <h3>Poll SCM</h3>
+  <p>Jenkins can periodically check your Git repo for changes. In the Pipeline configuration, enable "Poll SCM" and set a schedule:</p>
+  <pre><code>H/15 * * * *</code></pre>
+  <p>This checks every 15 minutes. It's simple but inefficient—Jenkins repeatedly polls even when nothing changed.</p>
+
+  <h3>Webhooks (Better Approach)</h3>
+  <p>GitHub/GitLab can push events to Jenkins instantly. On GitHub:</p>
+  <ol>
+    <li>Go to your repo → Settings → Webhooks → Add webhook</li>
+    <li>Payload URL: <code>http://your-jenkins-server:8080/github-webhook/</code></li>
+    <li>Content type: application/json</li>
+    <li>Select "Push events" and save</li>
+  </ol>
+  <p>Now every push triggers your pipeline immediately. In Jenkins, enable "GitHub hook trigger for GITScm polling" in the Pipeline configuration.</p>
+
+  <h3>Scheduled Builds</h3>
+  <p>Some teams run nightly or weekly builds regardless of code changes (e.g., security scans, dependency checks):</p>
+  <pre><code>triggers {
+    cron('H 2 * * *')  // 2 AM daily
+}</code></pre>
+
+  <h2>Managing Artifacts and Build History</h2>
+  <p>Pipelines produce artifacts—compiled binaries, Docker images, reports. Jenkins stores these so you can download them later or inspect test results.</p>
+
+  <h3>Archiving Artifacts</h3>
+  <p>After building, save artifacts:</p>
+  <pre><code>stage('Build') {
+    steps {
+        sh 'mvn clean package'
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', 
+                           allowEmptyArchive: false
+        }
+    }
+}</code></pre>
+  <p>Jenkins stores these in the job's workspace. You can download them from the UI or fetch via API.</p>
+
+  <h3>Test Reports</h3>
+  <p>Jenkins integrates with testing frameworks. For JUnit tests:</p>
+  <pre><code>post {
+    always {
+        junit 'target/surefire-reports/**/*.xml'
+    }
+}</code></pre>
+  <p>Jenkins parses XML reports and displays pass/fail statistics and trends over time.</p>
+
+  <h2>Essential Jenkins Plugins and Extensions</h2>
+  <p>Jenkins alone is powerful, but plugins supercharge it. Here are must-haves for beginners:</p>
+  <ul>
+    <li><strong>Pipeline:</strong> Enables declarative and scripted pipelines (usually pre-installed)</li>
+    <li><strong>Git:</strong> GitHub/GitLab integration</li>
+    <li><strong>Docker:</strong> Build and push Docker images from pipelines</li>
+    <li><strong>Slack:</strong> Send build notifications to Slack channels</li>
+    <li><strong>Email Extension:</strong> Email notifications on pipeline status</li>
+    <li><strong>SonarQube Scanner:</strong> Code quality analysis</li>
+    <li><strong>Credentials Binding:</strong> Manage secrets securely</li>
+  </ul>
+  <p>Install plugins via Manage Jenkins → Manage Plugins → Available. Search and click Install.</p>
+
+  <h2>Security Best Practices</h2>
+  <p>Jenkins often has access to sensitive data and production systems. Secure it properly.</p>
+
+  <h3>Credential Management</h3>
+  <p>Never hardcode passwords or API keys in pipelines. Use Jenkins Credentials:</p>
+  <pre><code>stage('Deploy') {
+    environment {
+        AWS_CREDENTIALS = credentials('aws-prod-credentials')
+    }
+    steps {
+        sh 'aws s3 cp app.jar s3://my-bucket/'
+    }
+}</code></pre>
+  <p>The <code>credentials()</code> function retrieves encrypted secrets stored in Jenkins. They're never printed in logs.</p>
+
+  <h3>Authentication and Authorization</h3>
+  <p>Enable authentication immediately. Go to Manage Jenkins → Security → Enable security. Set up role-based access control so developers can't access production deployments.</p>
+
+  <h3>Regular Updates</h3>
+  <p>Jenkins releases security patches frequently. Check for updates weekly and apply them promptly.</p>
+
+  <h2>Troubleshooting Common Pipeline Issues</h2>
+  <p>Pipelines fail. Here's how to debug.</p>
+
+  <h3>Build Logs</h3>
+  <p>The build log is your primary diagnostic tool. Each pipeline execution has a clickable log showing every command and its output. Most issues are visible there.</p>
+
+  <h3>Timeout Issues</h3>
+  <p>If tests or deployments hang, add timeouts:</p>
+  <pre><code>stage('Test') {
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+    }
+    steps {
+        sh 'npm test'
+    }
+}</code></pre>
+
+  <h3>Workspace Cleanup</h3>
+  <p>Old build artifacts consume disk space. Enable automatic cleanup:</p>
+  <pre><code>options {
+    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '5'))
+}</code></pre>
+  <p>This keeps the last 10 builds and 5 with artifacts.</p>
+
+  <h3>Agent Availability</h3>
+  <p><code>agent any</code> uses any available agent. If no agents are free, jobs queue. Monitor agent status in the Jenkins dashboard and add agents if needed.</p>
+
+  <h2>Advanced Pipeline Patterns</h2>
+  <p>Once comfortable with basics, these patterns unlock powerful
