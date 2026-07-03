@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Does Responsible Disclosure Work? — ITVedas</title>
+<meta name="description" content="Learn what responsible disclosure is, the coordinated disclosure process, bug bounty programmes, disclosure timelines, and real-world examples from Google Project Zero and HackerOne.">
+<link rel="canonical" href="https://itvedas.com/chapters/cve/how-does-responsible-disclosure-work.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Does Responsible Disclosure Work?",
+  "description": "Learn what responsible disclosure is, the coordinated disclosure process, bug bounty programmes, disclosure timelines, and real-world examples.",
+  "author": {"@type": "Organization", "name": "ITVedas"},
+  "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"},
+  "datePublished": "2026-07-03",
+  "dateModified": "2026-07-03",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://itvedas.com/chapters/cve/how-does-responsible-disclosure-work.html"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is responsible disclosure?", "acceptedAnswer": {"@type": "Answer", "text": "Responsible disclosure (also called coordinated disclosure) is the practice of privately reporting a security vulnerability to the affected vendor before making it public. This gives the vendor time to develop and release a patch before attackers can exploit the vulnerability."}},
+    {"@type": "Question", "name": "How long do researchers give vendors to fix a vulnerability?", "acceptedAnswer": {"@type": "Answer", "text": "The standard timeline is 90 days, established by Google Project Zero. Microsoft, CERT/CC, and most bug bounty platforms use 90 days as the default, sometimes with a 14-day extension for complex issues. Actively exploited vulnerabilities may warrant shorter timelines."}},
+    {"@type": "Question", "name": "What is the difference between responsible disclosure and full disclosure?", "acceptedAnswer": {"@type": "Answer", "text": "Responsible (coordinated) disclosure means reporting privately to the vendor first and only going public after a patch is available. Full disclosure means publishing all vulnerability details immediately, without giving the vendor advance notice. Bug bounty programmes generally require responsible disclosure."}},
+    {"@type": "Question", "name": "What is a bug bounty programme?", "acceptedAnswer": {"@type": "Answer", "text": "A bug bounty programme is a structured incentive scheme where organisations pay security researchers to find and responsibly disclose vulnerabilities. Payouts range from a few hundred dollars for low-severity issues to over $1 million for critical zero-days on major platforms."}}
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131A;--orange:#FF6B35;--text:#E2E8F0;--muted:#94A3B8;--border:#1E1E2E;--code:#1A1A2E}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7}
+nav{background:#0D0D14;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:60px;position:sticky;top:0;z-index:100}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+nav a:hover{color:var(--orange)}
+nav .brand{color:var(--text);font-weight:700;font-size:1.1rem;margin-right:auto}
+.hero{background:linear-gradient(135deg,#0D0D14 0%,#12121F 100%);border-bottom:1px solid var(--border);padding:3rem 2rem}
+.hero-inner{max-width:860px;margin:0 auto}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--orange)}
+.chapter-badge{display:inline-block;background:rgba(255,107,53,.15);color:var(--orange);border:1px solid rgba(255,107,53,.3);padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:.75rem}
+.hero-meta{font-size:.85rem;color:var(--muted)}
+.layout{max-width:1100px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 260px;gap:2.5rem;align-items:start}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+article h2{font-size:1.35rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+article h3{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .5rem;color:var(--orange)}
+article p{margin-bottom:1rem;color:#CBD5E1}
+article ul,article ol{margin:0 0 1rem 1.5rem;color:#CBD5E1}
+article li{margin-bottom:.4rem}
+article a{color:var(--orange);text-decoration:none}
+article a:hover{text-decoration:underline}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem}
+.toc h4{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.toc ol{margin:0 0 0 1rem}
+.toc li{margin-bottom:.35rem}
+.toc a{color:var(--muted);text-decoration:none;font-size:.85rem}
+.toc a:hover{color:var(--orange)}
+.callout{background:rgba(255,107,53,.07);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.5rem 0}
+.callout strong{color:var(--orange)}
+.timeline{margin:1.5rem 0}
+.tl-item{display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start}
+.tl-dot{width:12px;height:12px;background:var(--orange);border-radius:50%;flex-shrink:0;margin-top:.45rem}
+.tl-connector{width:2px;height:calc(100% + 1.25rem);background:rgba(255,107,53,.3);margin-left:5px}
+.tl-body strong{display:block;font-size:.95rem;margin-bottom:.2rem}
+.tl-body span{font-size:.85rem;color:var(--muted)}
+.tl-body p{font-size:.9rem;margin-top:.4rem;color:#CBD5E1}
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
+.sidebar-card h4{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.sidebar-card ul{list-style:none}
+.sidebar-card li{margin-bottom:.5rem}
+.sidebar-card a{color:var(--text);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.5rem}
+.sidebar-card a:hover{color:var(--orange)}
+.sidebar-card a::before{content:"›";color:var(--orange)}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}
+th{background:var(--card);color:var(--orange);font-weight:600;padding:.6rem .9rem;text-align:left;border:1px solid var(--border)}
+td{padding:.6rem .9rem;border:1px solid var(--border);color:#CBD5E1;vertical-align:top}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.faq{margin-top:2rem}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}
+.faq-q{background:var(--card);padding:.9rem 1.1rem;font-weight:600;font-size:.95rem}
+.faq-a{padding:.9rem 1.1rem;color:#CBD5E1;font-size:.9rem;border-top:1px solid var(--border)}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--orange);text-decoration:none}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+</head>
+<body>
+<nav>
+  <span class="brand"><a href="/" style="color:inherit;text-decoration:none">ITVedas</a></span>
+  <a href="/chapters/networking/">Networking</a>
+  <a href="/chapters/security/">Security</a>
+  <a href="/chapters/cloud/">Cloud</a>
+  <a href="/chapters/devops/">DevOps</a>
+  <a href="/chapters/databases/">Databases</a>
+  <a href="/chapters/linux/">Linux</a>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb"><a href="/">Home</a> / <a href="/chapters/cve/">CVE &amp; Vulnerabilities</a> / Responsible Disclosure</div>
+    <div class="chapter-badge">CVE Chapter</div>
+    <h1>How Does Responsible Disclosure Work?</h1>
+    <p class="hero-meta">Jul 3, 2026 &middot; 9 min read &middot; Beginner</p>
+  </div>
+</div>
+<div class="layout">
+<article>
+<div class="toc">
+  <h4>Table of Contents</h4>
+  <ol>
+    <li><a href="#what-is-rd">What is Responsible Disclosure?</a></li>
+    <li><a href="#disclosure-models">Disclosure Models: Responsible vs Full vs Bug Bounty</a></li>
+    <li><a href="#the-process">The Coordinated Disclosure Process Step by Step</a></li>
+    <li><a href="#timelines">Disclosure Timelines</a></li>
+    <li><a href="#project-zero">Google Project Zero and the 90-Day Standard</a></li>
+    <li><a href="#bug-bounty">Bug Bounty Programmes</a></li>
+    <li><a href="#legal">Legal Considerations</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<h2 id="what-is-rd">What is Responsible Disclosure?</h2>
+<p><strong>Responsible disclosure</strong> — also called <strong>coordinated vulnerability disclosure (CVD)</strong> — is the practice of privately reporting a security vulnerability to the organisation responsible for the affected software <em>before</em> making it public. The goal is to give the vendor time to develop, test, and release a patch, so that users can be protected before attackers learn the details.</p>
+<p>It sits at the intersection of two competing values:</p>
+<ul>
+  <li><strong>Public safety</strong> — Users deserve to know about vulnerabilities so they can protect themselves.</li>
+  <li><strong>Operational security</strong> — Publishing vulnerability details before a patch exists hands attackers a roadmap to exploit unpatched systems.</li>
+</ul>
+<p>Responsible disclosure balances both: the public eventually gets the information, but only after a fix is available.</p>
+
+<h2 id="disclosure-models">Disclosure Models</h2>
+<p>Three main approaches to vulnerability disclosure have emerged in the security community.</p>
+<table>
+  <tr><th>Model</th><th>Process</th><th>Pros</th><th>Cons</th></tr>
+  <tr><td>Responsible (Coordinated) Disclosure</td><td>Report privately → wait for patch → publish</td><td>Users protected at disclosure; builds vendor trust</td><td>Vendor may delay or ignore; researcher gets no credit during embargo</td></tr>
+  <tr><td>Full Disclosure</td><td>Publish all details immediately with no vendor notice</td><td>Pressures vendors to patch; no vendor suppression</td><td>Attackers get the details before a patch exists; users at risk</td></tr>
+  <tr><td>Bug Bounty (Structured)</td><td>Report via bounty platform → vendor has defined SLA → researcher paid → details published after patch</td><td>Financial incentive; defined timelines; legal clarity</td><td>Limited scope; some researchers prefer non-bounty channels</td></tr>
+</table>
+<p>The security industry has largely converged on coordinated disclosure as the responsible standard, with bug bounty programmes providing the infrastructure to make it financially viable for researchers.</p>
+
+<h2 id="the-process">The Coordinated Disclosure Process Step by Step</h2>
+<div class="timeline">
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Day 0: Discovery</strong>
+      <span>Researcher discovers the vulnerability</span>
+      <p>The researcher identifies a security flaw through code review, fuzzing, dynamic analysis, or reverse engineering. They write a proof of concept to confirm the vulnerability is real and exploitable.</p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Day 1–7: Initial Private Report</strong>
+      <span>Researcher contacts the vendor</span>
+      <p>The researcher submits a detailed private report to the vendor via their official security channel (security@vendor.com, a bug bounty platform, or a PSIRT portal). The report includes: vulnerability description, affected versions, reproduction steps, and PoC code.</p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Day 7–14: Vendor Acknowledgment</strong>
+      <span>Vendor confirms receipt</span>
+      <p>The vendor acknowledges the report, confirms it can reproduce the issue, and provides an estimated timeline for a fix. If the vendor does not respond within 7–14 days, the researcher typically sends a follow-up.</p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Days 14–90: Patch Development</strong>
+      <span>Vendor develops and tests the fix</span>
+      <p>The vendor develops the patch, tests it for regressions, and coordinates internal release processes. For complex vulnerabilities affecting many products, this can take the full 90 days. The researcher may provide additional technical assistance.</p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Day ~90: Patch Released</strong>
+      <span>Vendor publishes the fix and CVE is disclosed</span>
+      <p>The vendor publishes the patch, a security advisory, and a CVE ID (assigned earlier in the process). The researcher publishes their technical write-up, often simultaneously.</p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div><div class="tl-dot"></div></div>
+    <div class="tl-body">
+      <strong>Post-disclosure: CVE Enrichment</strong>
+      <span>NVD adds CVSS scores and CPE data</span>
+      <p>The NVD processes the CVE entry, adds CVSS scores, CWE classification, and CPE affected software lists. Security scanners update their plugin databases. Organisations begin patching.</p>
+    </div>
+  </div>
+</div>
+
+<h2 id="timelines">Disclosure Timelines</h2>
+<p>The most important decision in responsible disclosure is how long to give a vendor before going public, even if no patch exists.</p>
+<table>
+  <tr><th>Organisation</th><th>Default Deadline</th><th>Extension</th><th>Notes</th></tr>
+  <tr><td>Google Project Zero</td><td>90 days</td><td>+14 days if patch is imminent</td><td>Strict; publishes on deadline even without a patch</td></tr>
+  <tr><td>CERT/CC</td><td>45 days</td><td>Varies</td><td>Longer for complex multi-vendor issues</td></tr>
+  <tr><td>HackerOne</td><td>Per-programme SLA</td><td>Per programme</td><td>Usually 90 days; can be extended by mutual agreement</td></tr>
+  <tr><td>Bugcrowd</td><td>Per-programme SLA</td><td>Per programme</td><td>Same as HackerOne</td></tr>
+  <tr><td>Zero Day Initiative (ZDI)</td><td>120 days</td><td>Varies</td><td>Trend Micro-owned; buys and coordinates vulns</td></tr>
+  <tr><td>MSRC (Microsoft)</td><td>90 days (following Project Zero)</td><td>+30 days</td><td>Microsoft adopted 90-day standard following pressure</td></tr>
+</table>
+
+<h2 id="project-zero">Google Project Zero and the 90-Day Standard</h2>
+<p>Google Project Zero, launched in 2014, is a team of elite security researchers whose mission is to find and responsibly disclose vulnerabilities in widely used software — not just Google's own products.</p>
+<p>Project Zero introduced a strict <strong>90-day disclosure deadline</strong>: after 90 days (with a possible 14-day extension if a patch is imminent), Project Zero publishes full vulnerability details regardless of whether the vendor has released a patch. This firm stance was controversial when introduced — vendors complained that 90 days was too short for complex vulnerabilities — but it dramatically accelerated the industry's average patch times.</p>
+<p>Project Zero's database of disclosed vulnerabilities is public at <code>googleprojectzero.blogspot.com</code>. Their writeups are detailed technical analyses, often including PoC code, and are required reading for serious security researchers.</p>
+<div class="callout"><strong>Impact:</strong> Before Project Zero, some vendors took 6–12 months to patch reported vulnerabilities. After the 90-day deadline became the standard, Microsoft, Apple, and others significantly improved their average patch times to stay within the window.</div>
+
+<h2 id="bug-bounty">Bug Bounty Programmes</h2>
+<p>Bug bounty programmes are structured responsible disclosure programmes that pay researchers for finding valid vulnerabilities. They provide:</p>
+<ul>
+  <li>A defined scope (which products and vulnerability types are in-scope)</li>
+  <li>Clear rules of engagement (what testing is permitted)</li>
+  <li>Legal safe harbour (protection from prosecution for in-scope testing)</li>
+  <li>Financial rewards based on severity and impact</li>
+  <li>Defined response SLAs</li>
+</ul>
+<h3>Payout Ranges (2026)</h3>
+<table>
+  <tr><th>Severity</th><th>Typical Range</th><th>Max payouts (top programmes)</th></tr>
+  <tr><td>Critical (RCE, auth bypass)</td><td>$10,000–$100,000</td><td>$1,000,000+ (Google, Apple)</td></tr>
+  <tr><td>High (privilege escalation, data exfil)</td><td>$5,000–$30,000</td><td>$150,000+</td></tr>
+  <tr><td>Medium (stored XSS, SSRF)</td><td>$500–$5,000</td><td>$25,000+</td></tr>
+  <tr><td>Low (reflected XSS, information disclosure)</td><td>$100–$500</td><td>$2,000+</td></tr>
+</table>
+<h3>Major Bug Bounty Platforms</h3>
+<ul>
+  <li><strong>HackerOne</strong> — Largest platform; hosts programmes for GitHub, Shopify, Twitter/X, and US government agencies.</li>
+  <li><strong>Bugcrowd</strong> — Strong enterprise focus; runs programmes for Mastercard, Atlassian, and Tesla.</li>
+  <li><strong>Synack</strong> — Invitation-only, vetted researcher pool; popular with government and finance.</li>
+  <li><strong>Intigriti</strong> — European-focused; popular with EU-based organisations.</li>
+</ul>
+<p>Many major technology companies run their own in-house programmes directly: Google, Microsoft, Apple, Meta, and Amazon all accept vulnerability reports through their own PSIRT portals.</p>
+
+<h2 id="legal">Legal Considerations</h2>
+<p>Security research occupies legally complex territory. In many jurisdictions, testing systems without permission violates computer crime laws (the US Computer Fraud and Abuse Act, UK Computer Misuse Act, EU Directive on attacks against information systems).</p>
+<p>Bug bounty programmes address this by providing <strong>legal safe harbour</strong> — a written commitment from the vendor not to pursue legal action against researchers who follow the programme rules. This is a critical protection that researchers should always verify before testing.</p>
+<p>Key legal principles for researchers:</p>
+<ul>
+  <li><strong>Only test in-scope systems.</strong> Bug bounty scope definitions are legally significant. Testing out-of-scope systems is not protected by safe harbour.</li>
+  <li><strong>Do not access or exfiltrate real user data.</strong> Even if you find a data exposure vulnerability, accessing actual user data to demonstrate it may be illegal.</li>
+  <li><strong>Do not disrupt service.</strong> DoS testing is almost universally out-of-scope and may constitute criminal interference.</li>
+  <li><strong>Keep records.</strong> Document your testing process, communications with vendors, and disclosure timeline in case of legal challenge.</li>
+  <li><strong>Seek legal advice</strong> before testing in grey areas or unfamiliar jurisdictions.</li>
+</ul>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq">
+  <div class="faq-item"><div class="faq-q">What is responsible disclosure?</div><div class="faq-a">Responsible disclosure (also called coordinated disclosure) is the practice of privately reporting a security vulnerability to the affected vendor before making it public. This gives the vendor time to develop and release a patch before attackers can exploit the vulnerability.</div></div>
+  <div class="faq-item"><div class="faq-q">How long do researchers give vendors to fix a vulnerability?</div><div class="faq-a">The standard timeline is 90 days, established by Google Project Zero. Microsoft, CERT/CC, and most bug bounty platforms use 90 days as the default, sometimes with a 14-day extension for complex issues.</div></div>
+  <div class="faq-item"><div class="faq-q">What is the difference between responsible disclosure and full disclosure?</div><div class="faq-a">Responsible (coordinated) disclosure means reporting privately to the vendor first and only going public after a patch is available. Full disclosure means publishing all vulnerability details immediately, without giving the vendor advance notice.</div></div>
+  <div class="faq-item"><div class="faq-q">What is a bug bounty programme?</div><div class="faq-a">A bug bounty programme is a structured incentive scheme where organisations pay security researchers to find and responsibly disclose vulnerabilities. Payouts range from a few hundred dollars for low-severity issues to over $1 million for critical zero-days on major platforms.</div></div>
+  <div class="faq-item"><div class="faq-q">Can I get in legal trouble for reporting a vulnerability?</div><div class="faq-a">Potentially, yes — computer crime laws in many countries criminalise unauthorised access. Bug bounty programmes with legal safe harbour provisions protect researchers who follow the programme rules. Always test only in-scope systems, never access real user data, and read the programme's safe harbour clause before testing.</div></div>
+</div>
+</article>
+<aside class="sidebar">
+  <div class="sidebar-card">
+    <h4>CVE Chapter</h4>
+    <ul>
+      <li><a href="/chapters/cve/what-is-a-cve-vulnerability-explained.html">What is a CVE?</a></li>
+      <li><a href="/chapters/cve/how-cvss-scoring-works-explained.html">How CVSS Scoring Works</a></li>
+      <li><a href="/chapters/cve/what-is-a-zero-day-vulnerability-explained.html">What is a Zero-Day?</a></li>
+      <li><a href="/chapters/cve/how-to-read-a-cve-report.html">How to Read a CVE Report</a></li>
+      <li><a href="/chapters/cve/what-is-nvd-national-vulnerability-database.html">What is the NVD?</a></li>
+      <li><a href="/chapters/cve/cve-vs-cwe-vs-capec-explained.html">CVE vs CWE vs CAPEC</a></li>
+      <li><a href="/chapters/cve/what-is-a-security-patch-and-how-to-apply-it.html">What is a Security Patch?</a></li>
+      <li><a href="/chapters/cve/what-is-vulnerability-management.html">Vulnerability Management</a></li>
+      <li><a href="/chapters/cve/what-is-a-proof-of-concept-exploit.html">What is a PoC Exploit?</a></li>
+      <li><a href="/chapters/cve/how-does-responsible-disclosure-work.html" style="color:var(--orange)">Responsible Disclosure</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-card">
+    <h4>Related</h4>
+    <ul>
+      <li><a href="/chapters/security/">Security Chapter</a></li>
+      <li><a href="/chapters/compliance/">Compliance Chapter</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+<footer>
+  <p>&copy; 2026 <a href="/">ITVedas</a> &mdash; IT Education for Everyone</p>
+</footer>
+</body>
+</html>
