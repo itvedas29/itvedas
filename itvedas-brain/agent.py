@@ -1102,9 +1102,14 @@ function streamResponse(message) {
   // Create assistant row
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
-  row.innerHTML = `<div class="avatar">⚡</div><div class="msg-body" id="resp-body"></div>`;
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  const avatarEl = document.createElement('div');
+  avatarEl.className = 'avatar';
+  avatarEl.textContent = '⚡';
+  row.appendChild(avatarEl);
+  row.appendChild(body);
   messagesEl.appendChild(row);
-  const body = document.getElementById('resp-body');
   scrollBottom();
 
   // Containers
