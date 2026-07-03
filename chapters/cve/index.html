@@ -27,7 +27,7 @@ main{max-width:860px;margin:0 auto;padding:2rem}
 .section-header h2{font-size:1.1rem;font-weight:700;color:var(--text)}
 .count{background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:.75rem;padding:.2rem .6rem;border-radius:12px}
 ul#article-list{list-style:none;display:grid;gap:.75rem}
-ul#article-list li a{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color .2s,transform .15s}
+ul#article-list li a{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color .2s,transform .15s;cursor:pointer}
 ul#article-list li a:hover{border-color:var(--orange);transform:translateX(3px)}
 ul#article-list li a .icon{width:36px;height:36px;background:rgba(255,107,53,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 ul#article-list li a .icon svg{width:18px;height:18px;stroke:var(--orange);fill:none;stroke-width:2}
@@ -35,7 +35,6 @@ ul#article-list li a .info{flex:1;min-width:0}
 ul#article-list li a .info .title{font-size:.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 ul#article-list li a .info .meta{font-size:.75rem;color:var(--muted);margin-top:.2rem}
 .arrow{color:var(--muted);font-size:.8rem;flex-shrink:0}
-.empty{text-align:center;padding:3rem;color:var(--muted)}
 footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
 footer a{color:var(--orange);text-decoration:none}
 </style>
@@ -55,7 +54,7 @@ footer a{color:var(--orange);text-decoration:none}
 <div class="hero">
   <div class="hero-inner">
     <div class="breadcrumb"><a href="/">Home</a> / Chapters / CVE</div>
-    <div class="chapter-badge">Chapter 8</div>
+    <div class="chapter-badge">Chapter 9</div>
     <h1>CVE &amp; Vulnerabilities</h1>
     <p class="hero-desc">In-depth analysis of real-world CVEs, zero-day vulnerabilities, exploit breakdowns and patch guidance. Stay current on the threats that matter most.</p>
   </div>
@@ -66,14 +65,14 @@ footer a{color:var(--orange);text-decoration:none}
     <span class="count" id="art-count">Loading...</span>
   </div>
   <ul id="article-list">
+    <li><a href="/chapters/cve/what-is-a-cve-vulnerability-explained.html"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="info"><span class="title">What is a CVE? Common Vulnerabilities and Exposures Explained</span><span class="meta">Jul 3, 2026 &middot; CVE &middot; Beginner</span></span><span class="arrow">&#8250;</span></a></li>
+    <li><a href="/chapters/cve/how-cvss-scoring-works-explained.html"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="info"><span class="title">How CVSS Scoring Works: Understanding Vulnerability Severity</span><span class="meta">Jul 3, 2026 &middot; CVE &middot; Beginner</span></span><span class="arrow">&#8250;</span></a></li>
   </ul>
-  <div class="empty" id="empty-state"><p>Articles are being published. Check back soon!</p></div>
 </main>
 <script>
-const list=document.getElementById('article-list'),empty=document.getElementById('empty-state'),count=document.getElementById('art-count');
+const list=document.getElementById('article-list'),count=document.getElementById('art-count');
 const n=list.querySelectorAll('li').length;
 count.textContent=n+' article'+(n!==1?'s':'');
-if(n>0)empty.style.display='none';
 </script>
 <footer>
   <p>&copy; 2026 <a href="/">ITVedas</a> &mdash; IT Education for Everyone</p>
