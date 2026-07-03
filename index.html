@@ -475,6 +475,240 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 .quiz-cta-btn:hover { transform:translateY(-2px); opacity:0.9; }
 .contact-card-net:hover { transform:translateY(-4px); border-color:rgba(255,107,53,0.3); }
 .contact-card-dev:hover { transform:translateY(-4px); border-color:rgba(139,92,246,0.3); }
+
+/* ── VISUAL UPGRADE ──────────────────────────────────── */
+
+/* Richer body texture: dual noise layers */
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  opacity:0.6;
+  mix-blend-mode:overlay;
+}
+
+/* Section eyebrow: orange line accent */
+.section-eyebrow {
+  display:inline-flex; align-items:center; gap:0.5rem;
+}
+.section-eyebrow::before {
+  content:'';
+  display:inline-block; width:18px; height:2px;
+  background:currentColor; border-radius:2px;
+  opacity:0.7;
+}
+
+/* Section titles: subtle gradient shimmer */
+.section-title {
+  background: linear-gradient(135deg, #F0F0F8 0%, #C8C8E0 60%, #A0A0C8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Chapter cards: stronger depth + glow on hover */
+.chapter-card {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
+              0 4px 24px rgba(0,0,0,0.35);
+  background: linear-gradient(145deg, #161622 0%, #111119 100%);
+}
+.chapter-card:hover {
+  box-shadow: 0 0 0 1px var(--c),
+              0 0 40px rgba(0,0,0,0.2),
+              0 16px 48px rgba(0,0,0,0.5),
+              inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.chapter-card::after {
+  background: radial-gradient(ellipse at 50% 0%, var(--ci) 0%, transparent 70%);
+}
+
+/* Chapter cards: icon uses CSS gradient background */
+.chapter-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 0.75rem;
+  background: var(--ci);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Chapter num: colored accent */
+.chapter-num { color: var(--c); opacity: 0.9; }
+
+/* Why cards: colored left border + glow on hover */
+.why-card {
+  background: linear-gradient(145deg, #161622 0%, #0f0f18 100%);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  border-left: 2px solid transparent;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+.why-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  border-left-color: var(--net);
+}
+.why-card:nth-child(2):hover { border-left-color: var(--sec); }
+.why-card:nth-child(3):hover { border-left-color: var(--news); }
+.why-card:nth-child(4):hover { border-left-color: var(--cld); }
+.why-card:nth-child(5):hover { border-left-color: var(--comp); }
+.why-card:nth-child(6):hover { border-left-color: var(--dev); }
+
+/* Latest article cards: deeper background + colored badge glow */
+.lac {
+  background: linear-gradient(145deg, #161622 0%, #0f0f18 100%);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.lac:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.14);
+}
+
+/* Live security cards: deeper + green glow */
+.lsc {
+  background: linear-gradient(145deg, #14141e 0%, #0f0f18 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.lsc:hover {
+  box-shadow: 0 6px 24px rgba(16,185,129,0.12), 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* News cards: depth */
+.news-card {
+  background: linear-gradient(145deg, #161622 0%, #0f0f18 100%);
+}
+.news-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
+/* Demo cards: terminal feel */
+.demo-card {
+  background: linear-gradient(170deg, #14141e 0%, #0c0c14 100%);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* Hero badge: glassy pill */
+.hero-badge {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Hero search box: deeper glass */
+.search-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 0 rgba(255,107,53,0);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.search-box:focus-within {
+  border-color: rgba(255,107,53,0.4);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 3px rgba(255,107,53,0.08);
+}
+
+/* Chapters section: subtle radial glow in background */
+#chapters .section {
+  position: relative;
+}
+#chapters .section::before {
+  content: '';
+  position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 600px; pointer-events: none;
+  background: radial-gradient(ellipse at center,
+    rgba(255,107,53,0.04) 0%, rgba(59,130,246,0.03) 40%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* Newsletter: stronger inner glow */
+.nl-wrap {
+  box-shadow: 0 0 120px rgba(255,107,53,0.09),
+              0 0 60px rgba(139,92,246,0.07),
+              inset 0 1px 0 rgba(255,255,255,0.07),
+              inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+/* Footer: gradient fade-in from bottom */
+footer {
+  background: linear-gradient(to top, rgba(10,10,15,1) 0%, rgba(13,13,20,0.6) 100%);
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+footer::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,107,53,0.25) 30%,
+    rgba(139,92,246,0.2) 70%, transparent 100%);
+  margin-bottom: 3.5rem;
+  margin-top: -3.5rem;
+}
+
+/* Nav: sharper glass + accent underline on active */
+nav a:not(.logo):not(.nav-cta):hover {
+  color: var(--net);
+}
+.nav-cta {
+  background: var(--net);
+  box-shadow: 0 2px 12px rgba(255,107,53,0.35);
+  transition: box-shadow 0.2s, opacity 0.2s;
+}
+.nav-cta:hover {
+  box-shadow: 0 4px 20px rgba(255,107,53,0.5);
+  opacity: 0.92;
+}
+
+/* Stat numbers: stronger glow */
+.stat-num {
+  text-shadow: 0 0 20px rgba(255,107,53,0.4), 0 0 40px rgba(255,107,53,0.15);
+}
+
+/* Hero actions: btn-primary glow */
+.btn-primary {
+  box-shadow: 0 4px 20px rgba(255,107,53,0.4);
+  transition: box-shadow 0.2s, transform 0.15s, opacity 0.15s;
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 28px rgba(255,107,53,0.55);
+  transform: translateY(-1px);
+}
+
+/* Hero: add a subtle horizontal gradient separator line before stats */
+.hero-stats {
+  position: relative;
+}
+.hero-stats::before {
+  content: '';
+  display: block; margin-bottom: 2rem;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,255,255,0.08) 30%,
+    rgba(255,255,255,0.08) 70%, transparent 100%);
+}
+
+/* tags on chapter cards: cleaner glass */
+.tag {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* alt-bg sections: richer separator */
+.alt-bg {
+  background: linear-gradient(to bottom, var(--bg2) 0%, #161622 100%);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+/* articles-bg: distinct layer */
+.articles-bg {
+  background: linear-gradient(to bottom, #0e0e18 0%, var(--bg3) 100%);
+}
+
+/* Quiz CTA: enhance the gradient card */
+#chapters + div > div {
+  box-shadow: 0 0 80px rgba(139,92,246,0.08),
+              0 4px 32px rgba(0,0,0,0.4),
+              inset 0 1px 0 rgba(255,255,255,0.05);
+}
 </style>
 </head>
 <body>
@@ -498,7 +732,6 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       <div class="nav-drop-menu">
         <a href="/faq.html">FAQ</a>
         <a href="/deals.html" class="nav-deals">🔥 Deals</a>
-        <a href="/problems-solutions.html">Problems &amp; Solutions</a>
         <a href="/about.html">About</a>
         <a href="#contact">Contact</a>
       </div>
@@ -560,8 +793,8 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     </a>
   </section>
   <div class="hero-stats">
-    <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">IT Chapters</div></div>
-    <div class="stat"><div class="stat-num">200+</div><div class="stat-lbl">Guides &amp; Tutorials</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">IT Chapters</div></div>
+    <div class="stat"><div class="stat-num">150+</div><div class="stat-lbl">Guides & Tutorials</div></div>
     <div class="stat"><div class="stat-num">3×</div><div class="stat-lbl">Weekly New Articles</div></div>
     <div class="stat"><div class="stat-num">Hourly</div><div class="stat-lbl">Cybersecurity News</div></div>
     <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Free Forever</div></div>
@@ -570,7 +803,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
 <!-- ── LIVE SECURITY & THREAT WATCH (filled by news-agent.py) ── -->
 <!-- LATEST_SECURITY_START -->
-<div class="live-security"><div class="live-security-head"><div class="live-security-label"><span class="live-security-dot"></span>Live Security &amp; Threat Watch</div><a href="/security-news.html" class="live-security-link">See all security news →</a></div><div class="live-security-grid"><a href="/news/2026-07-02-google-takes-down-major-proxy-network-used-by-cyber-criminal.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Google Takes Down Major Proxy Network Used by Cyber Criminals</div><div class="lsc-time">2026-07-02 · 08:45 PM IST</div></a><a href="/news/2026-07-02-government-removes-ai-safety-curbs-on-anthropic-s-claude-fol.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Government Removes AI Safety Curbs on Anthropic&#x27;s Claude Following Security Review</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a><a href="/news/2026-07-02-major-firewall-breach-exposes-thousands-to-ransomware-gangs.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Major Firewall Breach Exposes Thousands to Ransomware Gangs</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a><a href="/news/2026-07-02-critical-citrix-flaw-under-active-attack-as-hackers-weaponiz.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Critical Citrix Flaw Under Active Attack as Hackers Weaponize Released Code</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a></div></div>
+<div class="live-security"><div class="live-security-head"><div class="live-security-label"><span class="live-security-dot"></span>Live Security &amp; Threat Watch</div><a href="/security-news.html" class="live-security-link">See all security news →</a></div><div class="live-security-grid"><a href="/news/2026-07-02-government-removes-ai-safety-curbs-on-anthropic-s-claude-fol.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Government Removes AI Safety Curbs on Anthropic&#x27;s Claude Following Security Review</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a><a href="/news/2026-07-02-major-firewall-breach-exposes-thousands-to-ransomware-gangs.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Major Firewall Breach Exposes Thousands to Ransomware Gangs</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a><a href="/news/2026-07-02-critical-citrix-flaw-under-active-attack-as-hackers-weaponiz.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Critical Citrix Flaw Under Active Attack as Hackers Weaponize Released Code</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a><a href="/news/2026-07-02-active-attacks-underway-on-microsoft-sharepoint-vulnerabilit.html" class="lsc"><span class="lsc-badge security">Security</span><div class="lsc-title">Active Attacks Underway on Microsoft SharePoint Vulnerability—Here&#x27;s What Companies Need to Know</div><div class="lsc-time">2026-07-02 · 04:30 PM IST</div></a></div></div>
 <!-- LATEST_SECURITY_END -->
 
 <!-- ── LATEST ARTICLES (filled by brain agent) ─────────── -->
@@ -589,7 +822,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 
   <div class="chapters-grid">
 
-    <a href="/chapters/networking/" class="chapter-card" style="--c:var(--net);--ci:rgba(255,107,53,0.10);">
+    <a href="/articles/networking/" class="chapter-card" style="--c:var(--net);--ci:rgba(255,107,53,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🌐</div>
       <div class="chapter-num">Chapter 01 · Networking</div>
@@ -600,7 +833,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/cloud/" class="chapter-card" style="--c:var(--cld);--ci:rgba(59,130,246,0.10);">
+    <a href="/articles/cloud/" class="chapter-card" style="--c:var(--cld);--ci:rgba(59,130,246,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">☁️</div>
       <div class="chapter-num">Chapter 02 · Cloud Computing</div>
@@ -611,7 +844,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/security/" class="chapter-card" style="--c:var(--sec);--ci:rgba(16,185,129,0.10);">
+    <a href="/articles/security/" class="chapter-card" style="--c:var(--sec);--ci:rgba(16,185,129,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🔐</div>
       <div class="chapter-num">Chapter 03 · Security</div>
@@ -622,7 +855,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/devops/" class="chapter-card" style="--c:var(--dev);--ci:rgba(139,92,246,0.10);">
+    <a href="/articles/devops/" class="chapter-card" style="--c:var(--dev);--ci:rgba(139,92,246,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">⚙️</div>
       <div class="chapter-num">Chapter 04 · DevOps</div>
@@ -633,7 +866,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/databases/" class="chapter-card" style="--c:var(--db);--ci:rgba(245,158,11,0.10);">
+    <a href="/articles/databases/" class="chapter-card" style="--c:var(--db);--ci:rgba(245,158,11,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🗄️</div>
       <div class="chapter-num">Chapter 05 · Databases</div>
@@ -644,10 +877,10 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/linux/" class="chapter-card" style="--c:var(--os);--ci:rgba(239,68,68,0.10);">
+    <a href="/articles/linux/" class="chapter-card" style="--c:var(--os);--ci:rgba(239,68,68,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🐧</div>
-      <div class="chapter-num">Chapter 06 · Linux &amp; OS</div>
+      <div class="chapter-num">Chapter 06 · Linux & OS</div>
       <div class="chapter-title">Own the Terminal</div>
       <p class="chapter-desc">Shell scripting, process management, file systems, systemd, permissions, cron — Linux is the foundation every IT professional needs.</p>
       <div class="chapter-tags">
@@ -655,7 +888,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/hardware/" class="chapter-card" style="--c:var(--hw);--ci:rgba(6,182,212,0.10);">
+    <a href="/articles/hardware/" class="chapter-card" style="--c:var(--hw);--ci:rgba(6,182,212,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🖥️</div>
       <div class="chapter-num">Chapter 07 · Hardware</div>
@@ -666,7 +899,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/compliance/" class="chapter-card" style="--c:var(--comp);--ci:rgba(236,72,153,0.10);">
+    <a href="/articles/compliance/" class="chapter-card" style="--c:var(--comp);--ci:rgba(236,72,153,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">📋</div>
       <div class="chapter-num">Chapter 08 · Compliance</div>
@@ -677,7 +910,7 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
       </div>
     </a>
 
-    <a href="/chapters/cve/" class="chapter-card" style="--c:#EF4444;--ci:rgba(239,68,68,0.10);">
+    <a href="/articles/cve/" class="chapter-card" style="--c:#EF4444;--ci:rgba(239,68,68,0.10);">
       <span class="chapter-arrow">↗</span>
       <div class="chapter-icon">🛡️</div>
       <div class="chapter-num">Chapter 09 · CVE Database</div>
@@ -849,14 +1082,14 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <div class="footer-col">
       <h4>Chapters</h4>
       <ul>
-        <li><a href="/chapters/networking/">🌐 Networking</a></li>
-        <li><a href="/chapters/cloud/">☁️ Cloud</a></li>
-        <li><a href="/chapters/security/">🔐 Security</a></li>
-        <li><a href="/chapters/devops/">⚙️ DevOps</a></li>
-        <li><a href="/chapters/databases/">🗄️ Databases</a></li>
-        <li><a href="/chapters/linux/">🐧 Linux</a></li>
-        <li><a href="/chapters/hardware/">🖥️ Hardware</a></li>
-        <li><a href="/chapters/compliance/">📋 Compliance</a></li>
+        <li><a href="/articles/networking/">🌐 Networking</a></li>
+        <li><a href="/articles/cloud/">☁️ Cloud</a></li>
+        <li><a href="/articles/security/">🔐 Security</a></li>
+        <li><a href="/articles/devops/">⚙️ DevOps</a></li>
+        <li><a href="/articles/databases/">🗄️ Databases</a></li>
+        <li><a href="/articles/linux/">🐧 Linux</a></li>
+        <li><a href="/articles/hardware/">🖥️ Hardware</a></li>
+        <li><a href="/articles/compliance/">📋 Compliance</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -874,12 +1107,12 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
     <div class="footer-col">
       <h4>Topics</h4>
       <ul>
-        <li><a href="/chapters/security/">Cybersecurity</a></li>
-        <li><a href="/chapters/compliance/">GDPR Guide</a></li>
-        <li><a href="/chapters/compliance/">HIPAA Guide</a></li>
-        <li><a href="/chapters/cloud/">Cloud Security</a></li>
-        <li><a href="/chapters/devops/">Docker Guide</a></li>
-        <li><a href="/chapters/linux/">Linux Guide</a></li>
+        <li><a href="/articles/security/">Cybersecurity</a></li>
+        <li><a href="/articles/compliance/">GDPR Guide</a></li>
+        <li><a href="/articles/compliance/">HIPAA Guide</a></li>
+        <li><a href="/articles/cloud/">Cloud Security</a></li>
+        <li><a href="/articles/devops/">Docker Guide</a></li>
+        <li><a href="/articles/linux/">Linux Guide</a></li>
       </ul>
     </div>
   </div>
@@ -895,14 +1128,14 @@ footer { border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
 <script>
 /* ── Site Search ─────────────────────────────────── */
 let SEARCH_INDEX = [
-  {title:"Networking — How Networks Talk", topic:"Networking", url:"/chapters/networking/", icon:"🌐", color:"#FF6B35", kw:"dns vpn tcp ip subnet router firewall network"},
-  {title:"Cloud Computing — AWS, Azure, GCP", topic:"Cloud", url:"/chapters/cloud/", icon:"☁️", color:"#3B82F6", kw:"cloud aws azure gcp serverless cdn kubernetes"},
-  {title:"Security — Defending the Stack", topic:"Security", url:"/chapters/security/", icon:"🔐", color:"#10B981", kw:"security encryption firewall zero trust owasp 2fa ssl phishing ransomware"},
-  {title:"DevOps — Ship Faster, Break Less", topic:"DevOps", url:"/chapters/devops/", icon:"⚙️", color:"#8B5CF6", kw:"devops docker kubernetes ci cd terraform ansible git pipeline"},
-  {title:"Databases — Data at Any Scale", topic:"Databases", url:"/chapters/databases/", icon:"🗄️", color:"#F59E0B", kw:"database sql nosql postgresql mongodb redis indexing"},
-  {title:"Linux & OS — Own the Terminal", topic:"Linux", url:"/chapters/linux/", icon:"🐧", color:"#EF4444", kw:"linux bash terminal ssh systemd cron permissions ubuntu"},
-  {title:"Hardware — Silicon to System", topic:"Hardware", url:"/chapters/hardware/", icon:"🖥️", color:"#06B6D4", kw:"hardware cpu ram ssd hdd gpu nvme raid memory"},
-  {title:"Compliance — Rules That Protect You", topic:"Compliance", url:"/chapters/compliance/", icon:"📋", color:"#EC4899", kw:"compliance gdpr hipaa soc 2 pci dss iso 27001 regulation"},
+  {title:"Networking — How Networks Talk", topic:"Networking", url:"/articles/networking/", icon:"🌐", color:"#FF6B35", kw:"dns vpn tcp ip subnet router firewall network"},
+  {title:"Cloud Computing — AWS, Azure, GCP", topic:"Cloud", url:"/articles/cloud/", icon:"☁️", color:"#3B82F6", kw:"cloud aws azure gcp serverless cdn kubernetes"},
+  {title:"Security — Defending the Stack", topic:"Security", url:"/articles/security/", icon:"🔐", color:"#10B981", kw:"security encryption firewall zero trust owasp 2fa ssl phishing ransomware"},
+  {title:"DevOps — Ship Faster, Break Less", topic:"DevOps", url:"/articles/devops/", icon:"⚙️", color:"#8B5CF6", kw:"devops docker kubernetes ci cd terraform ansible git pipeline"},
+  {title:"Databases — Data at Any Scale", topic:"Databases", url:"/articles/databases/", icon:"🗄️", color:"#F59E0B", kw:"database sql nosql postgresql mongodb redis indexing"},
+  {title:"Linux & OS — Own the Terminal", topic:"Linux", url:"/articles/linux/", icon:"🐧", color:"#EF4444", kw:"linux bash terminal ssh systemd cron permissions ubuntu"},
+  {title:"Hardware — Silicon to System", topic:"Hardware", url:"/articles/hardware/", icon:"🖥️", color:"#06B6D4", kw:"hardware cpu ram ssd hdd gpu nvme raid memory"},
+  {title:"Compliance — Rules That Protect You", topic:"Compliance", url:"/articles/compliance/", icon:"📋", color:"#EC4899", kw:"compliance gdpr hipaa soc 2 pci dss iso 27001 regulation"},
   {title:"Test Your IT Knowledge — Quiz", topic:"Quiz", url:"/quiz.html", icon:"🧠", color:"#8B5CF6", kw:"quiz test knowledge score skills assessment"},
   {title:"About ITVedas", topic:"About", url:"/about.html", icon:"ℹ️", color:"#64748B", kw:"about mission team contact"}
 ];
