@@ -1706,111 +1706,122 @@ def _log(msg: str):
     print(msg, flush=True)
     sys.stdout.flush()
 
+def _publish_one(topic: str, memory: dict, mem_sha: str) -> tuple[str, dict, str]:
+    """Publish a single article. Returns (summary, updated_memory, new_sha)."""
+    date_str = time.strftime("%Y-%m-%d")
+    chapter = _route_chapter(topic)
+    slug = _slug_from_topic(topic, date_str)
+    _log(f"[AUTO] Topic: {topic}")
+    _log(f"[AUTO] Chapter: {chapter} | Slug: {slug}")
+
+    # Claude writes article HTML — only Claude call in the whole pipeline
+    _log("[AUTO] Calling Claude to write article HTML...")
+    html_content = _write_article_with_claude(topic, chapter, slug, date_str)
+    _log(f"[AUTO] Claude returned {len(html_content)} chars")
+
+    if len(html_content) < 2000:
+        raise ValueError(f"Article too short ({len(html_content)} chars)")
+
+    # Save article to GitHub
+    article_path = f"chapters/{chapter}/{slug}.html"
+    encoded = base64.b64encode(html_content.encode("utf-8")).decode()
+    file_sha = None
+    try:
+        existing = _gh("GET", f"/repos/{GITHUB_REPO}/contents/{article_path}")
+        file_sha = existing["sha"]
+    except Exception:
+        pass
+    payload = {"message": f"feat: publish '{topic}' [{chapter}]", "content": encoded, "branch": GITHUB_BRANCH}
+    if file_sha:
+        payload["sha"] = file_sha
+    _gh("PUT", f"/repos/{GITHUB_REPO}/contents/{article_path}", payload)
+    _log(f"[AUTO] Saved: {article_path}")
+
+    # Extract title
+    title_match = re.search(r'<title>([^<]+)</title>', html_content)
+    title = title_match.group(1).strip() if title_match else topic
+
+    # Update chapter index
+    try:
+        _update_chapter_index(chapter, slug, title, date_str)
+    except Exception as e:
+        _log(f"[AUTO] Index update failed (non-fatal): {e}")
+
+    # Update brain_memory.json and get new SHA for next iteration
+    _update_brain_memory(memory, topic, slug, title, chapter, date_str, mem_sha)
+
+    # Re-read SHA after update
+    try:
+        updated_resp = _gh("GET", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/brain_memory.json")
+        new_sha = updated_resp["sha"]
+        updated_memory = json.loads(base64.b64decode(updated_resp["content"]).decode())
+    except Exception:
+        new_sha = mem_sha
+        updated_memory = memory
+
+    summary = f"✓ {title} → {article_path}"
+    _log(f"[AUTO] {summary}")
+    return summary, updated_memory, new_sha
+
+
 def _run_autonomous():
     """
-    Autonomous publishing loop — runs every AUTO_INTERVAL seconds.
-    Python handles ALL orchestration. Claude is called ONLY to write article HTML.
+    Autonomous publishing loop.
+    Each run publishes ALL pending topics back-to-back.
+    Python handles all orchestration — Claude only writes article HTML.
     """
     _log("[AUTO] Thread started — first run in 30s")
     time.sleep(30)
     while True:
         ts = time.strftime("%Y-%m-%d %H:%M:%S UTC")
-        date_str = time.strftime("%Y-%m-%d")
-        _log(f"[AUTO] ── Starting run at {ts} ──")
-        summary = "No action"
+        _log(f"[AUTO] ── Batch run starting at {ts} ──")
+        published_this_run = []
         try:
-            # STEP 1: Read brain_memory.json (pure Python)
-            _log("[AUTO] Reading brain_memory.json...")
+            # Read memory once
             mem_resp = _gh("GET", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/brain_memory.json")
             mem_sha = mem_resp["sha"]
             memory = json.loads(base64.b64decode(mem_resp["content"]).decode())
 
-            # STEP 2: Pick next topic (pure Python)
-            topic = _pick_next_topic(memory)
-            if not topic:
-                _log("[AUTO] All topics published — nothing to do this run")
-                summary = "All topics published — idle"
-                _auto_log.append({"time": ts, "summary": summary})
+            pending = memory.get("pending_topics", [])
+            done = set(memory.get("done_topics", []))
+            remaining = [t for t in pending if t not in done]
+            _log(f"[AUTO] {len(remaining)} topics pending, {len(done)} done")
+
+            if not remaining:
+                _log("[AUTO] All topics published — sleeping")
+                _auto_log.append({"time": ts, "summary": "All topics published — idle"})
                 time.sleep(AUTO_INTERVAL)
                 continue
 
-            _log(f"[AUTO] Next topic: {topic}")
+            # Publish every pending topic one by one
+            for i, topic in enumerate(remaining):
+                try:
+                    _log(f"[AUTO] [{i+1}/{len(remaining)}] Publishing: {topic}")
+                    summary, memory, mem_sha = _publish_one(topic, memory, mem_sha)
+                    published_this_run.append(summary)
+                    _auto_log.append({"time": time.strftime("%Y-%m-%d %H:%M:%S UTC"), "summary": summary})
+                    if len(_auto_log) > 100:
+                        _auto_log.pop(0)
+                    # Small pause between articles to be gentle on GitHub API
+                    time.sleep(5)
+                except Exception as e:
+                    err = f"FAILED [{topic}]: {e}"
+                    _log(f"[AUTO] {err}\n{traceback.format_exc()}")
+                    _auto_log.append({"time": time.strftime("%Y-%m-%d %H:%M:%S UTC"), "summary": err})
+                    # Mark as failed in memory
+                    memory.setdefault("failed_topics", [])
+                    if topic not in memory["failed_topics"]:
+                        memory["failed_topics"].append(topic)
+                    time.sleep(5)
 
-            # STEP 3: Route to correct chapter (pure Python)
-            chapter = _route_chapter(topic)
-            slug = _slug_from_topic(topic, date_str)
-            _log(f"[AUTO] Chapter: {chapter} | Slug: {slug}")
-
-            # STEP 4: Call Claude ONLY to write article HTML
-            _log(f"[AUTO] Calling Claude to write article HTML...")
-            html_content = _write_article_with_claude(topic, chapter, slug, date_str)
-            _log(f"[AUTO] Claude returned {len(html_content)} chars of HTML")
-
-            if len(html_content) < 2000:
-                raise ValueError(f"Article too short ({len(html_content)} chars) — likely an error")
-
-            # STEP 5: Save article to GitHub (pure Python)
-            article_path = f"chapters/{chapter}/{slug}.html"
-            encoded = base64.b64encode(html_content.encode("utf-8")).decode()
-
-            # Check if file exists (get SHA if so)
-            file_sha = None
-            try:
-                existing = _gh("GET", f"/repos/{GITHUB_REPO}/contents/{article_path}")
-                file_sha = existing["sha"]
-            except Exception:
-                pass
-
-            payload = {
-                "message": f"feat: publish '{topic}' [{chapter}]",
-                "content": encoded,
-                "branch": GITHUB_BRANCH,
-            }
-            if file_sha:
-                payload["sha"] = file_sha
-
-            _gh("PUT", f"/repos/{GITHUB_REPO}/contents/{article_path}", payload)
-            _log(f"[AUTO] Article saved: {article_path}")
-
-            # STEP 6: Extract title from HTML for index update
-            title_match = re.search(r'<title>([^<]+)</title>', html_content)
-            title = title_match.group(1).strip() if title_match else topic
-
-            # STEP 7: Update chapter index (pure Python)
-            try:
-                _update_chapter_index(chapter, slug, title, date_str)
-            except Exception as e:
-                _log(f"[AUTO] Chapter index update failed (non-fatal): {e}")
-
-            # STEP 8: Update brain_memory.json (pure Python)
-            _update_brain_memory(memory, topic, slug, title, chapter, date_str, mem_sha)
-
-            summary = f"Published: {title} → chapters/{chapter}/{slug}.html"
-            _log(f"[AUTO] ✓ {summary}")
+            _log(f"[AUTO] Batch complete — {len(published_this_run)} published this run")
 
         except Exception as e:
-            summary = f"ERROR: {e}"
-            _log(f"[AUTO] Error: {e}\n{traceback.format_exc()}")
-
-        _auto_log.append({"time": ts, "summary": summary})
-        if len(_auto_log) > 50:
-            _auto_log.pop(0)
+            _log(f"[AUTO] Batch error: {e}\n{traceback.format_exc()}")
+            _auto_log.append({"time": ts, "summary": f"Batch error: {e}"})
 
         _log(f"[AUTO] Sleeping {AUTO_INTERVAL}s until next run")
         time.sleep(AUTO_INTERVAL)
-                except Exception:
-                    pass
-            summary = result_text.strip()[:500] if result_text.strip() else "No output"
-            entry = {"time": ts, "summary": summary}
-            _auto_log.append(entry)
-            if len(_auto_log) > 50:
-                _auto_log.pop(0)
-            _log(f"[AUTO] Done: {summary[:200]}")
-        except Exception as e:
-            import traceback
-            _log(f"[AUTO] Error: {e}\n{traceback.format_exc()}")
-        _log(f"[AUTO] Sleeping {AUTO_INTERVAL}s until next run")
-        _time.sleep(AUTO_INTERVAL)
 
 def check_deps():
     missing = []
