@@ -1,14 +1,13 @@
 name: ITVedas Brain Bot — Autonomous Content Publisher
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'   # every 15 minutes — burst mode to publish all seeds fast
   workflow_dispatch:
     inputs:
       bot_mode:
         description: 'Run mode: article, audit, or sitemap'
         required: false
         default: 'article'
+  # Schedule disabled — VPS agent (ai.itvedas.com) now handles all publishing autonomously
 
 permissions:
   contents: write
