@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Replication: Master-Slave vs Multi-Master</title>
+  <meta name="description" content="Learn database replication architectures. Compare master-slave and multi-master models with real-world examples. Understand failover, consistency, and scaling.">
+  <link rel="canonical" href="https://itvedas.com/chapters/databases/2026-07-03-database-replication-explained-master-slave-and-mu.html">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+    .highlight{background:#1E293B;border-left:3px solid #FF6B35;padding:1rem;margin:1.5rem 0;border-radius:4px}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Database Replication Explained: Master-Slave and Multi-Master",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/databases/" class="back">← Back to Databases</a>
+  <h1>Database Replication Explained: Master-Slave and Multi-Master</h1>
+
+  <p>Database replication copies data across multiple servers to improve availability, distribute read load, and enable disaster recovery. Master-slave replication uses one primary server for writes, while multi-master allows writes on multiple nodes—each with different tradeoffs in consistency, complexity, and failure resilience.</p>
+
+  <h2>What is Database Replication?</h2>
+
+  <p>Database replication is the process of maintaining synchronized copies of data across separate database instances. It's the backbone of modern distributed systems, ensuring your application can survive server failures and handle traffic spikes without going dark.</p>
+
+  <p>At its core, replication works by capturing changes from a source database and applying them to target databases. The source is called the primary (or master), and the targets are replicas (or slaves). The magic happens in the replication lag—the time between a write on the primary and when it reaches replicas.</p>
+
+  <p>Without replication, a single database failure means total data loss or extended downtime. With it, you're buying redundancy and read scalability for the cost of eventual consistency and operational complexity.</p>
+
+  <h2>Master-Slave Replication Architecture</h2>
+
+  <p>Master-slave (now often called primary-replica) is the traditional model. One primary server accepts all writes, and one or more replica servers receive those writes asynchronously or synchronously.</p>
+
+  <h3>How Master-Slave Works</h3>
+
+  <p>The flow is straightforward:</p>
+
+  <ol>
+    <li>Client sends a write query to the master</li>
+    <li>Master executes the write and records it to its binary log (or similar transaction log)</li>
+    <li>Slave connects to master, reads new log entries, and applies them locally</li>
+    <li>Read queries can be directed to slaves to distribute load</li>
+  </ol>
+
+  <p>Most relational databases like MySQL, PostgreSQL, and MariaDB implement master-slave natively. It's simple, battle-tested, and works well for read-heavy workloads.</p>
+
+  <h3>Setting Up MySQL Master-Slave</h3>
+
+  <p>Here's a practical example with MySQL:</p>
+
+  <p><strong>On the Master:</strong></p>
+
+<pre><code># my.cnf configuration
+[mysqld]
+server-id = 1
+log_bin = mysql-bin
+binlog_format = ROW
+
+# Create replication user
+CREATE USER 'repl_user'@'%' IDENTIFIED BY 'password';
+GRANT REPLICATION SLAVE ON *.* TO 'repl_user'@'%';
+
+# Get master status
+SHOW MASTER STATUS;
+# Output: File: mysql-bin.000001, Position: 154</code></pre>
+
+  <p><strong>On the Slave:</strong></p>
+
+<pre><code># my.cnf configuration
+[mysqld]
+server-id = 2
+relay-log = mysql-relay-bin
+
+# Configure replication
+CHANGE MASTER TO
+  MASTER_HOST='master-ip',
+  MASTER_USER='repl_user',
+  MASTER_PASSWORD='password',
+  MASTER_LOG_FILE='mysql-bin.000001',
+  MASTER_LOG_POS=154;
+
+# Start replication
+START SLAVE;
+
+# Check status
+SHOW SLAVE STATUS\G</code></pre>
+
+  <h3>Strengths of Master-Slave</h3>
+
+  <ul>
+    <li><strong>Simple to implement:</strong> Most databases support it out of the box</li>
+    <li><strong>Clear consistency model:</strong> Master is always the source of truth</li>
+    <li><strong>Proven at scale:</strong> Used by major platforms for decades</li>
+    <li><strong>Low write latency:</strong> Writes don't wait for replica confirmation</li>
+    <li><strong>Easy failover:</strong> Promote a replica to master when needed</li>
+  </ul>
+
+  <h3>Weaknesses and Challenges</h3>
+
+  <ul>
+    <li><strong>Single point of failure:</strong> Master going down stops all writes (until promotion)</li>
+    <li><strong>Replication lag:</strong> Reads from slaves might see stale data</li>
+    <li><strong>No automatic failover:</strong> You must detect failure and promote manually (or use tools)</li>
+    <li><strong>Limited write scaling:</strong> All writes go to one server</li>
+    <li><strong>Split-brain risk:</strong> If master and replica lose connectivity, both might accept writes</li>
+  </ul>
+
+  <h2>Multi-Master Replication Architecture</h2>
+
+  <p>Multi-master (also called active-active) lets two or more nodes accept writes simultaneously. Changes from any master are replicated to all others. It's attractive for distributed systems but introduces complexity.</p>
+
+  <h3>How Multi-Master Works</h3>
+
+  <p>Instead of one primary, every node is a primary:</p>
+
+  <ol>
+    <li>Client writes to any master node</li>
+    <li>That master logs the write and replicates it to peer masters</li>
+    <li>Peer masters apply the same write locally</li>
+    <li>All nodes eventually hold identical data</li>
+  </ol>
+
+  <p>MySQL Group Replication, PostgreSQL's Patroni with etcd, and Galera Cluster are popular implementations. They use consensus algorithms to prevent conflicts.</p>
+
+  <h3>Conflict Resolution Strategies</h3>
+
+  <p>Multi-master risks write conflicts. Two masters might execute conflicting changes. Here's how they're handled:</p>
+
+  <h3>Last-Write-Wins (LWW)</h3>
+
+  <p>Whichever write has the newest timestamp wins. Loser's change is silently discarded.</p>
+
+<pre><code># Simulating LWW conflict
+Master A: UPDATE users SET status='active' WHERE id=1 at timestamp=1000
+Master B: UPDATE users SET status='inactive' WHERE id=1 at timestamp=1005
+
+# Result: inactive (B's write wins)</code></pre>
+
+  <h3>Custom Application Logic</h3>
+
+  <p>Your app detects conflicts and decides which write to keep. More complex but gives you control.</p>
+
+  <h3>Operational Transformation (OT)</h3>
+
+  <p>Advanced systems like CRDTs (Conflict-free Replicated Data Types) ensure conflicts resolve deterministically without losing data. Databases like DynamoDB and Cassandra use variants of this.</p>
+
+  <div class="highlight">
+    <strong>Pro tip:</strong> Most production multi-master setups avoid conflicts by partitioning writes. One master handles user accounts, another handles orders. This gives you the benefits without the pain.
+  </div>
+
+  <h3>Strengths of Multi-Master</h3>
+
+  <ul>
+    <li><strong>No single point of failure:</strong> Any node can go down; others keep accepting writes</li>
+    <li><strong>Write scaling:</strong> Distribute writes across multiple nodes</li>
+    <li><strong>Geographic distribution:</strong> Local writes in multiple regions with eventual sync</li>
+    <li><strong>Higher availability:</strong> System survives multiple node failures</li>
+    <li><strong>Low-latency local writes:</strong> Write to nearest node, replicate globally</li>
+  </ul>
+
+  <h3>Weaknesses and Challenges</h3>
+
+  <ul>
+    <li><strong>Conflict complexity:</strong> Must handle write conflicts intelligently</li>
+    <li><strong>Eventual consistency:</strong> Reads might see stale data; no strong consistency guarantees</li>
+    <li><strong>Replication overhead:</strong> Every node talks to every other node (O(n²) messaging)</li>
+    <li><strong>Harder to debug:</strong> State can diverge; root causes are harder to trace</li>
+    <li><strong>Split-brain scenarios:</strong> Network partitions can create data divergence</li>
+    <li><strong>Operational complexity:</strong> Requires careful monitoring and understanding</li>
+  </ul>
+
+  <h2>Master-Slave vs Multi-Master: Side-by-Side Comparison</h2>
+
+  <table style="width:100%;border-collapse:collapse;margin:1.5rem 0">
+    <tr style="background:#1E293B">
+      <th style="border:1px solid #334155;padding:.75rem;text-align:left">Aspect</th>
+      <th style="border:1px solid #334155;padding:.75rem;text-align:left">Master-Slave</th>
+      <th style="border:1px solid #334155;padding:.75rem;text-align:left">Multi-Master</th>
+    </tr>
+    <tr>
+      <td style="border:1px solid #334155;padding:.75rem">Write location</td>
+      <td style="border:1px solid #334155;padding:.75rem">Master only</td>
+      <td style="border:1px solid #334155;padding:.75rem">Any node</td>
+    </tr>
+    <tr style="background:#111827">
+      <td style="border:1px solid #334155;padding:.75rem">Consistency</td>
+      <td style="border:1px solid #334155;padding:.75rem">Strong (master truth)</td>
+      <td style="border:1px solid #334155;padding:.75rem">Eventual</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #334155;padding:.75rem">Failover</td>
+      <td style="border:1px solid #334155;padding:.75rem">Manual or automated</td>
+      <td style="border:1px solid #334155;padding:.75rem">Automatic</td>
+    </tr>
+    <tr style="background:#111827">
+      <td style="border:1px solid #334155;padding:.75rem">Conflict handling</td>
+      <td style="border:1px solid #334155;padding:.75rem">N/A (single writer)</td>
+      <td style="border:1px solid #334155;padding:.75rem">Required (LWW, OT, etc.)</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #334155;padding:.75rem">Write latency</td>
+      <td style="border:1px solid #334155;padding:.75rem">Low</td>
+      <td style="border:1px solid #334155;padding:.75rem">Low (local writes)</td>
+    </tr>
+    <tr style="background:#111827">
+      <td style="border:1px solid #334155;padding:.75rem">Operational complexity</td>
+      <td style="border:1px solid #334155;padding:.75rem">Low-moderate</td>
+      <td style="border:1px solid #334155;padding:.75rem">High</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #334155;padding:.75rem">Best for</td>
+      <td style="border:1px solid #334155;padding:.75rem">Read-heavy, single region</td>
+      <td style="border:1px solid #334155;padding:.75rem">Multi-region, high availability</td>
+    </tr>
+  </table>
+
+  <h2>Replication Lag: The Hidden Challenge</h2>
+
+  <p>Replication lag is the delay between a write on the primary and when it appears on replicas. It's measured in milliseconds or seconds, but it matters.</p>
+
+  <p>If your application reads from a replica right after writing, you might get stale data. This is called a read-after-write inconsistency.</p>
+
+  <p>Solutions include:</p>
+
+  <ul>
+    <li><strong>Read from master after critical writes:</strong> Trade consistency for latency</li>
+    <li><strong>Sticky reads:</strong> Route reads from the same session to the master</li>
+    <li><strong>Causal consistency:</strong> Use version numbers to ensure ordered reads</li>
+    <li><strong>Accept eventual consistency:</strong> Design your app to tolerate stale reads</li>
+  </ul>
+
+  <h2>When to Use Each Model</h2>
+
+  <h3>Choose Master-Slave If:</h3>
+
+  <ul>
+    <li>Your workload is read-heavy (e.g., 95% reads, 5% writes)</li>
+    <li>You're okay with brief downtime during master failover</li>
+    <li>Data consistency is critical (financial systems)</li>
+    <li>You want simplicity and operational ease</li>
+    <li>You're in a single geographic region</li>
+  </ul>
+
+  <h3>Choose Multi-Master If:</h3>
