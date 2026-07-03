@@ -483,25 +483,24 @@ def tool_github_list_workflow_runs(workflow_file: str = "", limit: int = 10) -> 
 def tool_get_brain_status() -> str:
     try:
         lines = ["## Brain-Bot Status\n"]
-        # heartbeat
-        try:
-            d = _gh("GET", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/heartbeat.json")
-            hb = json.loads(base64.b64decode(d["content"]).decode())
-            lines.append(f"Last run: {hb.get('timestamp','?')}")
-            lines.append(f"Articles published: {hb.get('articles_published', '?')}")
-            lines.append(f"Mode: {hb.get('mode','?')}")
-        except Exception:
-            lines.append("Heartbeat: not found")
-        # memory
         try:
             d = _gh("GET", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/brain_memory.json")
             mem = json.loads(base64.b64decode(d["content"]).decode())
-            published = mem.get("published_topics", [])
-            lines.append(f"Published topics: {len(published)}")
+            stats = mem.get("stats", {})
+            published = mem.get("published_articles", mem.get("published_topics", []))
+            done = mem.get("done_topics", [])
+            last_run = stats.get("last_run", "?")
+            lines.append(f"Last run: {last_run}")
+            lines.append(f"Total published: {len(published)} articles")
+            lines.append(f"Done topics: {len(done)}")
+            lines.append(f"Failed topics: {len(mem.get('failed_topics', []))}")
+            lines.append(f"Autonomous runs: {stats.get('runs', '?')}")
             if published:
-                lines.append(f"Latest: {published[-1]}")
-        except Exception:
-            lines.append("Memory: not found")
+                last = published[-1]
+                title = last.get("title", last) if isinstance(last, dict) else last
+                lines.append(f"Latest article: {title}")
+        except Exception as e:
+            lines.append(f"Memory read error: {e}")
         return "\n".join(lines)
     except Exception as e:
         return f"Error: {e}"
