@@ -58,10 +58,8 @@ GITHUB_TOKEN    = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO     = os.environ.get("GITHUB_REPOSITORY", "itvedas29/itvedas")
 GITHUB_BRANCH   = os.environ.get("GITHUB_BRANCH", "main")
 
-# Use Sonnet for "think advanced" — with extended thinking enabled
-MODEL = "claude-sonnet-4-5"
-THINKING_BUDGET = 8000          # tokens for extended thinking
-MAX_ITERATIONS  = 30
+MODEL = "claude-haiku-4-5-20251001"   # fast + cheap for chat; change to sonnet for deeper work
+MAX_ITERATIONS  = 20
 PORT            = int(os.environ.get("PORT", 5001))
 
 ROOT      = pathlib.Path(__file__).resolve().parent.parent
@@ -565,34 +563,28 @@ def dispatch_tool(name: str, args: dict) -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ANTHROPIC CLIENT (raw HTTP — no SDK dependency)
 # ═══════════════════════════════════════════════════════════════════════════════
-def _claude(messages: list, stream: bool = False) -> Any:
+def _claude(messages: list) -> Any:
     payload = {
         "model": MODEL,
-        "max_tokens": 16000,
+        "max_tokens": 4096,
         "system": SYSTEM,
         "tools": TOOLS,
         "messages": messages,
-        "thinking": {"type": "enabled", "budget_tokens": THINKING_BUDGET},
     }
     body = json.dumps(payload).encode()
     headers = {
         "x-api-key": ANTHROPIC_KEY,
         "anthropic-version": "2023-06-01",
-        "anthropic-beta": "interleaved-thinking-2025-05-14",
         "content-type": "application/json",
     }
-    if stream:
-        payload["stream"] = True
-        headers["accept"] = "text/event-stream"
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=body, headers=headers, method="POST"
     )
-    return urllib.request.urlopen(req, timeout=120)
+    return urllib.request.urlopen(req, timeout=60)
 
 def call_claude_full(messages: list) -> dict:
-    """Non-streaming call — returns full response dict."""
-    with _claude(messages, stream=False) as r:
+    with _claude(messages) as r:
         return json.loads(r.read())
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -728,21 +720,20 @@ if FLASK_OK:
 
         def generate_and_track():
             global _history
-            chunks = list(agentic_loop_stream(msg, _history))
             assistant_text = ""
-            for chunk in chunks:
+            for chunk in agentic_loop_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
                         assistant_text += obj.get("text", "")
                 except Exception:
                     pass
+                yield chunk
             if assistant_text:
                 _history.append({"role": "user", "content": msg})
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            yield from chunks
 
         return Response(
             stream_with_context(generate_and_track()),
@@ -989,7 +980,7 @@ code,pre,kbd{font-family:'JetBrains Mono',monospace}
 
     <div class="sidebar-footer">
       <div>Powered by Claude</div>
-      <div class="model-badge"><span class="model-dot"></span>Extended Thinking</div>
+      <div class="model-badge"><span class="model-dot"></span>claude-haiku-4-5</div>
     </div>
   </div>
 
@@ -1200,11 +1191,11 @@ function streamResponse(message) {
     }
   }
 
-  fetch('/stream', {
+  fetch('/chat', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({msg: message})
+    body: JSON.stringify({message: message})
   }).then(resp => {
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const reader = resp.body.getReader();
@@ -1297,13 +1288,15 @@ function renderMarkdown(s) {
 
 # SSE route via GET for EventSource compatibility
 if FLASK_OK:
+    # /stream kept for backward compat — delegates to same logic as /chat
     @app.route("/stream", methods=["GET", "POST"])
     def stream():
         if not _check_auth():
             return Response("data: {\"type\":\"done\"}\n\n", mimetype="text/event-stream")
         global _history
         if request.method == "POST":
-            msg = (request.json or {}).get("msg", "").strip()
+            data = request.get_json() or {}
+            msg = (data.get("msg") or data.get("message") or "").strip()
         else:
             msg = request.args.get("msg", "").strip()
         if not msg:
@@ -1311,21 +1304,20 @@ if FLASK_OK:
 
         def generate_and_track():
             global _history
-            chunks = list(agentic_loop_stream(msg, _history))
             assistant_text = ""
-            for chunk in chunks:
+            for chunk in agentic_loop_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
                         assistant_text += obj.get("text", "")
                 except Exception:
                     pass
+                yield chunk
             if assistant_text:
                 _history.append({"role": "user", "content": msg})
                 _history.append({"role": "assistant", "content": assistant_text})
                 if len(_history) > 40:
                     _history = _history[-40:]
-            yield from chunks
 
         return Response(
             stream_with_context(generate_and_track()),
@@ -1353,10 +1345,9 @@ def main():
         sys.exit(1)
     print(f"""
 ╔═══════════════════════════════════════╗
-║      ITVedas AI Agent  ⚡            ║
+║      ITVedas AI Agent  v2            ║
 ║  Open: http://localhost:{PORT}          ║
-║  Model: {MODEL}  ║
-║  Extended thinking: ON               ║
+║  Model: {MODEL}        ║
 ╚═══════════════════════════════════════╝
 """)
     app.run(host="0.0.0.0", port=PORT, debug=False, threaded=True)
