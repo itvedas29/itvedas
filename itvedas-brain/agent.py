@@ -1469,54 +1469,335 @@ import threading
 
 _auto_log: list = []   # recent autonomous actions visible in chat
 
-AUTONOMOUS_PROMPT = """You are the ITVedas site brain running autonomously on the VPS. You have FULL responsibility for this website. No human is watching — act independently.
+# ── Chapter routing — pure Python, no Claude needed ─────────────────────────
+CHAPTER_KEYWORDS = {
+    "networking": ["network", "dns", "tcp", "ip", "vpn", "firewall", "router", "subnet", "vlan",
+                   "osi", "http", "https", "ssl", "tls", "bandwidth", "latency", "packet",
+                   "ethernet", "wifi", "wireless", "nat", "dhcp", "bgp", "ospf", "cdn"],
+    "security":   ["security", "hack", "cyber", "malware", "ransomware", "phishing", "exploit",
+                   "vulnerability", "pentest", "xss", "sql injection", "csrf", "zero-day",
+                   "encryption", "certificate", "auth", "password", "2fa", "mfa", "siem",
+                   "threat", "attack", "breach", "antivirus", "firewall", "compliance"],
+    "cloud":      ["cloud", "aws", "azure", "gcp", "google cloud", "s3", "ec2", "lambda",
+                   "serverless", "saas", "paas", "iaas", "kubernetes", "container", "docker",
+                   "terraform", "devops", "ci/cd", "microservices", "load balancer", "auto scaling"],
+    "devops":     ["devops", "docker", "kubernetes", "k8s", "jenkins", "ci/cd", "pipeline",
+                   "ansible", "terraform", "helm", "git", "github actions", "deployment",
+                   "monitoring", "prometheus", "grafana", "nginx", "apache", "linux admin"],
+    "databases":  ["database", "sql", "nosql", "mysql", "postgresql", "mongodb", "redis",
+                   "elasticsearch", "sqlite", "oracle", "index", "query", "schema", "transaction",
+                   "acid", "replication", "sharding", "backup", "orm"],
+    "linux":      ["linux", "bash", "shell", "command line", "terminal", "unix", "ubuntu",
+                   "debian", "centos", "fedora", "kernel", "systemd", "cron", "ssh",
+                   "chmod", "chown", "grep", "awk", "sed", "vim", "process", "daemon"],
+    "hardware":   ["hardware", "cpu", "ram", "memory", "storage", "ssd", "hdd", "nvme",
+                   "motherboard", "gpu", "processor", "server", "rack", "bios", "uefi",
+                   "overclocking", "benchmark", "generation", "architecture"],
+    "cve":        ["cve-", "cve ", "vulnerability", "exploit", "shellshock", "heartbleed",
+                   "log4shell", "eternalblue", "zerologon", "proxylogon", "printnightmare"],
+    "compliance": ["compliance", "gdpr", "hipaa", "pci", "iso 27001", "sox", "nist",
+                   "audit", "regulation", "policy", "governance", "risk", "control"],
+}
 
-YOUR MISSION THIS RUN:
-1. Read itvedas-brain/memory/brain_memory.json to find the next unpublished topic
-2. Read an existing article from chapters/ to understand the exact HTML structure and style
-3. Write a COMPLETE, high-quality HTML article (1000-1500 words) for the next topic:
-   - Full HTML page matching existing article style exactly
-   - SEO title (keyword first, under 60 chars)
-   - Meta description (155 chars, includes CTA)
-   - First paragraph answers the question in under 50 words (Featured Snippet target)
-   - At least 4 subheadings (H2/H3) with keywords
-   - FAQ section with 4 Q&As targeting "People Also Ask"
-   - Internal links to 3 related articles
-   - Schema markup (Article + FAQ JSON-LD)
-   - GA4 tracking: G-D98BFZSJYP
-4. Save the article to the correct chapters/CHAPTER/SLUG.html path in GitHub
-5. Read the chapter's index file and add the new article to the article list
-6. Update itvedas-brain/memory/heartbeat.json with timestamp and publish count
-7. Update itvedas-brain/memory/brain_memory.json to mark the topic as published
+def _route_chapter(topic: str) -> str:
+    """Determine the correct chapter for a topic using keyword matching."""
+    t = topic.lower()
+    scores = {}
+    for chapter, keywords in CHAPTER_KEYWORDS.items():
+        scores[chapter] = sum(1 for kw in keywords if kw in t)
+    best = max(scores, key=scores.get)
+    return best if scores[best] > 0 else "networking"
+
+def _slug_from_topic(topic: str, date_str: str) -> str:
+    """Generate a URL-safe slug from topic + date."""
+    clean = re.sub(r'[^a-z0-9\s-]', '', topic.lower())
+    clean = re.sub(r'\s+', '-', clean.strip())[:50].rstrip('-')
+    return f"{date_str}-{clean}"
+
+def _pick_next_topic(memory: dict) -> str | None:
+    """Pick next unpublished topic from memory. Returns None if all done."""
+    done = set(memory.get("done_topics", []))
+    failed = set(memory.get("failed_topics", []))
+    skip = done | failed
+    for topic in memory.get("pending_topics", []):
+        if topic not in skip:
+            return topic
+    # fallback: pick from article_queue if present
+    for item in memory.get("article_queue", []):
+        t = item.get("topic", item) if isinstance(item, dict) else item
+        if t not in skip:
+            return t
+    return None
+
+ARTICLE_PROMPT_TEMPLATE = """Write a complete, high-quality HTML article for the ITVedas IT education website.
+
+TOPIC: {topic}
+CHAPTER: {chapter}
+SLUG: {slug}
+DATE: {date}
+
+OUTPUT REQUIREMENTS — return ONLY the complete HTML file content, no markdown fences, no explanation:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[SEO title — keyword first, under 60 chars]</title>
+  <meta name="description" content="[155 chars, includes CTA]">
+  <link rel="canonical" href="https://itvedas.com/chapters/{chapter}/{slug}.html">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{{box-sizing:border-box;margin:0;padding:0}}
+    body{{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}}
+    .container{{max-width:820px;margin:0 auto}}
+    h1{{color:#FF6B35;font-size:2rem;margin-bottom:1rem}}
+    h2{{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}}
+    h3{{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}}
+    p{{margin-bottom:1rem;color:#CBD5E1}}
+    a{{color:#FF6B35;text-decoration:none}}a:hover{{text-decoration:underline}}
+    .back{{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}}
+    pre{{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}}
+    code{{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}}
+    .faq{{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}}
+    .faq h3{{color:#FF6B35;margin-top:1rem}}
+    ul,ol{{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}}
+    li{{margin-bottom:.4rem}}
+  </style>
+  <script type="application/ld+json">
+  {{
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"[title]",
+    "datePublished":"{date}",
+    "author":{{"@type":"Organization","name":"ITVedas"}},
+    "publisher":{{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}}
+  }}
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/{chapter}/" class="back">← Back to {chapter_title}</a>
+  <h1>[H1 title]</h1>
+
+  [Article body — 1000-1500 words, real accurate content, no filler]
+  [First paragraph answers the question in under 50 words — Featured Snippet target]
+  [4+ H2/H3 subheadings with keywords]
+  [Include code examples or command examples where relevant]
+  [3 internal links to related itvedas.com articles]
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    [4 Q&As targeting "People Also Ask" searches]
+  </div>
+</div>
+</body>
+</html>
 
 CONTENT RULES:
-- Real, accurate technical content only — no filler, no AI-sounding phrases
-- Start with a hook fact or question, not "In today's world..."
+- Real, accurate technical content only
+- Start with a hook fact or question, NOT "In today's world..."
 - Vary sentence length. Use contractions. Be direct and specific.
-- Dark theme site (#0A0A0F bg, #FF6B35 orange accent) — match existing article HTML
+- No placeholder text — every section must be fully written"""
 
-Report exactly what article you published and its URL path."""
+def _write_article_with_claude(topic: str, chapter: str, slug: str, date_str: str) -> str:
+    """Call Claude API ONLY to write article HTML content. Returns HTML string."""
+    chapter_titles = {
+        "networking": "Networking", "security": "Security", "cloud": "Cloud Computing",
+        "devops": "DevOps", "databases": "Databases", "linux": "Linux",
+        "hardware": "Hardware", "cve": "CVE Database", "compliance": "Compliance"
+    }
+    prompt = ARTICLE_PROMPT_TEMPLATE.format(
+        topic=topic, chapter=chapter, slug=slug, date=date_str,
+        chapter_title=chapter_titles.get(chapter, chapter.title())
+    )
+    messages = [{"role": "user", "content": prompt}]
+    body = json.dumps({
+        "model": MODEL,
+        "max_tokens": 4096,
+        "messages": messages,
+    }).encode()
+    headers = {
+        "x-api-key": ANTHROPIC_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    }
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=body, headers=headers, method="POST"
+    )
+    with urllib.request.urlopen(req, timeout=120) as r:
+        resp = json.loads(r.read())
+    # Extract text from response
+    for block in resp.get("content", []):
+        if block.get("type") == "text":
+            text = block["text"].strip()
+            # Strip any markdown fences if Claude added them
+            text = re.sub(r'^```html?\s*', '', text)
+            text = re.sub(r'\s*```$', '', text)
+            return text
+    raise ValueError("No text in Claude response")
+
+def _update_chapter_index(chapter: str, slug: str, title: str, date_str: str):
+    """Add article link to chapter index file — pure Python, no Claude."""
+    index_path = f"chapters/{chapter}/index.html"
+    try:
+        d = _gh("GET", f"/repos/{GITHUB_REPO}/contents/{index_path}")
+        content = base64.b64decode(d["content"]).decode("utf-8")
+        sha = d["sha"]
+    except Exception:
+        _log(f"[AUTO] Chapter index not found: {index_path}")
+        return
+
+    # Build new article list item
+    new_item = f'<li><a href="{slug}.html">{title}</a> <span class="date">{date_str}</span></li>'
+
+    # Insert before </ul> or </ol> in the article list section
+    if "</ul>" in content:
+        # Insert the new item before the last </ul>
+        idx = content.rfind("</ul>")
+        content = content[:idx] + f"  {new_item}\n" + content[idx:]
+    elif new_item not in content:
+        _log(f"[AUTO] Could not find insertion point in {index_path}")
+        return
+
+    if new_item in content:
+        # Already inserted or just inserted above
+        updated = base64.b64encode(content.encode("utf-8")).decode()
+        _gh("PUT", f"/repos/{GITHUB_REPO}/contents/{index_path}", {
+            "message": f"feat: add '{title}' to {chapter} index",
+            "content": updated,
+            "sha": sha,
+            "branch": GITHUB_BRANCH,
+        })
+        _log(f"[AUTO] Updated chapter index: {index_path}")
+
+def _update_brain_memory(memory: dict, topic: str, slug: str, title: str, chapter: str, date_str: str, sha: str):
+    """Mark topic as done and save updated brain_memory.json — pure Python."""
+    memory.setdefault("done_topics", [])
+    memory.setdefault("published_articles", [])
+    memory.setdefault("stats", {})
+
+    if topic not in memory["done_topics"]:
+        memory["done_topics"].append(topic)
+
+    memory["published_articles"].append({
+        "slug": slug, "title": title, "chapter": chapter,
+        "date": date_str, "topic": topic,
+    })
+
+    stats = memory["stats"]
+    stats["total_published"] = len(memory["published_articles"])
+    stats["last_run"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    stats["runs"] = stats.get("runs", 0) + 1
+
+    updated = base64.b64encode(json.dumps(memory, indent=2, ensure_ascii=False).encode()).decode()
+    _gh("PUT", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/brain_memory.json", {
+        "message": f"brain: published '{topic}'",
+        "content": updated,
+        "sha": sha,
+        "branch": GITHUB_BRANCH,
+    })
+    _log(f"[AUTO] brain_memory.json updated — {len(memory['published_articles'])} total")
 
 def _log(msg: str):
     print(msg, flush=True)
     sys.stdout.flush()
 
 def _run_autonomous():
-    import time as _time
+    """
+    Autonomous publishing loop — runs every AUTO_INTERVAL seconds.
+    Python handles ALL orchestration. Claude is called ONLY to write article HTML.
+    """
     _log("[AUTO] Thread started — first run in 30s")
-    _time.sleep(30)
+    time.sleep(30)
     while True:
-        ts = _time.strftime("%Y-%m-%d %H:%M:%S UTC")
-        _log(f"[AUTO] Starting run at {ts}")
+        ts = time.strftime("%Y-%m-%d %H:%M:%S UTC")
+        date_str = time.strftime("%Y-%m-%d")
+        _log(f"[AUTO] ── Starting run at {ts} ──")
+        summary = "No action"
         try:
-            result_text = ""
-            for chunk in agentic_loop_stream(AUTONOMOUS_PROMPT, []):
-                try:
-                    obj = json.loads(chunk.replace("data: ", "").strip())
-                    if obj.get("type") == "text":
-                        result_text += obj.get("text", "")
-                    elif obj.get("type") == "tool_start":
-                        _log(f"[AUTO] Tool: {obj.get('name')}")
+            # STEP 1: Read brain_memory.json (pure Python)
+            _log("[AUTO] Reading brain_memory.json...")
+            mem_resp = _gh("GET", f"/repos/{GITHUB_REPO}/contents/itvedas-brain/memory/brain_memory.json")
+            mem_sha = mem_resp["sha"]
+            memory = json.loads(base64.b64decode(mem_resp["content"]).decode())
+
+            # STEP 2: Pick next topic (pure Python)
+            topic = _pick_next_topic(memory)
+            if not topic:
+                _log("[AUTO] All topics published — nothing to do this run")
+                summary = "All topics published — idle"
+                _auto_log.append({"time": ts, "summary": summary})
+                time.sleep(AUTO_INTERVAL)
+                continue
+
+            _log(f"[AUTO] Next topic: {topic}")
+
+            # STEP 3: Route to correct chapter (pure Python)
+            chapter = _route_chapter(topic)
+            slug = _slug_from_topic(topic, date_str)
+            _log(f"[AUTO] Chapter: {chapter} | Slug: {slug}")
+
+            # STEP 4: Call Claude ONLY to write article HTML
+            _log(f"[AUTO] Calling Claude to write article HTML...")
+            html_content = _write_article_with_claude(topic, chapter, slug, date_str)
+            _log(f"[AUTO] Claude returned {len(html_content)} chars of HTML")
+
+            if len(html_content) < 2000:
+                raise ValueError(f"Article too short ({len(html_content)} chars) — likely an error")
+
+            # STEP 5: Save article to GitHub (pure Python)
+            article_path = f"chapters/{chapter}/{slug}.html"
+            encoded = base64.b64encode(html_content.encode("utf-8")).decode()
+
+            # Check if file exists (get SHA if so)
+            file_sha = None
+            try:
+                existing = _gh("GET", f"/repos/{GITHUB_REPO}/contents/{article_path}")
+                file_sha = existing["sha"]
+            except Exception:
+                pass
+
+            payload = {
+                "message": f"feat: publish '{topic}' [{chapter}]",
+                "content": encoded,
+                "branch": GITHUB_BRANCH,
+            }
+            if file_sha:
+                payload["sha"] = file_sha
+
+            _gh("PUT", f"/repos/{GITHUB_REPO}/contents/{article_path}", payload)
+            _log(f"[AUTO] Article saved: {article_path}")
+
+            # STEP 6: Extract title from HTML for index update
+            title_match = re.search(r'<title>([^<]+)</title>', html_content)
+            title = title_match.group(1).strip() if title_match else topic
+
+            # STEP 7: Update chapter index (pure Python)
+            try:
+                _update_chapter_index(chapter, slug, title, date_str)
+            except Exception as e:
+                _log(f"[AUTO] Chapter index update failed (non-fatal): {e}")
+
+            # STEP 8: Update brain_memory.json (pure Python)
+            _update_brain_memory(memory, topic, slug, title, chapter, date_str, mem_sha)
+
+            summary = f"Published: {title} → chapters/{chapter}/{slug}.html"
+            _log(f"[AUTO] ✓ {summary}")
+
+        except Exception as e:
+            summary = f"ERROR: {e}"
+            _log(f"[AUTO] Error: {e}\n{traceback.format_exc()}")
+
+        _auto_log.append({"time": ts, "summary": summary})
+        if len(_auto_log) > 50:
+            _auto_log.pop(0)
+
+        _log(f"[AUTO] Sleeping {AUTO_INTERVAL}s until next run")
+        time.sleep(AUTO_INTERVAL)
                 except Exception:
                     pass
             summary = result_text.strip()[:500] if result_text.strip() else "No output"
