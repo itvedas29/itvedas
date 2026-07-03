@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="How Docker Works: Architecture &amp; Containers | ITVedas">
+<meta property="og:description" content="Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.">
+<meta property="og:image" content="https://itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-07-03">
+<link rel="canonical" href="https://itvedas.com/articles/devops/docker-works-architecture-containers.html">
+<title>How Docker Works: Architecture &amp; Containers | ITVedas</title>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How Docker Works: Architecture & Containers", "description": "Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner's guide to containerization technology.", "datePublished": "2026-07-03", "dateModified": "2026-07-03", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "url": "https://itvedas.com/articles/devops/docker-works-architecture-containers.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What&#x27;s the difference between a Docker image and a Docker container?", "acceptedAnswer": {"@type": "Answer", "text": "A Docker image is a read-only blueprint or template\u2014like a recipe. A Docker container is a running instance of that image\u2014like a cake made from the recipe. You build one image and create hundreds of containers from it. Images are immutable; containers are temporary and can be modified while running."}}, {"@type": "Question", "name": "Why is Docker faster than virtual machines?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containers share the host&#x27;s operating system kernel, using only ~5-15MB RAM and starting in ~50ms. Virtual machines emulate an entire OS, consuming 2GB+ RAM and taking 3-5 minutes to boot. Containers achieve isolation through namespaces and cgroups, not full OS emulation, making them dramatically faster and more efficient."}}, {"@type": "Question", "name": "What are Docker layers and why do they matter?", "acceptedAnswer": {"@type": "Answer", "text": "Each instruction in a Dockerfile creates an immutable layer. Docker caches layers, so rebuilding an image reuses unchanged layers instantly. If only your code changed, Docker rebuilds only that layer instead of re-running all previous steps, saving minutes of build time on large projects."}}, {"@type": "Question", "name": "How do containers on the same host communicate with each other?", "acceptedAnswer": {"@type": "Answer", "text": "Docker creates a bridge network where each container gets an internal IP. Containers reach each other by service name (e.g., a web app container can call &#x27;postgres:5432&#x27; to reach a database container). The Docker daemon handles name resolution automatically, so you never need to know IPs."}}, {"@type": "Question", "name": "Can I run Docker on Windows or Mac?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Docker Desktop for Windows and Mac includes a lightweight Linux VM that runs the Docker Engine. On Windows 10/11, you can also use WSL 2 (Windows Subsystem for Linux 2) for native Linux integration. On Linux, Docker runs directly without a VM, making it slightly faster."}}, {"@type": "Question", "name": "What&#x27;s the difference between Docker and Kubernetes?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containerizes single applications; Kubernetes orchestrates hundreds of containers across multiple servers. Docker is about packaging, Kubernetes is about managing at scale. Most teams use Docker containers inside Kubernetes clusters, so they complement each other."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://itvedas.com"}, {"@type": "ListItem", "position": 2, "name": "DevOps", "item": "https://itvedas.com/articles/devops/"}, {"@type": "ListItem", "position": 3, "name": "How Docker Works: Architecture & Containers", "item": "https://itvedas.com/articles/devops/docker-works-architecture-containers.html"}]}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A0F;--bg2:#13131C;--bg3:#1A1A28;
+  --text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;
+  --accent:#8B5CF6;--border:rgba(255,255,255,0.08);--r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+#prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+.breadcrumb a:hover{color:var(--accent);}
+.ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+.hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+.pub-date{color:var(--sub);font-weight:500;}
+.new-badge{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2em .55em;border-radius:4px;line-height:1;}
+.hero p.intro{font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;}
+.wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+.art{min-width:0;}
+.toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;}
+.toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+.toc ol{padding-left:1.1rem;}
+.toc li{margin-bottom:.4rem;}
+.toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+.toc a:hover{color:var(--accent);}
+.art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+.art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+.art p{color:var(--sub);margin-bottom:1.25rem;}
+.art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+.art li{margin-bottom:.4rem;}
+.art strong{color:var(--text);}
+.art a{color:var(--accent);text-decoration:none;}
+.art a:hover{text-decoration:underline;}
+.art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+.art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
+.art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+.fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+.fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+.fact-box ul{margin:0;padding-left:1.25rem;}
+.fact-box li{color:var(--sub);font-size:.9rem;margin-bottom:.3rem;}
+.takeaways{background:var(--bg3);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+.takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+.takeaways ul{margin:0;padding-left:1.25rem;}
+.takeaways li{color:var(--sub);font-size:.9rem;}
+.faq{margin-top:.75rem;}
+.faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.85rem;transition:border-color .2s;}
+.faq-item:hover{border-color:var(--accent);}
+.faq-item h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.faq-item p{margin:0;font-size:.9rem;color:var(--sub);}
+.related h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:2.5rem 0 1rem;color:var(--text);}
+.rel-grid{display:flex;flex-direction:column;gap:.6rem;}
+.rel-card{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;text-decoration:none;color:var(--sub);font-size:.875rem;transition:border-color .2s,color .2s;}
+.rel-card:hover{border-color:var(--accent);color:var(--text);}
+.nav-art{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+.nav-art a{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;text-decoration:none;color:var(--sub);font-size:.875rem;transition:border-color .2s;cursor:pointer;}
+.nav-art a:hover{border-color:var(--accent);}
+.nav-art .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}.nav-links{display:none;}
+  .wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}
+  .toc{display:none;}
+  .hero{padding-left:1.25rem;padding-right:1.25rem;}
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/articles/devops/">⚙️ DevOps</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/devops/">DevOps</a> › How Docker Works: Architecture &amp; Containers</div>
+  <div class="ch-badge">⚙️ DevOps</div>
+  <h1>How Docker Works: Architecture &amp; Containers</h1>
+  <div class="hero-meta"><span class="pub-date">📅 July 03, 2026</span><span class="new-badge">NEW</span><span>7 min read</span><span>ITVedas</span></div>
+  <p class="intro">&lt;p&gt;Docker packages your entire application—code, libraries, settings—into a lightweight container that runs identically on any computer. Since Docker launched in 2013, over 13 million developers have adopted it because containers solve a massive problem: &quot;it works on my laptop but breaks on the server.&quot; This guide explains the architecture behind containers without assuming you know what a kernel is.&lt;/p&gt;</p>
+</div>
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box"><strong>Key Facts</strong><ul><li>Docker was released in 2013 and now has over 13 million developers using the platform globally</li><li>Docker uses Linux kernel namespaces and cgroups to isolate containers with minimal overhead compared to virtual machines</li><li>Docker images are built in layers using a Dockerfile, with each instruction creating a new immutable layer that can be reused and cached</li></ul></div>
+
+    <h2 id="what-is-a-container-start-here">What Is a Container? Start Here.</h2>
+<p>Forget the jargon for a moment. A container is like a shrink-wrapped box containing everything your app needs to run: the code, the Python interpreter, the database driver, even the specific version of Linux libraries.</p><p>When you ship a physical product, you put it in a box. The box protects it during transport. A software container works the same way—it isolates your application from the outside world. Inside the container, your app thinks it owns the entire computer. Outside, multiple containers share the same machine without interfering with each other. Think of it this way: your laptop might have Python 3.9 installed, but a container might need Python 3.11. Both versions run side-by-side without conflict.</p><p>The magic happens because Docker uses Linux kernel features called <strong>namespaces</strong> and <strong>cgroups</strong>. Namespaces create isolated views of system resources—each container sees its own file system, network interfaces, and process IDs. Cgroups limit how much CPU and memory each container can use. Together, they isolate containers with minimal overhead, which is why Docker is so much faster than traditional virtual machines.</p>
+<h2 id="docker-vs-virtual-machines-why-containers-win">Docker vs. Virtual Machines: Why Containers Win</h2>
+<p>Before Docker, teams used virtual machines (VMs) to isolate applications.</p><p>A VM is heavy. It emulates an entire computer—it needs its own operating system, which eats ~2GB of RAM and takes minutes to boot. If you run 10 VMs on one server, you're running 10 operating systems. Docker containers share the host's operating system kernel, so each container uses only ~5-15MB of RAM and starts in milliseconds. A single server can run 50+ containers where it might run only 3-4 VMs.</p><p>Here's the practical difference:</p><ul><li><strong>Virtual Machine:</strong> Host OS + Hypervisor + Guest OS + App. 3-5 minutes to start. Hundreds of MB per instance.</li><li><strong>Docker Container:</strong> Host OS + Docker Engine + App. ~50ms to start. 5-15MB per instance.</li><li><strong>Winner:</strong> Containers for speed and density. VMs for maximum isolation if you need to run Windows apps on a Linux server.</li></ul><p>We'll dive deeper into this comparison in our Docker vs Virtual Machines guide, but the short version: containers let you pack more applications on less hardware.</p>
+<h2 id="the-docker-architecture-layers-you-should-know">The Docker Architecture: Layers You Should Know</h2>
+<p>Docker's architecture has three key parts: the Docker Engine, images, and containers.</p><p>The <strong>Docker Engine</strong> is software that runs on your computer or server. It manages images and runs containers. When you type a Docker command, it talks to the Engine, which does the actual work. The Engine includes a daemon (a background process) and a CLI (command-line interface). You don't need to know about this to use Docker, but it's good to know something is managing containers behind the scenes.</p><p>A <strong>Docker image</strong> is a blueprint. It's a read-only template that says: "To run my app, start with Ubuntu Linux, install Python 3.11, copy my code, and run this command." Images are built in layers. Each instruction in a Dockerfile creates a new layer. This layering system is crucial—Docker caches layers, so rebuilding an image is fast. If only your code changed, Docker reuses the layers for the OS and dependencies.</p><p>A <strong>Docker container</strong> is a running instance of an image. You can create 100 containers from one image, just like you can print 100 copies of a blueprint. Each container has its own file system, network, and isolated process space, but they all share the host's operating system kernel through namespaces and cgroups.</p>
+<h2 id="building-a-docker-image-the-dockerfile-explained">Building a Docker Image: The Dockerfile Explained</h2>
+<p>This is where Docker gets concrete.</p><p>A Dockerfile is a text file with instructions. Each instruction creates a layer. Here's a real example:</p><pre><code>FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "app.py"]</code></pre><p>Breaking this down:</p><ul><li><strong>FROM python:3.11-slim</strong> — Start with Python 3.11. Docker pulls this pre-made image from Docker Hub (think of it as GitHub for images). This is Layer 1.</li><li><strong>WORKDIR /app</strong> — Set the working directory inside the container to /app. Layer 2.</li><li><strong>COPY requirements.txt .</strong> — Copy requirements.txt from your computer into the container. Layer 3.</li><li><strong>RUN pip install -r requirements.txt</strong> — Install Python packages. This layer captures the installed packages. Layer 4.</li><li><strong>COPY . .</strong> — Copy your entire application code into the container. Layer 5.</li><li><strong>CMD ["python", "app.py"]</strong> — When the container starts, run this command. Layer 6.</li></ul><p>When you build this image with <code>docker build -t myapp .</code>, Docker executes each instruction, creates each layer, and stacks them. The beauty: if you rebuild and only Layer 5 (your code) changed, Docker reuses Layers 1-4 from cache. No need to reinstall Python or packages.</p><p>Each layer is immutable. Once created, it never changes. This immutability makes Docker reliable and predictable.</p>
+<h2 id="how-containers-run-namespaces-and-cgroups-in-action">How Containers Run: Namespaces and cgroups in Action</h2>
+<p>This is the technical heart of Docker, explained simply.</p><p>When Docker starts a container, it uses Linux kernel features to isolate it. <strong>Namespaces</strong> create separate views of resources. There are six types:</p><ul><li><strong>PID namespace:</strong> Each container sees its own process IDs. Your app thinks it's PID 1 (the main process), even though the host sees it differently.</li><li><strong>Network namespace:</strong> Each container gets its own network interfaces, IP address, and port space. Two containers can both use port 80 without conflict.</li><li><strong>Mount namespace:</strong> Each container has its own file system. It can't see files outside its designated directories.</li><li><strong>IPC namespace:</strong> Isolates inter-process communication.</li><li><strong>UTS namespace:</strong> Each container has its own hostname.</li><li><strong>User namespace:</strong> Maps user IDs inside the container to different IDs on the host, adding security.</li></ul><p>Then there are <strong>cgroups (control groups)</strong>. These limit resources. You can tell Docker: "This container gets maximum 512MB RAM and 0.5 CPU cores." The kernel enforces these limits. One container can't starve others by hogging memory.</p><p>Together, namespaces and cgroups create isolation with minimal overhead. That's why Docker containers are so fast and efficient compared to virtual machines.</p>
+<h2 id="container-networking-how-containers-talk-to-each-other">Container Networking: How Containers Talk to Each Other</h2>
+<p>By default, Docker creates a bridge network.</p><p>Imagine a private network switch inside your computer. Each container plugs into this switch and gets an internal IP address (like 172.17.0.2). Containers can ping each other by name. A web server container named "api" can reach a database container named "postgres" by calling "postgres:5432" without knowing its IP.</p><p>Docker also supports three other networking modes: host (container shares the host's network), overlay (for containers across multiple servers), and macvlan (containers get their own MAC addresses). For beginners, the default bridge network is enough.</p><p>Port publishing is how the outside world reaches containers. If your web server listens on port 80 inside the container, you can publish it to port 8080 on the host. External traffic goes to port 8080 → Docker routes it to port 80 inside the container. This isolation means you can run five different web servers, each on port 80 inside their containers, all published to different host ports (8080, 8081, 8082, etc.).</p>
+<h2 id="running-your-first-container-commands-that-work">Running Your First Container: Commands That Work</h2>
+<p>You don't need to build an image to run a container.</p><p>Docker Hub hosts millions of pre-made images. Let's run a simple one:</p><pre><code>docker run -d -p 8080:80 --name webserver nginx</code></pre><p>This command:</p><ul><li><strong>run</strong> — Start a new container</li><li><strong>-d</strong> — Run in the background (detached)</li><li><strong>-p 8080:80</strong> — Map port 8080 on your computer to port 80 in the container</li><li><strong>--name webserver</strong> — Give the container a friendly name</li><li><strong>nginx</strong> — The image to use (Docker downloads it from Docker Hub if you don't have it locally)</li></ul><p>Now visit http://localhost:8080 in your browser, and you'll see the Nginx welcome page. The web server is running inside a container. To stop it: <code>docker stop webserver</code>. To see running containers: <code>docker ps</code>. To see all containers (running and stopped): <code>docker ps -a</code>.</p><p>That's the basic workflow. Build or pull an image, run a container, map ports, and interact with it.</p>
+<h2 id="docker-compose-managing-multiple-containers">Docker Compose: Managing Multiple Containers</h2>
+<p>Real applications need multiple services. A typical app has a web server, a database, a cache, a message queue.</p><p>Running them individually with docker run commands gets messy fast. Docker Compose solves this with a YAML file. You define all services, networks, and volumes in one file, then start everything with one command: <code>docker-compose up</code>. All containers start in the correct order and connect to each other automatically. Check out our full guide on Docker Compose for Multi-Container Apps for details, but know that Compose is the standard tool for local development and small deployments.</p>
+<h2 id="container-orchestration-what-kubernetes-does">Container Orchestration: What Kubernetes Does</h2>
+<p>Docker Compose works great on one machine. But what if you need to run 100 containers across 10 servers?</p><p>That's where orchestration comes in. Kubernetes (often called K8s) automatically manages containers across clusters. It handles scaling (spin up 10 more containers if traffic spikes), load balancing (distribute traffic evenly), and failure recovery (restart containers that crash). Learn more in our Kubernetes and Container Orchestration guide, but the key point: Docker containers are the building blocks, and orchestrators like Kubernetes manage them at scale.</p>
+
+    <div class="takeaways"><h2>Key Takeaways</h2><ul><li>Docker containers isolate applications using Linux namespaces and cgroups, achieving ~5-15MB footprint and ~50ms startup time per container versus virtual machines at 2GB and 3-5 minutes</li><li>Docker images are built in layers from a Dockerfile; each instruction creates an immutable layer that Docker caches, making rebuilds fast when only code changes</li><li>Containers share the host&#x27;s OS kernel through namespace isolation (PID, network, mount, IPC, UTS, user) while cgroups limit CPU and memory per container, enabling 50+ containers on hardware that would run only 3-4 VMs</li><li>Docker Compose manages multiple containers locally with a single YAML file, while Kubernetes orchestrates containers at scale across server clusters</li><li>Port publishing and bridge networks allow containers to communicate with each other and the outside world without exposing their internal IP addresses</li></ul></div>
+
+    <h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq"><div class="faq-item"><h3>What&#x27;s the difference between a Docker image and a Docker container?</h3><p>A Docker image is a read-only blueprint or template—like a recipe. A Docker container is a running instance of that image—like a cake made from the recipe. You build one image and create hundreds of containers from it. Images are immutable; containers are temporary and can be modified while running.</p></div>
+<div class="faq-item"><h3>Why is Docker faster than virtual machines?</h3><p>Docker containers share the host&#x27;s operating system kernel, using only ~5-15MB RAM and starting in ~50ms. Virtual machines emulate an entire OS, consuming 2GB+ RAM and taking 3-5 minutes to boot. Containers achieve isolation through namespaces and cgroups, not full OS emulation, making them dramatically faster and more efficient.</p></div>
+<div class="faq-item"><h3>What are Docker layers and why do they matter?</h3><p>Each instruction in a Dockerfile creates an immutable layer. Docker caches layers, so rebuilding an image reuses unchanged layers instantly. If only your code changed, Docker rebuilds only that layer instead of re-running all previous steps, saving minutes of build time on large projects.</p></div>
+<div class="faq-item"><h3>How do containers on the same host communicate with each other?</h3><p>Docker creates a bridge network where each container gets an internal IP. Containers reach each other by service name (e.g., a web app container can call &#x27;postgres:5432&#x27; to reach a database container). The Docker daemon handles name resolution automatically, so you never need to know IPs.</p></div>
+<div class="faq-item"><h3>Can I run Docker on Windows or Mac?</h3><p>Yes. Docker Desktop for Windows and Mac includes a lightweight Linux VM that runs the Docker Engine. On Windows 10/11, you can also use WSL 2 (Windows Subsystem for Linux 2) for native Linux integration. On Linux, Docker runs directly without a VM, making it slightly faster.</p></div>
+<div class="faq-item"><h3>What&#x27;s the difference between Docker and Kubernetes?</h3><p>Docker containerizes single applications; Kubernetes orchestrates hundreds of containers across multiple servers. Docker is about packaging, Kubernetes is about managing at scale. Most teams use Docker containers inside Kubernetes clusters, so they complement each other.</p></div>
+</div>
+
+    
+    <div class="nav-art">
+      <a href="/articles/devops/"><div class="label">← Chapter</div>⚙️ DevOps</a>
+      <a href="/#chapters"><div class="label">Explore →</div>All Chapters</a>
+    </div>
+  </article>
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol><li><a href="#what-is-a-container-start-here">What Is a Container? Start Here.</a></li>
+<li><a href="#docker-vs-virtual-machines-why-containers-win">Docker vs. Virtual Machines: Why Containers Win</a></li>
+<li><a href="#the-docker-architecture-layers-you-should-know">The Docker Architecture: Layers You Should Know</a></li>
+<li><a href="#building-a-docker-image-the-dockerfile-explained">Building a Docker Image: The Dockerfile Explained</a></li>
+<li><a href="#how-containers-run-namespaces-and-cgroups-in-action">How Containers Run: Namespaces and cgroups in Action</a></li>
+<li><a href="#container-networking-how-containers-talk-to-each-other">Container Networking: How Containers Talk to Each Other</a></li>
+<li><a href="#running-your-first-container-commands-that-work">Running Your First Container: Commands That Work</a></li>
+<li><a href="#docker-compose-managing-multiple-containers">Docker Compose: Managing Multiple Containers</a></li>
+<li><a href="#container-orchestration-what-kubernetes-does">Container Orchestration: What Kubernetes Does</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/articles/devops/">DevOps</a><a href="/#chapters">Chapters</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+    <a href="/terms-of-service.html">Terms</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+(function(){
+  var b=document.getElementById('prog');
+  if(!b)return;
+  window.addEventListener('scroll',function(){
+    var s=document.documentElement;
+    b.style.width=Math.min(100,(s.scrollTop/(s.scrollHeight-s.clientHeight))*100)+'%';
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
