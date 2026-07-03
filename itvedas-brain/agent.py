@@ -1377,20 +1377,26 @@ AUTONOMOUS_PROMPT = """You are running in autonomous mode. Your job right now:
 Follow the existing article HTML structure. Target 800-1200 words. Use real technical content, no filler.
 Focus on SEO: include the keyword in the title, first paragraph, and at least 3 subheadings."""
 
+def _log(msg: str):
+    print(msg, flush=True)
+    sys.stdout.flush()
+
 def _run_autonomous():
-    """Called in background thread every AUTO_INTERVAL seconds."""
     import time as _time
-    _time.sleep(30)  # wait 30s after startup before first run
+    _log("[AUTO] Thread started — first run in 30s")
+    _time.sleep(30)
     while True:
+        ts = _time.strftime("%Y-%m-%d %H:%M:%S UTC")
+        _log(f"[AUTO] Starting run at {ts}")
         try:
-            ts = _time.strftime("%Y-%m-%d %H:%M:%S UTC")
-            print(f"[AUTO] Starting autonomous run at {ts}")
             result_text = ""
             for chunk in agentic_loop_stream(AUTONOMOUS_PROMPT, []):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
                         result_text += obj.get("text", "")
+                    elif obj.get("type") == "tool_start":
+                        _log(f"[AUTO] Tool: {obj.get('name')}")
                 except Exception:
                     pass
             summary = result_text.strip()[:500] if result_text.strip() else "No output"
@@ -1398,9 +1404,11 @@ def _run_autonomous():
             _auto_log.append(entry)
             if len(_auto_log) > 50:
                 _auto_log.pop(0)
-            print(f"[AUTO] Done: {summary[:120]}")
+            _log(f"[AUTO] Done: {summary[:200]}")
         except Exception as e:
-            print(f"[AUTO] Error: {e}")
+            import traceback
+            _log(f"[AUTO] Error: {e}\n{traceback.format_exc()}")
+        _log(f"[AUTO] Sleeping {AUTO_INTERVAL}s until next run")
         _time.sleep(AUTO_INTERVAL)
 
 def check_deps():
