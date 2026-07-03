@@ -591,6 +591,101 @@ def call_claude_full(messages: list) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════════
 #  AGENTIC LOOP (streaming SSE version)
 # ═══════════════════════════════════════════════════════════════════════════════
+#  SKILL DISPATCHER — handles requests locally without calling Claude
+# ═══════════════════════════════════════════════════════════════════════════════
+def _skill_dispatch(msg: str) -> str | None:
+    """
+    Try to handle the message with a built-in skill.
+    Returns response text if handled, None if Claude should take over.
+    """
+    m = msg.lower().strip()
+
+    # STATUS
+    if any(k in m for k in ["status", "brain bot", "brain-bot", "how many article", "articles published", "heartbeat"]):
+        return tool_get_brain_status()
+
+    # LIST ARTICLES
+    if any(k in m for k in ["list article", "show article", "all article", "published article"]):
+        try:
+            files = tool_github_list_files("articles")
+            count = len([l for l in files.splitlines() if l.strip().startswith("📄")])
+            return f"## Published Articles\n\n{files}\n\n**Total: {count} articles published.**"
+        except Exception as e:
+            return f"Error listing articles: {e}"
+
+    # PUBLISH NOW
+    if any(k in m for k in ["publish now", "publish article", "write article", "trigger publish", "run bot"]):
+        topic = msg
+        for strip in ["publish now", "publish article", "write article", "publish", "write"]:
+            topic = topic.lower().replace(strip, "").strip()
+        if len(topic) < 4:
+            topic = "next pending topic"
+        return tool_publish_article(topic)
+
+    # WORKFLOW RUNS
+    if any(k in m for k in ["workflow", "actions", "runs", "ci", "pipeline"]):
+        return tool_github_list_workflow_runs(limit=10)
+
+    # LIST FILES
+    if m.startswith("list files") or m.startswith("show files"):
+        path = m.replace("list files", "").replace("show files", "").strip() or ""
+        return tool_github_list_files(path)
+
+    # READ FILE
+    if m.startswith("read ") and ("/" in m or "." in m):
+        path = msg.strip()[5:].strip()
+        return tool_github_read_file(path)
+
+    # OPEN ISSUES
+    if any(k in m for k in ["list issue", "show issue", "open issue", "github issue"]):
+        return tool_github_list_issues()
+
+    # OPEN PRS
+    if any(k in m for k in ["pull request", "list pr", "open pr", "show pr"]):
+        return tool_github_list_prs()
+
+    # SEARCH WEB
+    if m.startswith("search ") or m.startswith("search the web"):
+        query = msg[7:].strip()
+        return tool_web_search(query)
+
+    # SITE INFO
+    if any(k in m for k in ["what is itvedas", "about the site", "site info", "tell me about"]):
+        return (
+            "## ITVedas\n\n"
+            "**itvedas.com** is an IT education platform covering 9 chapters:\n"
+            "Networking, Cloud, Security, DevOps, Databases, Linux, Hardware, Compliance, CVE Database.\n\n"
+            "- Static site hosted on GitHub Pages (repo: itvedas29/itvedas)\n"
+            "- Dark theme (#0A0A0F bg, #FF6B35 orange accent)\n"
+            "- VPS agent (this bot) publishes articles every 15 minutes autonomously\n"
+            "- 171 seed articles in the pipeline"
+        )
+
+    # HELP
+    if any(k in m for k in ["help", "what can you do", "commands", "capabilities"]):
+        return (
+            "## What I can do\n\n"
+            "**Without Claude (instant):**\n"
+            "- `status` — brain-bot status, articles published\n"
+            "- `list articles` — all published articles\n"
+            "- `publish [topic]` — queue an article for publishing\n"
+            "- `list files [path]` — browse repo files\n"
+            "- `read [path]` — read any repo file\n"
+            "- `list issues` / `list prs` — GitHub activity\n"
+            "- `search [query]` — web search\n"
+            "- `workflow runs` — recent CI runs\n\n"
+            "**With Claude (complex tasks):**\n"
+            "- Write full articles from scratch\n"
+            "- Analyse and improve site content\n"
+            "- Answer technical IT questions\n"
+            "- Plan content strategy\n"
+            "- Debug and fix code"
+        )
+
+    return None  # Claude handles it
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 def agentic_loop_stream(user_message: str, history: list) -> Generator[str, None, None]:
     """
     Yields SSE-formatted strings:
@@ -721,6 +816,17 @@ if FLASK_OK:
 
         def generate_and_track():
             global _history
+            # Try built-in skills first — no Claude API call needed
+            skill_result = _skill_dispatch(msg)
+            if skill_result is not None:
+                yield f"data: {json.dumps({'type': 'text', 'text': skill_result})}\n\n"
+                yield f"data: {json.dumps({'type': 'done'})}\n\n"
+                _history.append({"role": "user", "content": msg})
+                _history.append({"role": "assistant", "content": skill_result})
+                if len(_history) > 40:
+                    _history = _history[-40:]
+                return
+            # Fall back to Claude for complex requests
             assistant_text = ""
             for chunk in agentic_loop_stream(msg, _history):
                 try:
