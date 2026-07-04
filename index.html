@@ -671,17 +671,18 @@ nav a:not(.logo):not(.nav-cta):hover {
   transform: translateY(-1px);
 }
 
-/* Hero: add a subtle horizontal gradient separator line before stats */
+/* Hero: gradient separator line above stats (replaces flat border) */
 .hero-stats {
   position: relative;
+  border-top-color: transparent;
 }
 .hero-stats::before {
   content: '';
-  display: block; margin-bottom: 2rem;
+  position: absolute; top: 0; left: 8%; right: 8%;
   height: 1px;
   background: linear-gradient(90deg,
-    transparent 0%, rgba(255,255,255,0.08) 30%,
-    rgba(255,255,255,0.08) 70%, transparent 100%);
+    transparent 0%, rgba(255,255,255,0.12) 30%,
+    rgba(255,255,255,0.12) 70%, transparent 100%);
 }
 
 /* tags on chapter cards: cleaner glass */
