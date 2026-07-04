@@ -200,6 +200,98 @@ def validate_file(filepath):
         return False
 
 
+def validate_phase4_features():
+    """Validate Phase 4 features: content hierarchy, search, caching, analytics"""
+    print("\n⚙️  Phase 4 Features Validation")
+    print("=" * 60)
+
+    issues = []
+
+    # Check for Phase 4 JavaScript modules
+    modules = [
+        'js/content-hierarchy.js',
+        'js/advanced-search.js',
+        'js/cache-optimizer.js',
+        'js/analytics-tracker.js'
+    ]
+
+    for module in modules:
+        if os.path.exists(module):
+            size = os.path.getsize(module)
+            print(f"✓ {module} ({size} bytes)")
+        else:
+            issues.append(f"⚠️  Missing module: {module}")
+
+    # Verify search index is still present and valid
+    if os.path.exists('search-index.json'):
+        with open('search-index.json', 'r') as f:
+            try:
+                index = json.load(f)
+                print(f"✓ Search index: {len(index)} entries")
+            except json.JSONDecodeError:
+                issues.append("❌ Search index JSON invalid")
+    else:
+        issues.append("❌ search-index.json not found")
+
+    if issues:
+        for issue in issues:
+            print(issue)
+    else:
+        print("✓ All Phase 4 features present")
+
+    return len([i for i in issues if i.startswith('❌')]) == 0
+
+
+def validate_phase3_features():
+    """Validate Phase 3 features: mobile optimization and accessibility"""
+    print("\n📱 Phase 3 Features Validation")
+    print("=" * 60)
+
+    issues = []
+
+    # Check for Phase 3 JavaScript modules
+    modules = [
+        'js/mobile-nav.js',
+        'js/accessibility-audit.js',
+        'js/performance-optimization.js'
+    ]
+
+    for module in modules:
+        if os.path.exists(module):
+            size = os.path.getsize(module)
+            print(f"✓ {module} ({size} bytes)")
+        else:
+            issues.append(f"⚠️  Missing module: {module}")
+
+    # Check CSS for Phase 3 styles
+    if os.path.exists('css/shared.css'):
+        with open('css/shared.css', 'r') as f:
+            css = f.read()
+        if '.mobile-menu-toggle' in css and '.sr-only' in css and '@media (prefers-reduced-motion' in css:
+            print("✓ CSS includes mobile, accessibility, and performance styles")
+        else:
+            issues.append("⚠️  CSS may be missing Phase 3 styles")
+    else:
+        issues.append("❌ shared.css not found")
+
+    # Check for mobile viewport meta tag
+    if os.path.exists('index.html'):
+        with open('index.html', 'r') as f:
+            html = f.read()
+        if 'viewport' in html and 'device-width' in html:
+            print("✓ Mobile viewport meta tag present")
+        else:
+            issues.append("⚠️  Mobile viewport meta tag missing")
+
+    if issues:
+        for issue in issues:
+            print(issue)
+    else:
+        print("✓ All Phase 3 features present")
+
+    return len([i for i in issues if i.startswith('❌')]) == 0
+
+
 def validate_phase2_features():
     """Validate Phase 2 features: breadcrumbs, related content, image optimization"""
     print("\n🔧 Phase 2 Features Validation")
@@ -305,6 +397,20 @@ def main():
     # Validate Phase 2 features
     phase2_ok = validate_phase2_features()
     if not phase2_ok:
+        failed += 1
+    else:
+        passed += 1
+
+    # Validate Phase 3 features
+    phase3_ok = validate_phase3_features()
+    if not phase3_ok:
+        failed += 1
+    else:
+        passed += 1
+
+    # Validate Phase 4 features
+    phase4_ok = validate_phase4_features()
+    if not phase4_ok:
         failed += 1
     else:
         passed += 1
