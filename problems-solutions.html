@@ -10,8 +10,10 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0A0A0F;--surface:#111827;--border:#1E293B;--orange:#FF6B35;--text:#E2E8F0;--muted:#94A3B8;--dim:#64748B;--green:#22C55E;--red:#EF4444;--yellow:#F59E0B}
+:root{--bg:#0A0A0F;--surface:#111827;--border:#1E293B;--orange:#FF6B35;--orange2:#ff8c5a;--text:#E2E8F0;--muted:#94A3B8;--dim:#64748B;--green:#22C55E;--red:#EF4444;--yellow:#F59E0B;--blue:#3B82F6}
 body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;min-height:100vh}
+
+/* NAV */
 .topnav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;gap:1rem}
 .topnav a.logo{color:var(--orange);font-weight:700;font-size:1.1rem;text-decoration:none}
 .topnav .breadcrumb{color:var(--muted);font-size:.85rem}
@@ -20,7 +22,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
 .search-bar input{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem .5rem 2.2rem;color:var(--text);font-size:.9rem;width:260px;outline:none;transition:border-color .2s}
 .search-bar input:focus{border-color:var(--orange)}
 .search-bar svg{position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--dim)}
+
+/* LAYOUT */
 .page{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 53px)}
+
+/* SIDEBAR */
 .sidebar{border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:53px;height:calc(100vh - 53px);overflow-y:auto}
 .sidebar::-webkit-scrollbar{width:4px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
@@ -29,19 +35,26 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
 .sidebar a{display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem;border-radius:6px;color:var(--muted);font-size:.85rem;text-decoration:none;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left}
 .sidebar a:hover,.sidebar a.active{background:rgba(255,107,53,.1);color:var(--orange)}
 .sidebar a .count{margin-left:auto;background:var(--surface);color:var(--dim);font-size:.7rem;padding:.1rem .4rem;border-radius:999px}
+.sidebar a.active .count{background:rgba(255,107,53,.2);color:var(--orange)}
+
+/* MAIN */
 .main{padding:2rem 2.5rem;max-width:900px}
 .hero{margin-bottom:2.5rem}
-.hero h1{font-size:2rem;font-weight:700;margin-bottom:.5rem}
+.hero h1{font-size:2rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
 .hero h1 span{color:var(--orange)}
 .hero p{color:var(--muted);max-width:600px}
 .stats-row{display:flex;gap:1.5rem;margin-top:1.2rem;flex-wrap:wrap}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;font-size:.85rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;font-size:.85rem}
 .stat strong{color:var(--orange)}
+
+/* CHAPTER SECTIONS */
 .chapter-section{margin-bottom:3rem}
 .chapter-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
-.chapter-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.chapter-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .chapter-header h2{font-size:1.2rem;font-weight:600}
 .chapter-header .chapter-count{margin-left:auto;color:var(--dim);font-size:.8rem}
+
+/* PROBLEM CARDS */
 .problem-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:.8rem;overflow:hidden;transition:border-color .2s}
 .problem-card:hover{border-color:#2D3748}
 .problem-header{display:flex;align-items:center;gap:.8rem;padding:1rem 1.2rem;cursor:pointer;user-select:none}
@@ -57,19 +70,32 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-s
 .problem-card.open .problem-body{display:block}
 .prob-label{font-size:.75rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .4rem}
 .prob-text{color:#CBD5E1;font-size:.9rem}
-.code-block{background:#0D1117;border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;margin:.5rem 0;overflow-x:auto;font-size:.82rem;color:#7DD3FC;line-height:1.6;font-family:'Fira Code',monospace;white-space:pre}
+pre,code{font-family:'Fira Code','JetBrains Mono',monospace}
+.code-block{background:#0D1117;border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;margin:.5rem 0;overflow-x:auto;font-size:.82rem;color:#7DD3FC;line-height:1.6}
 .solution-steps{counter-reset:steps;list-style:none;margin:.4rem 0}
 .solution-steps li{counter-increment:steps;display:flex;gap:.7rem;margin-bottom:.6rem;font-size:.9rem;color:#CBD5E1}
 .solution-steps li::before{content:counter(steps);background:rgba(255,107,53,.15);color:var(--orange);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px}
 .tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem}
 .tag{font-size:.72rem;padding:.2rem .5rem;border-radius:4px;background:rgba(255,255,255,.05);color:var(--dim)}
-code{background:#1E293B;padding:.1rem .3rem;border-radius:3px;font-family:'Fira Code',monospace;font-size:.82rem;color:#7DD3FC}
+
+/* HIDDEN for search */
 .hidden{display:none!important}
+
+/* NO RESULTS */
 .no-results{text-align:center;padding:3rem;color:var(--muted);display:none}
-@media(max-width:768px){.page{grid-template-columns:1fr}.sidebar{display:none}.main{padding:1.2rem}.search-bar input{width:160px}.hero h1{font-size:1.4rem}}
+.no-results svg{margin-bottom:.8rem;color:var(--dim)}
+
+@media(max-width:768px){
+  .page{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:1.2rem}
+  .search-bar input{width:180px}
+  .hero h1{font-size:1.4rem}
+}
 </style>
 </head>
 <body>
+
 <nav class="topnav">
   <a href="/" class="logo">ITVedas</a>
   <span class="breadcrumb">/ <a href="#">Problems &amp; Solutions</a></span>
@@ -78,33 +104,71 @@ code{background:#1E293B;padding:.1rem .3rem;border-radius:3px;font-family:'Fira 
     <input type="text" id="searchInput" placeholder="Search problems..." autocomplete="off">
   </div>
 </nav>
+
 <div class="page">
+
+<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-section">
     <h4>All Topics</h4>
-    <a href="#" class="active" onclick="filterChapter('all',this);return false">
+    <a href="#all" class="active" onclick="filterChapter('all',this)">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      All Problems <span class="count">200+</span>
+      All Problems <span class="count" id="count-all">200</span>
     </a>
   </div>
   <div class="sidebar-section">
     <h4>Chapters</h4>
-    <a href="#networking" onclick="filterChapter('networking',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11l-5 6M12 11l5 6"/></svg>Networking <span class="count">28</span></a>
-    <a href="#security" onclick="filterChapter('security',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Security <span class="count">30</span></a>
-    <a href="#linux" onclick="filterChapter('linux',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Linux <span class="count">28</span></a>
-    <a href="#cloud" onclick="filterChapter('cloud',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Cloud <span class="count">24</span></a>
-    <a href="#devops" onclick="filterChapter('devops',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>DevOps <span class="count">24</span></a>
-    <a href="#databases" onclick="filterChapter('databases',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Databases <span class="count">24</span></a>
-    <a href="#hardware" onclick="filterChapter('hardware',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/></svg>Hardware <span class="count">22</span></a>
-    <a href="#compliance" onclick="filterChapter('compliance',this);return false"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Compliance <span class="count">20</span></a>
+    <a href="#networking" onclick="filterChapter('networking',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11l-5 6M12 11l5 6"/></svg>
+      Networking <span class="count">28</span>
+    </a>
+    <a href="#security" onclick="filterChapter('security',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Security <span class="count">30</span>
+    </a>
+    <a href="#linux" onclick="filterChapter('linux',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Linux <span class="count">28</span>
+    </a>
+    <a href="#cloud" onclick="filterChapter('cloud',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+      Cloud <span class="count">24</span>
+    </a>
+    <a href="#devops" onclick="filterChapter('devops',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      DevOps <span class="count">24</span>
+    </a>
+    <a href="#databases" onclick="filterChapter('databases',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      Databases <span class="count">24</span>
+    </a>
+    <a href="#hardware" onclick="filterChapter('hardware',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/></svg>
+      Hardware <span class="count">22</span>
+    </a>
+    <a href="#compliance" onclick="filterChapter('compliance',this)">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Compliance <span class="count">20</span>
+    </a>
   </div>
   <div class="sidebar-section">
     <h4>Filter by Severity</h4>
-    <a href="#" onclick="filterSeverity('high',this);return false"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>High Priority</a>
-    <a href="#" onclick="filterSeverity('med',this);return false"><span style="width:8px;height:8px;border-radius:50%;background:var(--yellow);display:inline-block"></span>Medium Priority</a>
-    <a href="#" onclick="filterSeverity('low',this);return false"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>Low Priority</a>
+    <a href="#" onclick="filterSeverity('high',this)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>
+      High Priority
+    </a>
+    <a href="#" onclick="filterSeverity('med',this)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--yellow);display:inline-block"></span>
+      Medium Priority
+    </a>
+    <a href="#" onclick="filterSeverity('low',this)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>
+      Low Priority
+    </a>
   </div>
 </aside>
+
+<!-- MAIN CONTENT -->
 <main class="main">
   <div class="hero">
     <h1>IT Problems &amp; <span>Solutions</span></h1>
@@ -115,716 +179,1002 @@ code{background:#1E293B;padding:.1rem .3rem;border-radius:3px;font-family:'Fira 
       <div class="stat"><strong>500+</strong> Commands &amp; Examples</div>
     </div>
   </div>
-  <div class="no-results" id="noResults"><p>No problems found for "<span id="searchTerm"></span>"</p></div>
 
-  <!-- NETWORKING -->
+  <div class="no-results" id="noResults">
+    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <p>No problems found for "<span id="searchTerm"></span>"</p>
+  </div>
+
+  <!-- ═══════ NETWORKING ═══════ -->
   <section class="chapter-section" id="networking" data-chapter="networking">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(59,130,246,.15);color:#3B82F6">🌐</div>
-      <h2>Networking Problems</h2><span class="chapter-count">28 problems</span>
+      <h2>Networking Problems</h2>
+      <span class="chapter-count">28 problems</span>
     </div>
+
+    <!-- CARD -->
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Cannot connect to the internet — all pings fail</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Cannot connect to the internet — all pings fail</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
-        <div class="prob-label">Problem</div><div class="prob-text">No internet access. <code>ping 8.8.8.8</code> times out. Browser shows "No internet connection".</div>
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">No internet access. <code>ping 8.8.8.8</code> times out. Browser shows "No internet connection".</div>
         <div class="prob-label">Diagnosis</div>
         <div class="code-block">ip addr show          # check if interface has IP
-ip route show         # check default gateway
-ping 192.168.1.1      # ping gateway
-ping 8.8.8.8          # test external
+ip route show         # check default gateway exists
+ping 192.168.1.1      # ping gateway — if fails, local issue
+ping 8.8.8.8          # if gateway ok, DNS/ISP issue
 cat /etc/resolv.conf  # check DNS servers</div>
-        <div class="prob-label">Solution</div>
+        <div class="prob-label">Solution — Step by Step</div>
         <ol class="solution-steps">
-          <li>Restart interface: <code>sudo ip link set eth0 down && sudo ip link set eth0 up</code></li>
-          <li>Request new IP: <code>sudo dhclient -r && sudo dhclient eth0</code></li>
-          <li>Fix DNS: <code>echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf</code></li>
-          <li>Add default route: <code>sudo ip route add default via 192.168.1.1</code></li>
-          <li>Restart networking: <code>sudo systemctl restart NetworkManager</code></li>
+          <li>Restart network interface: <code>sudo ip link set eth0 down && sudo ip link set eth0 up</code></li>
+          <li>Request new IP via DHCP: <code>sudo dhclient -r && sudo dhclient eth0</code></li>
+          <li>Add Google DNS if resolv.conf is empty: <code>echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf</code></li>
+          <li>Add missing default route: <code>sudo ip route add default via 192.168.1.1</code></li>
+          <li>If still failing, restart networking service: <code>sudo systemctl restart NetworkManager</code></li>
         </ol>
-        <div class="tags"><span class="tag">networking</span><span class="tag">dhcp</span><span class="tag">dns</span></div>
+        <div class="tags"><span class="tag">networking</span><span class="tag">dhcp</span><span class="tag">dns</span><span class="tag">linux</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">DNS resolution failing — domain not found</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">DNS resolution failing — domain not found</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
-        <div class="prob-label">Problem</div><div class="prob-text">Sites fail with "server not found" but IPs work. <code>nslookup google.com</code> returns SERVFAIL.</div>
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Websites fail with "server not found" but IP addresses work fine. <code>nslookup google.com</code> returns SERVFAIL.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">nslookup google.com
-nslookup google.com 8.8.8.8
-cat /etc/resolv.conf
-systemd-resolve --status</div>
+        <div class="code-block">nslookup google.com           # test DNS resolution
+nslookup google.com 8.8.8.8  # test with Google DNS directly
+cat /etc/resolv.conf          # see configured DNS servers
+systemd-resolve --status      # check systemd-resolved</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Set reliable DNS: add <code>nameserver 8.8.8.8</code> and <code>nameserver 1.1.1.1</code> to <code>/etc/resolv.conf</code></li>
-          <li>Flush cache: <code>sudo systemd-resolve --flush-caches</code></li>
-          <li>Windows: <code>ipconfig /flushdns</code></li>
-          <li>Restart resolver: <code>sudo systemctl restart systemd-resolved</code></li>
+          <li>Set reliable DNS servers: <code>sudo nano /etc/resolv.conf</code> → add <code>nameserver 8.8.8.8</code> and <code>nameserver 1.1.1.1</code></li>
+          <li>Flush DNS cache: <code>sudo systemd-resolve --flush-caches</code></li>
+          <li>On Windows: <code>ipconfig /flushdns</code></li>
+          <li>Restart DNS resolver: <code>sudo systemctl restart systemd-resolved</code></li>
         </ol>
-        <div class="tags"><span class="tag">dns</span><span class="tag">resolv.conf</span></div>
+        <div class="tags"><span class="tag">dns</span><span class="tag">networking</span><span class="tag">resolv.conf</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">High network latency and packet loss</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">High network latency and packet loss</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Slow network, video calls drop, ping shows >200ms or packet loss.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">ping -c 50 8.8.8.8
-mtr --report 8.8.8.8
-iperf3 -c iperf.he.net
-nethogs</div>
+        <div class="code-block">ping -c 50 8.8.8.8             # check packet loss %
+mtr --report 8.8.8.8          # traceroute + ping combined
+iperf3 -c iperf.he.net        # test bandwidth
+ss -tulpn                     # check what's using bandwidth
+nethogs                       # per-process bandwidth monitor</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Find bandwidth hogs: <code>sudo nethogs eth0</code></li>
-          <li>Check duplex: <code>ethtool eth0</code></li>
-          <li>Switch Wi-Fi to 5GHz band</li>
-          <li>If VPS: may be noisy neighbor — contact provider</li>
+          <li>Identify bandwidth hogs: <code>sudo nethogs eth0</code> — kill greedy processes</li>
+          <li>Check for duplex mismatch: <code>ethtool eth0</code> — set to <code>sudo ethtool -s eth0 duplex full speed 1000</code></li>
+          <li>Enable jumbo frames for LAN: <code>sudo ip link set eth0 mtu 9000</code></li>
+          <li>If Wi-Fi: switch to 5GHz band or move closer to AP</li>
+          <li>If VPS: contact provider — could be noisy neighbor on shared host</li>
         </ol>
         <div class="tags"><span class="tag">latency</span><span class="tag">packet-loss</span><span class="tag">mtr</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">SSH connection refused on port 22</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">SSH connection refused on port 22</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text"><code>ssh user@host</code> returns "Connection refused" or times out.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">nc -zv host 22
-systemctl status sshd
-ss -tlnp | grep 22
-ufw status</div>
+        <div class="code-block">nc -zv host 22          # test if port 22 open
+nmap -p 22 host         # port scan
+# on the server:
+systemctl status sshd   # is SSH daemon running?
+ss -tlnp | grep 22      # is it listening?
+ufw status              # firewall blocking?</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Start SSH: <code>sudo systemctl start sshd && sudo systemctl enable sshd</code></li>
-          <li>Open firewall: <code>sudo ufw allow 22/tcp</code></li>
-          <li>If port changed: <code>ssh -p 2222 user@host</code></li>
+          <li>Start SSH daemon: <code>sudo systemctl start sshd && sudo systemctl enable sshd</code></li>
+          <li>Allow port in firewall: <code>sudo ufw allow 22/tcp</code></li>
+          <li>If port was changed, connect with: <code>ssh -p 2222 user@host</code></li>
+          <li>Check SSH config: <code>sudo sshd -T | grep port</code></li>
         </ol>
-        <div class="tags"><span class="tag">ssh</span><span class="tag">firewall</span></div>
+        <div class="tags"><span class="tag">ssh</span><span class="tag">firewall</span><span class="tag">port-22</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">SSL certificate error in browser</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">SSL certificate error in browser</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
-        <div class="prob-label">Problem</div><div class="prob-text">"Your connection is not private" / NET::ERR_CERT_AUTHORITY_INVALID or expired certificate.</div>
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">"Your connection is not private" / NET::ERR_CERT_AUTHORITY_INVALID or certificate expired warning.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">openssl s_client -connect domain.com:443 2>/dev/null | openssl x509 -noout -dates</div>
+        <div class="code-block">openssl s_client -connect domain.com:443 2>/dev/null | openssl x509 -noout -dates
+# Shows notBefore and notAfter dates
+curl -vI https://domain.com 2>&1 | grep -E "expire|SSL|cert"</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Renew cert: <code>sudo certbot renew --force-renewal</code></li>
-          <li>Auto-renew cron: <code>0 12 * * * certbot renew --quiet</code></li>
-          <li>Check system clock: <code>timedatectl status</code> — wrong date breaks SSL</li>
+          <li>Check expiry: if expired, renew with <code>sudo certbot renew --force-renewal</code></li>
+          <li>Auto-renew setup: <code>sudo certbot renew --dry-run</code></li>
+          <li>Add cron: <code>0 12 * * * certbot renew --quiet</code></li>
+          <li>If self-signed cert: replace with Let's Encrypt free cert</li>
+          <li>Check system clock — wrong date causes SSL failures: <code>timedatectl status</code></li>
         </ol>
-        <div class="tags"><span class="tag">ssl</span><span class="tag">certbot</span><span class="tag">https</span></div>
+        <div class="tags"><span class="tag">ssl</span><span class="tag">https</span><span class="tag">certbot</span><span class="tag">certificate</span></div>
       </div>
     </div>
+
+    <div class="problem-card" data-chapter="networking" data-sev="low">
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-low">Low</span>
+        <span class="problem-title">VPN connected but no internet access</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">VPN shows connected but browsing fails. Also known as "VPN tunnel all traffic" issue.</div>
+        <div class="prob-label">Solution</div>
+        <ol class="solution-steps">
+          <li>Check routing table: <code>ip route show</code> — look for 0.0.0.0/0 via VPN interface</li>
+          <li>Enable split tunneling in VPN client settings to allow non-VPN traffic</li>
+          <li>Add DNS bypass: set DNS to 8.8.8.8 in network settings while VPN is on</li>
+          <li>On OpenVPN: remove <code>redirect-gateway def1</code> from config if you don't want all traffic routed</li>
+        </ol>
+        <div class="tags"><span class="tag">vpn</span><span class="tag">routing</span><span class="tag">split-tunnel</span></div>
+      </div>
+    </div>
+
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Port 80/443 not accessible from outside</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Port 80/443 not accessible from outside</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Web server runs locally but external users can't reach the site.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">ss -tlnp | grep -E "80|443"
-sudo ufw status
-curl -I http://localhost</div>
+        <div class="code-block">ss -tlnp | grep -E "80|443"      # is nginx/apache listening?
+sudo ufw status                    # firewall rules
+curl -I http://localhost            # local test
+# From outside:
+curl -I http://YOUR_IP</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Open firewall: <code>sudo ufw allow 80/tcp && sudo ufw allow 443/tcp</code></li>
-          <li>Ensure server binds to 0.0.0.0 not 127.0.0.1</li>
-          <li>Cloud: add inbound rules in security group</li>
+          <li>Check server binds to 0.0.0.0 not 127.0.0.1 in nginx/apache config</li>
+          <li>If cloud server (AWS/DO): add inbound rules in security group / firewall panel</li>
           <li>Restart web server: <code>sudo systemctl restart nginx</code></li>
         </ol>
-        <div class="tags"><span class="tag">nginx</span><span class="tag">firewall</span><span class="tag">ufw</span></div>
+        <div class="tags"><span class="tag">nginx</span><span class="tag">firewall</span><span class="tag">ufw</span><span class="tag">web-server</span></div>
       </div>
     </div>
-    <div class="problem-card" data-chapter="networking" data-sev="low">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-low">Low</span><span class="problem-title">VPN connected but no internet access</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Check routing: <code>ip route show</code> — look for 0.0.0.0/0 via VPN</li>
-          <li>Enable split tunneling in VPN client</li>
-          <li>Set DNS to 8.8.8.8 while VPN is on</li>
-          <li>OpenVPN: remove <code>redirect-gateway def1</code> from config</li>
-        </ol>
-        <div class="tags"><span class="tag">vpn</span><span class="tag">routing</span></div>
-      </div>
-    </div>
-    <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Network interface not showing IP address</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>List interfaces: <code>ip link show</code></li>
-          <li>Bring up interface: <code>sudo ip link set eth0 up</code></li>
-          <li>Request DHCP: <code>sudo dhclient eth0</code></li>
-          <li>Set static IP: <code>sudo ip addr add 192.168.1.100/24 dev eth0</code></li>
-        </ol>
-        <div class="tags"><span class="tag">dhcp</span><span class="tag">ip-address</span><span class="tag">interface</span></div>
-      </div>
-    </div>
+
   </section>
 
-  <!-- SECURITY -->
+  <!-- ═══════ SECURITY ═══════ -->
   <section class="chapter-section" id="security" data-chapter="security">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(239,68,68,.15);color:#EF4444">🔒</div>
-      <h2>Security Problems</h2><span class="chapter-count">30 problems</span>
+      <h2>Security Problems</h2>
+      <span class="chapter-count">30 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Server getting brute-forced via SSH</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Server getting brute-forced via SSH</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Hundreds of failed SSH login attempts in auth.log. Server is being scanned/attacked.</div>
         <div class="prob-label">Diagnosis</div>
         <div class="code-block">sudo grep "Failed password" /var/log/auth.log | tail -20
-sudo grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head</div>
+sudo grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -10</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Install fail2ban: <code>sudo apt install fail2ban && sudo systemctl enable fail2ban</code></li>
-          <li>Disable password auth: set <code>PasswordAuthentication no</code> in <code>/etc/ssh/sshd_config</code></li>
-          <li>Change SSH port: <code>Port 2222</code> in sshd_config</li>
-          <li>Allowlist your IP: <code>sudo ufw allow from YOUR_IP to any port 22</code></li>
-          <li>Reload: <code>sudo systemctl reload sshd</code></li>
+          <li>Disable password auth — use keys only: in <code>/etc/ssh/sshd_config</code> set <code>PasswordAuthentication no</code></li>
+          <li>Change SSH port: <code>Port 2222</code> in sshd_config (reduces noise significantly)</li>
+          <li>Allow only your IP: <code>sudo ufw allow from YOUR_IP to any port 22</code></li>
+          <li>Reload SSH: <code>sudo systemctl reload sshd</code></li>
         </ol>
-        <div class="tags"><span class="tag">ssh</span><span class="tag">brute-force</span><span class="tag">fail2ban</span></div>
+        <div class="tags"><span class="tag">ssh</span><span class="tag">brute-force</span><span class="tag">fail2ban</span><span class="tag">hardening</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Website defaced or injected with malware</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Website defaced or injected with malware</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Site shows unexpected content, redirects visitors, or Google marks it as dangerous.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">find /var/www -name "*.php" -newer /var/www/index.php -ls
-grep -r "eval(base64_decode" /var/www/</div>
+        <div class="code-block">find /var/www -name "*.php" -newer /var/www/index.php -ls  # recently changed files
+grep -r "eval(base64_decode" /var/www/                     # common malware pattern
+grep -r "iframe" /var/www/ --include="*.html"              # injected iframes</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Take site offline immediately</li>
+          <li>Take site offline immediately to protect visitors</li>
           <li>Restore from last known clean backup</li>
-          <li>Change ALL passwords: FTP, DB, CMS admin, hosting panel</li>
-          <li>Update CMS and plugins to patch entry point</li>
-          <li>Add Cloudflare WAF — free plan blocks most attacks</li>
+          <li>Change all passwords: FTP, database, CMS admin, hosting panel</li>
+          <li>Update CMS/plugins to latest versions — patch the entry point</li>
+          <li>Add WAF: Cloudflare free plan blocks most attacks</li>
+          <li>Request Google reconsideration after cleanup</li>
         </ol>
-        <div class="tags"><span class="tag">malware</span><span class="tag">defacement</span><span class="tag">recovery</span></div>
+        <div class="tags"><span class="tag">malware</span><span class="tag">defacement</span><span class="tag">cms</span><span class="tag">recovery</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Ransomware encrypted files on server</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Ransomware encrypted files on server</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Files renamed with unknown extension (.locked, .crypt). Ransom note left on server.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Isolate server immediately — disconnect from network</li>
-          <li>Do NOT pay the ransom</li>
-          <li>Check nomoreransom.org for free decryptors</li>
-          <li>Restore from offline backup</li>
-          <li>Report to your national cybercrime unit</li>
-          <li>After restore: patch entry vector, enable EDR, set up immutable backups</li>
+          <li>Immediately isolate the server — disconnect from network</li>
+          <li>Do NOT pay the ransom — no guarantee of decryption</li>
+          <li>Identify the ransomware family at nomoreransom.org — may have free decryptor</li>
+          <li>Restore from offline backup (why you should always have air-gapped backups)</li>
+          <li>Report to CISA (US) or your national cybercrime unit</li>
+          <li>After restore: patch the entry vector, enable EDR, set up immutable backups</li>
         </ol>
         <div class="tags"><span class="tag">ransomware</span><span class="tag">incident-response</span><span class="tag">backup</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="security" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">API keys accidentally pushed to GitHub</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">API keys accidentally pushed to GitHub</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">AWS keys, API tokens or passwords committed to a public or private repository.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Revoke the exposed key IMMEDIATELY</li>
-          <li>Remove from history: <code>git filter-repo --path secrets.env --invert-paths</code></li>
+          <li>Revoke the exposed key IMMEDIATELY — do this before anything else</li>
+          <li>Remove from Git history: <code>git filter-repo --path secrets.env --invert-paths</code></li>
           <li>Force push: <code>git push origin --force --all</code></li>
           <li>Add to .gitignore: <code>echo ".env" >> .gitignore</code></li>
-          <li>Use environment variables or secrets manager going forward</li>
+          <li>Use environment variables or a secrets manager (AWS Secrets Manager, HashiCorp Vault)</li>
+          <li>Enable GitHub secret scanning to catch this automatically in future</li>
         </ol>
-        <div class="tags"><span class="tag">api-keys</span><span class="tag">git</span><span class="tag">secrets</span></div>
+        <div class="tags"><span class="tag">api-keys</span><span class="tag">git</span><span class="tag">secrets</span><span class="tag">github</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="security" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Missing security headers — F grade on securityheaders.com</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Users logging in from suspicious locations</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Account accessed from unknown country/IP. Possible credential compromise.</div>
+        <div class="prob-label">Solution</div>
+        <ol class="solution-steps">
+          <li>Force password reset for affected account immediately</li>
+          <li>Invalidate all existing sessions</li>
+          <li>Enable MFA — even if password is leaked, attacker can't log in</li>
+          <li>Check for other accounts using same password — change those too</li>
+          <li>Review audit logs for what the attacker accessed or changed</li>
+          <li>Set up geo-blocking or anomaly detection alerts</li>
+        </ol>
+        <div class="tags"><span class="tag">account-takeover</span><span class="tag">mfa</span><span class="tag">incident</span></div>
+      </div>
+    </div>
+
+    <div class="problem-card" data-chapter="security" data-sev="low">
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-low">Low</span>
+        <span class="problem-title">Missing security headers on web application</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">securityheaders.com gives F grade. Missing CSP, HSTS, X-Frame-Options etc.</div>
         <div class="prob-label">Solution — Add to Nginx config</div>
         <div class="code-block">add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header X-Frame-Options "SAMEORIGIN" always;
 add_header X-XSS-Protection "1; mode=block" always;
-add_header Referrer-Policy "strict-origin-when-cross-origin" always;</div>
-        <div class="tags"><span class="tag">security-headers</span><span class="tag">nginx</span><span class="tag">hsts</span></div>
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline';" always;</div>
+        <div class="tags"><span class="tag">security-headers</span><span class="tag">nginx</span><span class="tag">csp</span><span class="tag">hsts</span></div>
       </div>
     </div>
-    <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">SQL Injection vulnerability in web app</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Problem</div><div class="prob-text">User input goes directly into SQL queries. Attacker can dump database, bypass auth, or delete data.</div>
-        <div class="prob-label">Vulnerable code</div>
-        <div class="code-block">query = "SELECT * FROM users WHERE id = " + user_input  # NEVER DO THIS</div>
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Use parameterized queries: <code>cursor.execute("SELECT * FROM users WHERE id = %s", (user_input,))</code></li>
-          <li>Use an ORM (SQLAlchemy, Django ORM) — handles escaping automatically</li>
-          <li>Validate and whitelist input types — if expecting integer, cast to int first</li>
-          <li>Add WAF to catch exploitation attempts</li>
-        </ol>
-        <div class="tags"><span class="tag">sql-injection</span><span class="tag">owasp</span><span class="tag">web-security</span></div>
-      </div>
-    </div>
+
   </section>
 
-  <!-- LINUX -->
+  <!-- ═══════ LINUX ═══════ -->
   <section class="chapter-section" id="linux" data-chapter="linux">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(234,179,8,.15);color:#EAB308">🐧</div>
-      <h2>Linux Problems</h2><span class="chapter-count">28 problems</span>
+      <h2>Linux Problems</h2>
+      <span class="chapter-count">28 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Disk 100% full — server unresponsive</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Disk 100% full — server unresponsive</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text"><code>df -h</code> shows 100% usage. Applications crash, logs stop writing, server may become unreachable.</div>
         <div class="prob-label">Find the culprit</div>
-        <div class="code-block">df -h
-du -sh /* 2>/dev/null | sort -rh | head -10
-du -sh /var/log/* | sort -rh | head -10
-find / -name "*.log" -size +100M 2>/dev/null</div>
+        <div class="code-block">df -h                                    # which partition is full
+du -sh /* 2>/dev/null | sort -rh | head -10  # top directories by size
+du -sh /var/log/* | sort -rh | head -10      # often logs are the issue
+find / -name "*.log" -size +100M 2>/dev/null # big log files</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Clear old logs: <code>sudo journalctl --vacuum-size=100M</code></li>
           <li>Remove old kernels: <code>sudo apt autoremove --purge</code></li>
           <li>Clean apt cache: <code>sudo apt clean</code></li>
-          <li>Delete large temp files: <code>sudo find /tmp -size +50M -delete</code></li>
-          <li>Truncate log: <code>sudo truncate -s 0 /var/log/syslog</code></li>
+          <li>Find and delete large temp files: <code>sudo find /tmp -size +50M -delete</code></li>
+          <li>Truncate large log file (safe): <code>sudo truncate -s 0 /var/log/syslog</code></li>
+          <li>Set log rotation: configure <code>/etc/logrotate.conf</code></li>
         </ol>
-        <div class="tags"><span class="tag">disk-full</span><span class="tag">logs</span><span class="tag">storage</span></div>
+        <div class="tags"><span class="tag">disk-full</span><span class="tag">logs</span><span class="tag">storage</span><span class="tag">linux</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">CPU at 100% — server crawling</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">CPU at 100% — server crawling</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">top
-ps aux --sort=-%cpu | head -10
-htop</div>
+        <div class="code-block">top                           # see what's eating CPU (press P to sort by CPU)
+ps aux --sort=-%cpu | head -10  # top CPU processes
+htop                          # visual alternative
+iotop                         # if it's I/O wait, not CPU</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Kill runaway process: <code>kill -9 PID</code></li>
-          <li>Lower priority: <code>renice +10 PID</code></li>
-          <li>Check for crypto miners: <code>ps aux | grep -i "xmrig\|minerd"</code></li>
-          <li>Limit CPU in systemd service: add <code>CPUQuota=50%</code></li>
+          <li>Nice a process to lower priority: <code>renice +10 PID</code></li>
+          <li>Check for crypto miners: <code>ps aux | grep -i "minerd\|xmrig\|cryptonight"</code></li>
+          <li>If it's a web process: check for slow database queries or infinite loops in code</li>
+          <li>Set CPU limits with cgroups or systemd: <code>CPUQuota=50%</code> in service file</li>
         </ol>
-        <div class="tags"><span class="tag">cpu</span><span class="tag">performance</span><span class="tag">process</span></div>
+        <div class="tags"><span class="tag">cpu</span><span class="tag">performance</span><span class="tag">top</span><span class="tag">process</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Permission denied errors on files</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Permission denied errors on files/directories</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text"><code>bash: ./script.sh: Permission denied</code> or cannot write to a directory you should own.</div>
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">ls -la /path/to/file
-whoami
-id
-stat /path/to/file</div>
+        <div class="code-block">ls -la /path/to/file       # check permissions and owner
+whoami                     # current user
+id                         # groups you're in
+stat /path/to/file         # full permission details</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Make executable: <code>chmod +x script.sh</code></li>
+          <li>Make script executable: <code>chmod +x script.sh</code></li>
           <li>Change ownership: <code>sudo chown user:group /path</code></li>
-          <li>Web dir perms: <code>sudo chown -R www-data:www-data /var/www</code></li>
-          <li>Add to group: <code>sudo usermod -aG groupname username</code></li>
+          <li>Fix web directory permissions: <code>sudo chown -R www-data:www-data /var/www</code></li>
+          <li>Set correct directory perms: <code>chmod 755 /dir</code> (dirs need execute bit)</li>
+          <li>Add user to group: <code>sudo usermod -aG groupname username</code> (log out and back in)</li>
         </ol>
-        <div class="tags"><span class="tag">permissions</span><span class="tag">chmod</span><span class="tag">chown</span></div>
+        <div class="tags"><span class="tag">permissions</span><span class="tag">chmod</span><span class="tag">chown</span><span class="tag">linux</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="linux" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Service fails to start after reboot</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Service fails to start after reboot</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">systemctl status servicename
-journalctl -u servicename -n 50</div>
+        <div class="code-block">systemctl status servicename       # see error message
+journalctl -u servicename -n 50    # last 50 log lines for service
+journalctl -u servicename --since "1 hour ago"</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Enable auto-start: <code>sudo systemctl enable servicename</code></li>
-          <li>Fix config errors shown in journal</li>
-          <li>Check for port conflicts: <code>ss -tlnp | grep PORT</code></li>
-          <li>Reload daemon: <code>sudo systemctl daemon-reload</code></li>
+          <li>Fix config errors shown in journal output</li>
+          <li>Check dependencies: <code>systemctl list-dependencies servicename</code></li>
+          <li>If port conflict: <code>ss -tlnp | grep PORT</code> — kill conflicting process</li>
+          <li>Reload daemon after editing service file: <code>sudo systemctl daemon-reload</code></li>
         </ol>
-        <div class="tags"><span class="tag">systemd</span><span class="tag">service</span><span class="tag">boot</span></div>
+        <div class="tags"><span class="tag">systemd</span><span class="tag">service</span><span class="tag">boot</span><span class="tag">journalctl</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="linux" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Out of memory — OOM killer killing processes</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Out of memory — OOM killer killing processes</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">free -h
-dmesg | grep -i "oom\|killed"
-ps aux --sort=-%mem | head -10</div>
+        <div class="code-block">free -h                           # see available RAM
+dmesg | grep -i "oom\|killed"     # OOM killer log
+ps aux --sort=-%mem | head -10    # top memory processes</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Add swap: <code>sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile</code></li>
-          <li>Make permanent: add <code>/swapfile none swap sw 0 0</code> to <code>/etc/fstab</code></li>
-          <li>Tune: <code>sudo sysctl vm.swappiness=10</code></li>
+          <li>Add swap (quick fix): <code>sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile</code></li>
+          <li>Make swap permanent: add <code>/swapfile none swap sw 0 0</code> to <code>/etc/fstab</code></li>
+          <li>Tune swappiness: <code>sudo sysctl vm.swappiness=10</code></li>
+          <li>Find memory leaks — restart the leaking service nightly via cron</li>
+          <li>Upgrade RAM or move to larger server</li>
         </ol>
-        <div class="tags"><span class="tag">memory</span><span class="tag">oom</span><span class="tag">swap</span></div>
+        <div class="tags"><span class="tag">memory</span><span class="tag">oom</span><span class="tag">swap</span><span class="tag">ram</span></div>
       </div>
     </div>
-    <div class="problem-card" data-chapter="linux" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">cron job not running as expected</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Diagnosis</div>
-        <div class="code-block">grep CRON /var/log/syslog | tail -20
-crontab -l
-systemctl status cron</div>
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Test cron syntax at crontab.guru</li>
-          <li>Cron uses minimal PATH — use full paths: <code>/usr/bin/python3</code> not <code>python3</code></li>
-          <li>Redirect output to log: <code>* * * * * /script.sh >> /var/log/myjob.log 2>&1</code></li>
-          <li>Check cron is running: <code>sudo systemctl start cron</code></li>
-        </ol>
-        <div class="tags"><span class="tag">cron</span><span class="tag">scheduling</span><span class="tag">linux</span></div>
-      </div>
-    </div>
+
   </section>
 
-  <!-- CLOUD -->
+  <!-- ═══════ CLOUD ═══════ -->
   <section class="chapter-section" id="cloud" data-chapter="cloud">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(99,102,241,.15);color:#818CF8">☁️</div>
-      <h2>Cloud Problems</h2><span class="chapter-count">24 problems</span>
+      <h2>Cloud Problems</h2>
+      <span class="chapter-count">24 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="cloud" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">AWS bill unexpectedly high — cost spike</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">AWS bill unexpectedly high — cost spike</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
-        <div class="prob-label">Common culprits</div>
-        <div class="prob-text">NAT Gateway transfer, forgotten EC2 instances, S3 request spikes, unattached Elastic IPs</div>
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">AWS/GCP/Azure bill 10x higher than expected. Often caused by forgotten resources or data transfer costs.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Identify spike: AWS Console → Cost Explorer → by service</li>
-          <li>Set billing alarm in CloudWatch</li>
-          <li>Enable AWS Budgets — email alert before threshold hit</li>
-          <li>Use Reserved Instances for predictable workloads (saves 40-70%)</li>
-          <li>Use AWS Trusted Advisor to find idle resources</li>
+          <li>Go to AWS Cost Explorer → identify the service causing the spike</li>
+          <li>Common culprits: NAT Gateway data transfer, unused EC2 instances, S3 request spikes, Elastic IPs not attached</li>
+          <li>Set billing alarm: <code>aws cloudwatch put-metric-alarm --alarm-name billing-alarm --metric-name EstimatedCharges</code></li>
+          <li>Enable AWS Budgets — get email before threshold reached</li>
+          <li>Use Reserved Instances or Savings Plans for predictable workloads (saves 40-70%)</li>
+          <li>Delete idle resources: use AWS Trusted Advisor to find them</li>
         </ol>
-        <div class="tags"><span class="tag">aws</span><span class="tag">cost</span><span class="tag">billing</span></div>
+        <div class="tags"><span class="tag">aws</span><span class="tag">cost</span><span class="tag">billing</span><span class="tag">cloud</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="cloud" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Locked out of EC2 after security group change</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">EC2 instance unreachable after security group change</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Locked yourself out of EC2 — SSH and HTTP both blocked after mis-configuring security group.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>AWS Console → EC2 → Security Groups → Edit Inbound Rules</li>
-          <li>Add SSH rule: Port 22, Source: My IP</li>
-          <li>For future: use AWS Systems Manager Session Manager (no port 22 needed)</li>
+          <li>Go to AWS Console → EC2 → Security Groups</li>
+          <li>Find the security group → Edit Inbound Rules</li>
+          <li>Add rule: Type SSH, Port 22, Source: My IP (or 0.0.0.0/0 temporarily)</li>
+          <li>For future: use AWS Systems Manager Session Manager — SSH without port 22</li>
+          <li>Never remove all rules in one batch — always add new rule before removing old</li>
         </ol>
-        <div class="tags"><span class="tag">ec2</span><span class="tag">security-group</span><span class="tag">lockout</span></div>
+        <div class="tags"><span class="tag">ec2</span><span class="tag">security-group</span><span class="tag">aws</span><span class="tag">lockout</span></div>
       </div>
     </div>
-    <div class="problem-card" data-chapter="cloud" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">S3 bucket accidentally made public</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Block immediately: S3 → Bucket → Permissions → Block all public access → Enable</li>
-          <li>Via CLI: <code>aws s3api put-public-access-block --bucket BUCKET --public-access-block-configuration "BlockPublicAcls=true,BlockPublicPolicy=true,IgnorePublicAcls=true,RestrictPublicBuckets=true"</code></li>
-          <li>Enable S3 Block Public Access at account level</li>
-        </ol>
-        <div class="tags"><span class="tag">s3</span><span class="tag">data-exposure</span><span class="tag">aws</span></div>
-      </div>
-    </div>
+
     <div class="problem-card" data-chapter="cloud" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Kubernetes pod stuck in CrashLoopBackOff</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">S3 bucket public — data exposed</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">S3 bucket accidentally made public exposing files. Noticed via security scan or data breach.</div>
+        <div class="prob-label">Solution</div>
+        <ol class="solution-steps">
+          <li>Block public access immediately: AWS Console → S3 → Bucket → Permissions → Block all public access → Enable</li>
+          <li>Or via CLI: <code>aws s3api put-public-access-block --bucket BUCKET --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"</code></li>
+          <li>Audit what was accessed: enable S3 server access logging and CloudTrail</li>
+          <li>Enable S3 Block Public Access at account level to prevent future mistakes</li>
+        </ol>
+        <div class="tags"><span class="tag">s3</span><span class="tag">aws</span><span class="tag">data-exposure</span><span class="tag">security</span></div>
+      </div>
+    </div>
+
+    <div class="problem-card" data-chapter="cloud" data-sev="med">
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Kubernetes pod stuck in CrashLoopBackOff</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">kubectl get pods
-kubectl describe pod POD_NAME
-kubectl logs POD_NAME --previous</div>
+        <div class="code-block">kubectl get pods                        # see status
+kubectl describe pod POD_NAME          # events and error details
+kubectl logs POD_NAME --previous       # logs from crashed container
+kubectl logs POD_NAME -c CONTAINER     # specific container logs</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Read crash logs — root cause is almost always in there</li>
-          <li>Common causes: missing env vars, wrong image, misconfigured liveness probe</li>
-          <li>Exit code 137 = OOMKilled — increase memory limit</li>
-          <li>Restart deployment: <code>kubectl rollout restart deployment/NAME</code></li>
+          <li>Read crash logs — usually reveals the root cause immediately</li>
+          <li>Common causes: missing environment variables, wrong image, misconfigured liveness probe</li>
+          <li>Check resource limits — OOMKilled means pod ran out of memory: <code>kubectl describe pod | grep -A5 Limits</code></li>
+          <li>Test image locally: <code>docker run --rm IMAGE_NAME</code></li>
+          <li>Fix config then: <code>kubectl rollout restart deployment/DEPLOYMENT_NAME</code></li>
         </ol>
-        <div class="tags"><span class="tag">kubernetes</span><span class="tag">k8s</span><span class="tag">crashloop</span></div>
+        <div class="tags"><span class="tag">kubernetes</span><span class="tag">k8s</span><span class="tag">crashloop</span><span class="tag">pods</span></div>
       </div>
     </div>
+
   </section>
 
-  <!-- DEVOPS -->
+  <!-- ═══════ DEVOPS ═══════ -->
   <section class="chapter-section" id="devops" data-chapter="devops">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(16,185,129,.15);color:#10B981">⚙️</div>
-      <h2>DevOps Problems</h2><span class="chapter-count">24 problems</span>
+      <h2>DevOps Problems</h2>
+      <span class="chapter-count">24 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="devops" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Docker container exits immediately after start</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Docker container exits immediately after start</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">docker ps -a
-docker logs CONTAINER_ID
-docker run -it IMAGE /bin/sh</div>
+        <div class="code-block">docker ps -a                   # see exited containers
+docker logs CONTAINER_ID       # see what it printed before dying
+docker inspect CONTAINER_ID    # full config and exit code
+docker run -it IMAGE /bin/sh   # run interactively to debug</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Exit code 1 = app error — check logs</li>
+          <li>Exit code 1 = application error — check logs for crash message</li>
           <li>Exit code 137 = OOM killed — increase <code>--memory</code> limit</li>
-          <li>Add CMD to Dockerfile: <code>CMD ["python", "app.py"]</code></li>
-          <li>Pass env vars: <code>--env-file .env</code></li>
+          <li>Missing CMD/ENTRYPOINT — add to Dockerfile: <code>CMD ["python", "app.py"]</code></li>
+          <li>Missing env vars — add <code>-e VAR=value</code> or use <code>--env-file .env</code></li>
+          <li>Permission issue on mounted volumes — check <code>:z</code> flag on SELinux systems</li>
         </ol>
-        <div class="tags"><span class="tag">docker</span><span class="tag">container</span></div>
+        <div class="tags"><span class="tag">docker</span><span class="tag">container</span><span class="tag">devops</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="devops" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">CI/CD pipeline failing on every push</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">CI/CD pipeline failing on every push</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">GitHub Actions / Jenkins pipeline red on every commit. Tests pass locally but fail in CI.</div>
+        <div class="prob-label">Solution</div>
+        <ol class="solution-steps">
+          <li>Read the full CI log — don't just see "failed", read WHY</li>
+          <li>Common: missing secrets — add to GitHub Settings → Secrets and variables</li>
+          <li>Environment mismatch — CI uses different Node/Python version: pin it in workflow <code>node-version: '20'</code></li>
+          <li>Missing test dependencies: add install step before test step</li>
+          <li>Reproduce locally: <code>act</code> tool runs GitHub Actions locally</li>
+          <li>Port conflicts between parallel jobs: use dynamic ports or sequential jobs</li>
+        </ol>
+        <div class="tags"><span class="tag">ci-cd</span><span class="tag">github-actions</span><span class="tag">jenkins</span><span class="tag">pipeline</span></div>
+      </div>
+    </div>
+
+    <div class="problem-card" data-chapter="devops" data-sev="med">
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Git merge conflicts blocking deployment</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Read the full CI log — don't just see "failed", find WHY</li>
-          <li>Missing secrets: add to GitHub Settings → Secrets and variables</li>
-          <li>Pin runtime version in workflow: <code>node-version: '20'</code></li>
-          <li>Reproduce locally with <code>act</code> tool</li>
+          <li>See all conflicted files: <code>git status | grep "both modified"</code></li>
+          <li>Open each file — resolve between <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> markers</li>
+          <li>Use visual tool: <code>git mergetool</code> (opens vimdiff or configured tool)</li>
+          <li>After resolving: <code>git add . && git commit</code></li>
+          <li>Prevent conflicts: merge main into feature branches frequently, keep PRs small</li>
         </ol>
-        <div class="tags"><span class="tag">ci-cd</span><span class="tag">github-actions</span><span class="tag">pipeline</span></div>
+        <div class="tags"><span class="tag">git</span><span class="tag">merge</span><span class="tag">conflict</span><span class="tag">devops</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="devops" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Nginx 502 Bad Gateway</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Nginx 502 Bad Gateway error</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">sudo tail -f /var/log/nginx/error.log
-systemctl status gunicorn
-curl http://localhost:8000</div>
+        <div class="code-block">sudo tail -f /var/log/nginx/error.log   # see the actual error
+systemctl status gunicorn              # is backend running?
+curl http://localhost:8000             # test backend directly
+ss -tlnp | grep 8000                  # is backend listening on expected port?</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>502 = nginx can't reach backend — start the backend service</li>
           <li>Check proxy_pass port matches where backend actually runs</li>
-          <li>Increase timeout: <code>proxy_read_timeout 300;</code></li>
-          <li>Reload: <code>sudo nginx -t && sudo systemctl reload nginx</code></li>
+          <li>Increase timeouts if backend is slow: <code>proxy_read_timeout 300;</code> in nginx config</li>
+          <li>Check unix socket permissions if using socket instead of port</li>
+          <li>Reload after config fix: <code>sudo nginx -t && sudo systemctl reload nginx</code></li>
         </ol>
-        <div class="tags"><span class="tag">nginx</span><span class="tag">502</span><span class="tag">proxy</span></div>
+        <div class="tags"><span class="tag">nginx</span><span class="tag">502</span><span class="tag">proxy</span><span class="tag">backend</span></div>
       </div>
     </div>
-    <div class="problem-card" data-chapter="devops" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Git push rejected — non-fast-forward</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Pull and rebase: <code>git pull --rebase origin main</code></li>
-          <li>Resolve any conflicts, then push again</li>
-          <li>Never force push to shared branches without team consent</li>
-        </ol>
-        <div class="tags"><span class="tag">git</span><span class="tag">push</span><span class="tag">rebase</span></div>
-      </div>
-    </div>
+
   </section>
 
-  <!-- DATABASES -->
+  <!-- ═══════ DATABASES ═══════ -->
   <section class="chapter-section" id="databases" data-chapter="databases">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(168,85,247,.15);color:#A855F7">🗄️</div>
-      <h2>Database Problems</h2><span class="chapter-count">24 problems</span>
+      <h2>Database Problems</h2>
+      <span class="chapter-count">24 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">MySQL queries extremely slow — full table scans</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">MySQL queries extremely slow — full table scans</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
         <div class="code-block">EXPLAIN SELECT * FROM users WHERE email = 'test@test.com';
--- Look for type: ALL = full table scan
-SHOW FULL PROCESSLIST;</div>
+-- Look for "type: ALL" = full table scan — needs index
+SHOW FULL PROCESSLIST;          -- see running queries
+SHOW VARIABLES LIKE 'slow_query_log%';  -- enable slow query log</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Add index: <code>CREATE INDEX idx_email ON users(email);</code></li>
-          <li>Enable slow query log: <code>SET GLOBAL slow_query_log = 1;</code></li>
-          <li>Composite index for multi-column WHERE: <code>CREATE INDEX idx ON table(col1, col2);</code></li>
-          <li>Update stats: <code>ANALYZE TABLE users;</code></li>
+          <li>Add index on searched column: <code>CREATE INDEX idx_email ON users(email);</code></li>
+          <li>Enable slow query log: <code>SET GLOBAL slow_query_log = 1; SET GLOBAL long_query_time = 1;</code></li>
+          <li>Analyze with EXPLAIN — every query plan should show index use, not ALL</li>
+          <li>Use composite index for multi-column WHERE: <code>CREATE INDEX idx_name ON table(col1, col2);</code></li>
+          <li>Run ANALYZE TABLE to update statistics: <code>ANALYZE TABLE users;</code></li>
         </ol>
-        <div class="tags"><span class="tag">mysql</span><span class="tag">index</span><span class="tag">slow-query</span></div>
+        <div class="tags"><span class="tag">mysql</span><span class="tag">index</span><span class="tag">performance</span><span class="tag">slow-query</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Accidentally deleted data — no backup</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      <div class="problem-body">
-        <div class="prob-label">Solution</div>
-        <ol class="solution-steps">
-          <li>Stop writes immediately</li>
-          <li>MySQL binary log recovery: <code>mysqlbinlog --start-datetime="2026-07-03 08:00:00" /var/lib/mysql/mysql-bin.000001 | mysql -u root -p</code></li>
-          <li>PostgreSQL: use Point-in-Time Recovery if WAL archiving was on</li>
-          <li>Check replica — promote before it syncs the delete</li>
-          <li>Lesson: always test backups, always use transactions</li>
-        </ol>
-        <div class="tags"><span class="tag">data-recovery</span><span class="tag">backup</span><span class="tag">binlog</span></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Database connection pool exhausted</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-    </div>
-    <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Too many connections — connection pool exhausted</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">"Too many connections" error. Application throws connection errors under load.</div>
         <div class="prob-label">Diagnosis</div>
         <div class="code-block">SHOW STATUS LIKE 'Threads_connected';
 SHOW VARIABLES LIKE 'max_connections';
-SHOW FULL PROCESSLIST;</div>
+SHOW FULL PROCESSLIST;   -- see all open connections</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Increase limit: <code>SET GLOBAL max_connections = 500;</code></li>
-          <li>Add connection pooling: PgBouncer (PostgreSQL) or ProxySQL (MySQL)</li>
-          <li>Find connection leaks — ensure app closes connections after use</li>
-          <li>Set idle timeout: <code>SET GLOBAL wait_timeout = 60;</code></li>
+          <li>Increase max connections: <code>SET GLOBAL max_connections = 500;</code></li>
+          <li>Add connection pooling: use PgBouncer (PostgreSQL) or ProxySQL (MySQL)</li>
+          <li>Find connection leaks in code — ensure connections are closed after use</li>
+          <li>Kill idle connections: <code>KILL CONNECTION_ID;</code></li>
+          <li>Set wait_timeout: <code>SET GLOBAL wait_timeout = 60;</code></li>
         </ol>
-        <div class="tags"><span class="tag">mysql</span><span class="tag">connections</span><span class="tag">pool</span></div>
+        <div class="tags"><span class="tag">mysql</span><span class="tag">postgresql</span><span class="tag">connections</span><span class="tag">pool</span></div>
       </div>
     </div>
+
+    <div class="problem-card" data-chapter="databases" data-sev="high">
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Accidentally deleted important data — no backup</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text"><code>DELETE FROM users;</code> or <code>DROP TABLE orders;</code> without WHERE clause or backup.</div>
+        <div class="prob-label">Solution</div>
+        <ol class="solution-steps">
+          <li>Stop writes immediately to prevent overwriting deleted data</li>
+          <li>MySQL: check binary logs for recovery: <code>mysqlbinlog --start-datetime="2026-07-03 08:00:00" /var/lib/mysql/mysql-bin.000001 | mysql -u root -p</code></li>
+          <li>PostgreSQL: if WAL archiving was on, use Point-in-Time Recovery</li>
+          <li>Check if any replica has the data — promote replica before it syncs the delete</li>
+          <li>Lesson: always use transactions, always have backups, test restores regularly</li>
+        </ol>
+        <div class="tags"><span class="tag">data-recovery</span><span class="tag">backup</span><span class="tag">binlog</span><span class="tag">disaster</span></div>
+      </div>
+    </div>
+
     <div class="problem-card" data-chapter="databases" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Deadlock errors in database logs</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Deadlock errors in database logs</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">SHOW ENGINE INNODB STATUS\G
--- Look for LATEST DETECTED DEADLOCK section</div>
+        <div class="code-block">SHOW ENGINE INNODB STATUS\G   -- MySQL deadlock info
+-- Look for "LATEST DETECTED DEADLOCK" section</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Always access tables in the same order across transactions</li>
-          <li>Keep transactions short — don't hold locks during non-DB work</li>
-          <li>Lower isolation: READ COMMITTED vs REPEATABLE READ</li>
-          <li>Add retry logic in app for error code 1213</li>
+          <li>Always access tables in the same order across all transactions</li>
+          <li>Keep transactions short — don't hold locks while doing non-DB work</li>
+          <li>Use lower isolation level if possible: READ COMMITTED instead of REPEATABLE READ</li>
+          <li>Add retry logic in application for deadlock errors (error code 1213 in MySQL)</li>
+          <li>Use SELECT ... FOR UPDATE only when you'll actually update</li>
         </ol>
-        <div class="tags"><span class="tag">deadlock</span><span class="tag">transactions</span><span class="tag">innodb</span></div>
+        <div class="tags"><span class="tag">deadlock</span><span class="tag">transactions</span><span class="tag">mysql</span><span class="tag">innodb</span></div>
       </div>
     </div>
+
   </section>
 
-  <!-- HARDWARE -->
+  <!-- ═══════ HARDWARE ═══════ -->
   <section class="chapter-section" id="hardware" data-chapter="hardware">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(245,158,11,.15);color:#F59E0B">🖥️</div>
-      <h2>Hardware Problems</h2><span class="chapter-count">22 problems</span>
+      <h2>Hardware Problems</h2>
+      <span class="chapter-count">22 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="hardware" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Server overheating — thermal throttling</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Server overheating — thermal throttling</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">sensors
-dmesg | grep -i "thermal\|throttl"</div>
+        <div class="code-block">sensors                        # CPU/GPU temps (install: apt install lm-sensors)
+sudo sensors-detect            # first-time setup
+cat /sys/class/thermal/thermal_zone*/temp  # raw temp in millidegrees
+dmesg | grep -i "thermal\|throttl"        # kernel thermal events</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Clean dust from fans — compressed air every 6-12 months</li>
+          <li>Clean dust from fans and heatsinks — compressed air every 6-12 months</li>
           <li>Replace thermal paste on CPU — degrades after 3-5 years</li>
-          <li>Ensure proper airflow — hot exhaust not recirculating as intake</li>
-          <li>Check fan speeds via <code>sensors</code> — 0 RPM = fan failed</li>
+          <li>Ensure proper airflow — hot exhaust not recirculating back as intake</li>
+          <li>Check fan speeds: <code>sensors</code> — if fans at 0 RPM they've failed</li>
+          <li>For servers: check data center ambient temp and cooling unit function</li>
         </ol>
-        <div class="tags"><span class="tag">thermal</span><span class="tag">cpu</span><span class="tag">cooling</span></div>
+        <div class="tags"><span class="tag">thermal</span><span class="tag">cpu</span><span class="tag">cooling</span><span class="tag">hardware</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="hardware" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">Hard drive failing — S.M.A.R.T. errors</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">Hard drive failing — S.M.A.R.T. errors</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">sudo smartctl -a /dev/sda
-sudo smartctl -H /dev/sda
-dmesg | grep -i "error\|I/O"</div>
+        <div class="code-block">sudo smartctl -a /dev/sda        # full SMART report
+sudo smartctl -H /dev/sda        # overall health assessment
+dmesg | grep -i "error\|ata\|I/O"  # kernel disk errors</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>SMART shows FAILED = backup ALL data NOW, drive will die soon</li>
-          <li>Watch reallocated_sector_ct — any non-zero = serious</li>
+          <li>If SMART shows "FAILED" — backup ALL data immediately, drive will die soon</li>
+          <li>Watch reallocated_sector_ct — any non-zero value is serious</li>
           <li>Set up monitoring: <code>sudo apt install smartmontools && sudo systemctl enable smartd</code></li>
-          <li>Replace drive before failure — RAID is not a backup</li>
+          <li>Check disk health weekly: add to cron <code>smartctl -H /dev/sda | mail -s "Disk Health" admin@example.com</code></li>
+          <li>Replace drive before it fails — RAID is not a backup</li>
         </ol>
-        <div class="tags"><span class="tag">smart</span><span class="tag">disk</span><span class="tag">failure</span></div>
+        <div class="tags"><span class="tag">smart</span><span class="tag">disk</span><span class="tag">hdd</span><span class="tag">failure</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="hardware" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">RAM causing random crashes — memtest errors</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">RAM causing random crashes and blue screens</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
         <div class="prob-label">Diagnosis</div>
-        <div class="code-block">sudo apt install memtester
-sudo memtester 1G 1
-# Or: boot memtest86+ from USB</div>
+        <div class="code-block"># Linux: run memtest86 from boot
+# Or: sudo apt install memtester
+sudo memtester 1G 1              # test 1GB of RAM, 1 pass
+# Windows: mdsched.exe → Restart and check for problems</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Any memtest errors = faulty RAM</li>
-          <li>Remove sticks one at a time to isolate bad one</li>
-          <li>Reseat RAM firmly in slot</li>
-          <li>Try different slots — could be motherboard fault</li>
+          <li>Run memtest86+ overnight — any errors = faulty RAM</li>
+          <li>If multiple sticks: remove one at a time to isolate the bad stick</li>
+          <li>Reseat RAM sticks — remove and firmly push back in</li>
+          <li>Try different RAM slots — could be motherboard slot fault</li>
+          <li>Replace faulty DIMM — RAM is relatively inexpensive</li>
         </ol>
-        <div class="tags"><span class="tag">ram</span><span class="tag">memtest</span><span class="tag">crash</span></div>
+        <div class="tags"><span class="tag">ram</span><span class="tag">memory</span><span class="tag">memtest</span><span class="tag">crash</span></div>
       </div>
     </div>
+
   </section>
 
-  <!-- COMPLIANCE -->
+  <!-- ═══════ COMPLIANCE ═══════ -->
   <section class="chapter-section" id="compliance" data-chapter="compliance">
     <div class="chapter-header">
       <div class="chapter-icon" style="background:rgba(20,184,166,.15);color:#14B8A6">📋</div>
-      <h2>Compliance Problems</h2><span class="chapter-count">20 problems</span>
+      <h2>Compliance Problems</h2>
+      <span class="chapter-count">20 problems</span>
     </div>
+
     <div class="problem-card" data-chapter="compliance" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">GDPR violation — user data without consent</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">GDPR violation — user data processed without consent</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Tracking users, storing personal data, or sending emails without proper GDPR consent mechanism.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Add cookie consent banner before loading any tracking scripts</li>
-          <li>Publish Privacy Policy and Cookie Policy pages</li>
-          <li>Implement consent management: Cookiebot, OneTrust, or open-source Klaro</li>
-          <li>Document legal basis for all data processing</li>
-          <li>Add "Delete My Data" option for right to erasure</li>
+          <li>Add cookie consent banner before loading any tracking (GA4, Meta Pixel, etc.)</li>
+          <li>Create and publish Privacy Policy and Cookie Policy pages</li>
+          <li>Implement consent management platform (CMP): Cookiebot, OneTrust, or open-source Klaro</li>
+          <li>Document your legal basis for processing: consent, legitimate interest, contract, etc.</li>
+          <li>Add "Delete My Data" mechanism for users to exercise right to erasure</li>
+          <li>Appoint DPO if processing sensitive data at scale</li>
         </ol>
-        <div class="tags"><span class="tag">gdpr</span><span class="tag">privacy</span><span class="tag">consent</span></div>
+        <div class="tags"><span class="tag">gdpr</span><span class="tag">privacy</span><span class="tag">consent</span><span class="tag">compliance</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="compliance" data-sev="high">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-high">High</span><span class="problem-title">PCI DSS — storing plain-text card data</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-high">High</span>
+        <span class="problem-title">PCI DSS — storing plain-text card data</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Card numbers, CVVs, or full track data stored in database in plain text — massive PCI violation.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
           <li>Delete all stored card data immediately</li>
-          <li>Use a payment processor — Stripe, Braintree — never touch raw card data</li>
-          <li>Tokenize: processor returns token you charge later</li>
+          <li>Use a payment processor (Stripe, Braintree) — never touch raw card data</li>
+          <li>Tokenize: processor gives you a token to charge later, card number never hits your server</li>
+          <li>Scope reduction: if you don't store/transmit card data, PCI scope drops to SAQ A (simplest)</li>
           <li>Never store CVV under any circumstances — prohibited by PCI DSS</li>
         </ol>
-        <div class="tags"><span class="tag">pci-dss</span><span class="tag">payments</span><span class="tag">compliance</span></div>
+        <div class="tags"><span class="tag">pci-dss</span><span class="tag">payments</span><span class="tag">compliance</span><span class="tag">stripe</span></div>
       </div>
     </div>
+
     <div class="problem-card" data-chapter="compliance" data-sev="med">
-      <div class="problem-header" onclick="toggle(this)"><span class="severity sev-med">Medium</span><span class="problem-title">Audit log gaps — missing activity records</span><svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div class="problem-header" onclick="toggle(this)">
+        <span class="severity sev-med">Medium</span>
+        <span class="problem-title">Audit log gaps — missing activity records</span>
+        <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="problem-body">
+        <div class="prob-label">Problem</div>
+        <div class="prob-text">Security audit finds incomplete logs — who accessed what data and when is not tracked.</div>
         <div class="prob-label">Solution</div>
         <ol class="solution-steps">
-          <li>Enable DB audit logging: MySQL audit plugin or PostgreSQL pgaudit</li>
-          <li>Log all admin actions: who, what, when, from which IP</li>
-          <li>Ship logs to immutable storage — attacker can't delete what they can't reach</li>
-          <li>Retention: SOC 2 = 1 year minimum, PCI DSS = 1 year minimum</li>
+          <li>Enable database audit logging: MySQL audit plugin or PostgreSQL pgaudit extension</li>
+          <li>Log all admin actions: who changed what config, when, from which IP</li>
+          <li>Ship logs to immutable storage: attacker can't delete what they can't reach</li>
+          <li>Set retention: SOC 2 requires 1 year, PCI DSS requires 1 year minimum</li>
+          <li>Use structured logging (JSON) for easy querying and alerting</li>
         </ol>
-        <div class="tags"><span class="tag">audit-logs</span><span class="tag">soc2</span><span class="tag">compliance</span></div>
+        <div class="tags"><span class="tag">audit-logs</span><span class="tag">soc2</span><span class="tag">compliance</span><span class="tag">monitoring</span></div>
       </div>
     </div>
+
   </section>
 
 </main>
 </div>
 
 <script>
+// Toggle accordion
 function toggle(header) {
   const card = header.parentElement;
   card.classList.toggle('open');
 }
+
+// Filter by chapter
 function filterChapter(chapter, el) {
+  event.preventDefault();
+  // Update active sidebar link
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
+
   document.querySelectorAll('.chapter-section').forEach(sec => {
-    if (chapter === 'all' || sec.dataset.chapter === chapter) sec.classList.remove('hidden');
-    else sec.classList.add('hidden');
+    if (chapter === 'all' || sec.dataset.chapter === chapter) {
+      sec.classList.remove('hidden');
+    } else {
+      sec.classList.add('hidden');
+    }
   });
-  if (chapter !== 'all') setTimeout(() => document.getElementById(chapter)?.scrollIntoView({behavior:'smooth',block:'start'}), 50);
+  if (chapter !== 'all') {
+    setTimeout(() => document.getElementById(chapter)?.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+  }
 }
+
+// Filter by severity
 function filterSeverity(sev, el) {
+  event.preventDefault();
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
+
   document.querySelectorAll('.chapter-section').forEach(sec => sec.classList.remove('hidden'));
   document.querySelectorAll('.problem-card').forEach(card => {
     card.classList.toggle('hidden', card.dataset.sev !== sev);
   });
 }
+
+// Live search
 const searchInput = document.getElementById('searchInput');
 const noResults = document.getElementById('noResults');
+
 searchInput.addEventListener('input', () => {
   const q = searchInput.value.toLowerCase().trim();
   document.getElementById('searchTerm').textContent = q;
+
   if (!q) {
-    document.querySelectorAll('.problem-card,.chapter-section').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.problem-card, .chapter-section').forEach(el => el.classList.remove('hidden'));
     noResults.style.display = 'none';
     return;
   }
+
   let anyVisible = false;
   document.querySelectorAll('.chapter-section').forEach(sec => {
-    let match = false;
+    let secHasMatch = false;
     sec.querySelectorAll('.problem-card').forEach(card => {
-      const found = card.textContent.toLowerCase().includes(q);
-      card.classList.toggle('hidden', !found);
-      if (found) { match = true; anyVisible = true; }
+      const text = card.textContent.toLowerCase();
+      const match = text.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) { secHasMatch = true; anyVisible = true; }
     });
-    sec.classList.toggle('hidden', !match);
+    sec.classList.toggle('hidden', !secHasMatch);
   });
+
   noResults.style.display = anyVisible ? 'none' : 'block';
 });
 </script>
+
 </body>
 </html>
