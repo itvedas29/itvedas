@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WHOIS lookup tool. Query domain WHOIS information. Educational WHOIS lookup simulator.">
+  <title>WHOIS Lookup | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .search-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      flex: 1;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #F0F0F8;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+    input:focus { outline: none; border-color: #10B981; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .results {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+    .results.active { display: block; }
+    .info-row {
+      display: flex;
+      gap: 1.5rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label {
+      font-weight: 600;
+      min-width: 150px;
+      color: #6366F1;
+    }
+    .info-value {
+      flex: 1;
+      color: #D0D0E8;
+      word-break: break-word;
+    }
+    .disclaimer {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      color: #FBBF24;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🔍 WHOIS Lookup</h1>
+
+    <div class="search-section">
+      <div class="input-group">
+        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
+        <button onclick="whoisLookup()">Lookup</button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <h2 style="margin-bottom: 1.5rem; color: #6366F1;">WHOIS Information</h2>
+      <div id="resultsList"></div>
+      <div class="disclaimer">
+        <strong>⚠️ Educational Tool:</strong> This shows sample WHOIS data. For real WHOIS queries, use whois command or ICANN WHOIS lookup at whois.icann.org
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sampleWhois = {
+      'example.com': {
+        'Registrar': 'IANA Example Registrar',
+        'Registrar IANA ID': '292',
+        'Registrant Name': 'Example Registrant',
+        'Registrant Email': 'admin@example.com',
+        'Created Date': '1995-08-14',
+        'Updated Date': '2022-08-15',
+        'Expiration Date': '2025-08-13',
+        'Nameserver': ['ns1.example.com', 'ns2.example.com'],
+        'Status': 'clientTransferProhibited'
+      },
+      'google.com': {
+        'Registrar': 'MarkMonitor Inc.',
+        'Registrar IANA ID': '292',
+        'Registrant Name': 'Google LLC',
+        'Registrant Email': 'admin@google.com',
+        'Created Date': '1997-09-15',
+        'Updated Date': '2023-09-14',
+        'Expiration Date': '2028-09-14',
+        'Nameserver': ['ns1.google.com', 'ns2.google.com', 'ns3.google.com', 'ns4.google.com'],
+        'Status': 'clientUpdateProhibited clientTransferProhibited'
+      }
+    };
+
+    function whoisLookup() {
+      const domain = document.getElementById('domain').value.toLowerCase().trim();
+      if (!domain) return;
+
+      const data = sampleWhois[domain];
+      const resultsList = document.getElementById('resultsList');
+
+      if (data) {
+        let html = '';
+        for (const [key, value] of Object.entries(data)) {
+          if (Array.isArray(value)) {
+            html += `
+              <div class="info-row">
+                <div class="info-label">${key}</div>
+                <div class="info-value">${value.join(', ')}</div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="info-row">
+                <div class="info-label">${key}</div>
+                <div class="info-value">${value}</div>
+              </div>
+            `;
+          }
+        }
+        resultsList.innerHTML = html;
+      } else {
+        resultsList.innerHTML = `<div style="color: #8888A8;">No WHOIS data found (sample data only)</div>`;
+      }
+
+      document.getElementById('results').classList.add('active');
+    }
+  </script>
+</body>
+</html>

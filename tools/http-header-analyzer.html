@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HTTP header analyzer. Parse and analyze HTTP response headers for security and performance insights.">
+  <title>HTTP Header Analyzer | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .input-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 250px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .results {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+    .results.active { display: block; }
+    .header-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: #0A0A0F;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+    .header-name {
+      font-weight: 600;
+      min-width: 200px;
+      color: #6366F1;
+    }
+    .header-value {
+      flex: 1;
+      color: #D0D0E8;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    .security-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-good { background: rgba(16,185,129,0.2); color: #6EE7B7; }
+    .badge-warning { background: rgba(251,191,36,0.2); color: #FBBF24; }
+    .badge-bad { background: rgba(239,68,68,0.2); color: #F87171; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>📋 HTTP Header Analyzer</h1>
+
+    <div class="input-section">
+      <textarea id="headers" placeholder="Paste HTTP response headers here (one per line)&#10;Example:&#10;Content-Type: application/json&#10;X-Frame-Options: DENY&#10;Strict-Transport-Security: max-age=31536000"></textarea>
+      <button onclick="analyzeHeaders()">Analyze Headers</button>
+    </div>
+
+    <div class="results" id="results">
+      <h2 style="margin-bottom: 1.5rem; color: #6366F1;">Parsed Headers</h2>
+      <div id="headersList"></div>
+      <h2 style="margin-top: 2rem; margin-bottom: 1.5rem; color: #6366F1;">Security Check</h2>
+      <div id="securityCheck"></div>
+    </div>
+  </div>
+
+  <script>
+    function analyzeHeaders() {
+      const input = document.getElementById('headers').value;
+      if (!input) return;
+
+      const lines = input.split('\n').filter(line => line.trim());
+      const headers = {};
+
+      lines.forEach(line => {
+        const [name, ...valueParts] = line.split(':');
+        const value = valueParts.join(':').trim();
+        if (name) headers[name.trim()] = value;
+      });
+
+      const headersList = document.getElementById('headersList');
+      headersList.innerHTML = Object.entries(headers)
+        .map(([name, value]) => `
+          <div class="header-row">
+            <div class="header-name">${name}</div>
+            <div class="header-value">${value}</div>
+          </div>
+        `).join('');
+
+      // Security analysis
+      const securityCheck = document.getElementById('securityCheck');
+      const checks = [];
+
+      if (headers['Strict-Transport-Security']) {
+        checks.push({ name: 'HSTS Enabled', status: 'good', value: headers['Strict-Transport-Security'] });
+      } else {
+        checks.push({ name: 'HSTS', status: 'bad', value: 'Missing - consider enabling' });
+      }
+
+      if (headers['X-Frame-Options']) {
+        checks.push({ name: 'Clickjack Protection', status: 'good', value: headers['X-Frame-Options'] });
+      } else {
+        checks.push({ name: 'Clickjack Protection', status: 'warning', value: 'Missing' });
+      }
+
+      if (headers['X-Content-Type-Options'] === 'nosniff') {
+        checks.push({ name: 'MIME Type Security', status: 'good', value: 'nosniff' });
+      }
+
+      securityCheck.innerHTML = checks
+        .map(check => `
+          <div class="header-row">
+            <div class="header-name">${check.name}</div>
+            <div style="flex: 1;"><span class="security-badge badge-${check.status}">${check.status.toUpperCase()}</span></div>
+            <div class="header-value">${check.value}</div>
+          </div>
+        `).join('');
+
+      document.getElementById('results').classList.add('active');
+    }
+  </script>
+</body>
+</html>

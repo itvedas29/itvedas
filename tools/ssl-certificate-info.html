@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SSL certificate information generator. Generate certificate details and examine certificate properties.">
+  <title>SSL Certificate Info | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .input-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 250px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .results {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+    .results.active { display: block; }
+    .info-row {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: #0A0A0F;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      align-items: flex-start;
+    }
+    .info-label {
+      font-weight: 600;
+      min-width: 150px;
+      color: #6366F1;
+    }
+    .info-value {
+      flex: 1;
+      color: #D0D0E8;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    .badge-valid { background: rgba(16,185,129,0.2); color: #6EE7B7; }
+    .badge-expired { background: rgba(239,68,68,0.2); color: #F87171; }
+    .badge-expiring { background: rgba(251,191,36,0.2); color: #FBBF24; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🔐 SSL Certificate Info</h1>
+
+    <div class="input-section">
+      <textarea id="certPEM" placeholder="Paste SSL certificate in PEM format (-----BEGIN CERTIFICATE----- to -----END CERTIFICATE-----)"></textarea>
+      <button onclick="parseCertificate()">Parse Certificate</button>
+    </div>
+
+    <div class="results" id="results">
+      <div id="certInfo"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.8.3/jsrsasign-all-min.js"></script>
+  <script>
+    function parseCertificate() {
+      const pem = document.getElementById('certPEM').value;
+      if (!pem) return;
+
+      try {
+        const x509 = new X509();
+        x509.readCertPEM(pem);
+
+        const subject = x509.getSubjectString();
+        const issuer = x509.getIssuerString();
+        const notBefore = x509.getNotBefore();
+        const notAfter = x509.getNotAfter();
+        const serialNum = x509.getSerialNumberHex();
+
+        const now = new Date();
+        const expireDate = new Date(notAfter);
+        let status = 'valid';
+        let statusClass = 'badge-valid';
+
+        if (expireDate < now) {
+          status = 'EXPIRED';
+          statusClass = 'badge-expired';
+        } else {
+          const daysUntilExpire = Math.floor((expireDate - now) / (1000 * 60 * 60 * 24));
+          if (daysUntilExpire < 30) {
+            status = `EXPIRING SOON (${daysUntilExpire} days)`;
+            statusClass = 'badge-expiring';
+          } else {
+            status = `VALID (${daysUntilExpire} days remaining)`;
+          }
+        }
+
+        const info = `
+          <div class="info-row">
+            <div class="info-label">Status</div>
+            <div class="info-value"><span class="status-badge ${statusClass}">${status}</span></div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Subject</div>
+            <div class="info-value">${subject}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Issuer</div>
+            <div class="info-value">${issuer}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Serial Number</div>
+            <div class="info-value">${serialNum}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Valid From</div>
+            <div class="info-value">${notBefore}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Valid Until</div>
+            <div class="info-value">${notAfter}</div>
+          </div>
+        `;
+
+        document.getElementById('certInfo').innerHTML = info;
+        document.getElementById('results').classList.add('active');
+      } catch (e) {
+        document.getElementById('certInfo').innerHTML = `<div style="color: #F87171;">Error parsing certificate: ${e.message}</div>`;
+        document.getElementById('results').classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
