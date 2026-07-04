@@ -777,3 +777,293 @@ img:focus-visible {
 .breadcrumb-container {
   margin-bottom: 1.5rem;
 }
+
+/* ============================================================================
+   Phase 3: Mobile Optimization & Accessibility
+   ============================================================================ */
+
+/* ── Mobile Navigation ────────────────────────────────────────────────────── */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  nav.mobile-menu-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--bg);
+    z-index: 1000;
+    flex-direction: column;
+    padding-top: 80px;
+    overflow-y: auto;
+  }
+
+  .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+}
+
+/* ── Touch-Friendly Touch Targets ─────────────────────────────────────────── */
+a, button, [role="button"], input, select, textarea {
+  min-width: 44px;
+  min-height: 44px;
+  padding: max(8px, calc((44px - 1em) / 2)) max(12px, calc((44px - 1em) / 2));
+}
+
+/* Override for small inline elements */
+.badge, .label-small, small a, small button {
+  min-width: unset;
+  min-height: unset;
+  padding: unset;
+}
+
+/* ── Focus Styles for Keyboard Navigation ─────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--net);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove focus outline on click but keep on keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+/* ── Skip Link (accessibility) ────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--net);
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus-visible {
+  top: 0;
+}
+
+/* ── Screen Reader Only Content ──────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Reduced Motion Styles ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── High Contrast Mode Support ──────────────────────────────────────────── */
+@media (prefers-contrast: more) {
+  body {
+    --border: rgba(255, 255, 255, 0.2);
+    --muted: #aaaacc;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  button {
+    border: 2px solid var(--text);
+  }
+}
+
+/* ── Forced Colors Mode (Windows High Contrast) ──────────────────────────── */
+@media (forced-colors: active) {
+  a {
+    text-decoration: underline;
+  }
+
+  button {
+    border: 1px solid;
+  }
+
+  img {
+    border: 1px solid;
+  }
+}
+
+/* ── Mobile-Specific Adjustments ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Increase font size for readability */
+  body {
+    font-size: 16px;
+  }
+
+  /* Reduce padding for smaller screens */
+  .container, main, article, section {
+    padding: 1rem;
+  }
+
+  /* Full-width buttons on mobile */
+  button.full-width-mobile {
+    width: 100%;
+    display: block;
+  }
+
+  /* Stack form fields */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Larger tap targets */
+  a, button, [role="button"] {
+    min-height: 48px;
+    padding: max(12px, calc((48px - 1em) / 2)) 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Single column layouts */
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce heading sizes */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Extra large touch targets for mobile */
+  button, a, [role="button"] {
+    min-height: 48px;
+  }
+}
+
+/* ── Performance: Reduce Paint/Layout ──────────────────────────────────── */
+.lazy-load {
+  contain: content;
+  content-visibility: auto;
+}
+
+/* Use transform for animations instead of top/left */
+.slide-in {
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.slide-in.hidden {
+  transform: translateX(-100%);
+}
+
+/* ── Loading States ──────────────────────────────────────────────────── */
+.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid var(--border);
+  border-top-color: var(--net);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Utility Classes for Accessibility ────────────────────────────────────── */
+.has-tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.has-tooltip[aria-describedby]::after {
+  content: attr(aria-label);
+  position: absolute;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.has-tooltip:hover::after,
+.has-tooltip:focus-visible::after {
+  opacity: 1;
+}
