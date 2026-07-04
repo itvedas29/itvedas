@@ -1,6 +1,7 @@
 /* ============================================================================
    IT Vedas Shared Stylesheet
    Common styles for all pages: typography, colors, layout, components
+   Includes: Breadcrumbs, Related Content, Image Optimization, Lazy Loading
    ============================================================================ */
 
 /* ── Design Tokens ────────────────────────────────────────────────────── */
@@ -544,4 +545,235 @@ tr:hover td {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================================================
+   Phase 2: Breadcrumbs, Related Content, Image Optimization
+   ============================================================================ */
+
+/* ── Breadcrumb Navigation ────────────────────────────────────────────────── */
+.breadcrumb,
+nav.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 0;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.25rem;
+}
+
+.breadcrumb-item {
+  display: inline;
+}
+
+.breadcrumb-item a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--text);
+}
+
+.breadcrumb-item a:focus-visible {
+  outline: 2px solid var(--net);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.breadcrumb-item.current {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  margin: 0 0.5rem;
+  color: var(--border);
+}
+
+/* ── Related Content Section ──────────────────────────────────────────────── */
+.related-content {
+  margin: 3rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(139, 92, 246, 0.05));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.related-title {
+  font-family: var(--fd);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  --cols: 3;
+}
+
+@media (max-width: 768px) {
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.related-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.related-item:hover {
+  border-color: var(--net);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
+}
+
+.related-link {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  text-decoration: none;
+  height: 100%;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.related-link:hover .related-item-title {
+  color: var(--net);
+}
+
+.related-item-title {
+  font-family: var(--fd);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.related-item-excerpt {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.related-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.related-topic {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--net);
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Image Optimization & Lazy Loading ────────────────────────────────────── */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+img[loading="lazy"] {
+  background: linear-gradient(45deg, var(--bg2) 25%, transparent 25%, transparent 75%, var(--bg2) 75%, var(--bg2)),
+              linear-gradient(45deg, var(--bg2) 25%, transparent 25%, transparent 75%, var(--bg2) 75%, var(--bg2));
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  background-color: var(--bg3);
+  animation: skeleton-loading 1s infinite linear;
+}
+
+img[loading="lazy"].loaded {
+  background: none;
+  animation: none;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg2);
+  border-radius: var(--radius-md);
+}
+
+.image-container img {
+  transition: opacity 0.3s ease;
+}
+
+.image-container img[loading="lazy"] {
+  opacity: 0.7;
+}
+
+.image-container img.loaded {
+  opacity: 1;
+}
+
+/* Responsive image wrapper */
+picture {
+  display: block;
+}
+
+/* ── Accessibility: Image Focus ───────────────────────────────────────────── */
+img:focus-visible {
+  outline: 2px solid var(--net);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Utility Classes ──────────────────────────────────────────────────────── */
+.lazy-image {
+  background: var(--bg2);
+  border-radius: var(--radius-md);
+}
+
+.has-lazy-images {
+  /* Applied to body when lazy images are present */
+}
+
+.breadcrumb-container {
+  margin-bottom: 1.5rem;
 }

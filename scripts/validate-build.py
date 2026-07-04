@@ -200,6 +200,59 @@ def validate_file(filepath):
         return False
 
 
+def validate_phase2_features():
+    """Validate Phase 2 features: breadcrumbs, related content, image optimization"""
+    print("\n🔧 Phase 2 Features Validation")
+    print("=" * 60)
+
+    issues = []
+
+    # Check search index automation
+    if os.path.exists('search-index.json'):
+        try:
+            with open('search-index.json', 'r') as f:
+                index = json.load(f)
+            if len(index) > 100:
+                print(f"✓ Search index automation: {len(index)} entries")
+            else:
+                issues.append("⚠️  Search index has few entries (< 100)")
+        except Exception as e:
+            issues.append(f"❌ Search index error: {e}")
+    else:
+        issues.append("❌ Search index not found")
+
+    # Check for Phase 2 JavaScript modules
+    modules = [
+        'js/breadcrumb-generator.js',
+        'js/related-content.js',
+        'js/image-optimizer.js'
+    ]
+
+    for module in modules:
+        if os.path.exists(module):
+            size = os.path.getsize(module)
+            print(f"✓ {module} ({size} bytes)")
+        else:
+            issues.append(f"⚠️  Missing module: {module}")
+
+    # Check CSS updates
+    if os.path.exists('css/shared.css'):
+        with open('css/shared.css', 'r') as f:
+            css = f.read()
+        if '.breadcrumb' in css and '.related-content' in css and 'lazy-image' in css:
+            print("✓ CSS includes breadcrumb, related content, and image optimizer styles")
+        else:
+            issues.append("⚠️  CSS may be missing Phase 2 styles")
+
+    if issues:
+        for issue in issues:
+            print(issue)
+    else:
+        print("✓ All Phase 2 features present")
+
+    return len([i for i in issues if i.startswith('❌')]) == 0
+
+
 def main():
     """Main validation runner"""
     print("🚀 IT Vedas Build Validation")
@@ -248,6 +301,13 @@ def main():
                 failed += 1
         else:
             print(f"⚠️  {filename} not found")
+
+    # Validate Phase 2 features
+    phase2_ok = validate_phase2_features()
+    if not phase2_ok:
+        failed += 1
+    else:
+        passed += 1
 
     # Summary
     print("\n" + "=" * 60)
