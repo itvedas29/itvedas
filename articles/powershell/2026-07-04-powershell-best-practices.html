@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="PowerShell best practices for enterprise automation. Error handling, security, performance, and code standards.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Best Practices | IT Vedas">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-04">
+  <title>PowerShell Best Practices | IT Vedas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;margin-bottom:1.25rem;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art code{background:var(--bg2);border:1px solid var(--border);padding:.15em .45em;font-size:.875em;color:#6366F1;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.5rem;margin:2rem 0;}
+    .doc-metadata{display:flex;gap:1.5rem;margin:1.5rem 0 2rem;flex-wrap:wrap;align-items:center;}
+    .difficulty-badge{padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<nav><a href="/" class="logo">IT<span style="color:#FF6B35;">Vedas</span></a></nav>
+
+<div class="hero">
+  <h1>PowerShell Best Practices for Enterprise Automation</h1>
+  <div style="font-size:.8rem;color:var(--muted);">📅 July 04, 2026 | 10 min read</div>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge">ADVANCED</div>
+  <div style="color:#6EE7B7;font-weight:600;">⏱ 10 min read</div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>Error handling prevents scripts from silently failing on critical operations</li>
+        <li>Parameter validation catches bad input before code execution</li>
+        <li>Logging creates audit trails for compliance and debugging</li>
+        <li>Security best practices prevent credential exposure and privilege escalation</li>
+      </ul>
+    </div>
+
+    <h2>Error Handling with Try-Catch</h2>
+    <p>Always handle errors gracefully in production scripts:</p>
+
+    <pre><code>try {
+  $service = Stop-Service -Name "BITS" -PassThru -ErrorAction Stop
+  Write-Host "Service stopped successfully" -ForegroundColor Green
+}
+catch {
+  Write-Error "Failed to stop service: $_"
+  exit 1
+}</code></pre>
+
+    <h2>Logging Best Practices</h2>
+    <p>Maintain detailed logs for auditing and troubleshooting:</p>
+
+    <pre><code>function Write-Log {
+  param([string]$Message, [string]$Level = "INFO")
+  $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  "$timestamp [$Level] $Message" | Add-Content "C:\Logs\automation.log"
+}
+
+# Usage
+Write-Log "Starting user provisioning script"
+Write-Log "Error: Cannot connect to domain" -Level "ERROR"
+Write-Log "User creation completed successfully" -Level "SUCCESS"</code></pre>
+
+    <h2>Security: Never Hardcode Credentials</h2>
+    <p>Store passwords securely, never in scripts:</p>
+
+    <pre><code># WRONG - Never do this
+$password = "MyPassword123"
+
+# RIGHT - Use Windows Credential Manager or Azure Key Vault
+$credential = Get-Credential
+$securePassword = Read-Host -AsSecureString "Enter password"
+$credential = New-Object System.Management.Automation.PSCredential("user", $securePassword)</code></pre>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Use Try-Catch-Finally for error handling in production</li>
+        <li>Implement comprehensive logging for all automated tasks</li>
+        <li>Never hardcode credentials in scripts</li>
+        <li>Use -WhatIf parameter to preview changes before execution</li>
+        <li>Version control scripts with Git for collaboration and rollback</li>
+      </ul>
+    </div>
+  </article>
+</div>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

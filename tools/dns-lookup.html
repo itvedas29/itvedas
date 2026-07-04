@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.">
+  <title>DNS Lookup | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .search-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      flex: 1;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #F0F0F8;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+    input:focus { outline: none; border-color: #10B981; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .record-type-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .record-btn {
+      padding: 0.5rem 1rem;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #6366F1;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .record-btn.active {
+      background: #6366F1;
+      color: white;
+      border-color: #6366F1;
+    }
+    .results {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+    .results.active { display: block; }
+    .record-item {
+      background: #0A0A0F;
+      border-left: 3px solid #6366F1;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border-radius: 6px;
+    }
+    .record-type {
+      font-weight: 600;
+      color: #6366F1;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    .record-value {
+      color: #D0D0E8;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      word-break: break-all;
+    }
+    .info-text {
+      color: #8888A8;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🌐 DNS Lookup</h1>
+
+    <div class="search-section">
+      <div class="input-group">
+        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
+        <button onclick="lookupDNS()">Lookup</button>
+      </div>
+      <div class="record-type-buttons">
+        <button class="record-btn active" onclick="setRecordType('A')">A</button>
+        <button class="record-btn" onclick="setRecordType('AAAA')">AAAA</button>
+        <button class="record-btn" onclick="setRecordType('CNAME')">CNAME</button>
+        <button class="record-btn" onclick="setRecordType('MX')">MX</button>
+        <button class="record-btn" onclick="setRecordType('TXT')">TXT</button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <h2 style="margin-bottom: 1.5rem; color: #6366F1;" id="resultTitle"></h2>
+      <div id="resultsList"></div>
+      <div class="info-text">
+        <strong>Note:</strong> This is an educational tool showing example DNS records. For real DNS lookups, use nslookup, dig, or host commands.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentRecordType = 'A';
+
+    const sampleRecords = {
+      'A': { 'example.com': '93.184.216.34', 'google.com': '142.250.185.46' },
+      'AAAA': { 'example.com': '2606:2800:220:1:248:1893:25c8:1946', 'google.com': '2607:f8b0:4004:80d::200e' },
+      'CNAME': { 'www.example.com': 'example.com', 'mail.example.com': 'mail.google.com' },
+      'MX': { 'example.com': '10 mail.example.com', 'google.com': '10 smtp.google.com' },
+      'TXT': { 'example.com': 'v=spf1 -all', 'google.com': 'v=spf1 include:_spf.google.com ~all' }
+    };
+
+    function setRecordType(type) {
+      currentRecordType = type;
+      document.querySelectorAll('.record-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function lookupDNS() {
+      const domain = document.getElementById('domain').value.toLowerCase().trim();
+      if (!domain) return;
+
+      const records = sampleRecords[currentRecordType];
+      const result = records[domain];
+
+      const resultsList = document.getElementById('resultsList');
+      const resultTitle = document.getElementById('resultTitle');
+
+      resultTitle.textContent = `${currentRecordType} Records for ${domain}`;
+
+      if (result) {
+        if (Array.isArray(result)) {
+          resultsList.innerHTML = result.map(r => `
+            <div class="record-item">
+              <div class="record-type">${currentRecordType}</div>
+              <div class="record-value">${r}</div>
+            </div>
+          `).join('');
+        } else {
+          resultsList.innerHTML = `
+            <div class="record-item">
+              <div class="record-type">${currentRecordType}</div>
+              <div class="record-value">${result}</div>
+            </div>
+          `;
+        }
+      } else {
+        resultsList.innerHTML = `<div style="color: #8888A8;">No ${currentRecordType} records found (sample data only)</div>`;
+      }
+
+      document.getElementById('results').classList.add('active');
+    }
+  </script>
+</body>
+</html>

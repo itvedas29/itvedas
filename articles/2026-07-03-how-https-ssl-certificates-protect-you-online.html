@@ -88,8 +88,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 @media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
 </head>
 <body>
+  <div class="reading-progress-bar" id="readingProgress"></div>
+
 <div class="progress"><div class="pb" id="pb"></div></div>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
@@ -202,5 +205,6 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 const pb=document.getElementById('pb');
 addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
 </script>
+  <script src="/js/documentation-ui.js"><\/script>
 </body>
 </html>

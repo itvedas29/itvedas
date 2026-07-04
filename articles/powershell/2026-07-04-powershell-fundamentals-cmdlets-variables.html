@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas">
+  <meta property="og:description" content="Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-04">
+  <link rel="canonical" href="https://itvedas.com/articles/powershell/powershell-fundamentals-cmdlets-variables.html">
+  <title>PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "PowerShell Fundamentals: Cmdlets, Variables & Piping", "description": "Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#6366F1;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .code-block-wrapper{position:relative;margin:1.5rem 0;}
+    .copy-code-button{position:absolute;top:0.75rem;right:0.75rem;background:#10B981;color:white;border:none;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.85rem;cursor:pointer;opacity:0.8;transition:opacity 0.2s;}
+    .copy-code-button:hover{opacity:1;}
+    .copy-code-button.copied{background:#6EE7B7;color:black;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .faq{margin-top:.75rem;}
+    .faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.85rem;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .difficulty-expert{background:rgba(248,113,113,0.2);color:#F87171;border:1px solid rgba(248,113,113,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}.wrap{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span style="color:#FF6B35;">Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/articles/powershell/">🔷 PowerShell</a>
+    <a href="/#chapters">Chapters</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/powershell/">PowerShell</a> › Fundamentals</div>
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Fundamentals: Cmdlets, Variables & Piping</h1>
+  <div class="hero-meta"><span>📅 July 04, 2026</span><span>10 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">PowerShell is Microsoft's automation and configuration management framework. Learn cmdlets, variables, object piping, and data types—the foundation for Windows Server and Azure automation.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
+  <div class="reading-time">⏱ 10 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Windows Server basics</li>
+      <li>Command line familiarity</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>PowerShell is built on .NET Framework and provides access to Windows Management Instrumentation (WMI)</li>
+        <li>Over 2,400 cmdlets available in PowerShell 7+ across 137 modules</li>
+        <li>Cmdlet naming follows Verb-Noun convention (Get-Process, Set-Item, Remove-File)</li>
+        <li>PowerShell objects carry metadata, unlike traditional shell output (text only)</li>
+      </ul>
+    </div>
+
+    <h2 id="what-is-powershell">What is PowerShell?</h2>
+    <p>PowerShell is a task automation and configuration management framework from Microsoft. Unlike traditional shells (cmd.exe, Bash) that output text, PowerShell outputs objects—structured data with properties and methods. This fundamental difference makes PowerShell exceptionally powerful for system administration.</p>
+    <p>When you run <code>Get-Process</code>, you don't get text to parse. You get Process objects with properties like Name, ID, Memory, and methods like Kill() or Suspend(). You can filter, sort, and manipulate these objects programmatically.</p>
+
+    <h2 id="cmdlets-the-building-blocks">Cmdlets: The Building Blocks</h2>
+    <p>Cmdlets (pronounced "command-lets") are lightweight commands that perform a single function. They follow a Verb-Noun naming convention:</p>
+    <ul>
+      <li><code>Get-*</code> - Retrieve information (Get-Process, Get-Service)</li>
+      <li><code>Set-*</code> - Configure properties (Set-Item, Set-Service)</li>
+      <li><code>Start-*</code> - Begin operation (Start-Service, Start-Process)</li>
+      <li><code>Stop-*</code> - End operation (Stop-Service, Stop-Process)</li>
+      <li><code>Remove-*</code> - Delete (Remove-Item, Remove-User)</li>
+      <li><code>New-*</code> - Create (New-Item, New-User)</li>
+    </ul>
+    <p>This consistency makes PowerShell intuitive. If you know <code>Get-Process</code>, you can guess that <code>Get-Service</code> retrieves services and <code>Get-ChildItem</code> lists files.</p>
+
+    <div class="code-block-wrapper">
+      <pre><code># Get all running processes sorted by memory
+Get-Process | Sort-Object Memory -Descending | Select-Object Name, Memory
+
+# Start the Windows Update service
+Start-Service -Name wuauserv
+
+# Get all users in Active Directory
+Get-ADUser -Filter * | Select-Object Name, SamAccountName
+
+# Create a new file
+New-Item -Path "C:\temp\test.txt" -ItemType File</code></pre>
+    </div>
+
+    <h2 id="variables-and-data-types">Variables and Data Types</h2>
+    <p>PowerShell variables start with <code>$</code> and can store any data type. PowerShell automatically detects the type:</p>
+    <ul>
+      <li><code>[int]</code> - Integers (42, 100)</li>
+      <li><code>[string]</code> - Text ("Hello World")</li>
+      <li><code>[bool]</code> - Boolean (True, False)</li>
+      <li><code>[array]</code> - Collections (@("one", "two", "three"))</li>
+      <li><code>[hashtable]</code> - Key-value pairs (@{Name="John"; Age=30})</li>
+      <li><code>[object]</code> - Any PowerShell object (output from cmdlets)</li>
+    </ul>
+
+    <div class="code-block-wrapper">
+      <pre><code># String variable
+$name = "John"
+
+# Integer variable
+$age = 30
+
+# Array of servers
+$servers = @("server1", "server2", "server3")
+
+# Hashtable (dictionary)
+$user = @{
+  Name = "John Doe"
+  Department = "IT"
+  Salary = 75000
+}
+
+# Accessing hashtable values
+Write-Host $user.Name
+Write-Host $user["Department"]</code></pre>
+    </div>
+
+    <h2 id="piping-the-power-of-powershell">Piping: The Power of PowerShell</h2>
+    <p>The pipe operator <code>|</code> passes objects from one cmdlet to the next. This is the secret to PowerShell's power. Each cmdlet receives the output object and can filter, transform, or act on it.</p>
+    <div class="code-block-wrapper">
+      <pre><code># Pipe Get-Process to Where-Object to filter
+Get-Process | Where-Object {$_.Memory -gt 100MB}
+
+# Pipe to Select-Object to choose specific properties
+Get-ADUser -Filter * | Select-Object Name, SamAccountName, EmailAddress
+
+# Pipe to ForEach-Object to perform action on each item
+Get-ChildItem C:\temp | ForEach-Object {Remove-Item $_.FullName -Force}
+
+# Chain multiple pipes
+Get-Service | Where-Object {$_.Status -eq "Running"} | Sort-Object Name | Select-Object Name, Status</code></pre>
+    </div>
+
+    <h2 id="common-cmdlets-for-system-administration">Common Cmdlets for System Administration</h2>
+    <p><strong>File System:</strong></p>
+    <ul>
+      <li><code>Get-ChildItem</code> - List files and folders</li>
+      <li><code>Copy-Item</code> - Copy files or directories</li>
+      <li><code>Move-Item</code> - Move or rename files</li>
+      <li><code>Remove-Item</code> - Delete files or folders</li>
+    </ul>
+    <p><strong>Process Management:</strong></p>
+    <ul>
+      <li><code>Get-Process</code> - List running processes</li>
+      <li><code>Start-Process</code> - Launch a new process</li>
+      <li><code>Stop-Process</code> - Terminate a process</li>
+    </ul>
+    <p><strong>Service Management:</strong></p>
+    <ul>
+      <li><code>Get-Service</code> - List services</li>
+      <li><code>Start-Service</code> - Start a service</li>
+      <li><code>Stop-Service</code> - Stop a service</li>
+      <li><code>Restart-Service</code> - Restart a service</li>
+    </ul>
+
+    <h2 id="getting-help">Getting Help in PowerShell</h2>
+    <p>PowerShell has built-in help documentation accessible via the <code>Get-Help</code> cmdlet:</p>
+    <div class="code-block-wrapper">
+      <pre><code># Get help for a cmdlet
+Get-Help Get-Process
+
+# Show detailed help with examples
+Get-Help Get-Process -Detailed
+
+# Show only examples
+Get-Help Get-Process -Examples
+
+# Search for cmdlets matching a pattern
+Get-Command *service*</code></pre>
+    </div>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>PowerShell outputs objects, not text, enabling powerful filtering and manipulation</li>
+        <li>Cmdlets follow Verb-Noun naming convention, making them intuitive and discoverable</li>
+        <li>Variables store data; common types include strings, integers, arrays, and hashtables</li>
+        <li>The pipe operator <code>|</code> chains cmdlets together, passing objects between them</li>
+        <li>Master basic cmdlets for file management, processes, and services to automate daily tasks</li>
+      </ul>
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;">IT<span style="color:#FF6B35;">Vedas</span></div>
+  <div style="display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;">
+    <a href="/articles/powershell/" style="color:var(--muted);text-decoration:none;">PowerShell Hub</a>
+    <a href="/#chapters" style="color:var(--muted);text-decoration:none;">All Chapters</a>
+    <a href="mailto:info@itvedas.com" style="color:var(--muted);text-decoration:none;">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

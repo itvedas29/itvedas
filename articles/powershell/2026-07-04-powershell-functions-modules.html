@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Master PowerShell functions and modules. Build reusable code, parameters, error handling, and custom modules for enterprise automation.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Functions & Modules: Build Reusable Code | IT Vedas">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-04">
+  <title>PowerShell Functions & Modules: Build Reusable Code | IT Vedas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;line-height:1.15;margin-bottom:1.25rem;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#6366F1;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .code-block-wrapper{position:relative;margin:1.5rem 0;}
+    .copy-code-button{position:absolute;top:0.75rem;right:0.75rem;background:#10B981;color:white;border:none;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.85rem;cursor:pointer;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:1.5rem;margin:2rem 0;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;list-style:none;}
+    .prerequisites li::before{content:"✓ ";color:#6EE7B7;margin-right:0.5rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span style="color:#FF6B35;">Vedas</span></a>
+  <div class="nav-links">
+    <a href="/articles/powershell/">🔷 PowerShell</a>
+    <a href="/#chapters">Chapters</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;"><a href="/">Home</a> › <a href="/articles/powershell/">PowerShell</a> › Functions & Modules</div>
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Functions & Modules: Build Reusable Code</h1>
+  <div style="display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;">
+    <span>📅 July 04, 2026</span><span>12 min read</span>
+  </div>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
+  <div class="reading-time">⏱ 12 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>PowerShell fundamentals</li>
+      <li>Understanding of variables and cmdlets</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>Functions enable code reuse and reduce repetition in PowerShell scripts</li>
+        <li>Modules package functions into distributable units (ps1, psd1, dll files)</li>
+        <li>The PSGallery repository hosts 7,000+ PowerShell modules available for download</li>
+        <li>Proper parameter validation prevents invalid input from breaking automation</li>
+      </ul>
+    </div>
+
+    <h2 id="what-are-functions">What Are Functions?</h2>
+    <p>Functions are reusable blocks of code that perform a specific task. Instead of writing the same code repeatedly, define a function once and call it many times.</p>
+
+    <div class="code-block-wrapper">
+      <pre><code>function Get-SystemInfo {
+  param([string]$ComputerName = $env:COMPUTERNAME)
+
+  $os = Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName
+  $cpu = Get-CimInstance -ClassName Win32_Processor -ComputerName $ComputerName
+
+  [PSCustomObject]@{
+    ComputerName = $ComputerName
+    OS = $os.Caption
+    Memory = [math]::Round($os.TotalVisibleMemorySize / 1MB, 2)
+    CPUCores = $cpu.NumberOfCores
+  }
+}
+
+# Call the function
+Get-SystemInfo
+Get-SystemInfo -ComputerName "Server01"</code></pre>
+    </div>
+
+    <h2 id="function-parameters-and-validation">Function Parameters and Validation</h2>
+    <p>Parameters allow functions to accept input. Validation ensures the input meets requirements:</p>
+
+    <div class="code-block-wrapper">
+      <pre><code>function New-User {
+  param(
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(3,20)]
+    [string]$Username,
+
+    [Parameter(Mandatory=$true)]
+    [ValidatePattern('^[a-zA-Z]')]
+    [string]$FirstName,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("IT", "HR", "Finance", "Operations")]
+    [string]$Department
+  )
+
+  # Function body
+  Write-Host "Creating user: $Username in $Department"
+}
+
+# Valid call
+New-User -Username "jdoe" -FirstName "John" -Department "IT"
+
+# Invalid call (too short)
+New-User -Username "jd" -FirstName "John" -Department "IT"  # Error!

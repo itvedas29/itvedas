@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Markdown preview. Write Markdown and see live preview instantly.">
+  <title>Markdown Preview | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .panel {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .panel-label { font-weight: 600; margin-bottom: 1rem; color: #8888A8; }
+    textarea {
+      width: 100%;
+      height: 500px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    .preview {
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 1.5rem;
+      height: 500px;
+      overflow-y: auto;
+      line-height: 1.8;
+    }
+    .preview h1, .preview h2, .preview h3 { margin: 1.5rem 0 0.75rem; font-weight: 700; }
+    .preview h1 { font-size: 2rem; }
+    .preview h2 { font-size: 1.5rem; }
+    .preview h3 { font-size: 1.25rem; }
+    .preview p { margin-bottom: 1rem; color: var(--sub, #D0D0E8); }
+    .preview code {
+      background: rgba(99, 102, 241, 0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    .preview pre {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .preview ul, .preview ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+    .preview li { margin-bottom: 0.5rem; }
+    .preview blockquote {
+      border-left: 3px solid #6366F1;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #8888A8;
+    }
+    .preview a { color: #6366F1; text-decoration: none; }
+    .preview a:hover { text-decoration: underline; }
+    @media (max-width: 768px) {
+      .editor-container { grid-template-columns: 1fr; }
+      .preview, textarea { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>📝 Markdown Preview</h1>
+
+    <div class="editor-container">
+      <div class="panel">
+        <div class="panel-label">Markdown</div>
+        <textarea id="markdown" placeholder="# Heading&#10;## Subheading&#10;&#10;Write markdown here...&#10;&#10;- Bullet points&#10;- Another point&#10;&#10;**Bold text**&#10;&#10;[Links](https://example.com)"></textarea>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Live Preview</div>
+        <div class="preview" id="preview">Enter markdown to see preview...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const textarea = document.getElementById('markdown');
+    const preview = document.getElementById('preview');
+
+    function updatePreview() {
+      preview.innerHTML = marked.parse(textarea.value);
+    }
+
+    textarea.addEventListener('input', updatePreview);
+
+    // Initial preview
+    updatePreview();
+  </script>
+</body>
+</html>

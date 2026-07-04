@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="XML formatter and validator. Format, minify, and validate XML with syntax highlighting.">
+  <title>XML Formatter | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .description { color: #8888A8; margin-bottom: 2rem; }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    button.secondary {
+      background: transparent;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10B981;
+    }
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .editor {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .editor-label { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; color: #8888A8; }
+    textarea {
+      width: 100%;
+      height: 400px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    .status {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .status.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6EE7B7;
+      display: block;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      display: block;
+    }
+    @media (max-width: 1024px) {
+      .editor-container { grid-template-columns: 1fr; }
+      textarea { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>{ } XML Formatter</h1>
+    <p class="description">Format, minify, and validate XML with instant feedback and syntax highlighting.</p>
+
+    <div class="controls">
+      <button onclick="formatXML()">Format</button>
+      <button onclick="minifyXML()" class="secondary">Minify</button>
+      <button onclick="copyOutput()" class="secondary">📋 Copy</button>
+      <button onclick="clearAll()" class="secondary">Clear</button>
+    </div>
+
+    <div class="editor-container">
+      <div class="editor">
+        <div class="editor-label">Input XML</div>
+        <textarea id="input" placeholder='Paste your XML here...'></textarea>
+        <div class="status" id="inputStatus"></div>
+      </div>
+      <div class="editor">
+        <div class="editor-label">Output XML</div>
+        <textarea id="output" readonly placeholder='Formatted XML will appear here...'></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatXML() {
+      const input = document.getElementById('input').value;
+      if (!input) return;
+
+      try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(input, 'text/xml');
+
+        if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+          throw new Error('Invalid XML');
+        }
+
+        const formatted = new XMLSerializer().serializeToString(xmlDoc);
+        const pretty = formatted.replace(/></g, '>\n<');
+
+        document.getElementById('output').value = pretty;
+        document.getElementById('inputStatus').textContent = '✓ Valid XML';
+        document.getElementById('inputStatus').className = 'status success';
+      } catch (e) {
+        document.getElementById('inputStatus').textContent = '✗ Invalid XML: ' + e.message;
+        document.getElementById('inputStatus').className = 'status error';
+      }
+    }
+
+    function minifyXML() {
+      const input = document.getElementById('input').value;
+      if (!input) return;
+
+      try {
+        const minified = input.replace(/>\s+</g, '><').trim();
+        document.getElementById('output').value = minified;
+        document.getElementById('inputStatus').textContent = '✓ Minified';
+        document.getElementById('inputStatus').className = 'status success';
+      } catch (e) {
+        document.getElementById('inputStatus').textContent = '✗ Error';
+        document.getElementById('inputStatus').className = 'status error';
+      }
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output').value;
+      if (!output) return;
+      navigator.clipboard.writeText(output).then(() => {
+        const btn = event.target;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+      });
+    }
+
+    function clearAll() {
+      document.getElementById('input').value = '';
+      document.getElementById('output').value = '';
+      document.getElementById('inputStatus').className = 'status';
+    }
+  </script>
+</body>
+</html>

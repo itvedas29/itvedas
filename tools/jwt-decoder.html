@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JWT decoder. Decode and analyze JSON Web Tokens, view claims and expiration time.">
+  <title>JWT Decoder | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 2rem; }
+    .input-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .output {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+    .output.active { display: block; }
+    .section {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #6366F1;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    pre {
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      color: #A8E6CF;
+    }
+    .error {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #F87171;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🔐 JWT Decoder</h1>
+
+    <div class="input-section">
+      <textarea id="jwt" placeholder="Paste your JWT token here..."></textarea>
+      <button onclick="decodeJWT()">Decode JWT</button>
+    </div>
+
+    <div class="output" id="output">
+      <div class="section">
+        <div class="section-title">Header</div>
+        <pre id="header"></pre>
+      </div>
+      <div class="section">
+        <div class="section-title">Payload / Claims</div>
+        <pre id="payload"></pre>
+      </div>
+      <div class="section">
+        <div class="section-title">Expiration</div>
+        <div id="expiration" style="padding: 1rem; background: #0A0A0F; border-radius: 8px;"></div>
+      </div>
+      <div id="error-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    function decodeJWT() {
+      const token = document.getElementById('jwt').value.trim();
+      if (!token) return;
+
+      try {
+        const parts = token.split('.');
+        if (parts.length !== 3) throw new Error('Invalid JWT format. Must have 3 parts separated by dots.');
+
+        const header = JSON.parse(atob(parts[0]));
+        const payload = JSON.parse(atob(parts[1]));
+
+        document.getElementById('header').textContent = JSON.stringify(header, null, 2);
+        document.getElementById('payload').textContent = JSON.stringify(payload, null, 2);
+
+        // Check expiration
+        if (payload.exp) {
+          const expDate = new Date(payload.exp * 1000);
+          const now = new Date();
+          const isExpired = expDate < now;
+          document.getElementById('expiration').innerHTML = `
+            <strong>Expires:</strong> ${expDate.toISOString()}<br>
+            <strong>Status:</strong> <span style="color: ${isExpired ? '#F87171' : '#6EE7B7'};">${isExpired ? 'Expired' : 'Valid'}</span>
+          `;
+        }
+
+        document.getElementById('output').classList.add('active');
+        document.getElementById('error-msg').innerHTML = '';
+      } catch (e) {
+        document.getElementById('error-msg').innerHTML = `<div class="error">${e.message}</div>`;
+        document.getElementById('output').classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>

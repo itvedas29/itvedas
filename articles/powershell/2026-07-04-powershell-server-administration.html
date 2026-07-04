@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="PowerShell for server administration. Manage services, IIS, Hyper-V, and automate Windows Server operations.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Server Administration | IT Vedas">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-07-04">
+  <title>PowerShell Server Administration | IT Vedas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .ch-badge{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;margin-bottom:1.25rem;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art code{background:var(--bg2);border:1px solid var(--border);padding:.15em .45em;font-size:.875em;color:#6366F1;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .doc-metadata{display:flex;gap:1.5rem;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<nav><a href="/" class="logo">IT<span style="color:#FF6B35;">Vedas</span></a></nav>
+
+<div class="hero">
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Server Administration</h1>
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;">📅 July 04, 2026 | 11 min read</div>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge">ADVANCED</div>
+  <div style="color:#6EE7B7;">⏱ 11 min read</div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>Remoting enables execution on remote servers without SSH or agents</li>
+        <li>WMI and CIM cmdlets access low-level Windows operations</li>
+        <li>Event log monitoring detects security issues in real-time</li>
+        <li>Services automation improves uptime and reduces manual intervention</li>
+      </ul>
+    </div>
+
+    <h2>Service Management at Scale</h2>
+    <p>Manage services across multiple servers efficiently:</p>
+
+    <pre><code># Restart a service on multiple servers
+$servers = @("Server01", "Server02", "Server03")
+
+foreach ($server in $servers) {
+  Restart-Service -Name "Spooler" -ComputerName $server -Force
+  Get-Service -Name "Spooler" -ComputerName $server
+}</code></pre>
+
+    <h2>Monitor System Performance</h2>
+    <p>Track CPU, memory, and disk usage programmatically:</p>
+
+    <pre><code># Get disk space usage
+Get-Volume | Select-Object DriveLetter, Size, SizeRemaining, @{
+  Name = "PercentUsed"
+  Expression = {[math]::Round((($_.Size - $_.SizeRemaining) / $_.Size) * 100, 2)}
+}</code></pre>
+
+    <h2>Event Log Monitoring</h2>
+    <p>Alert on critical security events:</p>
+
+    <pre><code># Get failed login attempts in last hour
+$oneHourAgo = (Get-Date).AddHours(-1)
+Get-EventLog -LogName Security -InstanceId 4625 -After $oneHourAgo |
+  Select-Object TimeGenerated, Message | Head -20</code></pre>
+  </article>
+</div>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

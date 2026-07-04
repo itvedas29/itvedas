@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="YARA rule validator. Validate and check YARA malware detection rules syntax.">
+  <title>YARA Rule Validator | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .description { color: #8888A8; margin-bottom: 2rem; }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    button.secondary {
+      background: transparent;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10B981;
+    }
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .editor {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .editor-label { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; color: #8888A8; }
+    textarea {
+      width: 100%;
+      height: 400px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    .status {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .status.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6EE7B7;
+      display: block;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      display: block;
+    }
+    .output { background: #13131C; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; }
+    .output-row {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .output-row:last-child { border-bottom: none; }
+    .output-label { font-weight: 600; color: #6366F1; min-width: 120px; }
+    .output-value { flex: 1; color: #D0D0E8; word-break: break-word; }
+    @media (max-width: 1024px) {
+      .editor-container { grid-template-columns: 1fr; }
+      textarea { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🎯 YARA Rule Validator</h1>
+    <p class="description">Validate YARA rule syntax and structure for malware detection patterns.</p>
+
+    <div class="controls">
+      <button onclick="validateRule()">Validate Rule</button>
+      <button onclick="clearAll()" class="secondary">Clear</button>
+    </div>
+
+    <div class="editor-container">
+      <div class="editor">
+        <div class="editor-label">YARA Rule</div>
+        <textarea id="yaraRule" placeholder='rule ExampleRule&#10;{&#10;  meta:&#10;    description = "Example malware rule"&#10;    author = "Your Name"&#10;  strings:&#10;    $a = "malware"&#10;  condition:&#10;    $a&#10;}'></textarea>
+        <div class="status" id="status"></div>
+      </div>
+      <div class="editor">
+        <div class="editor-label">Validation Output</div>
+        <div class="output" id="output"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function validateRule() {
+      const rule = document.getElementById('yaraRule').value;
+      if (!rule) return;
+
+      const output = document.getElementById('output');
+      const status = document.getElementById('status');
+
+      try {
+        // Basic YARA rule syntax validation
+        const checks = {
+          'Has rule keyword': /\brule\s+\w+/.test(rule),
+          'Has opening brace': /\{/.test(rule),
+          'Has closing brace': /\}/.test(rule),
+          'Has strings section': /strings\s*:/.test(rule),
+          'Has condition section': /condition\s*:/.test(rule),
+          'Has valid string definitions': /\$\w+\s*=/.test(rule)
+        };
+
+        let allValid = Object.values(checks).every(v => v);
+        let html = '';
+
+        for (const [check, result] of Object.entries(checks)) {
+          const icon = result ? '✓' : '✗';
+          const color = result ? '#6EE7B7' : '#F87171';
+          html += `
+            <div class="output-row">
+              <div class="output-label" style="color: ${color};">${icon} ${check}</div>
+              <div class="output-value" style="color: ${color};">${result ? 'Valid' : 'Missing'}</div>
+            </div>
+          `;
+        }
+
+        // Extract rule name
+        const nameMatch = rule.match(/rule\s+(\w+)/);
+        if (nameMatch) {
+          html += `
+            <div class="output-row">
+              <div class="output-label">Rule Name</div>
+              <div class="output-value">${nameMatch[1]}</div>
+            </div>
+          `;
+        }
+
+        // Extract strings count
+        const stringMatches = rule.match(/\$\w+\s*=/g);
+        if (stringMatches) {
+          html += `
+            <div class="output-row">
+              <div class="output-label">String Count</div>
+              <div class="output-value">${stringMatches.length}</div>
+            </div>
+          `;
+        }
+
+        output.innerHTML = html;
+
+        if (allValid) {
+          status.textContent = '✓ Rule syntax is valid';
+          status.className = 'status success';
+        } else {
+          status.textContent = '✗ Rule has syntax errors';
+          status.className = 'status error';
+        }
+      } catch (e) {
+        output.innerHTML = `<div style="color: #F87171;">Error: ${e.message}</div>`;
+        status.textContent = '✗ Validation error';
+        status.className = 'status error';
+      }
+    }
+
+    function clearAll() {
+      document.getElementById('yaraRule').value = '';
+      document.getElementById('output').innerHTML = '';
+      document.getElementById('status').className = 'status';
+    }
+  </script>
+</body>
+</html>
