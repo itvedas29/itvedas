@@ -1,0 +1,63 @@
+name: Update CVE Database Daily
+
+on:
+  schedule:
+    # Run every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  update-cves:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run CVE aggregator
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd /home/user/itvedas
+          python3 itvedas-brain/cve-aggregator.py
+
+      - name: Check if CVE data changed
+        id: check_changes
+        run: |
+          if git diff --quiet data/cves-2025-2026.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push updates
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "CVE Bot"
+          git config user.email "cve-bot@itvedas.com"
+          git add data/cves-2025-2026.json
+          git commit -m "chore: Update CVE database $(date +%Y-%m-%d)"
+          git push origin claude/keen-keller-roy4d3
+
+      - name: Report status
+        run: |
+          if [ "${{ steps.check_changes.outputs.changed }}" = "true" ]; then
+            echo "✅ CVE database updated successfully"
+          else
+            echo "ℹ️ No CVE changes detected"
+          fi

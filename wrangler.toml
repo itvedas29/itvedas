@@ -1,0 +1,28 @@
+name = "itvedas"
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+
+# Cloudflare Pages configuration
+[env.production]
+name = "itvedas"
+routes = [
+  { pattern = "itvedas.com", zone_name = "itvedas.com" },
+  { pattern = "*.itvedas.com", zone_name = "itvedas.com" }
+]
+
+# Build configuration for Cloudflare Pages
+[build]
+command = "bash build.sh"
+cwd = "./"
+watch_paths = ["itvedas-brain/cve-aggregator.py"]
+
+# Observability
+[observability]
+enabled = true
+
+# Function configuration
+[functions]
+directory = "functions"
