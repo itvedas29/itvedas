@@ -1,24 +1,17 @@
-# ITVedas Brain
+# ITVedas Publishing Scripts
 
-This folder is the dedicated home for ITVedas autonomous content-generation architecture.
+Automated content publishing for itvedas.com, run by the GitHub Actions
+workflow `.github/workflows/write-article.yml` (ITVedas Autopilot):
 
-## Current live components
+- **content-writer.py** — writes and publishes a full SEO-optimised article
+  Mon / Wed / Fri (9:00 AM IST) into the correct chapter folder.
+- **news-agent.py** — refreshes IT & security news hourly and updates the
+  homepage Live Security Watch and news pages.
+- **core/** — shared helpers (LLM client, logging, IndexNow submission).
+- **state/** — publish state (`news_state.json`, `heartbeat.json`).
 
-The production autopilot currently runs from these repository paths:
+Both scripts use only the Python standard library. Secrets
+(`ANTHROPIC_API_KEY`, etc.) come from GitHub Actions secrets.
 
-- `itvedas-brain/content-writer.py` - evergreen article generation, review, rendering, catalog updates, state updates, and notifications
-- `itvedas-brain/news-agent.py` - RSS ingestion and original news commentary generation
-- `itvedas-brain/core/` - shared LLM call (`llm.py`) and logging (`log.py`) helpers used by all brain scripts
-- `itvedas-brain/state/state.json` - evergreen article memory and content-calendar progress
-- `itvedas-brain/state/news_state.json` - news deduplication and publication history
-- `itvedas-brain/state/brain.log` - consolidated activity log shared by all brain scripts (component-prefixed lines)
-- `.github/workflows/write-article.yml` - schedules, secrets, execution, commit, and push
-- `.github/workflows/validate-static-site.yml` - post-publication validation
-
-## Purpose
-
-Use this directory for the next version of the brain as its configuration, prompts, templates, validation logic, and documentation are separated from the current monolithic scripts.
-
-The legacy top-level `brain/` directory has been consolidated into `itvedas-brain/state/`. All scripts, workflows, and documentation now reference state files under `itvedas-brain/state/`.
-
-See `docs/REPOSITORY_KNOWLEDGE_MAP.md` for the complete system map and migration recommendations.
+The interactive chat bot / agent, COO dashboard, and self-improve
+automation were removed in July 2026.

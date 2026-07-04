@@ -1,13 +1,8 @@
-# Brain scripts (itvedas-brain/*.py, including content-writer.py and news-agent.py)
+# Publishing scripts (itvedas-brain/content-writer.py and news-agent.py)
 # use only the Python standard library (urllib, json, pathlib, etc.).
-#
-# itvedas-brain/api_server.py is the one exception: it exposes coo-agent.py
-# over HTTP for the COO dashboard frontend and needs FastAPI + an ASGI server.
 #
 # This file exists so the deployment is reproducible via a virtualenv
 # (see DEPLOYMENT.md). Add pinned third-party packages here the moment
 # any script grows a real dependency, then re-run:
 #   pip install -r requirements.txt
 
-fastapi>=0.110
-uvicorn>=0.29
