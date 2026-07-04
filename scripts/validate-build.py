@@ -200,6 +200,48 @@ def validate_file(filepath):
         return False
 
 
+def validate_phase4_features():
+    """Validate Phase 4 features: content hierarchy, search, caching, analytics"""
+    print("\n⚙️  Phase 4 Features Validation")
+    print("=" * 60)
+
+    issues = []
+
+    # Check for Phase 4 JavaScript modules
+    modules = [
+        'js/content-hierarchy.js',
+        'js/advanced-search.js',
+        'js/cache-optimizer.js',
+        'js/analytics-tracker.js'
+    ]
+
+    for module in modules:
+        if os.path.exists(module):
+            size = os.path.getsize(module)
+            print(f"✓ {module} ({size} bytes)")
+        else:
+            issues.append(f"⚠️  Missing module: {module}")
+
+    # Verify search index is still present and valid
+    if os.path.exists('search-index.json'):
+        with open('search-index.json', 'r') as f:
+            try:
+                index = json.load(f)
+                print(f"✓ Search index: {len(index)} entries")
+            except json.JSONDecodeError:
+                issues.append("❌ Search index JSON invalid")
+    else:
+        issues.append("❌ search-index.json not found")
+
+    if issues:
+        for issue in issues:
+            print(issue)
+    else:
+        print("✓ All Phase 4 features present")
+
+    return len([i for i in issues if i.startswith('❌')]) == 0
+
+
 def validate_phase3_features():
     """Validate Phase 3 features: mobile optimization and accessibility"""
     print("\n📱 Phase 3 Features Validation")
@@ -362,6 +404,13 @@ def main():
     # Validate Phase 3 features
     phase3_ok = validate_phase3_features()
     if not phase3_ok:
+        failed += 1
+    else:
+        passed += 1
+
+    # Validate Phase 4 features
+    phase4_ok = validate_phase4_features()
+    if not phase4_ok:
         failed += 1
     else:
         passed += 1
