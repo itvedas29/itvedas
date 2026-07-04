@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free IT tools for network engineers, system administrators, and security professionals. CIDR calculator, password generator, DNS lookup, subnet calculator, and 15+ more.">
+  <meta name="keywords" content="IT tools, network calculator, password generator, DNS lookup, CIDR, subnet calculator, security tools, free tools">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="Free IT Tools Hub | IT Vedas">
+  <meta property="og:description" content="Free IT tools for network engineers, system administrators, and security professionals. CIDR calculator, password generator, DNS lookup, and 15+ more.">
+  <meta property="og:url" content="https://itvedas.com/tools/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://itvedas.com/tools/">
+  <title>Free IT Tools Hub | IT Vedas</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Free IT Tools Hub",
+    "description": "Collection of free IT tools for network administration, security, and system management",
+    "url": "https://itvedas.com/tools/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "IT Vedas"
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --bg2: #13131C;
+      --text: #F0F0F8;
+      --muted: #8888A8;
+      --sub: #D0D0E8;
+      --accent: #10B981;
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .hero {
+      padding: 8rem 2rem 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-glow {
+      position: absolute;
+      top: 4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.16), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ch-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      background: rgba(16, 185, 129, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .ch-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--sub);
+      max-width: 640px;
+      line-height: 1.75;
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tag {
+      font-size: 0.78rem;
+      padding: 0.3rem 0.85rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+    }
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .search-box {
+      margin-bottom: 3rem;
+    }
+    .search-box input {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.75rem 1rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      margin-top: 2rem;
+    }
+    .section-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(16, 185, 129, 0.55);
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .tool-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .tool-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .tool-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+    .tool-link {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .tool-link:hover { text-decoration: underline; }
+    .category-header {
+      margin-top: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+    }
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      margin-top: 4rem;
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .hero { padding: 6rem 1rem 2rem; }
+      .tools-grid { grid-template-columns: 1fr; }
+      .nav-links { gap: 0.75rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">IT<span>Vedas</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chapters.html">Chapters</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="ch-icon">🛠️</div>
+    <div class="ch-num">Tools Hub</div>
+    <h1>Free IT Tools for Professionals</h1>
+    <p>Essential utilities for network engineers, system administrators, security professionals, and IT operations. All tools work instantly in your browser — no installation required.</p>
+    <div class="tags">
+      <span class="tag">Networking</span>
+      <span class="tag">Security</span>
+      <span class="tag">Administration</span>
+      <span class="tag">Free Forever</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="search-box">
+      <input type="text" id="toolSearch" placeholder="Search tools by name..." aria-label="Search tools">
+    </div>
+
+    <!-- Cryptography Tools -->
+    <div class="category-header">
+      <div class="section-label">Cryptography & Hashing</div>
+      <h2 class="section-h">Security Tools</h2>
+    </div>
+    <div class="tools-grid" data-category="crypto">
+      <div class="tool-card" onclick="window.location.href='/tools/password-generator.html'">
+        <div class="tool-icon">🔐</div>
+        <h3 class="tool-title">Password Generator</h3>
+        <p class="tool-desc">Create secure, randomized passwords with customizable length and character sets.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/password-strength.html'">
+        <div class="tool-icon">💪</div>
+        <h3 class="tool-title">Password Strength Checker</h3>
+        <p class="tool-desc">Analyze password strength with real-time feedback on security and entropy.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/hash-generator.html'">
+        <div class="tool-icon">🔗</div>
+        <h3 class="tool-title">Hash Generator</h3>
+        <p class="tool-desc">Generate MD5, SHA-256, SHA-512, and bcrypt hashes for any text input.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/base64-coder.html'">
+        <div class="tool-icon">📝</div>
+        <h3 class="tool-title">Base64 Encoder/Decoder</h3>
+        <p class="tool-desc">Encode and decode Base64 strings for API requests, headers, and data transmission.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+    </div>
+
+    <!-- Network Tools -->
+    <div class="category-header">
+      <div class="section-label">Networking & IP</div>
+      <h2 class="section-h">Network Administration Tools</h2>
+    </div>
+    <div class="tools-grid" data-category="network">
+      <div class="tool-card" onclick="window.location.href='/tools/cidr-calculator.html'">
+        <div class="tool-icon">🌐</div>
+        <h3 class="tool-title">CIDR Calculator</h3>
+        <p class="tool-desc">Convert CIDR notation to IP ranges, calculate network and broadcast addresses.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/subnet-calculator.html'">
+        <div class="tool-icon">🔢</div>
+        <h3 class="tool-title">Subnet Calculator</h3>
+        <p class="tool-desc">Calculate subnets, host ranges, and network masks for IPv4 addressing.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/dns-lookup.html'">
+        <div class="tool-icon">📍</div>
+        <h3 class="tool-title">DNS Lookup</h3>
+        <p class="tool-desc">Query DNS records (A, AAAA, MX, CNAME, TXT) for any domain.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/whois-lookup.html'">
+        <div class="tool-icon">🔍</div>
+        <h3 class="tool-title">WHOIS Lookup</h3>
+        <p class="tool-desc">Get domain and IP ownership information with WHOIS queries.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/ssl-checker.html'">
+        <div class="tool-icon">🔒</div>
+        <h3 class="tool-title">SSL Certificate Checker</h3>
+        <p class="tool-desc">Verify SSL/TLS certificate validity, expiration, and chain information.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+    </div>
+
+    <!-- Security Tools -->
+    <div class="category-header">
+      <div class="section-label">Advanced Security</div>
+      <h2 class="section-h">Security Analysis Tools</h2>
+    </div>
+    <div class="tools-grid" data-category="security">
+      <div class="tool-card" onclick="window.location.href='/tools/jwt-decoder.html'">
+        <div class="tool-icon">🎫</div>
+        <h3 class="tool-title">JWT Decoder</h3>
+        <p class="tool-desc">Decode and analyze JWT tokens to inspect claims and headers.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/http-headers.html'">
+        <div class="tool-icon">🚀</div>
+        <h3 class="tool-title">HTTP Header Analyzer</h3>
+        <p class="tool-desc">Analyze HTTP response headers for security and performance issues.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/yara-tester.html'">
+        <div class="tool-icon">⚠️</div>
+        <h3 class="tool-title">YARA Rule Tester</h3>
+        <p class="tool-desc">Test YARA rules against text patterns for malware detection.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+    </div>
+
+    <!-- Formatting Tools -->
+    <div class="category-header">
+      <div class="section-label">Data Formatting</div>
+      <h2 class="section-h">Format Conversion Tools</h2>
+    </div>
+    <div class="tools-grid" data-category="format">
+      <div class="tool-card" onclick="window.location.href='/tools/json-formatter.html'">
+        <div class="tool-icon">{ }</div>
+        <h3 class="tool-title">JSON Formatter</h3>
+        <p class="tool-desc">Validate, format, and minify JSON with syntax highlighting.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/xml-formatter.html'">
+        <div class="tool-icon">< ></div>
+        <h3 class="tool-title">XML Formatter</h3>
+        <p class="tool-desc">Validate and pretty-print XML documents with proper indentation.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/yaml-formatter.html'">
+        <div class="tool-icon">〜 〜</div>
+        <h3 class="tool-title">YAML Formatter</h3>
+        <p class="tool-desc">Validate and format YAML configuration files.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/markdown-preview.html'">
+        <div class="tool-icon">📄</div>
+        <h3 class="tool-title">Markdown Preview</h3>
+        <p class="tool-desc">Live preview of Markdown syntax with HTML rendering.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+    </div>
+
+    <!-- Utility Tools -->
+    <div class="category-header">
+      <div class="section-label">Utilities</div>
+      <h2 class="section-h">General Purpose Tools</h2>
+    </div>
+    <div class="tools-grid" data-category="util">
+      <div class="tool-card" onclick="window.location.href='/tools/regex-tester.html'">
+        <div class="tool-icon">🔤</div>
+        <h3 class="tool-title">Regex Tester</h3>
+        <p class="tool-desc">Test regular expressions with real-time matching feedback.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/guid-generator.html'">
+        <div class="tool-icon">🎰</div>
+        <h3 class="tool-title">GUID/UUID Generator</h3>
+        <p class="tool-desc">Generate v4 UUIDs and GUIDs for applications and databases.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/timestamp-converter.html'">
+        <div class="tool-icon">⏰</div>
+        <h3 class="tool-title">Timestamp Converter</h3>
+        <p class="tool-desc">Convert between Unix timestamps and human-readable dates.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+      <div class="tool-card" onclick="window.location.href='/tools/cron-generator.html'">
+        <div class="tool-icon">📅</div>
+        <h3 class="tool-title">Cron Expression Generator</h3>
+        <p class="tool-desc">Build and validate cron expressions for task scheduling.</p>
+        <span class="tool-link">Open Tool →</span>
+      </div>
+    </div>
+
+    <!-- Coming Soon -->
+    <div class="category-header">
+      <div class="section-label">Coming Soon</div>
+      <h2 class="section-h">Tools in Development</h2>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card" style="opacity: 0.6;">
+        <div class="tool-icon">🧪</div>
+        <h3 class="tool-title">PowerShell Script Builder</h3>
+        <p class="tool-desc">Generate PowerShell scripts from visual templates and automation workflows.</p>
+        <span class="tool-link">Coming Soon →</span>
+      </div>
+      <div class="tool-card" style="opacity: 0.6;">
+        <div class="tool-icon">📋</div>
+        <h3 class="tool-title">Group Policy Search</h3>
+        <p class="tool-desc">Search Group Policy settings across Windows domains.</p>
+        <span class="tool-link">Coming Soon →</span>
+      </div>
+      <div class="tool-card" style="opacity: 0.6;">
+        <div class="tool-icon">🪟</div>
+        <h3 class="tool-title">Windows Event ID Lookup</h3>
+        <p class="tool-desc">Decode Windows event IDs and understand event log entries.</p>
+        <span class="tool-link">Coming Soon →</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 IT Vedas. All rights reserved. | <a href="/about.html" style="color: var(--accent); text-decoration: none;">About</a> | <a href="/privacy-policy.html" style="color: var(--accent); text-decoration: none;">Privacy</a></p>
+  </footer>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-D98BFZSJYP');
+  </script>
+
+  <script>
+    // Simple tool search functionality
+    document.getElementById('toolSearch').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('.tool-card').forEach(card => {
+        const title = card.querySelector('.tool-title').textContent.toLowerCase();
+        const desc = card.querySelector('.tool-desc').textContent.toLowerCase();
+        const matches = title.includes(query) || desc.includes(query) || query === '';
+        card.style.display = matches ? 'flex' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

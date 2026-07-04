@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CIDR calculator for network engineers. Convert CIDR notation to IP ranges and calculate network addressing.">
+  <link rel="canonical" href="https://itvedas.com/tools/cidr-calculator.html">
+  <title>CIDR Calculator - Network Addressing Tool | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #8888A8; margin-bottom: 2rem; font-size: 0.95rem; }
+    .tool-section {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    input { width: 100%; padding: 0.75rem; background: #0A0A0F; border: 1px solid rgba(255,255,255,0.1); color: #F0F0F8; border-radius: 6px; }
+    input:focus { outline: none; border-color: #10B981; }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+    }
+    button:hover { opacity: 0.9; }
+    .result {
+      background: #0A0A0F;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      display: none;
+    }
+    .result.active { display: block; }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-label { color: #8888A8; font-weight: 600; }
+    .result-value { color: #10B981; font-family: monospace; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🌐 CIDR Calculator</h1>
+    <p class="description">Convert CIDR notation to network addresses, calculate IP ranges, and determine subnet masks.</p>
+
+    <div class="tool-section">
+      <div class="form-group">
+        <label for="cidr">Enter CIDR (e.g., 192.168.1.0/24)</label>
+        <input type="text" id="cidr" placeholder="192.168.1.0/24">
+      </div>
+      <button onclick="calculateCIDR()">Calculate</button>
+
+      <div class="result" id="result">
+        <div class="result-row">
+          <span class="result-label">Network Address:</span>
+          <span class="result-value" id="network">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Broadcast Address:</span>
+          <span class="result-value" id="broadcast">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Subnet Mask:</span>
+          <span class="result-value" id="mask">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">First Host:</span>
+          <span class="result-value" id="first">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Last Host:</span>
+          <span class="result-value" id="last">-</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Total Hosts:</span>
+          <span class="result-value" id="hosts">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculateCIDR() {
+      const cidr = document.getElementById('cidr').value.trim();
+      if (!cidr.includes('/')) {
+        alert('Invalid format. Use CIDR notation (e.g., 192.168.1.0/24)');
+        return;
+      }
+
+      const [ip, prefix] = cidr.split('/');
+      const ipParts = ip.split('.').map(Number);
+      const prefixLen = parseInt(prefix);
+
+      if (ipParts.length !== 4 || ipParts.some(p => p > 255) || prefixLen < 0 || prefixLen > 32) {
+        alert('Invalid IP or prefix length');
+        return;
+      }
+
+      const mask = (0xffffffff << (32 - prefixLen)) >>> 0;
+      const network = ipParts.reduce((a, b, i) => a + (b << (24 - i * 8)), 0) >>> 0;
+      const networkAddr = network & mask;
+      const broadcast = networkAddr | (~mask >>> 0);
+      const hostCount = Math.pow(2, 32 - prefixLen) - 2;
+
+      document.getElementById('network').textContent = toIPString(networkAddr);
+      document.getElementById('broadcast').textContent = toIPString(broadcast);
+      document.getElementById('mask').textContent = toIPString(mask);
+      document.getElementById('first').textContent = toIPString(networkAddr + 1);
+      document.getElementById('last').textContent = toIPString(broadcast - 1);
+      document.getElementById('hosts').textContent = Math.max(0, hostCount).toString();
+      document.getElementById('result').classList.add('active');
+    }
+
+    function toIPString(num) {
+      return [(num >>> 24) & 0xff, (num >>> 16) & 0xff, (num >>> 8) & 0xff, num & 0xff].join('.');
+    }
+  </script>
+</body>
+</html>
