@@ -1,0 +1,351 @@
+================================================================================
+                    WINDOWS SERVER COMPARISON QUICK REFERENCE
+                            2019 vs 2022 vs 2025
+================================================================================
+
+Created: July 2026
+For: IT Vedas Infrastructure Teams
+Status: Complete - Comprehensive Guides Available
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+SERVER 2019: MIGRATE IMMEDIATELY
+- Mainstream support ENDED (January 2024)
+- Security risk if continued in production
+- Migration target: 2022 or 2025
+- Only 5 years of extended support remaining (until Jan 2029)
+
+SERVER 2022: CURRENT RECOMMENDED
+- Mainstream support: Until October 2026
+- Modern security, Azure integration, proven stability
+- Good for migrations from 2019
+- 10 years total support (through Oct 2031)
+
+SERVER 2025: FUTURE-PROOF
+- Latest version with longest support (through Oct 2034)
+- Zero Trust architecture
+- AI-powered diagnostics
+- Recommended for new deployments
+
+================================================================================
+QUICK COMPARISON TABLE
+================================================================================
+
+Feature                           | 2019     | 2022      | 2025
+================================================================================
+Mainstream Support               | ENDED    | Oct 2026  | Oct 2029
+Extended Support                 | Jan 2029 | Oct 2031  | Oct 2034
+Total Support Window             | 10 years | 10 years  | 10 years
+
+PERFORMANCE
+RAM (Minimum)                    | 2 GB     | 2 GB      | 2 GB
+RAM (Recommended)                | 8 GB     | 8 GB      | 16 GB
+RAM (Maximum)                    | 24 TB    | 24 TB     | 48 TB
+Processor (Max Cores)            | 512      | 512       | 1,024
+
+HYPER-V
+Max vCPU per VM                  | 240      | 240       | 480
+Max RAM per VM                   | 12 TB    | 12 TB     | 24 TB
+Max VMs per Host                 | 1,024    | 1,024     | 2,048
+Failover Cluster Nodes           | 64       | 64        | 128
+Supported VM Generations         | 1 & 2    | 1 & 2     | 1 & 2
+
+STORAGE
+Storage Spaces                   | ✓        | ✓         | ✓
+Storage Spaces Direct            | ✓        | ✓         | ✓
+ReFS Filesystem                  | ✓ v3.1   | ✓ v3.1    | ✓ v3.2
+Max Virtual Disk Size            | 64 TB    | 64 TB     | 128 TB
+
+ACTIVE DIRECTORY
+Schema Version                   | 88       | 88        | 89
+Max Forest Functional Level      | 2016     | 2022      | 2025
+Kerberos Armoring (FAST)         | Limited  | ✓         | ✓
+FIDO2/Passwordless               | ✗        | Limited   | ✓ Default
+
+SECURITY
+Windows Defender for Servers     | ✗        | ✓         | ✓
+Credential Guard                 | ✓        | ✓         | ✓
+Device Guard (HVCI)              | ✓        | ✓         | ✓
+Zero Trust Support               | ✗        | Partial   | ✓ Native
+Passwordless Auth                | ✗        | Limited   | ✓ Default
+AI Threat Detection              | ✗        | ✗         | ✓
+SMB 3.1.1 Signing                | Optional | Default   | Default
+
+NETWORKING
+SMB Version Support              | 3.0      | 3.1.1     | 3.1.1
+NIC Interfaces per VM            | 32       | 32        | 64
+IPv6 Filtering                   | Limited  | ✓         | ✓
+
+LICENSING
+Price per 2-Core                 | ~$1,058  | ~$1,058   | ~$1,058
+Datacenter Edition               | ~$6,155  | ~$6,155   | ~$6,155
+CAL (User/Device)                | $39/$52  | $39/$52   | $39/$52
+
+================================================================================
+DECISION MATRIX
+================================================================================
+
+CHOOSE SERVER 2022 IF:
+- Upgrading from 2019 (direct migration path)
+- Proven, stable technology is priority
+- Current licensing investments can migrate
+- 4+ years additional mainstream support needed
+- Azure integration is important
+- Windows Defender for Servers needed
+
+CHOOSE SERVER 2025 IF:
+- Building new infrastructure
+- Long-term support (10 years) is critical
+- Zero Trust security required
+- Advanced features (AI, passwordless) needed
+- Plan to use for decade+
+- Require latest security capabilities
+
+DO NOT STAY ON SERVER 2019:
+- Mainstream support ENDED January 2024
+- No new security features available
+- Extended support expires January 2029
+- Compliance risk for regulated industries
+- Immediate action required
+
+================================================================================
+MIGRATION TIMELINE
+================================================================================
+
+IMMEDIATE (Month 0-1):
+  ☐ Assess current Server 2019 inventory
+  ☐ Identify dependencies and compatibility requirements
+  ☐ Plan hardware upgrades if needed
+  ☐ Establish migration budget and timeline
+
+PLANNING PHASE (Month 1-3):
+  ☐ Build test environments
+  ☐ Test critical applications
+  ☐ Verify driver and third-party software compatibility
+  ☐ Train IT staff on new version
+
+PILOT PHASE (Month 3-6):
+  ☐ Upgrade non-critical servers first
+  ☐ Migrate domain controllers (RODCs first)
+  ☐ Monitor stability and performance
+  ☐ Document issues and resolutions
+
+PRODUCTION ROLLOUT (Month 6-12):
+  ☐ Phase migrations by server role
+  ☐ Maintain backup plan
+  ☐ Monitor performance and stability
+  ☐ Optimize configuration
+
+FULL COMPLETION (Month 12-24):
+  ☐ Complete all server migrations
+  ☐ Retire 2019 infrastructure
+  ☐ Review and update documentation
+  ☐ Plan next upgrade cycle (2025)
+
+================================================================================
+MIGRATION PRIORITY BY ROLE
+================================================================================
+
+HIGH PRIORITY (Upgrade First):
+1. Domain Controllers - Security critical
+2. File Servers - Many dependent workloads
+3. SQL Servers - Application dependent
+
+MEDIUM PRIORITY (Upgrade Second):
+4. Exchange Servers - Coordination required
+5. Hyper-V Hosts - Plan live migration
+6. Application Servers - Dependency based
+
+LOW PRIORITY (Upgrade Last):
+7. DHCP/DNS Servers - Can run in pairs
+8. Print Servers - Often standalone
+9. Utility Servers - Non-critical
+
+Estimated time per server: 2-4 weeks (including testing/stability monitoring)
+Total infrastructure (small): 3-6 months
+Total infrastructure (medium): 6-12 months
+Total infrastructure (large): 12-24 months
+
+================================================================================
+SYSTEM REQUIREMENTS CHECKLIST
+================================================================================
+
+PROCESSOR:
+  ☐ 1.4 GHz 64-bit compatible with x64 instruction set
+  ☐ Intel/AMD support (modern processors preferred)
+  ☐ TPM 2.0 recommended (required for some security features)
+
+MEMORY:
+  ☐ Minimum: 2 GB
+  ☐ Recommended: 8 GB (2019/2022) or 16 GB (2025)
+  ☐ Server 2025 supports up to 48 TB (vs 24 TB for 2019/2022)
+
+STORAGE:
+  ☐ Minimum: 32 GB disk space
+  ☐ Additional space for workloads and growth
+
+FIRMWARE:
+  ☐ UEFI 2.3.1+ (UEFI 2.5+ for 2025)
+  ☐ Secure Boot capable
+  ☐ IOMMU for advanced security features
+
+NETWORK:
+  ☐ Gigabit Ethernet (10 GigE recommended for 2025)
+  ☐ Multiple NIC interfaces for redundancy
+
+================================================================================
+SECURITY HARDENING PRIORITIES
+================================================================================
+
+CRITICAL (Implement First):
+1. Enable Credential Guard (UEFI, Secure Boot, TPM 2.0)
+2. Enable Device Guard/HVCI
+3. Enforce SMB signing
+4. Enable Windows Defender real-time protection
+5. Configure Windows Firewall rules
+6. Enable audit logging
+
+IMPORTANT (Implement Second):
+7. Enable multi-factor authentication
+8. Implement network segmentation
+9. Deploy endpoint detection and response
+10. Configure log aggregation and monitoring
+
+RECOMMENDED (Implement Third):
+11. Implement just-in-time privileged access
+12. Deploy DLP policies
+13. Configure continuous compliance monitoring
+14. Implement Zero Trust architecture (2025)
+
+================================================================================
+LICENSING CONSIDERATIONS
+================================================================================
+
+EDITION OPTIONS:
+- Essentials: Small business (max 25 users), limited VMs
+- Standard: General purpose, up to unlimited VMs*
+- Datacenter: High-density virtualization, unlimited VM licensing
+
+*Standard = no included VM licenses, pay per vCPU allocation
+Datacenter = unlimited VM licensing included in core license
+
+COST OPTIMIZATION:
+- Azure Hybrid Benefit: 40-60% savings when migrating to Azure
+- Software Assurance: ~25% additional cost for upgrades
+- Volume Licensing: Significant discounts at scale (50+ licenses)
+
+TOTAL COST OF OWNERSHIP (Approximate):
+Small (5 servers):
+- 2022: $5,000-8,000 (hardware + licensing + training)
+- 2025: $6,000-9,000 (slightly more for enhanced security)
+
+Medium (20 servers):
+- 2022: $15,000-25,000
+- 2025: $18,000-28,000
+
+Enterprise (100+ servers):
+- Requires volume licensing quotes
+- Potential savings of 30-40% with volume discounts
+
+================================================================================
+KEY FEATURES ADDED IN EACH VERSION
+================================================================================
+
+SERVER 2019 → 2022:
+✓ Windows Defender for Servers (cloud-based threat protection)
+✓ Enhanced SMB 3.1.1 encryption (now default)
+✓ Kerberos Armoring improvements
+✓ Azure Arc integration
+✓ Better clustering and replication
+✓ Windows Admin Center enhancements
+
+SERVER 2022 → 2025:
+✓ Zero Trust Architecture (native support)
+✓ Passwordless Authentication (default option)
+✓ AI-Powered Threat Detection
+✓ Extended resource limits (480 vCPU, 48 TB RAM)
+✓ Enhanced Hyper-V capabilities
+✓ Predictive diagnostics and optimization
+✓ Schema 89 (new AD attributes)
+✓ Better cloud integration
+
+================================================================================
+FREQUENTLY ASKED QUESTIONS
+================================================================================
+
+Q: Is Server 2019 still secure?
+A: No. Mainstream support ended January 2024. While critical patches
+   continue until 2029, new security features are unavailable. Migrate
+   immediately for security compliance.
+
+Q: Can I skip 2022 and go directly 2019→2025?
+A: Technically possible but not recommended. Best practice: 2019→2022→2025.
+   However, organizations can compress timeline by upgrading 2022 servers
+   quickly to 2025 after 2019 migration completes.
+
+Q: How long is the migration?
+A: Single DC: 30-60 minutes. Full forest: 2-3 months with proper testing
+   and staging. Application servers: 2-4 weeks per wave with monitoring.
+
+Q: Do I need new hardware?
+A: Not necessarily. Existing hardware usually sufficient. Consider:
+   - TPM 2.0 (recommended for security features)
+   - 16GB RAM for Server 2025 (vs 8GB for 2022)
+   - Network capacity (more VMs need more bandwidth)
+
+Q: What about Azure?
+A: Server 2022+ integrates well with Azure. Consider Azure Stack Hub
+   for hybrid scenarios. Azure Hybrid Benefit provides significant
+   savings when migrating VMs to Azure.
+
+Q: Should we use ReFS or NTFS?
+A: Use ReFS for all new Storage Spaces and Storage Spaces Direct.
+   NTFS only for legacy/client compatibility. ReFS provides better
+   data integrity and recovery.
+
+Q: What about licensing costs?
+A: Core licensing unchanged across versions (~$1,058 per 2-core).
+   Cost differences from workload changes, cloud migration savings
+   (Azure Hybrid Benefit 40-60% reduction).
+
+Q: How does Zero Trust work?
+A: Never trust, always verify. Passwordless auth, device compliance,
+   network segmentation, continuous monitoring. Server 2025 enables
+   this by default.
+
+================================================================================
+CONTACT & RESOURCES
+================================================================================
+
+For detailed information, see:
+- windows-server-comparison-2019-2022-2025.html
+- active-directory-evolution.html
+- hyper-v-capability-matrix.html
+- storage-technologies-comparison.html
+- security-features-evolution.html
+- COMPARISON_GUIDES_INDEX.md
+
+Microsoft Resources:
+- Windows Server Documentation: docs.microsoft.com/windows-server
+- Microsoft Security Baselines: github.com/microsoft/SecurityBaselines
+- Azure Migration: azure.microsoft.com/migration
+
+================================================================================
+DOCUMENT INFO
+================================================================================
+
+Created: July 2026
+For: IT Vedas
+Scope: Complete Windows Server 2019/2022/2025 Comparison
+Format: Quick Reference (TXT), plus 5 detailed HTML guides
+Status: Final - Ready for Distribution
+
+Print-Friendly: Yes (this document)
+Shareable: Yes (distribute to your team)
+Updates: Check COMPARISON_GUIDES_INDEX.md for latest info
+
+================================================================================
+END OF QUICK REFERENCE GUIDE
+================================================================================
