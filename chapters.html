@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Explore IT Vedas comprehensive learning chapters covering Cloud Computing, DevOps, Linux, Networking, Security, Databases, Hardware, Compliance, CVE Analysis, and Windows Servers.">
+<meta name="keywords" content="IT chapters, cloud computing, DevOps, Linux, networking, cybersecurity, databases, servers, IT learning">
+<meta name="robots" content="index,follow">
+<title>IT Learning Chapters | IT Vedas - Complete IT Infrastructure Guide</title>
+<link rel="canonical" href="https://itvedas.com/chapters.html">
+<meta property="og:title" content="IT Learning Chapters | IT Vedas">
+<meta property="og:description" content="Explore comprehensive IT infrastructure chapters from Cloud to Security">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0F;
+  --bg2: #13131C;
+  --bg3: #1C1C2A;
+  --text: #F0F0F8;
+  --muted: #8888A8;
+  --sub: #D0D0E8;
+  --accent: #FF6B35;
+  --border: rgba(255,255,255,0.08);
+  --success: #10B981;
+  --blue: #3B82F6;
+  --purple: #8B5CF6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  background: rgba(10, 10, 15, 0.9);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  margin-left: 2rem;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: var(--text);
+}
+
+.hero {
+  margin-top: 64px;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(139, 92, 246, 0.05));
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 span {
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+}
+
+.chapters-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.chapter-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.chapter-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--bg3);
+}
+
+.chapter-card:hover::before {
+  transform: scaleX(1);
+}
+
+.chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chapter-emoji {
+  font-size: 2.5rem;
+  min-width: 50px;
+}
+
+.chapter-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chapter-count {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.chapter-description {
+  color: var(--sub);
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: 3rem;
+}
+
+.chapter-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: color 0.2s;
+}
+
+.chapter-link:hover {
+  color: var(--purple);
+}
+
+.chapter-link::after {
+  content: ' →';
+  transition: transform 0.2s;
+}
+
+.chapter-card:hover .chapter-link::after {
+  transform: translateX(4px);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.stat-item h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.stat-item p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 0 1.25rem;
+  }
+
+  nav a {
+    margin-left: 1rem;
+  }
+
+  .hero {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .chapters-grid {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.25rem;
+  }
+}
+
+/* Chapter-specific colors */
+.cloud { --chapter-color: #3B82F6; }
+.compliance { --chapter-color: #EC4899; }
+.cve { --chapter-color: #EF4444; }
+.databases { --chapter-color: #F59E0B; }
+.devops { --chapter-color: #8B5CF6; }
+.hardware { --chapter-color: #06B6D4; }
+.linux { --chapter-color: #EF4444; }
+.networking { --chapter-color: #FF6B35; }
+.security { --chapter-color: #10B981; }
+.servers { --chapter-color: #3B82F6; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/#chapters">Chapters</a>
+    <a href="/news.html">News</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>IT Learning <span>Chapters</span></h1>
+    <p>Comprehensive guides to master every aspect of modern IT infrastructure, from cloud computing and DevOps to security and networking.</p>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat-item">
+    <h3>10</h3>
+    <p>Learning Chapters</p>
+  </div>
+  <div class="stat-item">
+    <h3>108</h3>
+    <p>Total Articles</p>
+  </div>
+  <div class="stat-item">
+    <h3>26,700+</h3>
+    <p>Words of Content</p>
+  </div>
+</section>
+
+<section class="chapters-grid">
+
+  <!-- Cloud Computing -->
+  <div class="chapter-card cloud">
+    <div class="chapter-header">
+      <div class="chapter-emoji">☁️</div>
+      <div>
+        <div class="chapter-title">Cloud Computing</div>
+        <div class="chapter-count">12 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Master AWS, Azure, Google Cloud, and cloud infrastructure concepts. Learn about deployment models, services, and cloud architecture patterns.</p>
+    <a href="/chapters/cloud/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- DevOps -->
+  <div class="chapter-card devops">
+    <div class="chapter-header">
+      <div class="chapter-emoji">⚙️</div>
+      <div>
+        <div class="chapter-title">DevOps</div>
+        <div class="chapter-count">8 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Learn CI/CD pipelines, containerization with Docker, orchestration with Kubernetes, and infrastructure as code with Terraform.</p>
+    <a href="/chapters/devops/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Networking -->
+  <div class="chapter-card networking">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🌐</div>
+      <div>
+        <div class="chapter-title">Networking</div>
+        <div class="chapter-count">12 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Understand DNS, VPN, firewalls, load balancing, and network architecture. Deep dive into TCP/IP, protocols, and network security.</p>
+    <a href="/chapters/networking/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Security -->
+  <div class="chapter-card security">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🔐</div>
+      <div>
+        <div class="chapter-title">Security</div>
+        <div class="chapter-count">8 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Learn cybersecurity fundamentals, encryption, authentication, firewalls, and best practices for protecting your infrastructure.</p>
+    <a href="/chapters/security/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Databases -->
+  <div class="chapter-card databases">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🗄️</div>
+      <div>
+        <div class="chapter-title">Databases</div>
+        <div class="chapter-count">10 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Explore SQL, NoSQL, PostgreSQL, MongoDB, and database design. Learn query optimization, replication, and data management strategies.</p>
+    <a href="/chapters/databases/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Windows Servers -->
+  <div class="chapter-card servers">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🖥️</div>
+      <div>
+        <div class="chapter-title">Windows Servers</div>
+        <div class="chapter-count">14 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Master Windows Server administration including Active Directory, DNS, DHCP, Exchange Server, Hyper-V, and server hardening.</p>
+    <a href="/chapters/servers/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Linux -->
+  <div class="chapter-card linux">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🐧</div>
+      <div>
+        <div class="chapter-title">Linux</div>
+        <div class="chapter-count">10 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Learn Linux fundamentals, command line, system administration, shell scripting, and server management on Linux systems.</p>
+    <a href="/chapters/linux/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Hardware -->
+  <div class="chapter-card hardware">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🖲️</div>
+      <div>
+        <div class="chapter-title">Hardware</div>
+        <div class="chapter-count">10 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Understand server hardware, CPU architecture, memory management, storage devices, and hardware selection for optimal performance.</p>
+    <a href="/chapters/hardware/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- CVE & Threats -->
+  <div class="chapter-card cve">
+    <div class="chapter-header">
+      <div class="chapter-emoji">🛡️</div>
+      <div>
+        <div class="chapter-title">CVE & Threats</div>
+        <div class="chapter-count">10 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Analyze Common Vulnerabilities and Exposures, understand threat actors, and learn vulnerability management and remediation strategies.</p>
+    <a href="/chapters/cve/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+  <!-- Compliance -->
+  <div class="chapter-card compliance">
+    <div class="chapter-header">
+      <div class="chapter-emoji">📋</div>
+      <div>
+        <div class="chapter-title">Compliance</div>
+        <div class="chapter-count">4 Articles</div>
+      </div>
+    </div>
+    <p class="chapter-description">Learn regulatory requirements including GDPR, HIPAA, PCI-DSS, SOC 2, and compliance frameworks for IT systems.</p>
+    <a href="/chapters/compliance/" class="chapter-link">Explore Chapter</a>
+  </div>
+
+</section>
+
+<section style="background: var(--bg2); border-top: 1px solid var(--border); padding: 3rem 2rem; margin-top: 3rem;">
+  <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 1rem;">Not Found What You're Looking For?</h2>
+    <p style="color: var(--muted); margin-bottom: 2rem;">Explore our detailed guides or search for specific topics to find exactly what you need.</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="/" style="display: inline-block; background: var(--accent); color: white; padding: 0.8rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 600;">Back to Home</a>
+      <a href="/news.html" style="display: inline-block; background: var(--bg3); color: var(--text); padding: 0.8rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--border);">Latest News</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="margin-bottom: 1rem;">
+    <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem;">IT<span style="color: var(--accent);">Vedas</span></span>
+  </div>
+  <p>Comprehensive IT infrastructure learning platform — explained simply, for everyone.</p>
+  <div style="margin-top: 1rem;">
+    <a href="/">Home</a> ·
+    <a href="/chapters.html">Chapters</a> ·
+    <a href="/news.html">News</a> ·
+    <a href="mailto:info@itvedas.com">Contact</a> ·
+    <a href="/sitemap.xml">Sitemap</a>
+  </div>
+  <p style="margin-top: 1rem;">© 2026 IT Vedas · All rights reserved</p>
+</footer>
+
+</body>
+</html>
