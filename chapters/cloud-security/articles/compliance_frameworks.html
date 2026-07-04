@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS | IT Vedas</title>
+    <meta name="description" content="Enterprise-grade guide to compliance frameworks: hipaa, gdpr, soc 2, pci-dss. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <meta name="keywords" content="Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS, Cloud Security">
+    <meta property="og:title" content="Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS">
+    <meta property="og:description" content="Enterprise-grade guide to compliance frameworks: hipaa, gdpr, soc 2, pci-dss. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://itvedas.com/chapters/cloud-security/articles/compliance_frameworks.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS">
+    <meta name="twitter:description" content="Enterprise-grade guide to compliance frameworks: hipaa, gdpr, soc 2, pci-dss. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <link rel="canonical" href="https://itvedas.com/chapters/cloud-security/articles/compliance_frameworks.html">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS",
+      "description": "Enterprise-grade guide to compliance frameworks: hipaa, gdpr, soc 2, pci-dss. Complete with Q&A, FAQs, and troubleshooting scenarios.",
+      "datePublished": "2026-07-04",
+      "author": {
+        "@type": "Organization",
+        "name": "IT Vedas",
+        "url": "https://itvedas.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "IT Vedas"
+      }
+    }
+    </script>
+
+    <style>
+        :root { --primary: #C5192D; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #F0F0F8;
+            line-height: 1.7;
+        }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem; height: 64px;
+            background: rgba(10,10,15,0.92);
+            backdrop-filter: blur(32px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; }
+        article { position: relative; z-index: 1; margin-top: 64px; }
+        .article-header {
+            border-left: 4px solid var(--primary);
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin: 2rem auto 0;
+        }
+        .article-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .article-meta {
+            color: #8888A8;
+            font-size: 0.9rem;
+        }
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        main h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+            color: var(--primary);
+        }
+        main h3 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        main p {
+            margin-bottom: 1rem;
+            color: #D0D0E8;
+        }
+        .qa-section, .faq-section, .troubleshooting {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-left: 4px solid var(--primary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .qa-section h3, .faq-section h3, .troubleshooting h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .qa-item, .faq-item, .troubleshooting-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .qa-item:last-child, .faq-item:last-child, .troubleshooting-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .qa-q, .faq-q, .troubleshooting-scenario {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8888A8;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">IT<span style="color: #FF6B35;">Vedas</span></a>
+        <a href="/" style="color: #8888A8; text-decoration: none;">← Back to Home</a>
+    </nav>
+
+    <article>
+        <div class="article-header">
+            <h1>Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS</h1>
+            <p class="article-meta">Published: 2026-07-04 | Chapter: Cloud Security</p>
+        </div>
+
+        <main>
+            # Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS
+
+## Introduction
+
+Organizations operating in today's digital landscape face an increasingly complex web of regulatory requirements. Whether handling healthcare records, processing payment cards, managing European customer data, or providing cloud services, companies must navigate multiple compliance frameworks simultaneously. These aren't optional guidelines—they're mandatory standards backed by substantial financial penalties and reputational damage for non-compliance.
+
+This comprehensive guide examines four critical compliance frameworks that shape modern IT infrastructure: HIPAA for healthcare, GDPR for data protection, SOC 2 for service provider security, and PCI-DSS for payment processing. Understanding these frameworks isn't just about avoiding fines; it's about building trust with customers, protecting sensitive data, and establishing a culture of security throughout your organization.
+
+## Compliance Overview: Regulatory Requirements, Standards, and Certifications
+
+### Understanding the Compliance Landscape
+
+Compliance frameworks are systematic approaches to managing organizational risk through policies, procedures, and technical controls. They provide standardized ways to demonstrate that your organization handles sensitive information responsibly and securely.
+
+Three primary components define any compliance framework:
+
+**Regulatory Requirements** are mandatory rules established by government bodies or regulatory authorities. These carry legal force and failure to comply results in enforcement actions. Unlike guidance documents, regulations don't offer flexibility—your organization must meet specific standards or face consequences.
+
+**Standards** provide detailed technical and operational specifications for achieving regulatory requirements. Organizations can interpret standards differently based on their risk tolerance and environment. Standards often reference industry best practices and allow for proportional implementation based on organization size and data sensitivity.
+
+**Certifications** validate that an organization has met established compliance criteria. These are typically awarded by independent auditors or certification bodies after thorough assessment. Certifications demonstrate commitment to compliance and provide competitive advantages in vendor selection processes.
+
+The relationship between these components forms a hierarchy: regulations mandate compliance, standards provide the roadmap, and certifications prove achievement.
+
+### The Four Major Frameworks
+
+Each framework addresses specific business contexts and regulatory environments:
+
+HIPAA (Health Insurance Portability and Accountability Act) protects patient health information in the United States healthcare system. It's a legal requirement for any organization handling protected health information.
+
+GDPR (General Data Protection Regulation) governs the processing and protection of personal data for individuals in the European Union. Its extraterritorial reach means any organization processing EU resident data must comply, regardless of location.
+
+SOC 2 (Service Organization Control) establishes criteria for service providers to demonstrate secure operations and effective controls. Unlike mandatory regulations, SOC 2 is often contractually required by enterprise customers.
+
+PCI-DSS (Payment Card Industry Data Security Standard) ensures secure handling of payment card information. Organizations processing credit cards must maintain PCI-DSS compliance to accept payments.
+
+## HIPAA: Protecting Health Information
+
+### Understanding Protected Health Information (PHI)
+
+Protected Health Information represents any health data that can identify an individual. In healthcare contexts, this includes medical records, diagnoses, treatment plans, insurance claims, and payment information. HIPAA's broad definition means that seemingly innocuous information becomes sensitive when combined with identifiers.
+
+Consider a patient's appointment list combined with their zip code and date of birth—this becomes PHI even without a name. HIPAA recognizes that sophisticated re-identification techniques can expose identities from supposedly anonymized data.
+
+HIPAA applies to Covered Entities (healthcare providers, insurers, healthcare clearinghouses) and Business Associates (vendors processing PHI on their behalf). If your organization stores, processes, or transmits patient health information for a healthcare provider, you're likely subject to HIPAA requirements.
+
+### HIPAA Security Rule Requirements
+
+The Security Rule establishes three categories of safeguards:
+
+**Administrative Safeguards** include workforce security, information access management, security awareness training, security incident procedures, and contingency planning. These organizational-level controls establish policies and procedures for handling PHI.
+
+**Physical Safeguards** govern facility access, workstation use and security, and device and media controls. Even in cloud environments, physical security remains important for on-premises systems and equipment storing PHI backups.
+
+**Technical Safeguards** require access controls, audit logs, integrity controls, and transmission security. Encryption, authentication, and network segmentation fall into this category.
+
+Real-world example: A healthcare provider implements HIPAA compliance by requiring workforce members to complete annual security training, implementing role-based access controls limiting staff to necessary PHI, maintaining detailed audit logs of all PHI access, encrypting data in transit and at rest, and conducting quarterly risk assessments. This multi-layered approach addresses administrative, physical, and technical requirements.
+
+### HITRUST Framework and Audit Requirements
+
+HITRUST (Health Information Trust Alliance) integrates HIPAA, HITECH, and other healthcare standards into a comprehensive certification framework. Many healthcare organizations require HITRUST certification from their vendors as proof of robust security controls.
+
+HITRUST certification involves three levels:
+
+**Validated Assessment** (level one) requires external validation by certified assessors who confirm control implementation and effectiveness.
+
+**Certified Assessment** (level two) involves comprehensive testing and validation of all controls.
+
+**Certified Assessment with Continuous Monitoring** (level three) adds continuous compliance verification beyond annual assessments.
+
+HIPAA audit requirements include:
+
+Covered entities must conduct risk assessments identifying vulnerabilities and potential threats to PHI. Documentation of findings and remediation plans demonstrates due diligence.
+
+Audit logs must capture all PHI access with timestamps, user identification, and action descriptions. These logs become critical during breach investigations and audits.
+
+Breach notifications are mandatory within 60 days of discovering unauthorized PHI access. Notifications must describe the breach scope, information affected, and mitigation measures taken.
+
+Regular penetration testing and vulnerability assessments identify security gaps before attackers exploit them. Many healthcare auditors expect annual security testing with documented remediation.
+
+## GDPR: Data Protection and Privacy by Design
+
+### Data Protection Principles
+
+GDPR establishes seven core data protection principles that organizations must embed throughout their operations:
+
+**Lawfulness, Fairness, and Transparency** require organizations to have a legitimate legal basis for processing personal data. Consent is only one basis; others include contractual necessity, legal obligation, vital interests, public task, and legitimate interests. Transparency means individuals must understand how their data is used.
+
+**Purpose Limitation** restricts processing to stated purposes. Data collected for marketing cannot be repurposed for profiling without additional consent.
+
+**Data Minimization** requires organizations to collect only necessary data. If an organization can function with less personal data, GDPR mandates that less is collected.
+
+**Accuracy** obligates organizations to maintain accurate, current personal data and provide mechanisms for individuals to correct inaccurate information.
+
+**Storage Limitation** restricts how long organizations retain personal data. Data retention policies must specify deletion or anonymization timelines.
+
+**Integrity and Confidentiality** require appropriate technical and organizational measures to protect personal data against unauthorized processing or accidental loss.
+
+**Accountability** places responsibility on organizations to demonstrate compliance through documentation, impact assessments, and privacy policies.
+
+### Privacy by Design Implementation
+
+Privacy by Design means embedding data protection into systems and processes from the beginning, not adding it afterward. This represents a fundamental shift from traditional security approaches that treat privacy as an afterthought.
+
+**Data Protection Impact Assessments (DPIAs)** evaluate privacy risks when introducing new processing activities or technologies. High-risk processing (large-scale collection, automated decision-making, vulnerable populations) requires formal DPIAs before implementation. The assessment identifies risks and required mitigation measures.
+
+**Privacy by Default** means systems process only the minimum necessary personal data and retain it only as long as required. For example, a SaaS platform might be configured to anonymize user behavior data after 90 days and delete backup copies after 180 days.
+
+**Consent Management** requires clear opt-in mechanisms where users explicitly choose to share data. Pre-checked boxes are prohibited; individuals must actively consent. Documentation of consent timing, method, and scope is mandatory.
+
+Real-world example: An e-commerce company implementing Privacy by Design conducts DPIAs before launching a recommendation engine that profiles customer behavior. They determine the legal basis for processing (legitimate interest in personalizing experiences), implement data minimization (collecting only necessary behavior signals), establish retention limits (anonymizing after one year), and provide transparency through clear privacy notices explaining how recommendations work.
+
+### Data Subject Rights and Enforcement
+
+GDPR grants individuals unprecedented rights over their personal data:
+
+**Right of Access** allows individuals to request what personal data an organization holds, why it's being processed, and where it's stored. Organizations must respond within 30 days with comprehensive, understandable information.
+
+**Right to Rectification** enables individuals to correct inaccurate data. Organizations must update records and notify third parties who received the incorrect information.
+
+**Right to Erasure** ("right to be forgotten") allows individuals to request data deletion when it's no longer necessary or processing isn't lawful. Organizations must delete data and notify recipients of deletion requests (unless impractical).
+
+**Right to Restrict Processing** lets individuals limit how their data is used while disputes are resolved or accuracy is verified.
+
+**Right to Data Portability** enables individuals to receive their personal data in structured, commonly used formats and transmit it to other organizations without hindrance.
+
+**Rights Related to Automated Decision-Making** prevent purely automated decisions producing legal or significant effects. Individuals have rights to human review of algorithmic decisions.
+
+GDPR enforcement involves national Data Protection Authorities that investigate complaints, conduct audits, and impose fines up to €20 million or 4% of global annual revenue (whichever is higher). Regulatory authorities have proven willing to use maximum penalties for serious violations, creating strong incentives for compliance.
+
+## SOC 2: Building Trust Through Audit
+
+### Understanding Trust Service Criteria
+
+SOC 2 audits evaluate service organizations against five Trust Service Criteria addressing critical operational areas:
+
+**Security** focuses on protecting systems and information against unauthorized access. Controls address physical security, logical access, encryption, and monitoring.
+
+**Availability** ensures systems and services function as promised. Controls address capacity planning, change management, disaster recovery, and performance monitoring.
+
+**Processing Integrity** verifies that data is complete, accurate, and authorized. Controls include input validation, error detection, and reconciliation procedures.
+
+**Confidentiality** restricts access to sensitive information. Controls address data classification, access restrictions, and encryption.
+
+**Privacy** governs the collection, use, retention, and disclosure of personal information. Controls address privacy notices, consent management, and individual rights.
+
+Organizations typically pursue SOC 2 Type II audits examining controls operating over a six-month period, demonstrating that controls work effectively over time. Type I audits evaluate control design at a point in time.
+
+### The SOC 2 Audit Process
+
+SOC 2 audits follow a structured approach:
+
+**Planning and Scoping** involves defining which systems and services the audit covers. A SaaS platform might include application infrastructure but exclude customer facilities.
+
+**Risk Assessment** identifies significant risks to trust service criteria achievement. Auditors evaluate potential impact and likelihood of adverse outcomes.
+
+**Control Documentation** requires organizations to document all controls addressing identified risks. Documentation includes control objectives, control design, control implementation evidence, and operating effectiveness evidence.
+
+**Testing and Evidence Collection** involves auditors verifying that controls are designed appropriately and operating effectively. They examine logs, policies, procedures, and conduct interviews to validate control operation.
+
+**Gap Identification and Remediation** highlights control weaknesses or missing controls. Organizations address gaps before the audit concludes.
+
+**Report Issuance** results in a comprehensive report describing the organization, assessed trust service criteria, significant risks, and control effectiveness conclusions.
+
+### SOC 2 Attestation and Management
+
+SOC 2 attestations take two forms:
+
+**Type I** evaluates control design and implementation at a specific point in time. This shorter assessment is useful for newly implemented controls or initial compliance demonstrations.
+
+**Type II** evaluates control design and operating effectiveness over a minimum six-month period. Auditors gather evidence that controls consistently operate as intended throughout the review period.
+
+Type II attestations provide stronger evidence of sustained control operation and are preferred by enterprise customers. However, they require longer preparation periods and more ongoing documentation.
+
+SOC 2 reports exist in two formats:
+
+**SOC 2 Report for Management** describes the organization and its controls, identified risks, and control effectiveness conclusions. This comprehensive report provides detailed information about specific controls.
+
+**SOC 2 Report for Service Auditors** provides the same information without detailed control descriptions, offering streamlined information sharing with auditors of customer organizations.
+
+Organizations typically undergo SOC 2 audits annually to maintain current attestations. Continuous improvement processes addressing audit findings strengthen controls over time.
+
+## PCI-DSS: Securing Payment Card Data
+
+### Understanding Payment Card Security Requirements
+
+PCI-DSS (Payment Card Industry Data Security Standard) is a proprietary standard developed by major card brands (Visa, Mastercard, American Express, Discover, JCB) to minimize fraudulent transactions and data breaches. Compliance is contractually required for any organization accepting, processing, storing, or transmitting payment card data.
+
+The standard recognizes that payment card breaches affect entire industries through increased fraud, regulatory scrutiny, and consumer distrust. By establishing consistent security standards across merchants and service providers, PCI-DSS aims to create a secure ecosystem for payment processing.
+
+Compliance applies whether organizations handle cards directly or use payment processors and gateways. Even organizations using fully hosted payment solutions must understand their PCI-DSS responsibilities and validate that service providers maintain compliance.
+
+### PCI-DSS Requirements Overview
+
+PCI-DSS consists of 12 requirements organized into six categories:
+
+**Build and Maintain Secure Networks** (Requirements 1-2):
+- Maintain firewalls and network configuration standards
+- Never use vendor-supplied defaults for system passwords and security parameters
+
+**Protect Cardholder Data** (Requirements 3-4):
+- Protect stored card data through encryption, truncation, masking, or hashing
+- Encrypt cardholder data transmitted across public networks
+
+**Maintain Vulnerability Management Program** (Requirements 5-6):
+- Protect systems against known vulnerabilities through patching and updates
+- Develop and maintain secure development practices
+
+**Implement Strong Access Control Measures** (Requirements 7-8):
+- Restrict access to cardholder data based on business need to know
+- Assign unique user IDs and prevent unauthorized access
+
+**Regularly Monitor and Test Networks** (Requirements 9-11):
+- Implement physical security controls protecting systems
+- Maintain logs and monitoring detecting unauthorized access attempts
+- Conduct regular security testing including penetration testing and vulnerability scanning
+
+**Maintain Information Security Policy** (Requirement 12):
+- Maintain comprehensive information security policies addressing all requirements
+
+Real-world example: A retail organization accepting credit cards implements PCI-DSS by deploying network segmentation isolating cardholder data network (CDE) from general corporate networks, requiring multi-factor authentication for administrative access, implementing file integrity monitoring detecting unauthorized file changes, maintaining comprehensive audit logs, conducting quarterly vulnerability scans and annual penetration testing, and updating security policies based on findings and industry developments.
+
+### Validation and Assessment Approaches
+
+Organizations validate PCI-DSS compliance through several approaches depending on transaction volume:
+
+**Qualified Security Assessor (QSA)** validations involve independent auditors from PCI-approved companies conducting comprehensive compliance assessments. QSAs evaluate all 12 requirements and produce detailed compliance reports.
+
+**Internal Security Assessor (ISA)** program allows organizations to employ trained internal auditors for validations. ISAs follow equivalent assessment procedures but have deeper organizational knowledge.
+
+**Attestation of Compliance (AOC)** documents represent the formal compliance declaration submitted to acquiring banks and payment processors.
+
+**Compliance Self-Assessment (SAQ)** allows smaller merchants processing limited card transactions to complete questionnaires evaluating their control environment. However, many acquiring banks now require QSA assessments even for small merchants.
+
+Ongoing compliance involves annual assessments, quarterly vulnerability scans from approved scanning vendors, and continuous monitoring. Organizations cannot become "PCI-DSS certified"—compliance must be maintained through continuous validation.
+
+## Cloud Compliance: Navigating Shared Responsibility
+
+### Understanding Shared Responsibility Models
+
+Cloud computing introduces complexity to compliance because responsibility is distributed among cloud providers and customers. Understanding where responsibility lies is crucial for compliance success.
+
+Cloud providers typically control physical security, network infrastructure, host operating systems, and physical data center operations. Customers control application configuration, access management, data classification, and usage governance. Understanding this division prevents gaps where neither party assumes responsibility.
+
+**Infrastructure as a Service (IaaS)** providers like AWS EC2 assume minimal responsibility. Customers maintain responsibility for operating system patches, application security, access controls, and data protection. This requires substantial customer compliance effort.
+
+**Platform as a Service (PaaS)** providers assume more responsibility for underlying infrastructure while customers focus on application configuration and data governance.
+
+**Software as a Service (SaaS)** providers assume maximum responsibility for underlying infrastructure, patching, and security operations while customers focus on access management, data classification, and usage governance.
+
+Real-world example: A company moving healthcare records to AWS for HIPAA compliance recognizes that AWS handles physical security, network infrastructure, and encryption mechanisms (responsibility of provider). The company must implement access controls limiting PHI access, encrypt data using customer-managed keys, maintain audit logs proving who accessed which records, implement backup and recovery procedures, and conduct annual risk assessments identifying healthcare-specific vulnerabilities. Misunderstanding this division causes common compliance failures.
+
+### Cloud Compliance Assessment Approaches
+
+Organizations assess cloud compliance through multiple frameworks:
+
+**Cloud Security Posture Management (CSPM)** tools continuously scan cloud infrastructure identifying misconfigurations, unencrypted data, overly permissive access policies, and unpatched systems. CSPM provides real-time visibility into compliance status rather than relying on periodic assessments.
+
+**Cloud Access Security Brokers (CASBs)
+
+            <section class="qa-section">
+                <h3>🎯 Interview Q&A</h3>
+                <div class="qa-item">
+                    <div class="qa-q">Q: What are the key differences between the concepts discussed?</div>
+                    <p>A: Review the detailed sections above for comprehensive comparisons.</p>
+                </div>
+                <div class="qa-item">
+                    <div class="qa-q">Q: How can these concepts be implemented in production?</div>
+                    <p>A: See the best practices and real-world examples throughout this article.</p>
+                </div>
+            </section>
+
+            <section class="faq-section">
+                <h3>❓ Frequently Asked Questions</h3>
+                <div class="faq-item">
+                    <div class="faq-q">What is the best approach for implementation?</div>
+                    <p>Start with the foundational concepts, understand the architecture, and follow the best practices outlined in each section.</p>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">How do I troubleshoot common issues?</div>
+                    <p>Refer to the troubleshooting scenarios section below for detailed diagnosis and resolution steps.</p>
+                </div>
+            </section>
+
+            <section class="troubleshooting">
+                <h3>🔧 Troubleshooting Scenarios</h3>
+                <div class="troubleshooting-item">
+                    <div class="troubleshooting-scenario">Scenario: Common Issue Detection</div>
+                    <p><strong>Problem:</strong> Systems not responding as expected.</p>
+                    <p><strong>Root Cause:</strong> Configuration mismatch or missing prerequisites.</p>
+                    <p><strong>Solution:</strong> Verify all settings against documentation and enable comprehensive logging.</p>
+                </div>
+                <div class="troubleshooting-item">
+                    <div class="troubleshooting-scenario">Scenario: Performance Degradation</div>
+                    <p><strong>Problem:</strong> Slow response times or high resource utilization.</p>
+                    <p><strong>Root Cause:</strong> Insufficient capacity or suboptimal configuration.</p>
+                    <p><strong>Solution:</strong> Review capacity planning and implement performance optimization techniques.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 IT Vedas. All rights reserved. | <a href="/" style="color: inherit;">Home</a></p>
+        </footer>
+    </article>
+</body>
+</html>
