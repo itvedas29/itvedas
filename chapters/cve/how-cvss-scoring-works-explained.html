@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How CVSS Scoring Works: Understanding Vulnerability Severity | ITVedas</title>
+<meta name="description" content="Learn how CVSS scores work, what the 0–10 scale means, and how to use CVSS to prioritise patching — explained simply for beginners.">
+<meta name="keywords" content="CVSS score explained, how CVSS works, vulnerability severity score, CVSS v3, cybersecurity beginner">
+<meta property="og:title" content="How CVSS Scoring Works: Understanding Vulnerability Severity | ITVedas">
+<meta property="og:description" content="Learn how CVSS scores work, what the 0–10 scale means, and how to use CVSS to prioritise patching.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/chapters/cve/how-cvss-scoring-works-explained.html">
+<link rel="canonical" href="https://itvedas.com/chapters/cve/how-cvss-scoring-works-explained.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"How CVSS Scoring Works: Understanding Vulnerability Severity","description":"Learn how CVSS scores work, what the 0–10 scale means, and how to use CVSS to prioritise patching.","author":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},"datePublished":"2026-07-03","dateModified":"2026-07-03","articleSection":"CVE","educationalLevel":"Beginner","mainEntityOfPage":{"@type":"WebPage","@id":"https://itvedas.com/chapters/cve/how-cvss-scoring-works-explained.html"}}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131A;--card2:#1A1A26;--orange:#FF6B35;--text:#E2E8F0;--muted:#94A3B8;--sub:#CBD5E1;--border:#1E1E2E}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.8;-webkit-font-smoothing:antialiased}
+nav{background:#0D0D14;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:60px;position:sticky;top:0;z-index:100}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+nav a:hover{color:var(--orange)}
+nav .brand{color:var(--text);font-weight:700;font-size:1.1rem;margin-right:auto}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;pointer-events:none}
+.pb{height:100%;background:linear-gradient(90deg,var(--orange),#8B5CF6);width:0}
+.hero{padding:4rem 2rem 2.5rem;max-width:800px;margin:0 auto}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--orange)}
+.badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center}
+.badge{background:rgba(255,107,53,.15);color:var(--orange);border:1px solid rgba(255,107,53,.3);padding:.25rem .75rem;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.badge-info{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.2rem .65rem;border-radius:20px;font-size:.75rem}
+h1{font-size:clamp(1.75rem,4vw,2.6rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:1rem}
+.layout{display:grid;grid-template-columns:1fr 260px;gap:3rem;max-width:1100px;margin:0 auto;padding:0 2rem 5rem;align-items:start}
+article{min-width:0}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:2rem}
+.toc-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.toc ul{list-style:none}
+.toc a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:.3rem .5rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,.04);border-left-color:var(--orange);padding-left:.8rem}
+article h2{font-size:1.45rem;font-weight:700;margin:2.5rem 0 .9rem;display:flex;align-items:center;gap:.6rem}
+article h2::before{content:'';width:4px;height:1.3em;background:var(--orange);border-radius:2px;flex-shrink:0}
+article h3{font-size:1.1rem;font-weight:600;margin:1.75rem 0 .5rem;color:var(--text)}
+article p{margin-bottom:1.25rem;color:var(--sub)}
+article ul,article ol{margin:.5rem 0 1.25rem 1.5rem;color:var(--sub)}
+article li{margin-bottom:.5rem}
+article strong{color:var(--text)}
+article blockquote{background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(139,92,246,.06));border-left:4px solid var(--orange);border-radius:0 10px 10px 0;padding:1rem 1.25rem;margin:1.75rem 0;color:var(--sub);font-style:italic}
+article code{background:var(--card2);border:1px solid var(--border);padding:.1rem .4rem;border-radius:4px;font-family:monospace;font-size:.85rem;color:#10B981}
+.callout{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(139,92,246,.08));border:1px solid rgba(255,107,53,.25);border-radius:10px;padding:1.1rem 1.25rem;margin:1.75rem 0}
+.callout-title{font-weight:700;color:var(--orange);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.score-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}
+.score-table th{background:var(--card2);border:1px solid var(--border);padding:.65rem 1rem;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.score-table td{border:1px solid var(--border);padding:.65rem 1rem;color:var(--sub)}
+.score-table tr:hover td{background:rgba(255,255,255,.03)}
+.severity{display:inline-flex;align-items:center;gap:.4rem;padding:.2rem .7rem;border-radius:6px;font-size:.78rem;font-weight:700}
+.sev-critical{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.sev-high{background:rgba(249,115,22,.15);color:#fb923c;border:1px solid rgba(249,115,22,.3)}
+.sev-medium{background:rgba(234,179,8,.15);color:#facc15;border:1px solid rgba(234,179,8,.3)}
+.sev-low{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.sev-none{background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)}
+.cve-id{display:inline-block;background:#1a1a2e;border:1px solid rgba(239,68,68,.4);color:#f87171;font-family:monospace;font-size:.9rem;padding:.2rem .7rem;border-radius:6px;font-weight:700}
+.cta{margin:2.5rem 0;padding:2rem;background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(139,92,246,.1));border:1px solid rgba(255,107,53,.25);border-radius:16px;text-align:center}
+.cta h3{font-size:1.2rem;font-weight:700;margin-bottom:.6rem}
+.cta p{color:var(--muted);margin-bottom:1.25rem;font-size:.95rem}
+.btn{display:inline-block;background:var(--orange);color:#fff;padding:.75rem 1.75rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:.9rem}
+aside{position:sticky;top:80px;display:flex;flex-direction:column;gap:1rem}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem}
+.sc-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.sc ul{list-style:none}
+.sc a{color:var(--muted);text-decoration:none;font-size:.83rem;padding:.3rem 0;display:block;transition:color .2s}
+.sc a:hover{color:var(--orange)}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:.84rem;padding:.35rem 0;border-bottom:1px solid var(--border);transition:color .2s}
+.chapter-list a:last-child{border:none}
+.chapter-list a:hover{color:var(--orange)}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.85rem}
+footer a{color:var(--orange);text-decoration:none}
+@media(max-width:860px){.layout{grid-template-columns:1fr}aside{display:none}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem}nav{padding:0 1.25rem;gap:1rem}nav a:not(.brand){display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <span class="brand"><a href="/" style="color:inherit;text-decoration:none">ITVedas</a></span>
+  <a href="/chapters/networking/">Networking</a>
+  <a href="/chapters/security/">Security</a>
+  <a href="/chapters/cloud/">Cloud</a>
+  <a href="/chapters/devops/">DevOps</a>
+  <a href="/chapters/databases/">Databases</a>
+  <a href="/chapters/linux/">Linux</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/chapters/cve/">CVE</a> &rsaquo; How CVSS Scoring Works</div>
+  <div class="badges">
+    <span class="badge">CVE</span>
+    <span class="badge-info">&#128197; Jul 3, 2026</span>
+    <span class="badge-info">&#9201; 9 min read</span>
+    <span class="badge-info">&#128118; Beginner friendly</span>
+  </div>
+  <h1>How CVSS Scoring Works: Understanding Vulnerability Severity</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc">
+      <div class="toc-label">In this article</div>
+      <ul>
+        <li><a href="#what-is-cvss">What is CVSS?</a></li>
+        <li><a href="#the-score-scale">The 0–10 score scale</a></li>
+        <li><a href="#base-metrics">Base score metrics</a></li>
+        <li><a href="#temporal-environmental">Temporal &amp; environmental scores</a></li>
+        <li><a href="#real-examples">Real scoring examples</a></li>
+        <li><a href="#how-to-use">How to use CVSS in practice</a></li>
+        <li><a href="#limitations">Limitations of CVSS</a></li>
+        <li><a href="#faq">Frequently asked questions</a></li>
+      </ul>
+    </div>
+
+    <p>When a new vulnerability is announced, the first question most IT teams ask is: <em>how bad is it?</em> The answer comes from <strong>CVSS</strong> — a scoring system that turns a complex set of technical factors into a single number between 0 and 10. The higher the number, the worse the vulnerability.</p>
+    <p>But CVSS is more than just a number. Understanding how it is calculated helps you make smarter patching decisions and explain risk to non-technical stakeholders in language they understand.</p>
+
+    <h2 id="what-is-cvss">What is CVSS?</h2>
+    <p><strong>CVSS</strong> stands for <strong>Common Vulnerability Scoring System</strong>. It is an open framework for communicating the characteristics and severity of software vulnerabilities. CVSS is maintained by <strong>FIRST</strong> (Forum of Incident Response and Security Teams) and is currently on version 3.1, with version 4.0 published in 2023.</p>
+    <blockquote>In simple terms: CVSS is like a medical triage scale. A score of 10 means "rush to the operating theatre now." A score of 2 means "schedule a routine appointment."</blockquote>
+    <p>The National Vulnerability Database (NVD) at NIST publishes CVSS scores for every CVE. When you look up a CVE, the CVSS score is one of the first things you see.</p>
+
+    <h2 id="the-score-scale">The 0–10 score scale</h2>
+    <table class="score-table">
+      <thead><tr><th>Score range</th><th>Severity</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td>0.0</td><td><span class="severity sev-none">None</span></td><td>No action needed</td></tr>
+        <tr><td>0.1 – 3.9</td><td><span class="severity sev-low">Low</span></td><td>Patch in next scheduled cycle</td></tr>
+        <tr><td>4.0 – 6.9</td><td><span class="severity sev-medium">Medium</span></td><td>Patch within 30 days</td></tr>
+        <tr><td>7.0 – 8.9</td><td><span class="severity sev-high">High</span></td><td>Patch within 7 days</td></tr>
+        <tr><td>9.0 – 10.0</td><td><span class="severity sev-critical">Critical</span></td><td>Patch immediately — drop everything</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="base-metrics">Base score metrics</h2>
+    <p>The CVSS Base Score measures the intrinsic characteristics of a vulnerability — things that do not change over time or environment. It is calculated from two groups of metrics:</p>
+
+    <h3>Exploitability metrics (how easy is it to attack?)</h3>
+    <ul>
+      <li><strong>Attack Vector (AV)</strong> — where does the attacker need to be? Network (worst), Adjacent, Local, or Physical (least severe).</li>
+      <li><strong>Attack Complexity (AC)</strong> — how hard is the attack? Low (just fire the exploit) or High (requires specific conditions).</li>
+      <li><strong>Privileges Required (PR)</strong> — does the attacker need an account? None, Low (regular user), or High (admin).</li>
+      <li><strong>User Interaction (UI)</strong> — does a victim need to click something? None or Required.</li>
+    </ul>
+
+    <h3>Impact metrics (how bad is the damage?)</h3>
+    <p>CVSS measures impact across three dimensions — the classic security triad:</p>
+    <ul>
+      <li><strong>Confidentiality (C)</strong> — can the attacker read data they should not? None, Low, or High.</li>
+      <li><strong>Integrity (I)</strong> — can the attacker modify data? None, Low, or High.</li>
+      <li><strong>Availability (A)</strong> — can the attacker take the service down? None, Low, or High.</li>
+    </ul>
+    <p>A vulnerability that scores High on all three impact dimensions, requires no privileges, no user interaction, and can be exploited over the network with low complexity — that is a 10.0. That is Log4Shell (<span class="cve-id">CVE-2021-44228</span>).</p>
+
+    <div class="callout">
+      <div class="callout-title">Pro Tip</div>
+      <p>Use the NVD's CVSS calculator at <code>nvd.nist.gov/vuln-metrics/cvss/v3-calculator</code> to score any vulnerability yourself. Pick the metric values and the score calculates automatically — a great way to build intuition for what drives severity up or down.</p>
+    </div>
+
+    <h2 id="temporal-environmental">Temporal and environmental scores</h2>
+    <p>Beyond the Base Score, CVSS has two optional modifier layers:</p>
+
+    <h3>Temporal Score</h3>
+    <p>The Temporal Score adjusts the base score based on factors that change over time:</p>
+    <ul>
+      <li><strong>Exploit Code Maturity</strong> — is there a working exploit publicly available? If attackers have a ready-made tool, severity increases.</li>
+      <li><strong>Remediation Level</strong> — is there an official patch? A workaround reduces urgency slightly; no fix at all increases it.</li>
+      <li><strong>Report Confidence</strong> — how certain is the information? Confirmed by the vendor scores higher than an unconfirmed rumour.</li>
+    </ul>
+
+    <h3>Environmental Score</h3>
+    <p>The Environmental Score lets your organisation adjust the base score based on your specific situation:</p>
+    <ul>
+      <li>If the vulnerable software is not deployed in your environment, the effective score is 0.</li>
+      <li>If the vulnerable component handles your most sensitive customer data, you can weight the Confidentiality impact higher.</li>
+    </ul>
+    <p>Most teams work with the Base Score because it is standardised. The Environmental Score is most useful for mature security operations with asset inventory tools.</p>
+
+    <h2 id="real-examples">Real scoring examples</h2>
+    <p>Let us look at three real CVEs to see how the score reflects real-world severity:</p>
+
+    <h3><span class="cve-id">CVE-2021-44228</span> — Log4Shell <span class="severity sev-critical">CRITICAL 10.0</span></h3>
+    <p>Attack Vector: Network. Complexity: Low. No privileges needed. No user interaction. Full confidentiality, integrity, and availability impact. A remote attacker could execute arbitrary code on millions of servers with a single request. Score: 10.0.</p>
+
+    <h3><span class="cve-id">CVE-2023-34048</span> — VMware vCenter RCE <span class="severity sev-critical">CRITICAL 9.8</span></h3>
+    <p>A heap overflow in vCenter allowed unauthenticated remote code execution. Network attack vector, low complexity, no privileges. Score: 9.8. Actively exploited by nation-state actors within weeks of disclosure.</p>
+
+    <h3><span class="cve-id">CVE-2023-20198</span> — Cisco IOS XE <span class="severity sev-critical">CRITICAL 10.0</span></h3>
+    <p>A privilege escalation in Cisco's web UI allowed attackers to create admin accounts with no authentication. Used to compromise tens of thousands of network devices within days. Score: 10.0.</p>
+
+    <h2 id="how-to-use">How to use CVSS in practice</h2>
+    <p>Here is a simple prioritisation workflow for any IT team:</p>
+    <ol>
+      <li><strong>Get CVE feeds</strong> — subscribe to NVD, vendor security bulletins, or use a vulnerability scanner (Tenable Nessus, Qualys, OpenVAS).</li>
+      <li><strong>Filter by severity</strong> — start with Critical (9.0+), then High (7.0+). Do not lose sleep over Low scores until the urgent work is done.</li>
+      <li><strong>Check CISA KEV</strong> — any CVE in the Known Exploited Vulnerabilities catalog is being exploited right now. These jump the queue regardless of CVSS score.</li>
+      <li><strong>Confirm you are affected</strong> — check your asset inventory. If the vulnerable product is not in your environment, move on.</li>
+      <li><strong>Patch or mitigate</strong> — apply the vendor patch. If no patch exists, apply the vendor's workaround and set a reminder to patch when one arrives.</li>
+      <li><strong>Document and close</strong> — record what you patched and when. Auditors love this.</li>
+    </ol>
+
+    <h2 id="limitations">Limitations of CVSS</h2>
+    <p>CVSS is useful but imperfect. Know its limits:</p>
+    <ul>
+      <li><strong>It ignores threat intelligence</strong> — a 9.8 score CVE with no public exploit and no known attacks may be less urgent than a 7.5 score CVE being actively exploited by ransomware gangs. CVSS alone does not tell you this — the CISA KEV catalog does.</li>
+      <li><strong>It does not consider asset value</strong> — a medium-severity CVE in your payment processing server is more urgent than a critical CVE in a test machine with no internet access.</li>
+      <li><strong>Scores change</strong> — NVD sometimes recalculates scores after initial publication. Always check the current score, not one from an old report.</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title">Key Takeaway</div>
+      <p>Use CVSS as your starting filter, then layer on threat intelligence (CISA KEV, vendor advisories) and asset context (is this system critical? internet-facing?) to prioritise your actual patching workload. CVSS + context = smart vulnerability management.</p>
+    </div>
+
+    <h2 id="faq">Frequently asked questions</h2>
+    <h3>What is a good CVSS score?</h3>
+    <p>Lower is better. A score of 0 means no severity. Anything below 4.0 is low risk. Scores of 9.0 and above are Critical and require immediate action.</p>
+
+    <h3>Who calculates the CVSS score?</h3>
+    <p>The NVD team at NIST calculates Base Scores for all published CVEs. Vendors also publish their own scores for vulnerabilities in their products, sometimes differing slightly from NVD's assessment.</p>
+
+    <h3>Is CVSS v3.1 or v4.0 better?</h3>
+    <p>CVSS v4.0 (released November 2023) adds new metrics including supplemental scores and better support for operational technology (OT/ICS) systems. Most public databases still primarily show v3.1 scores. Both use the same 0–10 scale, so the severity bands are comparable.</p>
+
+    <h3>Can a CVSS 10.0 vulnerability not affect me?</h3>
+    <p>Yes. If you do not run the vulnerable software, a CVSS 10.0 score is irrelevant to you. Always confirm affected versions against your actual asset inventory before escalating.</p>
+
+    <div class="cta">
+      <h3>Keep learning on ITVedas</h3>
+      <p>Next: understand what a zero-day vulnerability is and why patching within 24 hours is sometimes not fast enough.</p>
+      <a href="/chapters/cve/" class="btn">Back to CVE Chapter &rarr;</a>
+    </div>
+  </article>
+
+  <aside>
+    <div class="sc">
+      <div class="sc-label">Jump to section</div>
+      <ul>
+        <li><a href="#what-is-cvss">What is CVSS?</a></li>
+        <li><a href="#the-score-scale">The score scale</a></li>
+        <li><a href="#base-metrics">Base metrics</a></li>
+        <li><a href="#temporal-environmental">Temporal &amp; environmental</a></li>
+        <li><a href="#real-examples">Real examples</a></li>
+        <li><a href="#how-to-use">How to use CVSS</a></li>
+        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="sc">
+      <div class="sc-label">CVE Chapter</div>
+      <div class="chapter-list">
+        <a href="/chapters/cve/what-is-a-cve-vulnerability-explained.html">&#128273; What is a CVE?</a>
+        <a href="/chapters/cve/how-cvss-scoring-works-explained.html">&#128200; How CVSS Scoring Works</a>
+        <a href="/chapters/cve/">All CVE articles &rarr;</a>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">All chapters</div>
+      <div class="chapter-list">
+        <a href="/chapters/networking/">&#127760; Networking</a>
+        <a href="/chapters/cloud/">&#9925; Cloud</a>
+        <a href="/chapters/security/">&#128272; Security</a>
+        <a href="/chapters/devops/">&#9881; DevOps</a>
+        <a href="/chapters/databases/">&#128451; Databases</a>
+        <a href="/chapters/linux/">&#128039; Linux</a>
+        <a href="/chapters/hardware/">&#128421; Hardware</a>
+        <a href="/chapters/compliance/">&#128203; Compliance</a>
+        <a href="/chapters/cve/">&#128737; CVE</a>
+      </div>
+    </div>
+  </aside>
+</div>
+<footer>
+  <p>&copy; 2026 <a href="/">ITVedas</a> &mdash; IT Education for Everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

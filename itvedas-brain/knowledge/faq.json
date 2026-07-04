@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-02T10:20:47Z",
+  "generated_at": "2026-07-03T10:44:15Z",
   "source_repository": "itvedas29/itvedas",
   "items": [
     {
@@ -522,6 +522,41 @@
       "related_course_id": "networking"
     },
     {
+      "id": "faq_1050f63cf851",
+      "question": "What Is DNS Caching and Why Does It Matter?",
+      "answer": "Every DNS record has a setting called TTL \u2014 Time to Live . This number (measured in seconds) tells systems how long they should remember a DNS lookup result before asking again. For example, a TTL of 3600 means the cached answer is good for one hour.",
+      "source_path": "articles/2026-07-02-what-is-dns-and-how-does-it-work.html",
+      "related_course_id": "networking"
+    },
+    {
+      "id": "faq_6eaf9c2ae097",
+      "question": "What Is HTTPS and Why Should You Care?",
+      "answer": "Every time you visit a website, look at the address bar in your browser. You will likely see either http:// or https:// at the start of the web address. That small \"s\" at the end makes a world of difference to your online safety.",
+      "source_path": "articles/2026-07-03-how-https-ssl-certificates-protect-you-online.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_8fdd025c9427",
+      "question": "What Is an SSL Certificate?",
+      "answer": "The technology that powers HTTPS is called an SSL certificate . SSL stands for Secure Sockets Layer \u2014 though in modern usage, the actual technology is called TLS (Transport Layer Security) . Most people still call it SSL, and both terms are used interchangeably in everyday conversation. Do not let that confuse you; they refer to the same idea.",
+      "source_path": "articles/2026-07-03-how-https-ssl-certificates-protect-you-online.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_45a5f943dd6c",
+      "question": "How Does the Encryption Actually Work?",
+      "answer": "When your browser connects to an HTTPS website, it goes through a rapid behind-the-scenes process called a TLS handshake . This happens in fractions of a second and you never notice it \u2014 but it is doing a lot of important work. Here is what happens in simple terms:",
+      "source_path": "articles/2026-07-03-how-https-ssl-certificates-protect-you-online.html",
+      "related_course_id": "security"
+    },
+    {
+      "id": "faq_d9f5b22501ce",
+      "question": "What Exactly Does HTTPS Protect You From?",
+      "answer": "Understanding what HTTPS actually defends against helps you appreciate why it matters so much. Here are the main threats it protects you from:",
+      "source_path": "articles/2026-07-03-how-https-ssl-certificates-protect-you-online.html",
+      "related_course_id": "security"
+    },
+    {
       "id": "faq_4a966dba7ac8",
       "question": "Is cloud computing the same as internet storage?",
       "answer": "Not exactly. Internet storage (Dropbox, Google Drive) is one type of cloud service. Cloud computing also includes renting servers to run applications, analyze data, or host websites. Storage is just one capability. Think of cloud computing as the umbrella; cloud storage is one feature under it.",
@@ -561,6 +596,97 @@
       "question": "SQL vs NoSQL: Which Database Should You Choose in 2026?",
       "answer": "The complete IT knowledge hub \u2014 explained simply, for everyone.",
       "source_path": "articles/databases/index.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_e2f2c6c62877",
+      "question": "What's the difference between a Docker image and a Docker container?",
+      "answer": "A Docker image is a read-only blueprint or template\u2014like a recipe. A Docker container is a running instance of that image\u2014like a cake made from the recipe. You build one image and create hundreds of containers from it. Images are immutable; containers are temporary and can be modified while running.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_be16be7bb782",
+      "question": "Why is Docker faster than virtual machines?",
+      "answer": "Docker containers share the host's operating system kernel, using only ~5-15MB RAM and starting in ~50ms. Virtual machines emulate an entire OS, consuming 2GB+ RAM and taking 3-5 minutes to boot. Containers achieve isolation through namespaces and cgroups, not full OS emulation, making them dramatically faster and more efficient.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_3b7876203174",
+      "question": "What are Docker layers and why do they matter?",
+      "answer": "Each instruction in a Dockerfile creates an immutable layer. Docker caches layers, so rebuilding an image reuses unchanged layers instantly. If only your code changed, Docker rebuilds only that layer instead of re-running all previous steps, saving minutes of build time on large projects.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_a0f0be6c140d",
+      "question": "How do containers on the same host communicate with each other?",
+      "answer": "Docker creates a bridge network where each container gets an internal IP. Containers reach each other by service name (e.g., a web app container can call 'postgres:5432' to reach a database container). The Docker daemon handles name resolution automatically, so you never need to know IPs.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_6961d1e3decd",
+      "question": "Can I run Docker on Windows or Mac?",
+      "answer": "Yes. Docker Desktop for Windows and Mac includes a lightweight Linux VM that runs the Docker Engine. On Windows 10/11, you can also use WSL 2 (Windows Subsystem for Linux 2) for native Linux integration. On Linux, Docker runs directly without a VM, making it slightly faster.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_b0b4a3345e41",
+      "question": "What's the difference between Docker and Kubernetes?",
+      "answer": "Docker containerizes single applications; Kubernetes orchestrates hundreds of containers across multiple servers. Docker is about packaging, Kubernetes is about managing at scale. Most teams use Docker containers inside Kubernetes clusters, so they complement each other.",
+      "source_path": "articles/devops/2026-07-03-docker-works-architecture-containers.html",
+      "related_course_id": "devops"
+    },
+    {
+      "id": "faq_a7606515dc95",
+      "question": "What Is a SQL Injection Attack?",
+      "answer": "SQL injection occurs when an attacker inserts untrusted code into a SQL query, tricking your database into executing commands it shouldn't. Think of it this way: if your website asks for a username in a login form, a normal user types \"john_doe\". A hacker types something like \"admin'--\" which closes the expected query and comments out the password check, granting access without credentials.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_a169b2571454",
+      "question": "What is SQL injection attack definition?",
+      "answer": "SQL injection is a cyberattack where hackers insert malicious SQL code into web forms or input fields, manipulating your database to steal data, modify records, or delete tables. It works because developers sometimes concatenate user input directly into database queries without protection. OWASP ranked it as the #1 web vulnerability in 2021.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_849e19210f13",
+      "question": "Can parameterized queries completely prevent SQL injection?",
+      "answer": "Yes. Parameterized queries (prepared statements) completely prevent SQL injection when implemented correctly. They separate query structure from user data, so the database treats all input as literal values, never as executable code. Every major database system\u2014MySQL, PostgreSQL, Microsoft SQL Server\u2014supports parameterized queries.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_6dc9b6b8fdb2",
+      "question": "What is the Bobby Tables SQL injection example?",
+      "answer": "Bobby Tables is a fictional but realistic example from xkcd comic #327 (2007). A parent names their child \"Robert'); DROP TABLE students;--\" and the school's enrollment system concatenates this into a SQL query without protection, causing the entire students table to be deleted. It popularized awareness of SQL injection vulnerabilities in web development.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_2a0768d81d52",
+      "question": "How do I test my website for SQL injection vulnerabilities?",
+      "answer": "Start manually: type a single quote (') into input fields and watch for database errors. Try ' OR '1'='1' in search fields\u2014if you see unauthorized data, you're vulnerable. For automated testing, use OWASP ZAP (free) or Burp Suite Community Edition, which scan your entire application and report injection flaws with severity ratings.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_686a2c58a22b",
+      "question": "Does input validation prevent SQL injection?",
+      "answer": "Input validation reduces risk but doesn't fully prevent SQL injection alone. It checks that data matches expected patterns (usernames contain only letters/numbers, phone numbers are exactly 10 digits). However, skilled attackers use hex encoding and obfuscation to bypass validation. Parameterized queries are the only 100% reliable defense.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
+      "related_course_id": "databases"
+    },
+    {
+      "id": "faq_3951cadefc99",
+      "question": "Why do MySQL, PostgreSQL, and SQL Server all have SQL injection vulnerabilities?",
+      "answer": "All three databases have injection vulnerabilities when code doesn't use parameterization. The vulnerability isn't in the database software itself\u2014it's in how developers write queries. When code concatenates user input directly into SQL, any database will execute it. Parameterized queries fix this universally across all three platforms.",
+      "source_path": "articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention.html",
       "related_course_id": "databases"
     },
     {

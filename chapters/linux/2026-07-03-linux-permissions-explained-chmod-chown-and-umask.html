@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux Permissions: chmod, chown, umask Explained</title>
+  <meta name="description" content="Master Linux file permissions with chmod, chown, and umask. Learn octal notation, symbolic syntax, and ownership management. Step-by-step guide for sysadmins.">
+  <link rel="canonical" href="https://itvedas.com/chapters/linux/2026-07-03-linux-permissions-explained-chmod-chown-and-umask.html">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+    .highlight{background:#1E293B;padding:.1rem .4rem;border-radius:3px}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Linux Permissions Explained: chmod, chown, and umask",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/linux/" class="back">← Back to Linux</a>
+  <h1>Linux Permissions Explained: chmod, chown, and umask</h1>
+
+  <p>Linux file permissions control who can read, write, and execute files. Three core tools manage these permissions: <span class="highlight">chmod</span> changes permissions, <span class="highlight">chown</span> changes ownership, and <span class="highlight">umask</span> sets default permissions for new files. Understanding these prevents security breaches and misconfigured systems.</p>
+
+  <h2>Understanding Linux File Permissions Basics</h2>
+
+  <p>Every file and directory in Linux has three permission categories: owner (user), group, and others. Each category has three permission types: read (r), write (w), and execute (x). When you run <code>ls -l</code>, you'll see output like this:</p>
+
+  <pre><code>-rw-r--r-- 1 alice staff 4096 Jul 3 10:45 document.txt</code></pre>
+
+  <p>Breaking this down: the first character <code>-</code> indicates it's a file (not a directory). The next nine characters represent permissions: <code>rw-r--r--</code>. The first three characters <code>rw-</code> are owner permissions (read and write). The next three <code>r--</code> are group permissions (read-only). The last three <code>r--</code> are other/world permissions (read-only).</p>
+
+  <p>Permissions translate to numeric values: read = 4, write = 2, execute = 1. So <code>rw-</code> equals 6 (4+2), <code>r--</code> equals 4. The full permission <code>rw-r--r--</code> becomes <code>644</code> in octal notation.</p>
+
+  <h2>The chmod Command: Changing Permissions</h2>
+
+  <p><code>chmod</code> modifies file and directory permissions using two methods: octal notation and symbolic notation.</p>
+
+  <h3>Octal Notation</h3>
+
+  <p>Octal notation uses three or four digits to set permissions. Each digit represents permissions for user, group, and others respectively.</p>
+
+  <pre><code>chmod 755 script.sh</code></pre>
+
+  <p>This sets: owner has read, write, execute (7); group has read, execute (5); others have read, execute (5). It's ideal for scripts and executables.</p>
+
+  <pre><code>chmod 644 file.txt</code></pre>
+
+  <p>This sets: owner has read, write (6); group has read (4); others have read (4). Standard for regular files.</p>
+
+  <p>You can also use four digits to set special permissions (setuid, setgid, sticky bit). For example, <code>chmod 4755</code> sets the setuid bit, useful for programs that need elevated privileges.</p>
+
+  <h3>Symbolic Notation</h3>
+
+  <p>Symbolic notation uses letters and operators, which is more readable and precise. The format is <code>[who][operator][permission]</code>.</p>
+
+  <pre><code>chmod u+x script.sh</code></pre>
+
+  <p>This adds execute permission for the owner (user). <code>u</code> = user, <code>g</code> = group, <code>o</code> = others, <code>a</code> = all.</p>
+
+  <pre><code>chmod g-w file.txt</code></pre>
+
+  <p>This removes write permission from the group.</p>
+
+  <pre><code>chmod o=r document.pdf</code></pre>
+
+  <p>This sets others' permissions to read-only, removing any existing permissions.</p>
+
+  <pre><code>chmod a+r config.conf</code></pre>
+
+  <p>This adds read permission for everyone (all).</p>
+
+  <p>Symbolic notation is safer when you're making incremental changes because it doesn't accidentally reset unmodified permissions. With octal notation, you must specify all three digits each time.</p>
+
+  <h3>Recursive Permission Changes</h3>
+
+  <p>Use the <code>-R</code> flag to recursively change permissions on directories and their contents:</p>
+
+  <pre><code>chmod -R 755 /var/www/html/</code></pre>
+
+  <p>This is dangerous if misused. A common mistake is making all files executable. Use <code>chmod -R u+rwX,g+rX,o+rX</code> instead, where capital <code>X</code> only applies execute to directories and existing executables.</p>
+
+  <h2>The chown Command: Changing Ownership</h2>
+
+  <p><code>chown</code> changes file and directory ownership. Only the root user can change ownership; regular users can't give away their files.</p>
+
+  <pre><code>sudo chown alice document.txt</code></pre>
+
+  <p>This changes the owner to alice, keeping the group unchanged.</p>
+
+  <pre><code>sudo chown alice:staff document.txt</code></pre>
+
+  <p>This changes both owner to alice and group to staff.</p>
+
+  <pre><code>sudo chown :staff document.txt</code></pre>
+
+  <p>This changes only the group to staff, leaving the owner unchanged.</p>
+
+  <pre><code>sudo chown -R alice:staff /home/alice/project/</code></pre>
+
+  <p>The <code>-R</code> flag recursively changes ownership of directories and contents. This is essential when transferring project directories between users.</p>
+
+  <p>A practical example: a web server runs as the <code>www-data</code> user, so you'd use <code>sudo chown -R www-data:www-data /var/www/html</code> to ensure proper ownership for web content.</p>
+
+  <h2>Understanding umask: Default Permissions</h2>
+
+  <p><code>umask</code> sets the default permissions for newly created files and directories. It's a mask that subtracts from the system's default values.</p>
+
+  <p>The default umask for most systems is <code>0022</code>. This means new files get <code>644</code> permissions (666 - 022 = 644) and new directories get <code>755</code> permissions (777 - 022 = 755). Files don't start with execute permissions; directories do (to allow entering them).</p>
+
+  <p>To check your current umask:</p>
+
+  <pre><code>umask</code></pre>
+
+  <p>This displays your current umask value. To temporarily change it:</p>
+
+  <pre><code>umask 0077</code></pre>
+
+  <p>This creates new files with <code>600</code> permissions (666 - 077 = 600) and directories with <code>700</code> permissions (777 - 077 = 700), restricting access to the owner only.</p>
+
+  <p>To make umask changes permanent, add them to your shell configuration file. For bash, edit <code>~/.bashrc</code> or <code>~/.bash_profile</code>:</p>
+
+  <pre><code>umask 0077</code></pre>
+
+  <p>For system-wide defaults, modify <code>/etc/profile</code> or <code>/etc/login.defs</code>, though this requires root access and affects all users.</p>
+
+  <p>The umask matters in multi-user environments where security is critical. Developers often use <code>0077</code> to prevent others from reading their code, while shared systems might use <code>0022</code> to allow group collaboration.</p>
+
+  <h2>Practical Permission Scenarios</h2>
+
+  <p>Here are real-world permission configurations:</p>
+
+  <p><strong>Web Server Document Root:</strong> The www-data user must read and execute files, but shouldn't write them. Other users shouldn't access them:</p>
+
+  <pre><code>sudo chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html</code></pre>
+
+  <p><strong>SSH Key File:</strong> SSH keys require strict permissions. Public keys are readable by anyone; private keys are owner-only:</p>
+
+  <pre><code>chmod 644 ~/.ssh/id_rsa.pub
+chmod 600 ~/.ssh/id_rsa</code></pre>
+
+  <p>SSH refuses to work if your private key is world-readable—it's a security feature.</p>
+
+  <p><strong>Shared Project Directory:</strong> Multiple developers need read and write access:</p>
+
+  <pre><code>sudo chown -R :developers /projects/webapp
+chmod -R 775 /projects/webapp</code></pre>
+
+  <p><strong>Setuid Executable:</strong> A program needs elevated privileges when run by regular users:</p>
+
+  <pre><code>sudo chown root:root /usr/bin/sudo
+sudo chmod 4755 /usr/bin/sudo</code></pre>
+
+  <p>The leading 4 sets the setuid bit, allowing the program to run with owner privileges.</p>
+
+  <h2>Common Mistakes and Troubleshooting</h2>
+
+  <p>Never use <code>chmod 777</code> except for temporary debugging. It grants full permissions to everyone, creating massive security holes.</p>
+
+  <p>Don't recursively change permissions on system directories. <code>chmod -R 777 /</code> will break your entire Linux system. Always target specific directories.</p>
+
+  <p>If a script won't execute, check three things: Is it owned by the current user (or do you have permission)? Does it have execute permissions? Is it located on a mounted filesystem without noexec (common with /tmp on some systems)?</p>
+
+  <p>If you can't access a file you created, your umask might be too restrictive. Check with <code>umask</code> and adjust if needed. You can always fix individual files with <code>chmod</code>.</p>
+
+  <p>When transferring files between users, verify both ownership and permissions. A file owned by root with 600 permissions is inaccessible to other users, even if they're in the owner group.</p>
+
+  <h2>Security Best Practices</h2>
+
+  <p>Principle of least privilege: Grant only the minimum permissions needed. A config file shouldn't be world-readable if it contains secrets. A directory shouldn't be world-writable unless it's explicitly meant for shared temp files.</p>
+
+  <p>Regularly audit permissions on sensitive files:</p>
+
+  <pre><code>find /etc -type f -perm -g+w -o -perm -o+w</code></pre>
+
+  <p>This finds files in /etc that are group-writable or world-writable—usually a red flag.</p>
+
+  <p>Be cautious with setuid and setgid bits. They're powerful but dangerous if misconfigured. Only use them when absolutely necessary, and ensure the owning user is trusted.</p>
+
+  <p>For web applications, never make files writable by the web server unless they genuinely need to be (like upload directories). This limits damage if the web server is compromised.</p>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>What's the difference between chmod and chown?</h3>
+    <p><code>chmod</code> changes file permissions (who can read, write, execute), while <code>chown</code> changes file ownership (who owns the file). Permissions determine access; ownership determines who has permission to change those permissions. You can change permissions on your own files, but you can't change ownership except to yourself (and root can transfer ownership to anyone).</p>
+
+    <h3>Why do directories need execute permissions?</h3>
+    <p>Execute permission on a directory means you can enter it and access its contents. Without execute permission, you can't list files inside or access files within it, even if you have read permission on the directory itself. That's why directories typically have 755 or 700 permissions, which include the execute bit for the appropriate users.</p>
+
+    <h3>How do I safely change permissions recursively?</h3>
+    <p>Use the capital X option: <code>chmod -R u+rwX,g+rX,o-rwx /path</code>. This adds read/write for owner, read for group, and removes everything for others. The capital X only applies execute to directories and already-executable files, preventing you from accidentally making all files executable.</p>
+
+    <h3>Can I change file permissions if I don't own the file?</h3>
+    <p>Only if you're the owner or root. Regular users can't change permissions on files they don't own. If you need permission changes on someone else's file, ask the owner to change it, or contact a system administrator. This is a crucial Linux security feature preventing privilege escalation.</p>
+  </div>
+
+  <p>Mastering chmod, chown, and umask is fundamental to Linux administration. These three tools handle 99% of permission tasks you'll encounter. Start with octal notation for initial setup, use symbolic notation for adjustments, and

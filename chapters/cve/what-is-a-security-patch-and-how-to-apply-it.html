@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is a Security Patch and How to Apply It — ITVedas</title>
+<meta name="description" content="Learn what a security patch is, why patching matters, different types of patches, and step-by-step how to apply patches on Linux and Windows servers.">
+<link rel="canonical" href="https://itvedas.com/chapters/cve/what-is-a-security-patch-and-how-to-apply-it.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "What is a Security Patch and How to Apply It",
+  "description": "Learn what a security patch is, why patching matters, different types of patches, and step-by-step how to apply patches on Linux and Windows servers.",
+  "author": {"@type": "Organization", "name": "ITVedas"},
+  "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"},
+  "datePublished": "2026-07-03",
+  "dateModified": "2026-07-03",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://itvedas.com/chapters/cve/what-is-a-security-patch-and-how-to-apply-it.html"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is a security patch?", "acceptedAnswer": {"@type": "Answer", "text": "A security patch is a software update that fixes one or more security vulnerabilities. It modifies executable code, configuration files, or libraries to eliminate or mitigate the vulnerability without requiring a full software version upgrade."}},
+    {"@type": "Question", "name": "How quickly should I apply security patches?", "acceptedAnswer": {"@type": "Answer", "text": "CISA recommends patching critical (CVSS 9.0+) vulnerabilities within 15 days and high (7.0-8.9) within 30 days. Vulnerabilities on the CISA Known Exploited Vulnerabilities list should be patched within the mandated deadline, often 2 weeks."}},
+    {"@type": "Question", "name": "What is patch Tuesday?", "acceptedAnswer": {"@type": "Answer", "text": "Patch Tuesday is the second Tuesday of every month, when Microsoft releases its monthly batch of security updates for Windows, Office, and other Microsoft products. Other vendors like Adobe and Intel also align releases to Patch Tuesday."}},
+    {"@type": "Question", "name": "What is a hotfix vs a patch?", "acceptedAnswer": {"@type": "Answer", "text": "A hotfix is an emergency patch released outside the normal release cycle to fix a critical, actively-exploited vulnerability. A regular patch is released on a scheduled cycle. Both fix security issues; the difference is urgency and release process."}}
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131A;--orange:#FF6B35;--text:#E2E8F0;--muted:#94A3B8;--border:#1E1E2E;--code:#1A1A2E}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7}
+nav{background:#0D0D14;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:60px;position:sticky;top:0;z-index:100}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+nav a:hover{color:var(--orange)}
+nav .brand{color:var(--text);font-weight:700;font-size:1.1rem;margin-right:auto}
+.hero{background:linear-gradient(135deg,#0D0D14 0%,#12121F 100%);border-bottom:1px solid var(--border);padding:3rem 2rem}
+.hero-inner{max-width:860px;margin:0 auto}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--orange)}
+.chapter-badge{display:inline-block;background:rgba(255,107,53,.15);color:var(--orange);border:1px solid rgba(255,107,53,.3);padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:.75rem}
+.hero-meta{font-size:.85rem;color:var(--muted)}
+.layout{max-width:1100px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 260px;gap:2.5rem;align-items:start}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+article h2{font-size:1.35rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+article h3{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .5rem;color:var(--orange)}
+article p{margin-bottom:1rem;color:#CBD5E1}
+article ul,article ol{margin:0 0 1rem 1.5rem;color:#CBD5E1}
+article li{margin-bottom:.4rem}
+article a{color:var(--orange);text-decoration:none}
+article a:hover{text-decoration:underline}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem}
+.toc h4{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.toc ol{margin:0 0 0 1rem}
+.toc li{margin-bottom:.35rem}
+.toc a{color:var(--muted);text-decoration:none;font-size:.85rem}
+.toc a:hover{color:var(--orange)}
+.callout{background:rgba(255,107,53,.07);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.5rem 0}
+.callout strong{color:var(--orange)}
+.callout-warn{background:rgba(234,179,8,.07);border-left:3px solid #EAB308;border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.5rem 0}
+.callout-warn strong{color:#EAB308}
+.sidebar{position:sticky;top:80px}
+.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
+.sidebar-card h4{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem}
+.sidebar-card ul{list-style:none}
+.sidebar-card li{margin-bottom:.5rem}
+.sidebar-card a{color:var(--text);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.5rem}
+.sidebar-card a:hover{color:var(--orange)}
+.sidebar-card a::before{content:"›";color:var(--orange)}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}
+th{background:var(--card);color:var(--orange);font-weight:600;padding:.6rem .9rem;text-align:left;border:1px solid var(--border)}
+td{padding:.6rem .9rem;border:1px solid var(--border);color:#CBD5E1;vertical-align:top}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+pre{background:var(--code);border:1px solid var(--border);border-radius:8px;padding:1.25rem;overflow-x:auto;margin:1.25rem 0;font-size:.85rem;line-height:1.6}
+pre code{color:#93C5FD;font-family:'Courier New',monospace}
+code{background:var(--code);color:#93C5FD;padding:.15rem .4rem;border-radius:4px;font-size:.85em;font-family:'Courier New',monospace}
+.step{display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start}
+.step-num{width:28px;height:28px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;margin-top:.15rem}
+.step-body strong{display:block;margin-bottom:.25rem}
+.step-body{color:#CBD5E1;font-size:.95rem}
+.faq{margin-top:2rem}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}
+.faq-q{background:var(--card);padding:.9rem 1.1rem;font-weight:600;font-size:.95rem}
+.faq-a{padding:.9rem 1.1rem;color:#CBD5E1;font-size:.9rem;border-top:1px solid var(--border)}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--orange);text-decoration:none}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+</head>
+<body>
+<nav>
+  <span class="brand"><a href="/" style="color:inherit;text-decoration:none">ITVedas</a></span>
+  <a href="/chapters/networking/">Networking</a>
+  <a href="/chapters/security/">Security</a>
+  <a href="/chapters/cloud/">Cloud</a>
+  <a href="/chapters/devops/">DevOps</a>
+  <a href="/chapters/databases/">Databases</a>
+  <a href="/chapters/linux/">Linux</a>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb"><a href="/">Home</a> / <a href="/chapters/cve/">CVE &amp; Vulnerabilities</a> / Security Patches</div>
+    <div class="chapter-badge">CVE Chapter</div>
+    <h1>What is a Security Patch and How to Apply It</h1>
+    <p class="hero-meta">Jul 3, 2026 &middot; 10 min read &middot; Beginner</p>
+  </div>
+</div>
+<div class="layout">
+<article>
+<div class="toc">
+  <h4>Table of Contents</h4>
+  <ol>
+    <li><a href="#what-is-patch">What is a Security Patch?</a></li>
+    <li><a href="#types">Types of Patches</a></li>
+    <li><a href="#why-patch">Why Patching Matters</a></li>
+    <li><a href="#sla">Patching SLAs: How Fast Should You Patch?</a></li>
+    <li><a href="#linux">How to Apply Patches on Linux</a></li>
+    <li><a href="#windows">How to Apply Patches on Windows Server</a></li>
+    <li><a href="#containers">Patching Containers and Cloud Services</a></li>
+    <li><a href="#best-practices">Patch Management Best Practices</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<h2 id="what-is-patch">What is a Security Patch?</h2>
+<p>A <strong>security patch</strong> is a targeted software update that fixes one or more security vulnerabilities without delivering new functionality. It modifies executable files, libraries, configuration, or firmware to eliminate or reduce the exploitability of a known weakness.</p>
+<p>Patches are released by software vendors in response to:</p>
+<ul>
+  <li>Internally discovered bugs during development and testing</li>
+  <li>Responsible disclosure reports from external security researchers</li>
+  <li>Active exploitation discovered in the wild (emergency/hotfix patches)</li>
+  <li>Government mandates (e.g., CISA KEV catalog requirements)</li>
+</ul>
+<p>From the vendor's side, a patch usually involves changing source code to add input validation, fix memory handling, enforce proper access controls, or disable an unsafe feature, then compiling, signing, and distributing the update through official channels.</p>
+
+<h2 id="types">Types of Patches</h2>
+<table>
+  <tr><th>Patch Type</th><th>Description</th><th>Example</th></tr>
+  <tr><td>Security Patch</td><td>Fixes a security vulnerability specifically</td><td>Apache httpd 2.4.59 fixing CVE-2024-27316</td></tr>
+  <tr><td>Hotfix</td><td>Emergency patch for an actively exploited critical vuln, released outside normal cycle</td><td>Microsoft out-of-band patch for a Defender zero-day</td></tr>
+  <tr><td>Bug Fix</td><td>Fixes non-security defects</td><td>Memory leak fix in database driver</td></tr>
+  <tr><td>Feature Update</td><td>Adds new functionality; may include security improvements</td><td>Major OS version update</td></tr>
+  <tr><td>Firmware Update</td><td>Patches hardware-level code (BIOS, UEFI, NIC firmware)</td><td>Intel microcode update for Spectre</td></tr>
+  <tr><td>Configuration Hardening</td><td>Not code — changes default settings to more secure values</td><td>Disabling TLS 1.0/1.1 via config</td></tr>
+</table>
+
+<h3>Patch Tuesday</h3>
+<p><strong>Patch Tuesday</strong> is the second Tuesday of each month, when Microsoft releases its batch of security updates. This predictable schedule lets IT teams plan maintenance windows around a known release date. Adobe, Intel, and SAP also align many releases to Patch Tuesday. Other vendors like Red Hat, Ubuntu, and Cisco have their own release schedules.</p>
+
+<h2 id="why-patch">Why Patching Matters</h2>
+<p>The overwhelming majority of successful cyberattacks exploit <em>known</em> vulnerabilities — ones that already have patches available. A landmark Verizon Data Breach Investigations Report finding: over 80% of successful breaches exploited vulnerabilities for which patches had been available for more than a year.</p>
+<p>Notable examples where slow patching led to catastrophe:</p>
+<ul>
+  <li><strong>WannaCry (2017)</strong> — Exploited EternalBlue (CVE-2017-0144) in Windows SMB. Microsoft had released patch MS17-010 two months earlier. Over 200,000 systems in 150 countries were infected because they had not been patched.</li>
+  <li><strong>Equifax breach (2017)</strong> — Apache Struts CVE-2017-5638 was patched in March 2017. Equifax was breached in May 2017 — two months after the patch was available — exposing 147 million records.</li>
+  <li><strong>Log4Shell (2021)</strong> — Apache released Log4j 2.15.0 within days. Organisations that delayed patching continued to face exploitation months later.</li>
+</ul>
+<div class="callout"><strong>Key insight:</strong> Patching is not about preventing zero-day attacks. It is about closing the window of opportunity after a patch is released — the period when attackers know the vulnerability exists but defenders have not yet fixed it.</div>
+
+<h2 id="sla">Patching SLAs: How Fast Should You Patch?</h2>
+<p>Most security frameworks define patching timeframes based on CVSS severity. These are common benchmarks:</p>
+<table>
+  <tr><th>CVSS Severity</th><th>Score Range</th><th>CISA Mandate</th><th>Common Enterprise SLA</th></tr>
+  <tr><td>Critical</td><td>9.0 – 10.0</td><td>15 days</td><td>7–15 days</td></tr>
+  <tr><td>High</td><td>7.0 – 8.9</td><td>30 days</td><td>30 days</td></tr>
+  <tr><td>Medium</td><td>4.0 – 6.9</td><td>—</td><td>60–90 days</td></tr>
+  <tr><td>Low</td><td>0.1 – 3.9</td><td>—</td><td>Next maintenance cycle</td></tr>
+  <tr><td>CISA KEV Listed</td><td>Any</td><td>Per KEV deadline (often 2 weeks)</td><td>Immediate</td></tr>
+</table>
+<p>If a vulnerability appears on the <strong>CISA Known Exploited Vulnerabilities (KEV) catalog</strong>, it means it is being actively exploited in the wild. Federal agencies are required by law to patch these within the specified deadline. Private organisations should treat KEV entries as highest priority regardless of CVSS score.</p>
+
+<h2 id="linux">How to Apply Patches on Linux</h2>
+<p>The exact commands vary by Linux distribution, but the process is the same: update the package list, then install available updates.</p>
+
+<h3>Ubuntu / Debian</h3>
+<pre><code># Update package index
+sudo apt update
+
+# View available security updates
+apt list --upgradable 2>/dev/null | grep -i security
+
+# Apply all updates (including security)
+sudo apt upgrade -y
+
+# Apply security updates only (requires unattended-upgrades)
+sudo unattended-upgrade --dry-run  # preview
+sudo unattended-upgrade            # apply</code></pre>
+
+<h3>RHEL / CentOS / Rocky Linux (dnf/yum)</h3>
+<pre><code># List available security updates
+sudo dnf check-update --security
+
+# Apply security updates only
+sudo dnf update --security -y
+
+# Apply all updates
+sudo dnf update -y</code></pre>
+
+<h3>Check If Reboot Is Required</h3>
+<pre><code># Ubuntu/Debian
+ls /var/run/reboot-required 2>/dev/null && echo "Reboot required"
+
+# RHEL/CentOS
+sudo needs-restarting -r</code></pre>
+
+<div class="callout-warn"><strong>Important:</strong> Kernel patches and libc updates require a reboot to take effect. Services like Apache or SSH can often be restarted without a full reboot after shared library patches. Use <code>needs-restarting</code> on RHEL or <code>checkrestart</code> on Debian to identify which services need restarting.</div>
+
+<h3>Automated Security Patching on Linux</h3>
+<p>For servers, consider enabling unattended security updates to reduce the window between patch release and application:</p>
+<pre><code># Ubuntu: install and enable
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+
+# Configuration file
+cat /etc/apt/apt.conf.d/50unattended-upgrades
+# Ensure "${distro_id}:${distro_codename}-security" is uncommented</code></pre>
+
+<h2 id="windows">How to Apply Patches on Windows Server</h2>
+<h3>Via Windows Update (GUI)</h3>
+<div class="step"><div class="step-num">1</div><div class="step-body"><strong>Open Settings → Windows Update</strong><br>Or search "Windows Update" in the Start menu.</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-body"><strong>Click "Check for updates"</strong><br>Windows will download and list available updates, flagging security updates separately.</div></div>
+<div class="step"><div class="step-num">3</div><div class="step-body"><strong>Install all updates</strong><br>Do not defer security updates. Click "Download and install" for Critical and Security updates immediately.</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-body"><strong>Reboot if prompted</strong><br>Many Windows patches require a restart. Schedule during a maintenance window.</div></div>
+
+<h3>Via PowerShell (Recommended for Servers)</h3>
+<pre><code># Install PSWindowsUpdate module if not present
+Install-Module -Name PSWindowsUpdate -Force
+
+# List available security updates
+Get-WindowsUpdate -Category "Security Updates"
+
+# Install all security updates
+Install-WindowsUpdate -Category "Security Updates" -AcceptAll -AutoReboot</code></pre>
+
+<h3>Enterprise: WSUS and SCCM</h3>
+<p>For large environments, use <strong>Windows Server Update Services (WSUS)</strong> to centralise patch approval and deployment, or <strong>Microsoft Endpoint Configuration Manager (SCCM/MECM)</strong> for full lifecycle management including testing, approval workflows, and compliance reporting.</p>
+
+<h2 id="containers">Patching Containers and Cloud Services</h2>
+<p>Containers and cloud-managed services require a different patching approach.</p>
+
+<h3>Container Images</h3>
+<p>Container images are immutable — you do not patch a running container. Instead:</p>
+<ol>
+  <li>Rebuild the base image from a patched base (e.g., <code>FROM ubuntu:24.04</code> after Ubuntu releases security updates)</li>
+  <li>Run your CI/CD pipeline to test the new image</li>
+  <li>Deploy the new image, replacing the old containers</li>
+</ol>
+<p>Use tools like <strong>Trivy</strong>, <strong>Grype</strong>, or <strong>Snyk Container</strong> to scan images for vulnerabilities before deployment.</p>
+
+<h3>Cloud Managed Services</h3>
+<p>Cloud-managed databases (RDS, Cloud SQL), load balancers, and serverless functions are patched by the cloud provider automatically. Your responsibility is to check the provider's security bulletins and update configuration when required (e.g., moving to a newer engine version when an old version reaches end of life).</p>
+
+<h2 id="best-practices">Patch Management Best Practices</h2>
+<ul>
+  <li><strong>Maintain an asset inventory.</strong> You cannot patch what you do not know exists. Use tools like Qualys VMDR, Tenable.io, or open-source alternatives to discover and inventory all systems.</li>
+  <li><strong>Test before production.</strong> Apply patches to a staging environment first for non-critical systems. For critical-CVSS patches on internet-facing systems, the risk of not patching outweighs the risk of a patch breaking something.</li>
+  <li><strong>Prioritise using CVSS + CISA KEV.</strong> A CVSS 6.0 vulnerability that is on the KEV list and actively exploited is more urgent than a CVSS 8.0 that has no public exploit.</li>
+  <li><strong>Track patch status.</strong> Log which systems have been patched and when. This is required for SOC 2, PCI DSS, ISO 27001, and HIPAA audits.</li>
+  <li><strong>Automate where possible.</strong> Unattended upgrades on Linux, automatic Windows updates for workstations, Dependabot for open source dependencies.</li>
+  <li><strong>Address end-of-life software.</strong> Software past its end-of-life date no longer receives security patches. Upgrade or isolate EOL systems.</li>
+  <li><strong>Have a rollback plan.</strong> Take snapshots or backups before applying major patches so you can recover if a patch causes instability.</li>
+</ul>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq">
+  <div class="faq-item"><div class="faq-q">What is a security patch?</div><div class="faq-a">A security patch is a software update that fixes one or more security vulnerabilities. It modifies executable code, configuration files, or libraries to eliminate or mitigate the vulnerability without requiring a full software version upgrade.</div></div>
+  <div class="faq-item"><div class="faq-q">How quickly should I apply security patches?</div><div class="faq-a">CISA recommends patching critical (CVSS 9.0+) vulnerabilities within 15 days and high (7.0–8.9) within 30 days. Vulnerabilities on the CISA Known Exploited Vulnerabilities list should be patched within the mandated deadline, often 2 weeks.</div></div>
+  <div class="faq-item"><div class="faq-q">What is Patch Tuesday?</div><div class="faq-a">Patch Tuesday is the second Tuesday of every month, when Microsoft releases its monthly batch of security updates for Windows, Office, and other Microsoft products. Other vendors like Adobe and Intel also align releases to Patch Tuesday.</div></div>
+  <div class="faq-item"><div class="faq-q">What is a hotfix vs a patch?</div><div class="faq-a">A hotfix is an emergency patch released outside the normal release cycle to fix a critical, actively-exploited vulnerability. A regular patch is released on a scheduled cycle. Both fix security issues; the difference is urgency and release process.</div></div>
+  <div class="faq-item"><div class="faq-q">Do I need to reboot after every patch?</div><div class="faq-a">Not always. Application patches often require only a service restart. OS kernel patches and core library (libc, OpenSSL) patches typically require a full reboot for the fix to take effect. On Linux, tools like needs-restarting or checkrestart will tell you what needs to be restarted.</div></div>
+</div>
+</article>
+<aside class="sidebar">
+  <div class="sidebar-card">
+    <h4>CVE Chapter</h4>
+    <ul>
+      <li><a href="/chapters/cve/what-is-a-cve-vulnerability-explained.html">What is a CVE?</a></li>
+      <li><a href="/chapters/cve/how-cvss-scoring-works-explained.html">How CVSS Scoring Works</a></li>
+      <li><a href="/chapters/cve/what-is-a-zero-day-vulnerability-explained.html">What is a Zero-Day?</a></li>
+      <li><a href="/chapters/cve/how-to-read-a-cve-report.html">How to Read a CVE Report</a></li>
+      <li><a href="/chapters/cve/what-is-nvd-national-vulnerability-database.html">What is the NVD?</a></li>
+      <li><a href="/chapters/cve/cve-vs-cwe-vs-capec-explained.html">CVE vs CWE vs CAPEC</a></li>
+      <li><a href="/chapters/cve/what-is-a-security-patch-and-how-to-apply-it.html" style="color:var(--orange)">What is a Security Patch?</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-card">
+    <h4>Related</h4>
+    <ul>
+      <li><a href="/chapters/linux/">Linux Chapter</a></li>
+      <li><a href="/chapters/compliance/">Compliance Chapter</a></li>
+    </ul>
+  </div>
+</aside>
+</div>
+<footer>
+  <p>&copy; 2026 <a href="/">ITVedas</a> &mdash; IT Education for Everyone</p>
+</footer>
+</body>
+</html>

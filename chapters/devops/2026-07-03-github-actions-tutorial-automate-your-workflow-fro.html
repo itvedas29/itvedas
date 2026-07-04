@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions Tutorial: Automate Workflows From Scratch</title>
+  <meta name="description" content="Learn GitHub Actions step-by-step. Automate CI/CD pipelines, testing, and deployments without external tools. Start building workflows today.">
+  <link rel="canonical" href="https://itvedas.com/chapters/devops/2026-07-03-github-actions-tutorial-automate-your-workflow-fro.html">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+    .highlight{background:#1E293B;padding:.2rem .4rem;border-radius:3px;color:#7DD3FC}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"GitHub Actions Tutorial: Automate Your Workflow From Scratch",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/devops/" class="back">← Back to DevOps</a>
+  <h1>GitHub Actions Tutorial: Automate Your Workflow From Scratch</h1>
+
+  <p>GitHub Actions lets you run automated tasks directly from your repository without third-party services. You can build, test, and deploy code using workflows triggered by repository events like pushes, pull requests, or schedules—all in YAML files stored in your repo.</p>
+
+  <h2>What Are GitHub Actions?</h2>
+  <p>GitHub Actions is a CI/CD platform built into GitHub. Instead of maintaining separate Jenkins servers or relying on external services like CircleCI, you define automation workflows as YAML files in your repository. When specific events occur—like a commit to main or a new pull request—GitHub automatically executes the defined jobs.</p>
+
+  <p>The platform's strength lies in its simplicity and integration. You don't install agents on servers. You don't configure webhooks. GitHub handles everything. Your workflows run on GitHub-hosted runners (Ubuntu, Windows, macOS) or your own self-hosted machines.</p>
+
+  <h3>Why Use GitHub Actions?</h3>
+  <ul>
+    <li><strong>Zero setup overhead</strong> — No infrastructure to maintain</li>
+    <li><strong>Native GitHub integration</strong> — Workflows run automatically on repository events</li>
+    <li><strong>Marketplace of actions</strong> — Reusable components for common tasks (testing, deployment, notifications)</li>
+    <li><strong>Cost-effective</strong> — Generous free tier: 2,000 minutes/month for private repos</li>
+    <li><strong>Multi-OS support</strong> — Test across Linux, Windows, and macOS simultaneously</li>
+  </ul>
+
+  <h2>Core Concepts You Need to Know</h2>
+  <p>Before writing your first workflow, understand the terminology.</p>
+
+  <h3>Workflows</h3>
+  <p>A workflow is an automated process defined in a YAML file. It lives in the <span class="highlight">.github/workflows/</span> directory of your repository. One repo can have multiple workflows—one for testing, one for deployment, one for security scanning.</p>
+
+  <h3>Jobs</h3>
+  <p>A job is a set of steps that execute in sequence on the same runner. Jobs within a workflow run in parallel by default, but you can create dependencies so one job waits for another to complete.</p>
+
+  <h3>Steps</h3>
+  <p>A step is an individual task—running a shell command, calling an action, or checking out code. Steps execute sequentially within a job and share the working directory.</p>
+
+  <h3>Actions</h3>
+  <p>Actions are reusable units of code. Instead of writing shell scripts, you use pre-built actions from the GitHub Marketplace. Common examples: <span class="highlight">actions/checkout</span> (clones your repo), <span class="highlight">actions/setup-node</span> (installs Node.js), <span class="highlight">actions/upload-artifact</span> (stores build outputs).</p>
+
+  <h3>Runners</h3>
+  <p>A runner is a server that executes your workflow. GitHub provides hosted runners (GitHub-hosted), or you can run jobs on your own machines (self-hosted runners).</p>
+
+  <h2>Building Your First Workflow</h2>
+  <p>Let's create a simple workflow that runs tests every time code is pushed.</p>
+
+  <h3>Step 1: Create the Workflow File</h3>
+  <p>In your repository root, create a directory and file:</p>
+  <pre><code>.github/workflows/test.yml</code></pre>
+
+  <h3>Step 2: Define the Trigger</h3>
+  <p>Specify when the workflow runs:</p>
+  <pre><code>name: Run Tests
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]</code></pre>
+
+  <p>This workflow triggers on pushes to main/develop branches and on any pull request targeting main.</p>
+
+  <h3>Step 3: Add a Job</h3>
+  <pre><code>jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install
+      - run: npm test</code></pre>
+
+  <p>This job checks out your code, installs Node 18, installs dependencies, and runs tests. The <span class="highlight">uses:</span> keyword invokes pre-built actions. The <span class="highlight">run:</span> keyword executes shell commands.</p>
+
+  <h3>Complete Example</h3>
+  <pre><code>name: Run Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build</code></pre>
+
+  <p>Notice the <span class="highlight">strategy.matrix</span> section. This runs the entire job across three Node versions in parallel, catching version-specific bugs instantly.</p>
+
+  <h2>Real-World Workflows</h2>
+
+  <h3>Automated Deployment to AWS</h3>
+  <p>Deploy to production when code lands on main:</p>
+  <pre><code>name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run build
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - run: aws s3 sync dist/ s3://my-bucket/
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"</code></pre>
+
+  <p>Secrets are stored in repository settings and injected at runtime—never hardcoded in YAML.</p>
+
+  <h3>Docker Image Build and Push</h3>
+  <p>Build and push to Docker Hub on every release:</p>
+  <pre><code>name: Build and Push Docker Image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: myusername/myapp:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max</code></pre>
+
+  <p>The GitHub Actions cache speeds up builds by reusing Docker layers across runs.</p>
+
+  <h3>Scheduled Health Checks</h3>
+  <p>Run synthetic tests every 6 hours:</p>
+  <pre><code>name: Health Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl https://api.example.com/health --fail
+      - run: curl https://example.com --fail
+      - uses: actions/github-script@v6
+        if: failure()
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ Health check failed!'
+            })</code></pre>
+
+  <p>Use cron syntax for scheduled workflows. The <span class="highlight">if: failure()</span> condition only runs if previous steps failed.</p>
+
+  <h2>Best Practices for GitHub Actions</h2>
+
+  <h3>Use Action Versions Explicitly</h3>
+  <p>Always pin action versions. Never use <span class="highlight">@latest</span> or <span class="highlight">@main</span>:</p>
+  <pre><code>✗ uses: actions/checkout@main
+✓ uses: actions/checkout@v4</code></pre>
+
+  <p>This prevents unexpected breaking changes when action maintainers push updates.</p>
+
+  <h3>Store Secrets Securely</h3>
+  <p>Go to Settings → Secrets and Variables → Actions in your repository. Add secrets like API keys, tokens, and credentials. Reference them as <span class="highlight">${{ secrets.SECRET_NAME }}</span>. GitHub masks secret values in logs automatically.</p>
+
+  <h3>Cache Dependencies</h3>
+  <p>Speed up builds by caching node_modules, pip packages, or Maven artifacts:</p>
+  <pre><code>- uses: actions/cache@v3
+  with:
+    path: ~/.npm
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-</code></pre>
+
+  <h3>Fail Fast on Linting</h3>
+  <p>Run linters and type checkers before expensive tests. Kill the workflow early if code quality fails:</p>
+  <pre><code>jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - run: npm run lint:fix
+      - run: npm run type-check
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      # test steps here</code></pre>
+
+  <p>The <span class="highlight">needs:</span> keyword creates job dependencies. The test job won't start until lint succeeds.</p>
+
+  <h3>Use Conditions Wisely</h3>
+  <p>Skip steps based on branch, event type, or outputs:</p>
+  <pre><code>- name: Deploy to production
+  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  run: npm run deploy:prod</code></pre>
+
+  <h2>Common Pitfalls to Avoid</h2>
+
+  <p><strong>Hardcoding secrets:</strong> Never paste API keys or tokens in YAML files. Always use repository secrets.</p>
+
+  <p><strong>Ignoring matrix failures:</strong> When you use a matrix strategy, one job failure stops the entire workflow. Use <span class="highlight">continue-on-error: true</span> if you want partial failures to not block downstream jobs.</p>
+
+  <p><strong>Forgetting checkout:</strong> Most workflows need <span class="highlight">actions/checkout@v4</span> as the first step. Without it, your code doesn't exist in the runner's filesystem.</p>
+
+  <p><strong>Bloated workflows:</strong> If a workflow file exceeds 500 lines, consider splitting it into multiple smaller workflows. Maintenance becomes difficult otherwise.</p>
+
+  <p><strong>Not testing workflows locally:</strong> Use <a href="https://github.com/nektos/act">act</a> to run workflows on your machine before pushing. It catches syntax errors and logic bugs early.</p>
+
+  <h2>Advanced Features</h2>
+
+  <h3>Manual Workflow Dispatch</h3>
+  <p>Allow manual triggering from the GitHub UI:</p>
+  <pre><code>on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to ${{ inputs.environment }}"</code></pre>
+
+  <h3>Reusable Workflows</h3>
+  <p>Share workflows across repositories. Create a <span class="highlight">.github/workflows/shared-test
