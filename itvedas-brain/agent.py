@@ -589,6 +589,118 @@ def call_claude_full(messages: list) -> dict:
         return json.loads(r.read())
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  PROGRAMMED CONVERSATION LAYER (zero API cost)
+#
+#  All normal conversation and operational commands are handled here with
+#  rule-based logic — no Claude API call, no credits spent. The Claude API is
+#  reserved ONLY for content work: writing articles, page content, designs,
+#  and SEO metadata. Those intents fall through to the agentic loop.
+# ═══════════════════════════════════════════════════════════════════════════════
+import re as _re
+
+# Messages matching these go to Claude (content generation only).
+_CONTENT_INTENTS = _re.compile(
+    r"\b(write|draft|publish|create|generate|compose|rewrite|improve|expand)\b"
+    r".*\b(article|post|content|guide|tutorial|chapter|page|copy|text)\b"
+    r"|\b(seo|meta\s*(title|description|tags?|data)|keywords?\s+for|og:)\b"
+    r"|\bdesign\b.*\b(page|card|hero|section|layout|banner|logo|ui|ux)\b",
+    _re.IGNORECASE | _re.DOTALL,
+)
+
+def _sse(obj: dict) -> str:
+    return f"data: {json.dumps(obj)}\n\n"
+
+def _programmed_answer(msg: str):
+    """Return an answer string for operational/conversational messages,
+    or None if the message needs Claude (content work)."""
+    m = msg.lower().strip()
+
+    if _CONTENT_INTENTS.search(msg):
+        return None  # content work → Claude
+
+    if _re.match(r"^(hi|hello|hey|namaste|good\s*(morning|afternoon|evening))\b", m):
+        return ("Hello! I'm the ITVedas Agent. I handle site operations directly — "
+                "try **status**, **list articles**, **issues**, **prs**, **news**, or **help**. "
+                "For new articles, content, designs or SEO metadata I call Claude.")
+
+    if _re.search(r"\b(help|what can you do|capabilit|commands?)\b", m):
+        return ("**Programmed commands (free, instant):**\n"
+                "- `status` / `health` — brain & site status\n"
+                "- `list articles [chapter]` — published articles\n"
+                "- `issues` / `prs` — GitHub issues & pull requests\n"
+                "- `workflows` — recent workflow runs\n"
+                "- `news` — latest news agent state\n"
+                "- `plan` / `next` — publishing schedule & roadmap\n"
+                "- `search <query>` — web search\n\n"
+                "**Claude-powered (uses API credits):** writing/publishing articles, "
+                "page content, designs, and SEO metadata — just describe what you want written.")
+
+    if _re.search(r"\b(status|health|alive|running|uptime)\b", m):
+        return tool_get_brain_status()
+
+    if _re.search(r"\b(list|show)\b.*\b(articles?|files?|pages?)\b", m) or m in ("articles", "files"):
+        chap = ""
+        cm = _re.search(r"\b(networking|cloud|security|devops|databases?|linux|hardware|compliance|cve)\b", m)
+        if cm:
+            chap = "articles/" + cm.group(1).rstrip("s") if cm.group(1).startswith("database") else "articles/" + cm.group(1)
+        return tool_github_list_files(chap or "articles")
+
+    if _re.search(r"\bissues?\b", m):
+        return tool_github_list_issues("open", "")
+
+    if _re.search(r"\b(prs?|pull\s*requests?)\b", m):
+        return tool_github_list_prs("open")
+
+    if _re.search(r"\bworkflows?\b|\bactions?\b|\bci\b", m):
+        return tool_github_list_workflow_runs("", 10)
+
+    if _re.search(r"\bnews\b", m):
+        try:
+            return tool_get_brain_status()
+        except Exception as e:
+            return f"News agent state unavailable: {e}"
+
+    if _re.search(r"\b(plan|next|roadmap|schedule|upcoming)\b", m):
+        return ("**Standing plan:**\n"
+                "- Articles publish Mon / Wed / Fri across the 9 chapters (routing map enforced)\n"
+                "- News agent refreshes security & IT news several times daily\n"
+                "- Homepage placeholders (latest articles / security watch) update automatically\n"
+                "- Sitemap and search index grow with each publish\n\n"
+                "Ask me to *write an article about &lt;topic&gt;* to queue content work (Claude).")
+
+    if _re.match(r"^search\s+(.+)", m):
+        q = _re.match(r"^search\s+(.+)", m).group(1)
+        return tool_web_search(q, 6)
+
+    if _re.search(r"\b(thanks|thank you|great|good job|nice)\b", m):
+        return "You're welcome! Anything else — try `help` for the command list."
+
+    # Unrecognized and not content work → answer programmatically, never spend credits.
+    return ("I handle operations with programmed commands — try `help` to see them. "
+            "If you want content written (article, page copy, design, SEO metadata), "
+            "describe it and I'll use Claude for that part.")
+
+def _friendly_api_error(code: int, raw: str) -> str:
+    if "credit balance" in raw.lower():
+        return ("⚠️ Content engine paused — the Anthropic API account is out of credits. "
+                "Operational commands (`status`, `list articles`, `issues`, `news`, …) still work. "
+                "Top up at console.anthropic.com → Plans & Billing to resume content generation.")
+    if code == 429:
+        return "⚠️ Content engine rate-limited — try again in a minute. Operational commands still work."
+    if code in (500, 502, 503, 529):
+        return "⚠️ Anthropic API is having a moment — try again shortly. Operational commands still work."
+    return f"⚠️ Content engine error ({code}). Operational commands still work.\n{raw[:300]}"
+
+def programmed_or_claude_stream(user_message: str, history: list) -> Generator[str, None, None]:
+    """Route: programmed logic for conversation/operations, Claude only for content."""
+    answer = _programmed_answer(user_message)
+    if answer is not None:
+        yield _sse({"type": "text", "text": answer})
+        yield _sse({"type": "done"})
+        return
+    yield from agentic_loop_stream(user_message, history)
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  AGENTIC LOOP (streaming SSE version)
 # ═══════════════════════════════════════════════════════════════════════════════
 def agentic_loop_stream(user_message: str, history: list) -> Generator[str, None, None]:
@@ -612,7 +724,7 @@ def agentic_loop_stream(user_message: str, history: list) -> Generator[str, None
             response = call_claude_full(messages)
         except urllib.error.HTTPError as e:
             err = e.read().decode()
-            yield emit({"type": "text", "text": f"\n\n❌ Claude API error: {e.code}\n{err}"})
+            yield emit({"type": "text", "text": "\n\n" + _friendly_api_error(e.code, err)})
             yield emit({"type": "done"})
             return
         except Exception as e:
@@ -722,7 +834,7 @@ if FLASK_OK:
         def generate_and_track():
             global _history
             assistant_text = ""
-            for chunk in agentic_loop_stream(msg, _history):
+            for chunk in programmed_or_claude_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
@@ -1334,7 +1446,7 @@ if FLASK_OK:
         def generate_and_track():
             global _history
             assistant_text = ""
-            for chunk in agentic_loop_stream(msg, _history):
+            for chunk in programmed_or_claude_stream(msg, _history):
                 try:
                     obj = json.loads(chunk.replace("data: ", "").strip())
                     if obj.get("type") == "text":
@@ -1369,7 +1481,17 @@ AUTONOMOUS_PROMPT = """You are running in autonomous mode. Your job right now:
 1. Check brain status: read itvedas-brain/state/heartbeat.json and itvedas-brain/memory/brain_memory.json from GitHub
 2. Pick the next unpublished topic from the seed list in itvedas-brain/memory/brain_memory.json
 3. Write a full SEO-optimised HTML article for that topic (use the same style as existing articles)
-4. Commit it to the correct chapter folder in the GitHub repo (e.g. chapters/networking/slug.html)
+4. Commit it to the CORRECT chapter folder using this MANDATORY routing map — never deviate from it:
+   networking  → chapters/networking/   DNS, firewall, VPN, TCP/IP, subnet, routing, proxy, DHCP, BGP, VLAN, NAT, ping, OSPF, MPLS
+   cloud       → chapters/cloud/        AWS, Azure, GCP, serverless, CDN, auto-scaling, Kubernetes, cloud storage, Lambda, IaaS, PaaS, SaaS
+   security    → chapters/security/     OWASP, SSL/TLS, SQL injection, XSS, CSRF, DDoS, phishing, ransomware, zero trust, penetration testing, OAuth, PKI, SIEM
+   devops      → chapters/devops/       Docker, CI/CD, Terraform, Ansible, GitOps, Jenkins, microservices, Prometheus, blue-green, chaos engineering
+   databases   → chapters/databases/    SQL, PostgreSQL, MongoDB, Redis, indexing, replication, sharding, NoSQL, backup, query optimisation
+   linux       → chapters/linux/        bash, shell scripting, systemd, cron, SSH, Linux commands, file permissions, Linux server, grep, awk
+   hardware    → chapters/hardware/     CPU, RAM, storage, NVMe, RAID, data centre, network card, server hardware, GPU, motherboard
+   compliance  → chapters/compliance/   GDPR, HIPAA, SOC 2, PCI DSS, ISO 27001, regulatory, audit, DORA, NIS2
+   cve         → chapters/cve/          CVE, CVSS, vulnerability, zero-day, NVD, security patch, exploit, responsible disclosure, CWE
+   File path format: chapters/{chapter}/YYYY-MM-DD-{slug}.html
 5. Update the chapter index file to include the new article link
 6. Update itvedas-brain/state/heartbeat.json with the new publish count and timestamp
 7. Report what you did in 2-3 sentences

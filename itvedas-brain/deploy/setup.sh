@@ -36,9 +36,14 @@ fi
 # 2. Create virtualenv + install deps
 echo ""
 echo "📦 Installing Python dependencies..."
+# Remove any corrupted venv before recreating
+if [ -d "$VENV" ]; then
+  echo "  Removing existing venv (rebuilding clean)..."
+  rm -rf "$VENV"
+fi
 python3 -m venv "$VENV"
 "$VENV/bin/pip" install -q --upgrade pip
-"$VENV/bin/pip" install -q flask duckduckgo-search beautifulsoup4
+"$VENV/bin/pip" install -q flask duckduckgo-search beautifulsoup4 anthropic requests
 echo "  ✓ Dependencies installed"
 
 # 3. Install systemd service
