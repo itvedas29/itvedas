@@ -1,1 +1,35 @@
-https://www.itvedas.com/* https://itvedas.com/:splat 301!
+# Cloudflare Pages Routing Configuration
+
+# CVE Database Routing
+
+# Main CVE listing page - all /cve/* requests except specific CVE IDs
+/cve              /cve-listing.html  200
+/cve/             /cve-listing.html  200
+
+# CVEs by year
+/cve/2024/*       /cve-listing.html  200
+/cve/2023/*       /cve-listing.html  200
+/cve/2022/*       /cve-listing.html  200
+/cve/2021/*       /cve-listing.html  200
+/cve/2020/*       /cve-listing.html  200
+/cve/201*/*       /cve-listing.html  200
+/cve/200*/*       /cve-listing.html  200
+/cve/199*/*       /cve-listing.html  200
+
+# CVEs by vendor
+/cve/vendors/*    /cve-listing.html  200
+
+# CVEs by severity
+/cve/severity/*   /cve-listing.html  200
+
+# Known exploited CVEs
+/cve/exploited    /cve-listing.html  200
+/cve/exploited/*  /cve-listing.html  200
+
+# Advanced search
+/cve/search       /cve-listing.html  200
+/cve/search/*     /cve-listing.html  200
+
+# Individual CVE detail pages (must be after other rules)
+/cve/cve-*        /cve-detail.html   200
+/cve/CVE-*        /cve-detail.html   200
