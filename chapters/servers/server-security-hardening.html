@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Server security and hardening guide: Windows Defender, firewall rules, UAC, security updates, and hardening checklist.">
+<meta name="keywords" content="server security, hardening, Windows Defender, firewall rules, UAC, security updates, security hardening">
+<property="og:title" content="Server Security & Hardening | ITVedas">
+<property="og:description" content="Learn to harden Windows servers and implement security best practices for enterprise protection.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/server-security-hardening.html">
+<title>Server Security & Hardening — Complete Guide | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--os);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>Security & Hardening</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">Server Security & Hardening</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 15 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>Server security isn't optional—it's mandatory. A single compromised server can expose your entire organization to data theft, ransomware, and regulatory violations. Security hardening means reducing attack surface by removing unnecessary services, enforcing strong authentication, and implementing defense-in-depth strategies.</p>
+
+<h2>Security Fundamentals</h2>
+
+<p><strong>The CIA Triad:</strong></p>
+<ul>
+<li><strong>Confidentiality:</strong> Only authorized people access information</li>
+<li><strong>Integrity:</strong> Information isn't modified without authorization</li>
+<li><strong>Availability:</strong> Systems remain operational for authorized users</li>
+</ul>
+
+<p>All security measures exist to protect one or more of these principles. A good security posture protects all three simultaneously.</p>
+
+<h2>Windows Defender Configuration</h2>
+
+<p>Windows Defender provides built-in antimalware protection. Proper configuration ensures comprehensive protection without impacting performance.</p>
+
+<div class="step-guide">
+<h4>Configuring Windows Defender via Group Policy</h4>
+<ol>
+<li>Open Group Policy Management</li>
+<li>Edit a GPO for your servers</li>
+<li>Navigate to: Computer Configuration → Policies → Administrative Templates → Windows Components → Windows Defender</li>
+<li>Configure these settings:
+  <ul>
+  <li>Real-time protection: Enabled</li>
+  <li>Scan incoming mail: Enabled</li>
+  <li>Scan downloads: Enabled</li>
+  <li>Signature updates: Download daily</li>
+  <li>Quarantine suspicious files: Enabled</li>
+  </ul>
+</li>
+<li>Schedule scans: Quick scan daily at 2:00 AM</li>
+<li>Apply GPO to all servers</li>
+</ol>
+</step-guide>
+
+<div class="code-block">
+# PowerShell: Configure Windows Defender
+# Enable real-time protection
+Set-MpPreference -DisableRealtimeMonitoring $false
+
+# Enable scan incoming files
+Set-MpPreference -DisableBehaviorMonitoring $false
+
+# Schedule daily quick scan at 2 AM
+Add-ScheduledTaskFolder -Path "Antivirus" -Force
+Register-ScheduledTask -TaskName "Daily Quick Scan" -Action (
+  New-ScheduledTaskAction -Execute "C:\Program Files\Windows Defender\MpCmdRun.exe" `
+  -Argument "-Scan -ScanType 1"
+) -Trigger (New-ScheduledTaskTrigger -Daily -At 02:00:00) -Force
+</code-block>
+
+<h2>Windows Firewall Management</h2>
+
+<p>Windows Firewall is a host-based firewall that controls inbound and outbound traffic. Proper configuration allows legitimate traffic while blocking threats.</p>
+
+<p><strong>Firewall Profiles:</strong></p>
+<ul>
+<li><strong>Domain:</strong> Applied when connected to domain network (typically most permissive)</li>
+<li><strong>Private:</strong> Applied on private/trusted networks</li>
+<li><strong>Public:</strong> Applied on public networks (most restrictive)</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating Firewall Rules via Group Policy</h4>
+<ol>
+<li>Open Group Policy Management</li>
+<li>Edit a GPO targeting servers</li>
+<li>Navigate to: Computer Configuration → Policies → Windows Settings → Security Settings → Windows Firewall with Advanced Security</li>
+<li>Right-click Inbound Rules and select New Rule</li>
+<li>Select "Port" and enter listening port (e.g., 443 for HTTPS)</li>
+<li>Allow the connection</li>
+<li>Apply to all profiles (Domain, Private, Public)</li>
+<li>Name the rule descriptively (e.g., "Allow HTTPS for Web Server")</li>
+<li>Repeat for all necessary services</li>
+</ol>
+</step-guide>
+
+<div class="code-block">
+# PowerShell: Create firewall rules
+# Allow RDP (port 3389)
+New-NetFirewallRule -Name "Allow-RDP" -DisplayName "Allow Remote Desktop" `
+  -Enabled True -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow
+
+# Allow HTTP and HTTPS for web server
+New-NetFirewallRule -Name "Allow-Web" -DisplayName "Allow HTTP/HTTPS" `
+  -Enabled True -Direction Inbound -Protocol TCP -LocalPort 80,443 -Action Allow
+
+# Block all other inbound traffic by default
+Set-NetFirewallProfile -Profile Domain,Private -DefaultInboundAction Block
+
+# List all active firewall rules
+Get-NetFirewallRule | Where-Object {$_.Enabled -eq "True"}
+</code-block>
+
+<h2>User Account Control (UAC)</h2>
+
+<p>UAC prompts administrators when changes require elevated privileges. This prevents malware from making unauthorized system changes even if user clicks malicious link.</p>
+
+<div class="tip">
+<strong>💡 Pro Tip:</strong> Don't disable UAC. Instead, configure it to "Prompt for password on Secure Desktop" which provides security without excessive prompts on servers.
+</div>
+
+<div class="code-block">
+# PowerShell: Configure UAC on servers
+# Set UAC to notify for all changes
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" `
+  -Name "ConsentPromptBehaviorAdmin" -Value 2
+
+# Require Secure Desktop for UAC prompts
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" `
+  -Name "PromptOnSecureDesktop" -Value 1
+</code-block>
+
+<h2>Security Updates and Patching</h2>
+
+<p>Unpatched systems are immediately vulnerable. Patch management must be automated and enforced.</p>
+
+<p><strong>Patch Categories:</strong></p>
+<ul>
+<li><strong>Critical:</strong> Deploy immediately (within 48 hours)</li>
+<li><strong>Important:</strong> Deploy within 1-2 weeks</li>
+<li><strong>Moderate:</strong> Deploy within monthly update cycle</li>
+<li><strong>Low:</strong> Deploy with normal update cycle</li>
+</ul>
+
+<div class="concept-box">
+<h4>🔐 Windows Update via Group Policy</h4>
+<p><strong>Policy Path:</strong> Computer Configuration → Policies → Administrative Templates → Windows Components → Windows Update</p>
+
+<p><strong>Key Settings:</strong></p>
+<ul>
+<li>Configure Automatic Updates: Enabled (Auto download and install)</li>
+<li>Install updates for other Microsoft products: Enabled</li>
+<li>No auto-restart with logged-in users: Disabled (force restart)</li>
+<li>Allow Immediate installation of auto updates: Enabled</li>
+<li>Notify for download and auto install: Set notification time</li>
+</ul>
+</div>
+
+<h2>Account Security and Access Control</h2>
+
+<p><strong>Local Administrator Account:</strong></p>
+<ul>
+<li>Rename from "Administrator" to something non-obvious</li>
+<li>Disable it (don't delete—needed for recovery)</li>
+<li>Use domain admin account for administration instead</li>
+</ul>
+
+<p><strong>Password Policy Requirements:</strong></p>
+<ul>
+<li>Minimum 12 characters (longer is better: 16+)</li>
+<li>Must contain: Uppercase, lowercase, numbers, symbols</li>
+<li>Password history: Remember at least 24 previous passwords</li>
+<li>Maximum age: 90 days (forces periodic changes)</li>
+<li>Minimum age: 1 day (prevents password reuse)</li>
+<li>Account lockout: 5 failed attempts, 30-minute lockout</li>
+</ul>
+
+<h2>Audit Logging and Monitoring</h2>
+
+<p>Audit logs are your detective—they record what happened after an incident. Enable comprehensive logging and review regularly.</p>
+
+<div class="step-guide">
+<h4>Enabling Security Audit Policies</h4>
+<ol>
+<li>Open Group Policy Management</li>
+<li>Edit GPO for servers</li>
+<li>Navigate to: Computer Configuration → Policies → Windows Settings → Security Settings → Advanced Audit Policy</li>
+<li>Enable these audit policies:
+  <ul>
+  <li>Account Logon: Success and Failure</li>
+  <li>Logon/Logoff: Success and Failure</li>
+  <li>Object Access: Success and Failure</li>
+  <li>Privilege Use: Failure</li>
+  <li>Process Creation: Success</li>
+  </ul>
+</li>
+<li>Configure event log retention: 30-90 days minimum</li>
+<li>Configure log size: At least 100MB</li>
+</ol>
+</step-guide>
+
+<h2>Network Security</h2>
+
+<p><strong>Network Segmentation:</strong></p>
+<ul>
+<li>Separate critical servers onto isolated networks</li>
+<li>Use VLANs to segregate traffic by department</li>
+<li>Implement network access control (NAC)</li>
+<li>Require network authentication for device access</li>
+</ul>
+
+<p><strong>Encryption:</strong></p>
+<ul>
+<li><strong>In Transit:</strong> Use HTTPS/TLS for all remote connections</li>
+<li><strong>At Rest:</strong> Enable BitLocker for disk encryption</li>
+<li><strong>SMB Signing:</strong> Enable for file server connections</li>
+</ul>
+
+<h2>Server Hardening Checklist</h2>
+
+<div class="concept-box">
+<h4>✅ Pre-Production Hardening Tasks</h4>
+<p><strong>Operating System:</strong></p>
+<ul>
+<li>☐ Install latest Windows updates</li>
+<li>☐ Configure Windows Defender with real-time protection</li>
+<li>☐ Configure Windows Firewall with rules</li>
+<li>☐ Enable UAC</li>
+<li>☐ Disable unnecessary services and features</li>
+<li>☐ Enable full disk encryption (BitLocker)</li>
+</ul>
+
+<p><strong>Network:</strong></p>
+<ul>
+<li>☐ Configure network adapters with static IPs</li>
+<li>☐ Configure DNS servers</li>
+<li>☐ Disable IPv6 if not needed</li>
+<li>☐ Configure NIC teaming for redundancy</li>
+</ul>
+
+<p><strong>Access Control:</strong></p>
+<ul>
+<li>☐ Disable default Administrator account</li>
+<li>☐ Rename administrator account to non-obvious name</li>
+<li>☐ Configure strong password policies</li>
+<li>☐ Require multi-factor authentication for sensitive accounts</li>
+<li>☐ Limit admin access via Group Policy</li>
+</ul>
+
+<p><strong>Auditing and Logging:</strong></p>
+<ul>
+<li>☐ Enable security event auditing</li>
+<li>☐ Configure event log retention (minimum 30 days)</li>
+<li>☐ Configure centralized log collection</li>
+<li>☐ Set up alerts for critical events</li>
+</ul>
+
+<p><strong>Hardening and Security:</strong></p>
+<ul>
+<li>☐ Run Microsoft Security Baseline</li>
+<li>☐ Disable unnecessary protocols (SMBv1, NTLMv1)</li>
+<li>☐ Enable LSA Protection</li>
+<li>☐ Enable Windows Defender Exploit Guard</li>
+<li>☐ Configure Data Execution Prevention (DEP)</li>
+<li>☐ Configure Address Space Layout Randomization (ASLR)</li>
+</ul>
+
+<p><strong>Backup and Recovery:</strong></p>
+<ul>
+<li>☐ Configure automated backups</li>
+<li>☐ Test backup restoration</li>
+<li>☐ Document recovery procedures</li>
+<li>☐ Verify off-site backup copies</li>
+</ul>
+</div>
+
+<h2>Common Security Issues and Solutions</h2>
+
+<div class="concept-box">
+<h4>Problem: Suspected Security Breach</h4>
+<p><strong>Immediate Actions:</strong></p>
+<ol>
+<li>Isolate affected system from network immediately</li>
+<li>Preserve evidence: Don't shut down, leave running for investigation</li>
+<li>Review security event logs for suspicious activity</li>
+<li>Check for unauthorized accounts or processes</li>
+<li>Scan with multiple antivirus tools</li>
+<li>Notify stakeholders and incident response team</li>
+</ol>
+
+<p><strong>Recovery:</strong></p>
+<ul>
+<li>Restore from clean backup</li>
+<li>Change all passwords on affected accounts</li>
+<li>Review and strengthen security policies</li>
+<li>Implement additional monitoring</li>
+</ul>
+</div>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>Security is multi-layered defense-in-depth approach</li>
+<li>Windows Defender and Firewall provide essential protection</li>
+<li>Regular patching closes vulnerability windows</li>
+<li>Strong passwords and access control prevent unauthorized access</li>
+<li>Comprehensive auditing enables breach detection</li>
+<li>Hardening checklist ensures consistent security posture</li>
+<li>Regular testing validates security effectiveness</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Server backup and recovery guide: backup strategies, recovery procedures, disaster planning, and business continuity.">
+<meta name="keywords" content="server backup, disaster recovery, backup strategy, recovery procedure, business continuity, 3-2-1 rule, RTO RPO">
+<property="og:title" content="Server Backup & Recovery | ITVedas">
+<property="og:description" content="Learn backup strategies, disaster recovery, and business continuity planning for enterprise servers.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/server-backup-recovery.html">
+<title>Server Backup & Recovery — Disaster Planning & Business Continuity | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--sec);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>Backup & Recovery</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">Server Backup & Recovery</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 14 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>Backup and recovery are not luxuries—they're necessities. Hardware fails, data gets corrupted, ransomware attacks occur, and human error happens. A comprehensive backup strategy ensures your organization can recover from any disaster with minimal data loss and downtime.</p>
+
+<h2>Backup Strategy Fundamentals</h2>
+
+<p><strong>The 3-2-1 Rule:</strong> Keep 3 copies of your data, on 2 different media types, with 1 copy off-site.</p>
+
+<ul>
+<li><strong>3 Copies:</strong> Original + 2 backups (protection against single backup failure)</li>
+<li><strong>2 Media Types:</strong> e.g., disk + tape (guards against media-specific failures)</li>
+<li><strong>1 Off-Site:</strong> Protects against natural disasters, theft, sabotage</li>
+</ul>
+
+<h2>Key Recovery Metrics</h2>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Metric</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+<tr>
+<td><strong>RTO</strong> (Recovery Time Objective)</td>
+<td>How long system can be down</td>
+<td>4 hours = system must be back online in 4 hours</td>
+</tr>
+<tr>
+<td><strong>RPO</strong> (Recovery Point Objective)</td>
+<td>Maximum acceptable data loss</td>
+<td>1 hour = okay to lose 1 hour of data</td>
+</tr>
+<tr>
+<td><strong>MTBF</strong> (Mean Time Between Failures)</td>
+<td>Average time between equipment failures</td>
+<td>Hardware lasts ~5 years before failure</td>
+</tr>
+<tr>
+<td><strong>MTTR</strong> (Mean Time To Repair)</td>
+<td>Average time to fix equipment after failure</td>
+<td>2 hours for hardware replacement</td>
+</tr>
+</table>
+</div>
+
+<div class="tip">
+<strong>💡 Example Scenario:</strong> For a company with 1-hour RPO and 4-hour RTO, you need hourly backups stored redundantly and tested recovery procedures that complete within 4 hours.
+</div>
+
+<h2>Backup Types</h2>
+
+<div class="concept-box">
+<h4>💾 Backup Classification</h4>
+<p><strong>Full Backup:</strong> Entire dataset copied</p>
+<ul>
+<li>Slowest to perform</li>
+<li>Uses most storage space</li>
+<li>Fastest to restore from</li>
+<li>Each backup is independent</li>
+</ul>
+
+<p><strong>Incremental Backup:</strong> Only changes since last backup (full or incremental)</p>
+<ul>
+<li>Fastest to perform</li>
+<li>Uses least storage space</li>
+<li>Requires multiple backups for restore (chain of backups)</li>
+<li>Suitable for nightly backups</li>
+</ul>
+
+<p><strong>Differential Backup:</strong> Only changes since last full backup</p>
+<ul>
+<li>Medium speed to perform</li>
+<li>Medium storage usage</li>
+<li>Requires only 2 backups for restore (full + latest differential)</li>
+<li>Good balance for weekly/daily backup cycles</li>
+</ul>
+</div>
+
+<h2>Backup Schedule Strategies</h2>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Strategy</th>
+<th>Schedule</th>
+<th>Backup Time</th>
+<th>Storage</th>
+<th>Restore Time</th>
+</tr>
+<tr>
+<td>Full Daily</td>
+<td>Full backup every day</td>
+<td>Long</td>
+<td>Very High</td>
+<td>Very Fast</td>
+</tr>
+<tr>
+<td>Full Weekly + Daily Incremental</td>
+<td>Full Sunday, Incremental Mon-Sat</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Full Weekly + Daily Differential</td>
+<td>Full Sunday, Differential Mon-Sat</td>
+<td>Fast</td>
+<td>Medium-High</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td>Continuous Replication</td>
+<td>Real-time to secondary location</td>
+<td>Minimal</td>
+<td>High + Secondary Server</td>
+<td>Seconds</td>
+</tr>
+</table>
+</div>
+
+<p><strong>Recommended for Most Enterprises:</strong> Full backup weekly (Sunday) + daily incremental (Mon-Sat). Good balance of performance, storage, and recovery capability.</p>
+
+<h2>Windows Server Backup</h2>
+
+<div class="step-guide">
+<h4>Installing and Configuring Backup</h4>
+<ol>
+<li>Open Server Manager</li>
+<li>Add Roles and Features</li>
+<li>Select Windows Server Backup feature</li>
+<li>Complete installation</li>
+<li>Open Windows Server Backup from Tools menu</li>
+<li>Click "Backup Schedule" to configure</li>
+<li>Select "Full Server" or specific volumes</li>
+<li>Choose frequency (daily, multiple times per day)</li>
+<li>Select time for backup (preferably off-peak hours)</li>
+<li>Choose backup destination (external drive, network share)</li>
+<li>Complete wizard and start backups</li>
+</ol>
+</div>
+
+<div class="code-block">
+# PowerShell: Windows Server Backup commands
+
+# Get backup policy
+Get-WBPolicy
+
+# Start backup manually
+Start-WBBackup
+
+# Schedule daily backup at 11:00 PM
+$policy = New-WBPolicy
+Add-WBFileSpec -Policy $policy -FileSpec "C:\Data"
+Add-WBBareMetalRecovery -Policy $policy
+Set-WBSchedule -Policy $policy -ScheduleTime (Get-Date -Hour 23 -Minute 0 -Second 0)
+Set-WBPolicy -Policy $policy
+</div>
+
+<h2>Active Directory Backup</h2>
+
+<p>Special consideration for Domain Controllers: You must backup the System State (Active Directory database) in addition to files.</p>
+
+<div class="concept-box">
+<h4>🔑 What is System State?</h4>
+<p>System State includes:</p>
+<ul>
+<li>Active Directory database (ntds.dit)</li>
+<li>SYSVOL (Group Policy files)</li>
+<li>Boot files and system files</li>
+<li>COM+ Class Registration database</li>
+<li>Certificate Services database (if applicable)</li>
+</ul>
+
+<p><strong>DC Backup Strategy:</strong> Backup System State daily, full server weekly. Keep System State backups for entire AD tombstone period (default 180 days).</p>
+</div>
+
+<h2>Testing Backups (Critical!)</h2>
+
+<p>An untested backup is not a backup—it's a backup "failure waiting to happen." Test backups regularly to ensure:</p>
+<ul>
+<li>Backup completed successfully</li>
+<li>Data can be restored</li>
+<li>Recovery procedures work correctly</li>
+<li>Recovery time meets RTO requirement</li>
+</ul>
+
+<div class="step-guide">
+<h4>Monthly Backup Test Procedure</h4>
+<ol>
+<li>Select a backup from the previous month</li>
+<li>Document current state and baseline metrics</li>
+<li>Perform full bare-metal restore to test system</li>
+<li>Boot restored system and verify functionality</li>
+<li>Check file integrity and permissions</li>
+<li>Verify all services start correctly</li>
+<li>Document actual recovery time and any issues</li>
+<li>Compare with RTO requirement</li>
+<li>Document results in recovery log</li>
+</ol>
+</div>
+
+<div class="warning">
+<strong>⚠️ Critical:</strong> Never test backups on production systems. Always use isolated test environment. A failed test backup that corrupts data is worse than no backup at all.
+</div>
+
+<h2>Off-Site and Cloud Backups</h2>
+
+<p><strong>On-Premises Only Issues:</strong></p>
+<ul>
+<li>Natural disasters (fire, flooding, earthquakes)</li>
+<li>Site theft or sabotage</li>
+<li>Ransomware affecting all copies</li>
+</ul>
+
+<p><strong>Off-Site Solutions:</strong></p>
+<ul>
+<li><strong>Cloud Backup Services:</strong> Redundant, geographically distributed, managed for you</li>
+<li><strong>Partner Data Center:</strong> Alternate facility in different geographic location</li>
+<li><strong>Physical Backup Copy:</strong> Tape or external drive stored off-site</li>
+</ul>
+
+<p><strong>Cloud Backup Providers:</strong> Microsoft Azure Backup, AWS Backup, Veeam Cloud, Backblaze</p>
+
+<h2>Disaster Recovery Plan</h2>
+
+<p><strong>Disaster Recovery Plan (DRP) Components:</strong></p>
+<ul>
+<li><strong>Critical Systems Inventory:</strong> Which systems are most critical?</li>
+<li><strong>Recovery Priorities:</strong> Restore order (e.g., DC → DNS → Exchange → file server)</li>
+<li><strong>Contact Lists:</strong> Who to call during disaster?</li>
+<li><strong>Backup Locations:</strong> Where to get backup media?</li>
+<li><strong>Alternate Sites:</strong> Where to operate from if primary data center is down?</li>
+<li><strong>Recovery Procedures:</strong> Step-by-step instructions for each system</li>
+<li><strong>Testing Schedule:</strong> Quarterly full DR test at minimum</li>
+<li><strong>Documentation:</strong> Hardcopy procedures (network might be down)</li>
+</ul>
+
+<h2>Common Recovery Scenarios</h2>
+
+<div class="concept-box">
+<h4>Scenario 1: Single File Recovery</h4>
+<p><strong>Problem:</strong> User accidentally deleted a file</p>
+<p><strong>Recovery:</strong></p>
+<ol>
+<li>Mount backup volume</li>
+<li>Locate file in backup</li>
+<li>Copy file to original location or user's directory</li>
+<li>Verify file integrity and permissions</li>
+</ol>
+<p><strong>Time:</strong> 5-10 minutes | <strong>Complexity:</strong> Low</p>
+</div>
+
+<div class="concept-box">
+<h4>Scenario 2: Volume Failure</h4>
+<p><strong>Problem:</strong> Storage array fails, entire volume lost</p>
+<p><strong>Recovery:</strong></p>
+<ol>
+<li>Replace failed hardware</li>
+<li>Boot from backup media</li>
+<li>Perform bare-metal restore</li>
+<li>Rebuild RAID array</li>
+<li>Restore incremental backups since last full backup</li>
+</ol>
+<p><strong>Time:</strong> 2-4 hours | <strong>Complexity:</strong> Medium</p>
+</div>
+
+<div class="concept-box">
+<h4>Scenario 3: Ransomware Attack</h4>
+<p><strong>Problem:</strong> Ransomware encrypts all files on server</p>
+<p><strong>Recovery:</strong></p>
+<ol>
+<li>Isolate infected server immediately</li>
+<li>Identify infection source and timeline</li>
+<li>Verify backups taken before infection</li>
+<li>Restore from clean backup</li>
+<li>Scan restore process thoroughly</li>
+<li>Deploy patches/updates to prevent re-infection</li>
+</ol>
+<p><strong>Time:</strong> 4-8 hours | <strong>Complexity:</strong> High</p>
+</div>
+
+<h2>Backup Best Practices</h2>
+
+<ul>
+<li><strong>Automate backups:</strong> Manual backups get skipped and forgotten</li>
+<li><strong>Test monthly:</strong> Untested backups are just expensive failures waiting to happen</li>
+<li><strong>Verify success:</strong> Check backup logs daily, alert on failures</li>
+<li><strong>Encrypt backups:</strong> Protect sensitive data in transit and at rest</li>
+<li><strong>Version retention:</strong> Keep 4 weeks of daily, 12 months of weekly, 7 years of yearly</li>
+<li><strong>Off-site copies:</strong> Follow 3-2-1 rule religiously</li>
+<li><strong>Document procedures:</strong> Keep hardcopy documentation accessible</li>
+<li><strong>Maintain inventory:</strong> Track backup media locations and status</li>
+<li><strong>Regular testing:</strong> Perform full DR test at least quarterly</li>
+<li><strong>Update DRP:</strong> Update Disaster Recovery Plan as infrastructure changes</li>
+</ul>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>Backups are essential insurance against data loss</li>
+<li>3-2-1 rule provides comprehensive protection</li>
+<li>Choose backup type/schedule based on RPO and RTO requirements</li>
+<li>Always test backups—untested backups don't exist</li>
+<li>Off-site backups protect against site-wide disasters</li>
+<li>Maintain updated Disaster Recovery Plan</li>
+<li>Regular testing ensures recovery capability when needed</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

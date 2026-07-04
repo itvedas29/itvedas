@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="File Server setup and permissions guide: file sharing, NTFS permissions, share permissions, ACLs, quotas, and backup strategies.">
+<meta name="keywords" content="File Server, NTFS permissions, share permissions, file sharing, access control, quotas, backup">
+<property="og:title" content="File Server: Setup & Permissions | ITVedas">
+<property="og:description" content="Learn to set up file servers, manage NTFS and share permissions, implement quotas, and secure file access.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/file-server-setup-permissions.html">
+<title>File Server: Setup & Permissions — Complete Guide | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--comp);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>File Server</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">File Server: Setup & Permissions</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 14 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>File Servers are the central hub for document storage in enterprise environments. Instead of files scattered across individual computers, a file server provides centralized storage with professional backup, recovery, and security features. Proper setup ensures data protection, access control, and regulatory compliance.</p>
+
+<h2>File Server Setup</h2>
+
+<p><strong>Hardware Considerations:</strong></p>
+<ul>
+<li><strong>Storage:</strong> RAID arrays for redundancy (RAID 5 or 6 recommended)</li>
+<li><strong>Memory:</strong> 32GB+ for caching and SMB performance</li>
+<li><strong>Network:</strong> Gigabit Ethernet minimum, 10Gbps for large environments</li>
+<li><strong>Backup:</strong> Dedicated backup solution or secondary storage</li>
+<li><strong>UPS:</strong> Uninterruptible Power Supply for graceful shutdown</li>
+</ul>
+
+<div class="step-guide">
+<h4>Installing File Server Role</h4>
+<ol>
+<li>Open Server Manager</li>
+<li>Click Add Roles and Features</li>
+<li>Select Role-based installation</li>
+<li>Select target server</li>
+<li>Check File and Storage Services</li>
+<li>Select File Server role</li>
+<li>Add recommended features</li>
+<li>Configure file server options</li>
+<li>Click Install</li>
+<li>Restart server if required</li>
+</ol>
+</div>
+
+<h2>NTFS Permissions</h2>
+
+<p>NTFS (New Technology File System) permissions control access at the file system level. They apply to all access methods (network, local, USB drives) and are more granular than share permissions.</p>
+
+<p><strong>NTFS Permission Levels:</strong></p>
+<ul>
+<li><strong>Full Control:</strong> Read, write, delete, change permissions, take ownership</li>
+<li><strong>Modify:</strong> Read, write, delete (but cannot change permissions)</li>
+<li><strong>Read & Execute:</strong> View and run files (read-only with execute)</li>
+<li><strong>List Folder Contents:</strong> View folder contents (for folders only)</li>
+<li><strong>Read:</strong> View file/folder content (no write or execute)</li>
+<li><strong>Write:</strong> Create and modify files (but not delete existing)</li>
+</ul>
+
+<div class="step-guide">
+<h4>Setting NTFS Permissions</h4>
+<ol>
+<li>Right-click file or folder → Properties</li>
+<li>Click Security tab</li>
+<li>Click Edit to modify permissions</li>
+<li>Click Add to add user or group</li>
+<li>Type username and click Check Names</li>
+<li>Click OK</li>
+<li>Select user/group from list</li>
+<li>Check appropriate permission boxes</li>
+<li>Click Apply then OK</li>
+</ol>
+</div>
+
+<div class="code-block">
+# PowerShell: Set NTFS Permissions
+# Grant Modify permission to user
+$acl = Get-Acl "C:\SharedFolder"
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+  "DOMAIN\username", "Modify", "ContainerInherit,ObjectInherit", "None", "Allow"
+)
+$acl.AddAccessRule($rule)
+Set-Acl "C:\SharedFolder" $acl
+
+# Remove all permissions for a user
+$acl = Get-Acl "C:\SharedFolder"
+$acl.RemoveAccessRuleAll((New-Object System.Security.AccessControl.FileSystemAccessRule(
+  "DOMAIN\username", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+)))
+Set-Acl "C:\SharedFolder" $acl
+</div>
+
+<h2>Share Permissions</h2>
+
+<p>Share permissions control access when accessing files over the network (SMB/CIFS protocol). They work alongside NTFS permissions—the most restrictive applies.</p>
+
+<p><strong>Share Permission Levels:</strong></p>
+<ul>
+<li><strong>Full Control:</strong> Read, change, delete (share level)</li>
+<li><strong>Change:</strong> Read and modify (share level)</li>
+<li><strong>Read:</strong> View only (share level)</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating Shared Folders</h4>
+<ol>
+<li>Create folder on server (e.g., C:\Shares\Department)</li>
+<li>Right-click folder → Properties</li>
+<li>Click Sharing tab</li>
+<li>Click Advanced Sharing</li>
+<li>Check "Share this folder"</li>
+<li>Enter Share name (e.g., Department$)</li>
+<li>Click Permissions</li>
+<li>Add users/groups and assign Share permissions</li>
+<li>Click Apply, OK, Close</li>
+<li>Test access from client: \\ServerName\ShareName</li>
+</ol>
+</div>
+
+<div class="tip">
+<strong>💡 Permission Strategy:</strong> Set Share permissions to "Everyone - Full Control" and use NTFS permissions for granular control. This simplifies management while maintaining security.
+</div>
+
+<h2>Permission Inheritance and Conflicts</h2>
+
+<p><strong>Inheritance:</strong> Permissions flow from parent to child objects unless explicitly blocked. This reduces administrative overhead but can cause security issues if not managed properly.</p>
+
+<p><strong>Permission Conflicts:</strong> When NTFS and Share permissions differ, the most restrictive applies.</p>
+
+<div class="concept-box">
+<h4>Permission Conflict Examples</h4>
+<p><strong>Example 1:</strong><br>
+Share Permission: Full Control<br>
+NTFS Permission: Read<br>
+Result: Read (most restrictive)</p>
+
+<p><strong>Example 2:</strong><br>
+Share Permission: Read<br>
+NTFS Permission: Modify<br>
+Result: Read (most restrictive)</p>
+
+<p><strong>Example 3:</strong><br>
+Share Permission: Change<br>
+NTFS Permission: Write only<br>
+Result: Write (most restrictive)</p>
+</div>
+
+<h2>Disk Quotas</h2>
+
+<p>Quotas limit the amount of disk space users can consume. This prevents users from filling the server and ensures fair resource allocation.</p>
+
+<div class="step-guide">
+<h4>Implementing Disk Quotas</h4>
+<ol>
+<li>Open File Server Resource Manager on server</li>
+<li>Right-click Quota Management</li>
+<li>Select Create Quota</li>
+<li>Select folder to apply quota</li>
+<li>Choose template or custom values</li>
+<li>Set Hard limit (cannot exceed) or Soft limit (warning only)</li>
+<li>Set notifications (email when limit approaching)</li>
+<li>Click Create</li>
+</ol>
+</div>
+
+<p><strong>Quota Types:</strong></p>
+<ul>
+<li><strong>Hard Quota:</strong> Prevents exceeding limit, user gets "disk full" error</li>
+<li><strong>Soft Quota:</strong> Allows exceeding limit but triggers notifications and reports</li>
+</ul>
+
+<h2>File Server Security</h2>
+
+<p><strong>Best Practices:</strong></p>
+<ul>
+<li><strong>Regular Backups:</strong> Daily incremental, weekly full backups</li>
+<li><strong>Encryption:</strong> Use EFS for sensitive files, SMB encryption for network traffic</li>
+<li><strong>Audit Logging:</strong> Track file access for compliance</li>
+<li><strong>Regular Patching:</strong> Apply security updates immediately</li>
+<li><strong>Antivirus:</strong> Real-time scanning of file server (with SMB exclusions to maintain performance)</li>
+<li><strong>Principle of Least Privilege:</strong> Users get minimum permissions necessary</li>
+<li><strong>Access Reviews:</strong> Quarterly audit of who has access to what</li>
+</ul>
+
+<h2>Shadow Copies and File Recovery</h2>
+
+<p>Shadow Copies (Volume Shadow Copy Service) automatically creates snapshots of files. Users can restore previous versions without administrator intervention.</p>
+
+<div class="step-guide">
+<h4>Enabling Shadow Copies</h4>
+<ol>
+<li>Right-click volume → Properties</li>
+<li>Click Shadow Copies tab</li>
+<li>Click Settings to configure</li>
+<li>Select storage location for shadow copies</li>
+<li>Set maximum storage space (10-20% of volume)</li>
+<li>Click Schedule to set snapshot frequency (default: daily at 7:00 AM and 12:00 PM)</li>
+<li>Click OK</li>
+</ol>
+</div>
+
+<h2>File Server Backup Strategies</h2>
+
+<p><strong>The 3-2-1 Backup Rule:</strong> Keep 3 copies of data, on 2 different media types, with 1 copy off-site.</p>
+
+<p><strong>Backup Types:</strong></p>
+<ul>
+<li><strong>Full Backup:</strong> Entire file server, performed weekly or monthly</li>
+<li><strong>Incremental Backup:</strong> Only files changed since last backup, performed daily</li>
+<li><strong>Differential Backup:</strong> Files changed since last full backup, performed daily</li>
+</ul>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Backup Strategy</th>
+<th>RPO (Recovery Point Objective)</th>
+<th>RTO (Recovery Time Objective)</th>
+<th>Storage</th>
+</tr>
+<tr>
+<td>Full daily</td>
+<td>1 day</td>
+<td>2-4 hours</td>
+<td>Very high</td>
+</tr>
+<tr>
+<td>Full weekly + daily incremental</td>
+<td>1 day</td>
+<td>1-2 hours</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Full weekly + daily differential</td>
+<td>1 day</td>
+<td>30 minutes</td>
+<td>Medium-high</td>
+</tr>
+<tr>
+<td>Continuous replication</td>
+<td>15 minutes</td>
+<td>5-10 minutes</td>
+<td>High + secondary server</td>
+</tr>
+</table>
+</div>
+
+<h2>Common File Server Issues</h2>
+
+<div class="concept-box">
+<h4>Problem: "Access Denied" Despite Correct Permissions</h4>
+<p><strong>Causes:</strong> Permission inheritance disabled, NTFS vs Share conflict, token refresh lag</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Check NTFS permissions: Properties → Security tab</li>
+<li>Verify Share permissions: Advanced Sharing → Permissions</li>
+<li>Check inheritance: Advanced → Change Permissions → Inheritance</li>
+<li>Force token refresh: User logs out/in or <code>gpupdate /force</code></li>
+<li>Clear cached credentials on client</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: File Server Running Slow or Disk Full</h4>
+<p><strong>Diagnosis:</strong></p>
+<ul>
+<li>Check disk usage: <code>Get-Volume</code></li>
+<li>Identify large folders: <code>Get-ChildItem -Recurse | Measure-Object -Sum Length</code></li>
+<li>Review Shadow Copies storage: Take up significant space</li>
+<li>Check for temporary files and cache</li>
+</ul>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Add storage (new drives or expand arrays)</li>
+<li>Archive old files to different location</li>
+<li>Reduce Shadow Copies retention</li>
+<li>Implement disk quotas to prevent abuse</li>
+<li>Delete temporary files and cache</li>
+</ul>
+</div>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>File servers provide centralized, secure file storage</li>
+<li>NTFS permissions control access at file system level</li>
+<li>Share permissions control network access</li>
+<li>Most restrictive permission applies when NTFS and Share differ</li>
+<li>Quotas prevent disk exhaustion</li>
+<li>Regular backups ensure data recovery capability</li>
+<li>Proper permission design is essential for security</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

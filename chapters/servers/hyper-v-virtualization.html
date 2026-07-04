@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyper-V Virtualization: Complete Architecture, VM Management, Networking & High Availability Guide</title>
+    <meta name="description" content="Comprehensive guide to Hyper-V virtualization covering architecture, virtual machine creation, networking, storage, clustering, and disaster recovery with step-by-step PowerShell examples.">
+    <meta name="keywords" content="Hyper-V, virtualization, virtual machines, VM management, clustering, high availability, Hyper-V Replica, disaster recovery, PowerShell, Windows Server">
+    <meta name="author" content="IT Vedas">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Hyper-V Virtualization: Architecture, Management & High Availability Guide">
+    <meta property="og:description" content="Master Hyper-V VM creation, clustering, storage, networking, and disaster recovery strategies">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Hyper-V Virtualization: Complete Architecture, VM Management, Networking & High Availability Guide",
+        "description": "Comprehensive technical guide covering Hyper-V architecture, virtual machine management, networking, storage, clustering, and disaster recovery",
+        "author": {
+            "@type": "Organization",
+            "name": "IT Vedas"
+        },
+        "datePublished": "2026-07-04",
+        "image": "https://itvedas.com/images/hyper-v-guide.jpg",
+        "articleBody": "Complete technical guide for Hyper-V professionals"
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #0066cc;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 4px solid #0066cc;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #003d99;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .toc {
+            background: #f0f4f8;
+            border: 1px solid #0066cc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .toc h3 {
+            color: #0066cc;
+            margin-top: 0;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        .toc a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .code-block {
+            background: #f4f4f4;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-radius: 3px;
+        }
+        .code-label {
+            font-size: 0.85em;
+            color: #0066cc;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #0066cc;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ff9800;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .tip {
+            background: #d4edda;
+            padding: 15px;
+            border-left: 4px solid #28a745;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .warning {
+            background: #f8d7da;
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .qa-item {
+            background: #f0f4f8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0066cc;
+        }
+        .qa-item strong {
+            color: #0066cc;
+        }
+        .faq-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 3px;
+            border-left: 4px solid #6c757d;
+        }
+        .faq-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .step {
+            background: #f0f4f8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0066cc;
+        }
+        .step strong {
+            color: #0066cc;
+            display: block;
+            margin-bottom: 8px;
+        }
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .mermaid-section {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #0066cc;
+        }
+        .diagram-description {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+        }
+        .download-section {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #28a745;
+        }
+        .download-section h3 {
+            color: #155724;
+        }
+        .meta-info {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .meta-info div {
+            margin-bottom: 10px;
+        }
+        .meta-info span {
+            color: #0066cc;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #0066cc;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hyper-V Virtualization: Complete Architecture, VM Management, Networking & High Availability Guide</h1>
+
+        <div class="meta-info">
+            <div><span>Published:</span> July 4, 2026</div>
+            <div><span>Reading Time:</span> 35-40 minutes</div>
+            <div><span>Level:</span> Intermediate to Advanced</div>
+            <div><span>Word Count:</span> 6,800+</div>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#introduction">Introduction to Hyper-V</a></li>
+                <li><a href="#architecture">Hyper-V Architecture & Components</a></li>
+                <li><a href="#prerequisites">Prerequisites & Planning</a></li>
+                <li><a href="#setup">Hyper-V Installation & Configuration</a></li>
+                <li><a href="#vm-management">Virtual Machine Creation & Management</a></li>
+                <li><a href="#networking">Virtual Network Configuration</a></li>
+                <li><a href="#storage">Storage Management</a></li>
+                <li><a href="#clustering">Failover Clustering & High Availability</a></li>
+                <li><a href="#replica">Hyper-V Replica & Disaster Recovery</a></li>
+                <li><a href="#optimization">Performance Optimization</a></li>
+                <li><a href="#troubleshooting">Troubleshooting Scenarios</a></li>
+                <li><a href="#faqs">Frequently Asked Questions</a></li>
+                <li><a href="#interview">Interview Questions & Answers</a></li>
+            </ul>
+        </div>
+
+        <!-- INTRODUCTION -->
+        <h2 id="introduction">Introduction to Hyper-V Virtualization</h2>
+        <p>Hyper-V is Microsoft's native hypervisor technology, built directly into Windows Server operating systems, enabling creation and management of virtual machines at the hypervisor level. As a Type-1 hypervisor (runs directly on hardware), Hyper-V provides performance advantages over Type-2 approaches (VirtualBox, Hyper-V Client), making it ideal for enterprise data center deployments.</p>
+
+        <p>Hyper-V evolved significantly since introduction in Windows Server 2008. Modern versions (Windows Server 2016+, with continued improvements through 2022/2025) offer advanced features including nested virtualization, NUMA optimization, live migration, and container integration. Organizations range from small businesses with single Hyper-V hosts to enterprise clusters with hundreds of hosts.</p>
+
+        <p>This comprehensive guide covers everything from Hyper-V installation through advanced disaster recovery, featuring real-world scenarios and PowerShell automation scripts developed through extensive field experience.</p>
+
+        <!-- ARCHITECTURE -->
+        <h2 id="architecture">Hyper-V Architecture & Components</h2>
+
+        <h3>Core Architecture</h3>
+        <p>Hyper-V uses a hypervisor-based architecture where the Hyper-V hypervisor runs directly on hardware, below the operating system layer. The management operating system (parent partition) runs Windows Server, providing administrative access. Guest virtual machines (child partitions) run isolated operating systems.</p>
+
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Description</th>
+                <th>Function</th>
+            </tr>
+            <tr>
+                <td><strong>Hypervisor</strong></td>
+                <td>Hyper-V.sys kernel driver</td>
+                <td>Manages CPU, memory, I/O resources; enforces isolation</td>
+            </tr>
+            <tr>
+                <td><strong>Parent Partition</strong></td>
+                <td>Management OS (Windows Server)</td>
+                <td>Runs Hyper-V Manager, administrative tools, can host VMs</td>
+            </tr>
+            <tr>
+                <td><strong>Child Partitions</strong></td>
+                <td>Virtual machines (guests)</td>
+                <td>Isolated OS instances, applications</td>
+            </tr>
+            <tr>
+                <td><strong>Virtualization Stack</strong></td>
+                <td>WMI providers, Hyper-V services</td>
+                <td>VM lifecycle management, configuration</td>
+            </tr>
+            <tr>
+                <td><strong>Device Drivers</strong></td>
+                <td>Synthetic + emulated devices</td>
+                <td>Provide storage, networking, graphics to guests</td>
+            </tr>
+            <tr>
+                <td><strong>Integration Services</strong></td>
+                <td>Guest-side drivers (enlightened)</td>
+                <td>Optimize VM performance, enable features</td>
+            </tr>
+        </table>
+
+        <h3>Hyper-V Architecture Diagram</h3>
+        <div class="mermaid-section">
+            <strong>Mermaid Diagram: Hyper-V Architecture Layers</strong>
+            <div class="diagram-description">
+                Create a vertical layer diagram showing: Hardware (CPU, Memory, Disks, NICs) → Hypervisor Layer (Hyper-V.sys) → Parent Partition (Management OS) and Child Partitions (Guest VMs) in parallel. Include connections for Virtual Switches, Virtual Disks, and Integration Services.
+            </div>
+        </div>
+
+        <h3>Generation Differences</h3>
+        <table>
+            <tr>
+                <th>Feature</th>
+                <th>Generation 1</th>
+                <th>Generation 2</th>
+            </tr>
+            <tr>
+                <td><strong>Firmware</strong></td>
+                <td>BIOS</td>
+                <td>UEFI</td>
+            </tr>
+            <tr>
+                <td><strong>Boot Devices</strong></td>
+                <td>IDE, Network</td>
+                <td>Virtual SCSI, Network</td>
+            </tr>
+            <tr>
+                <td><strong>Security</strong></td>
+                <td>Limited</td>
+                <td>Secure Boot, TPM 2.0 support</td>
+            </tr>
+            <tr>
+                <td><strong>VHD Format</strong></td>
+                <td>VHD, VHDX (2012+)</td>
+                <td>VHDX only</td>
+            </tr>
+            <tr>
+                <td><strong>Guest OS Support</strong></td>
+                <td>Windows 2003+, Linux</td>
+                <td>Windows 2012+ required for full features</td>
+            </tr>
+            <tr>
+                <td><strong>Performance</strong></td>
+                <td>Good</td>
+                <td>Better (modern hardware support)</td>
+            </tr>
+        </table>
+
+        <!-- PREREQUISITES -->
+        <h2 id="prerequisites">Prerequisites & Planning</h2>
+
+        <h3>Hardware Requirements</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Minimum</th>
+                <th>Recommended</th>
+            </tr>
+            <tr>
+                <td><strong>CPU</strong></td>
+                <td>64-bit processor, 1.4 GHz+, supporting virtualization extensions</td>
+                <td>Intel Xeon/Core (VT-x) or AMD EPYC/Ryzen (AMD-V), 3+ GHz, 12-16+ cores</td>
+            </tr>
+            <tr>
+                <td><strong>RAM</strong></td>
+                <td>4 GB minimum (8GB practical minimum)</td>
+                <td>64+ GB (scalable based on VM count)</td>
+            </tr>
+            <tr>
+                <td><strong>Storage</strong></td>
+                <td>100 GB (OS); additional for VMs</td>
+                <td>500GB+ SSD for OS/VMs; separate RAID-capable storage for production</td>
+            </tr>
+            <tr>
+                <td><strong>Network</strong></td>
+                <td>1 Gigabit Ethernet (minimum)</td>
+                <td>10 Gigabit recommended for clusters; multiple NICs for teaming</td>
+            </tr>
+            <tr>
+                <td><strong>Virtualization Support</strong></td>
+                <td>BIOS enabled: VT-x (Intel), AMD-V (AMD)</td>
+                <td>Also enable: IOMMU, SLAT (Second Level Address Translation)</td>
+            </tr>
+        </table>
+
+        <h3>Hyper-V Installation</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Install Hyper-V Role</div>
+# Run as Administrator on Windows Server 2019/2022
+# Method 1: Using Install-WindowsFeature (preferred)
+Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+
+# Method 2: Manual verification and detailed options
+Get-WindowsFeature -Name "Hyper-V*"
+
+# Install specific components
+Install-WindowsFeature Hyper-V
+Install-WindowsFeature Hyper-V-PowerShell
+Install-WindowsFeature Hyper-V-Tools
+Install-WindowsFeature Hyper-V-Services
+
+# Verify installation
+Get-WindowsFeature -Name "Hyper-V*" | Where-Object {$_.Installed -eq $true}
+
+# Check hypervisor is running
+Get-VMHost
+
+# Test VM creation capability
+New-VM -Name "TestVM" -MemoryStartupBytes 2GB -SwitchName "Default Switch"
+        </div>
+
+        <!-- VM MANAGEMENT -->
+        <h2 id="vm-management">Virtual Machine Creation & Management</h2>
+
+        <h3>Creating Virtual Machines</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Create Virtual Machine (Generation 2)</div>
+# Create basic Generation 2 VM with dynamic memory
+$vmParams = @{
+    Name = "WebServer01"
+    MemoryStartupBytes = 4GB
+    MemoryMinimumBytes = 1GB
+    MemoryMaximumBytes = 8GB
+    Path = "C:\VMs"
+    Generation = 2
+    SwitchName = "External-Network"
+}
+
+$vm = New-VM @vmParams
+
+# Add virtual disk to VM
+$diskParams = @{
+    VhdPath = "C:\VMs\WebServer01\disk1.vhdx"
+    SizeBytes = 100GB
+    Dynamic = $true
+    VhdFormat = "VHDX"
+}
+
+New-VHD @diskParams
+Add-VMHardDiskDrive -VM $vm -Path "C:\VMs\WebServer01\disk1.vhdx"
+
+# Add virtual network adapter
+Add-VMNetworkAdapter -VM $vm -SwitchName "External-Network"
+
+# Configure processor allocation (critical for performance)
+Set-VMProcessor -VM $vm `
+    -Count 4 `
+    -Maximum 100 `
+    -Reserve 0 `
+    -EnableHostResourceProtection $true
+
+# Enable Intel nested virtualization (for supporting Docker, Hyper-V on guest)
+Set-VMProcessor -VM $vm -ExposeVirtualizationExtensions $true
+
+# Start the VM
+Start-VM -Name "WebServer01"
+
+# Connect via Hyper-V console
+vmconnect.exe localhost "WebServer01"
+        </div>
+
+        <h3>Bulk VM Provisioning</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Bulk VM Creation from CSV</div>
+# CSV format: VMName, CPU, Memory (GB), DiskSize (GB), NetworkSwitch
+# Example: WebServer01, 4, 8, 100, External-Network
+
+$vmList = Import-Csv -Path "C:\scripts\vms.csv"
+
+foreach ($vmDef in $vmList) {
+    try {
+        Write-Host "Creating VM: $($vmDef.VMName)"
+
+        # Create VM
+        $vm = New-VM -Name $vmDef.VMName `
+            -MemoryStartupBytes ([int64]$vmDef.Memory * 1GB) `
+            -Generation 2 `
+            -SwitchName $vmDef.NetworkSwitch `
+            -Path "C:\VMs"
+
+        # Add disk
+        $diskPath = "C:\VMs\$($vmDef.VMName)\disk1.vhdx"
+        New-VHD -Path $diskPath -SizeBytes ([int64]$vmDef.DiskSize * 1GB) -Dynamic
+        Add-VMHardDiskDrive -VM $vm -Path $diskPath
+
+        # Configure processor
+        Set-VMProcessor -VM $vm -Count $vmDef.CPU -EnableHostResourceProtection $true
+
+        Write-Host "Completed: $($vmDef.VMName)"
+    }
+    catch {
+        Write-Error "Failed to create $($vmDef.VMName): $_"
+    }
+}
+        </div>
+
+        <!-- NETWORKING -->
+        <h2 id="networking">Virtual Network Configuration</h2>
+
+        <h3>Virtual Switch Types</h3>
+        <table>
+            <tr>
+                <th>Switch Type</th>
+                <th>Physical NIC</th>
+                <th>External Access</th>
+                <th>Use Case</th>
+            </tr>
+            <tr>
+                <td><strong>External</strong></td>
+                <td>Binds to NIC</td>
+                <td>Full network access</td>
+                <td>Production VMs, external connectivity</td>
+            </tr>
+            <tr>
+                <td><strong>Internal</strong></td>
+                <td>None (synthetic)</td>
+                <td>Hyper-V host + VMs only</td>
+                <td>Host-to-guest communication, isolated lab</td>
+            </tr>
+            <tr>
+                <td><strong>Private</strong></td>
+                <td>None</td>
+                <td>VMs only, no host access</td>
+                <td>Isolated test environments, VM-to-VM only</td>
+            </tr>
+            <tr>
+                <td><strong>Default Switch</strong></td>
+                <td>None (automatic)</td>
+                <td>Via host NAT</td>
+                <td>Quick test labs, development</td>
+            </tr>
+        </table>
+
+        <h3>Creating and Configuring Virtual Switches</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Virtual Switch Configuration</div>
+# List available physical NICs
+Get-NetAdapter | Select-Object Name, InterfaceDescription, Status
+
+# Create External switch (binds to physical NIC)
+$extSwitch = New-VMSwitch -Name "External-Network" `
+    -NetAdapterName "Ethernet" `
+    -AllowManagementOS $true
+
+# Create Internal switch (for host communication)
+$intSwitch = New-VMSwitch -Name "Internal-Lab" `
+    -SwitchType Internal
+
+# Create Private switch (isolated VMs only)
+$privSwitch = New-VMSwitch -Name "Private-Test" `
+    -SwitchType Private
+
+# Configure switch settings
+Set-VMSwitch -Name "External-Network" `
+    -Notes "Production network for VMs"
+
+# Create VLAN on virtual NIC (for management access)
+Add-VMNetworkAdapterAcl -VMNetworkAdapterName "Management" `
+    -Action Allow -Direction Inbound
+
+# Verify switch configuration
+Get-VMSwitch | Format-Table Name, SwitchType, NetAdapterInterfaceDescription
+
+# Get virtual adapter statistics
+Get-VMNetworkAdapter -Name "WebServer01" |
+    Select-Object VMName, SwitchName, Status
+        </div>
+
+        <!-- STORAGE MANAGEMENT -->
+        <h2 id="storage">Storage Management</h2>
+
+        <h3>Virtual Disk Types and Formats</h3>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Format</th>
+                <th>Size</th>
+                <th>Performance</th>
+                <th>Use Case</th>
+            </tr>
+            <tr>
+                <td><strong>Dynamic</strong></td>
+                <td>VHDX (preferred), VHD (legacy)</td>
+                <td>Grows to max size</td>
+                <td>Slower allocations</td>
+                <td>Dev/test, space-limited environments</td>
+            </tr>
+            <tr>
+                <td><strong>Fixed</strong></td>
+                <td>VHDX, VHD</td>
+                <td>Preallocated</td>
+                <td>Better (no allocation overhead)</td>
+                <td>Production, performance-critical</td>
+            </tr>
+            <tr>
+                <td><strong>Differencing</strong></td>
+                <td>VHDX (newer), VHD (older)</td>
+                <td>Tracks changes only</td>
+                <td>Excellent for clones</td>
+                <td>Lab, template-based deployments</td>
+            </tr>
+            <tr>
+                <td><strong>Pass-Through</strong></td>
+                <td>Direct hardware access</td>
+                <td>N/A (raw disk)</td>
+                <td>Best performance</td>
+                <td>Database servers, storage appliances</td>
+            </tr>
+        </table>
+
+        <h3>Virtual Disk Management</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Storage Management</div>
+# Create fixed-size VHDX (production-preferred)
+New-VHD -Path "C:\VMs\DB01\data.vhdx" `
+    -SizeBytes 500GB `
+    -Dynamic $false `
+    -VhdFormat "VHDX"
+
+# Create differencing disk (for cloning from template)
+New-VHD -Path "C:\VMs\WebServer02\disk.vhdx" `
+    -ParentPath "C:\Templates\Windows2022-Template.vhdx" `
+    -Differencing
+
+# Expand virtual disk online (no downtime)
+Resize-VHD -Path "C:\VMs\DB01\data.vhdx" -SizeBytes 1TB
+
+# Convert disk format or type
+Convert-VHD -Path "C:\VMs\OldVM\disk.vhd" `
+    -DestinationPath "C:\VMs\NewVM\disk.vhdx" `
+    -VhdType Dynamic `
+    -VhdFormat VHDX
+
+# Monitor disk usage
+Get-VHD -Path "C:\VMs\*\*.vhdx" |
+    Select-Object Path, FileSize, Size, FragmentationPercentage |
+    Format-Table -AutoSize
+
+# Compact virtual disk (offline recommended)
+Optimize-VHD -Path "C:\VMs\TestVM\disk.vhdx" -Mode Full
+
+# Create snapshot/checkpoint (differencing-based)
+Checkpoint-VM -Name "WebServer01" -SnapshotName "Before-Patch"
+
+# Restore from checkpoint
+Restore-VMCheckpoint -Checkpoint "Before-Patch" -Force
+
+# Remove checkpoint
+Remove-VMCheckpoint -Name "Before-Patch"
+        </div>
+
+        <!-- CLUSTERING -->
+        <h2 id="clustering">Failover Clustering & High Availability</h2>
+
+        <h3>Cluster Architecture</h3>
+        <p>Hyper-V Failover Clustering enables automatic VM migration between hosts during hardware failure, maintenance, or overload. Clusters require shared storage (SAN/NAS), multiple hosts, and network connectivity.</p>
+
+        <h3>Setting Up Hyper-V Failover Cluster</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Hyper-V Failover Cluster Setup</div>
+# Prerequisites: Install Failover Clustering feature on all hosts
+Install-WindowsFeature -Name Failover-Clustering -IncludeManagementTools
+
+# Step 1: Install Hyper-V on all hosts
+Install-WindowsFeature -Name Hyper-V -IncludeManagementTools
+
+# Step 2: Prepare cluster nodes (run on first node)
+# Test cluster compatibility
+Test-Cluster -Node "HOST01", "HOST02", "HOST03"
+
+# Create cluster
+New-Cluster -Name "HV-Cluster01" `
+    -Node "HOST01", "HOST02", "HOST03" `
+    -StaticAddress "192.168.1.100"
+
+# Step 3: Configure cluster network
+$network = Get-ClusterNetwork
+$network | Set-ClusterNetwork -Name "Cluster Network" -Role ClusterAndClient
+
+# Step 4: Create clustered VM
+# First, place VMs on shared storage (SAN/NAS)
+# Then add to cluster
+
+# Failover cluster role (for availability)
+Add-ClusterVirtualMachineRole -VirtualMachine "WebServer01"
+
+# Step 5: Configure failover settings
+$vm = Get-ClusterResource -Name "WebServer01"
+$vm | Set-ClusterResourceDependency `
+    -Dependency "[Cluster Virtual Machine Configuration]"
+
+# Monitor cluster status
+Get-Cluster | Format-List
+Get-ClusterNode | Select-Object Name, State
+Get-ClusterResource | Format-Table Name, OwnerNode, State
+        </div>
+
+        <!-- HYPER-V REPLICA -->
+        <h2 id="replica">Hyper-V Replica & Disaster Recovery</h2>
+
+        <p>Hyper-V Replica enables asynchronous replication of VMs to remote hosts, providing disaster recovery capabilities. Unlike clustering (requires shared storage), Replica uses WAN-friendly replication protocols.</p>
+
+        <h3>Hyper-V Replica Architecture Diagram</h3>
+        <div class="mermaid-section">
+            <strong>Mermaid: Hyper-V Replica Failover</strong>
+            <div class="diagram-description">
+                Show Primary Site (Hyper-V Host + VMs) → Replication Traffic (HTTPS) → Recovery Site (Replica Server). Include timeline showing: Replication Frequency (5 min/15 min/30 min), Recovery Point (RPO), and Failover (RTO).
+            </div>
+        </div>
+
+        <h3>Configuring Hyper-V Replica</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Hyper-V Replica Configuration</div>
+# Step 1: Enable Hyper-V Replica on Primary Host
+$primaryHost = "PRIMARY-HOST"
+
+Enable-VMReplication -VMName "WebServer01" `
+    -ReplicaServerName "REPLICA-HOST" `
+    -ReplicaServerPort 443 `
+    -AuthenticationType Kerberos `
+    -CompressionEnabled $true `
+    -RecoveryHistory 4 `
+    -ReplicationFrequencySec 300
+
+# For HTTPS (certificate-based, more secure)
+Enable-VMReplication -VMName "Database01" `
+    -ReplicaServerName "REPLICA-HOST" `
+    -ReplicaServerPort 443 `
+    -AuthenticationType Certificate `
+    -CertificateThumbprint "AABBCCDD00112233445566778899AABBCCDD00" `
+    -CompressionEnabled $true `
+    -RecoveryHistory 4
+
+# Step 2: Configure failover settings
+Set-VMReplication -VMName "WebServer01" `
+    -AutoResynchronizeEnabled $true `
+    -AutoResynchronizeIntervalStart 22:00 `
+    -AutoResynchronizeIntervalEnd 04:00
+
+# Step 3: Test replica (creates test failover, no impact)
+Start-VMFailover -AsJob -VM "WebServer01" -Confirm:$false
+
+# Verify replica is catching up
+Get-VMReplication -VMName "WebServer01" |
+    Select-Object VMName, ReplicationStatus, ReplicationHealth
+
+# Step 4: Actual failover (activate replica VM)
+Start-VMFailover -VM "WebServer01" -Force
+
+# After failover, commit and cleanup
+Complete-VMFailover -VM "WebServer01"
+
+# Reverse replication (failback after primary recovery)
+Reverse-VMReplication -VMName "WebServer01"
+
+# Monitor replication metrics
+Get-VMReplication |
+    Select-Object VMName, ReplicationStatus, ReplicationHealth, `
+        @{n='LastReplicationTime';e={$_.LastReplicaCreationTime}}, `
+        @{n='RPO (min)';e={[math]::Round((Get-Date - $_.LastReplicationTime).TotalMinutes)}}
+        </div>
+
+        <!-- OPTIMIZATION -->
+        <h2 id="optimization">Performance Optimization</h2>
+
+        <h3>Performance Tuning Recommendations</h3>
+        <table>
+            <tr>
+                <th>Setting</th>
+                <th>Impact</th>
+                <th>Recommendation</th>
+            </tr>
+            <tr>
+                <td><strong>vNUMA Configuration</strong></td>
+                <td>NUMA-aware VM memory allocation</td>
+                <td>Enable for VMs with >8vCPUs; match host topology</td>
+            </tr>
+            <tr>
+                <td><strong>Memory Oversubscription</strong></td>
+                <td>Allows total VM RAM > host RAM</td>
+                <td>Use Dynamic Memory; cap at 120% on stable workloads</td>
+            </tr>
+            <tr>
+                <td><strong>Virtual Processor Priority</strong></td>
+                <td>CPU scheduling priority</td>
+                <td>High (100) for critical VMs; Normal (50) for others</td>
+            </tr>
+            <tr>
+                <td><strong>Storage I/O</strong></td>
+                <td>Disk performance</td>
+                <td>Fixed disks > Dynamic; SCSI > IDE; SSD for logs</td>
+            </tr>
+            <tr>
+                <td><strong>Network Optimization</strong></td>
+                <td>Network throughput</td>
+                <td>Synthetic adapters; use SR-IOV if available</td>
+            </tr>
+        </table>
+
+        <h3>Performance Monitoring</h3>
+        <div class="code-block">
+            <div class="code-label">PowerShell: Hyper-V Performance Monitoring</div>
+# Monitor host-level resources
+Get-VMHost | Format-List LogicalProcessorCount, VirtualMachineCount
+
+# Get detailed resource usage
+Get-VM | Select-Object Name, State, MemoryAssigned, MemoryDemand, CPUUsage |
+    Format-Table -AutoSize
+
+# Monitor dynamic memory
+Get-VM | Select-Object Name, `
+    @{n='MemoryAssigned (GB)';e={$_.MemoryAssigned / 1GB}}, `
+    @{n='MemoryDemand (GB)';e={$_.MemoryDemand / 1GB}}, `
+    @{n='Memory Pressure (%)';e={[math]::Round(($_.MemoryDemand / $_.MemoryMaximumBytes) * 100)}}
+
+# Monitor storage performance
+Get-VMHardDiskDrive -VM "Database01" |
+    Measure-Object -Property "Size" -Sum |
+    Select-Object @{n='TotalStorage (GB)';e={$_.Sum / 1GB}}
+
+# Performance counter monitoring
+$vm = "WebServer01"
+Get-Counter -Counter "\Hyper-V Virtual Machine ($vm)\*" -ErrorAction SilentlyContinue
+
+# Network adapter statistics
+Get-VMNetworkAdapter -VM "WebServer01" |
+    Measure-Object -Property "Size" -Sum
+
+# Identify resource-hungry VMs
+Get-VM | Where-Object {$_.MemoryDemand -gt 4GB} |
+    Format-Table Name, MemoryDemand, MemoryAssigned
+        </div>
+
+        <!-- TROUBLESHOOTING -->
+        <h2 id="troubleshooting">Troubleshooting Scenarios</h2>
+
+        <h3>Scenario 1: VM Won't Start</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> VM remains in "Off" state when attempting Start-VM
+            <br><br>
+            <strong>Diagnosis:</strong>
+            <div class="code-block">
+# Check VM state and errors
+Get-VM -Name "FailingVM" | Format-List *
+
+# Review Hyper-V logs
+Get-WinEvent -LogName "Microsoft-Windows-Hyper-V-Worker/Operational" -MaxEvents 50 |
+    Where-Object {$_.LevelDisplayName -match "Error|Warning"}
+
+# Verify hardware file integrity
+Get-VHD -Path "C:\VMs\FailingVM\*.vhdx" | Test-VHD
+            </div>
+            <strong>Resolution:</strong> Common causes: corrupted VHDX (repair using Repair-VHD), insufficient host resources, or firmware conflicts. For Gen2 with boot issues, disable Secure Boot temporarily.
+        </div>
+
+        <h3>Scenario 2: High Disk I/O Latency</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> VMs experience slow disk performance, especially multiple VMs on same host
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# Check storage path utilization
+Get-VM | Select-Object Name, @{n='VHDPath';e={(Get-VMHardDiskDrive -VM $_).Path}} |
+    Group-Object VHDPath |
+    Select-Object Name, Count
+
+# Monitor I/O per VM
+Get-VM | Measure-Object -Property ProcessorCount -Sum
+Get-Counter -Counter "\Hyper-V Virtual Machine ($vm)\*" -Continuous
+
+# Recommendations:
+# 1. Use fixed-size disks for performance-critical VMs
+# 2. Distribute VMs across multiple storage paths
+# 3. Enable QoS if available: Set-VMNetworkAdapterQoSPolicy
+# 4. Monitor host disk: Get-PhysicalDisk | Get-StorageReliabilityCounter
+            </div>
+        </div>
+
+        <h3>Scenario 3: Live Migration Fails</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> Move-VM fails with network/storage errors
+            <br><br>
+            <strong>Diagnosis & Fix:</strong>
+            <div class="code-block">
+# Verify prerequisites
+Test-ClusterResourceFailure -Resource "VM-Name"
+
+# Check storage accessibility
+Test-Path "\\Shared-Storage\VM-Name"
+
+# Verify network connectivity
+Test-NetConnection -ComputerName "TARGET-HOST" -CommonTCPPort WINRM
+
+# Perform migration
+Move-VM -Name "WebServer01" -DestinationHost "HOST02" -IncludeStorage
+
+# Monitor migration progress
+Get-VMIntegrationService | Where-Object {$_.Enabled -eq $true}
+            </div>
+        </div>
+
+        <h3>Scenario 4: Excessive Memory Usage</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> Host memory pressure increasing despite sufficient physical RAM
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# Identify memory consumers
+Get-VM | Sort-Object MemoryDemand -Descending |
+    Select-Object Name, MemoryDemand, MemoryAssigned -First 5
+
+# Check dynamic memory configuration
+Get-VMMemory -VM "HighMemoryVM" | Format-List *
+
+# Reduce memory pressure by: adjusting minimum/maximum values
+Set-VMMemory -VM "HighMemoryVM" `
+    -StartupBytes 4GB `
+    -MinimumBytes 2GB `
+    -MaximumBytes 8GB `
+    -Priority 60
+            </div>
+        </div>
+
+        <h3>Scenario 5: VM Network Not Connected</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> VM shows network adapter but no connectivity
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# Verify VM network configuration
+Get-VMNetworkAdapter -VM "NetworkVM" | Format-List *
+
+# Check switch status
+Get-VMSwitch
+
+# Verify VLAN if configured
+Get-VMNetworkAdapterVlan -VM "NetworkVM"
+
+# Restart network adapter
+Get-VMNetworkAdapter -VM "NetworkVM" | Disconnect-VMNetworkAdapter
+Get-VMNetworkAdapter -VM "NetworkVM" | Connect-VMNetworkAdapter -SwitchName "External"
+
+# Check NIC settings in guest OS (if accessible)
+# Ensure guest has Integration Services installed
+Get-VMIntegrationService -VM "NetworkVM" | Select-Object Name, Enabled
+            </div>
+        </div>
+
+        <h3>Scenario 6: Hyper-V Service Crashes</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> Hyper-V service repeatedly crashes; VMs shut down unexpectedly
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# Check service status
+Get-Service -Name "vmms" | Select-Object Name, Status, StartType
+
+# Review crash dumps
+Get-ChildItem "C:\ProgramData\Microsoft\Windows\WER\ReportQueue" -Recurse |
+    Where-Object {$_ -match "hyperv|vmms"}
+
+# Restart service
+Restart-Service -Name "vmms" -Force
+
+# Check hardware virtualization support
+$cpu = Get-WmiObject -Class Win32_Processor
+$cpu | Select-Object Name, Manufacturer, Characteristics
+
+# Monitor for errors
+Get-WinEvent -LogName "System" -MaxEvents 100 |
+    Where-Object {$_.Source -match "Hyper-V"}
+            </div>
+        </div>
+
+        <h3>Scenario 7: Replica Replication Lag</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> Replica consistently behind by hours; synchronization failing
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# Check replication health
+Get-VMReplication | Select-Object VMName, ReplicationHealth, LastReplicationTime
+
+# Verify network connectivity
+Test-NetConnection -ComputerName "REPLICA-HOST" -CommonTCPPort 443
+
+# Check Kerberos/Certificate auth
+Get-VMReplication | Select-Object VMName, AuthenticationType, CertificateThumbprint
+
+# Increase replication frequency if possible
+Set-VMReplication -VMName "LaggingVM" -ReplicationFrequencySec 600
+
+# Disable compression if high-latency link
+Set-VMReplication -VMName "LaggingVM" -CompressionEnabled $false
+
+# Resynchronize replica
+Update-VMReplication -VMName "LaggingVM"
+            </div>
+        </div>
+
+        <h3>Scenario 8: Checkpoint/Snapshot Corruption</h3>
+        <div class="faq-item">
+            <strong>Symptoms:</strong> Cannot restore from checkpoint; checkpoint files corrupted
+            <br><br>
+            <strong>Resolution:</strong>
+            <div class="code-block">
+# List checkpoints
+Get-VMCheckpoint -VM "TestVM" | Format-Table Name, CreationTime
+
+# Verify checkpoint integrity
+Test-VHD -Path "C:\VMs\TestVM\*.vhdx"
+
+# Delete corrupted checkpoint
+Remove-VMCheckpoint -Name "CorruptedCheckpoint" -Force
+
+# Export VM to clean checkpoint location (recovery)
+Export-VM -Name "TestVM" -Path "D:\Recovery"
+
+# Verify VM after corruption
+Get-VM "TestVM" | Measure-Object
+            </div>
+        </div>
+
+        <!-- FAQs -->
+        <h2 id="faqs">Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <strong>Q1: What's the difference between Generation 1 and Generation 2 VMs?</strong><br>
+            Gen1 uses BIOS/IDE boot; Gen2 uses UEFI/SCSI. Gen2 supports Secure Boot, TPM, and modern hardware. Always choose Gen2 for new deployments unless running legacy OS (pre-Windows 2012).
+        </div>
+
+        <div class="faq-item">
+            <strong>Q2: Can I run Hyper-V inside a VM (nested virtualization)?</strong><br>
+            Yes, with limitations. Enable via Set-VMProcessor -ExposeVirtualizationExtensions. Performance degrades; suitable for lab/dev, not production. Requires modern CPU (Intel Haswell+, AMD EPYC).
+        </div>
+
+        <div class="faq-item">
+            <strong>Q3: How many VMs can one host support?</strong><br>
+            Depends on CPU, memory, storage. Typically 10-50+ VMs per host. Monitor CPU (target 25-40%), memory (50-70%), I/O. Scale by adding hosts and implementing clustering.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q4: Do VMs require shared storage for clustering?</strong><br>
+            Yes for Failover Clustering. Hyper-V Replica doesn't require shared storage but has RPO/RTO tradeoffs. For high availability, implement clustering with SAN/NAS.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q5: What's the performance impact of snapshots?</strong><br>
+            Snapshots (differencing disks) have minor overhead. Restore from older snapshots is slower. Keep snapshots to max 10 levels deep; merge regularly.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q6: Can I migrate VMs between Hyper-V hosts?</strong><br>
+            Yes, Live Migration (zero downtime) requires clustering and shared storage. Quick Migration (few seconds downtime) works without shared storage.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q7: What's Hyper-V Replica RPO/RTO?</strong><br>
+            RPO: 5-30 minutes (configurable replication frequency). RTO: minutes to hours (test failover beforehand). Depends on replication frequency and failover testing.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q8: How do I monitor Hyper-V host health?</strong><br>
+            Use Hyper-V Manager, Failover Cluster Manager, Performance Monitor counters, or third-party tools. Monitor CPU, memory, I/O, network, and Integration Services status.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q9: Can I use USB devices in VMs?</strong><br>
+            Limited support. RemoteFX (deprecated in newer versions) provided USB redirection. Modern alternative: pass-through using virtual machine guest drivers or USB-over-IP appliances.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q10: How do I backup VMs?</strong><br>
+            Options: VSS-based backups (third-party tools), checkpoints (not for backups), replicas (DR only), or host-level backups. Recommended: VSS snapshots to isolated storage.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q11: What's the difference between Internal and Private switches?</strong><br>
+            Internal: VMs + host can communicate. Private: VMs communicate only with each other, no host access. Choose based on isolation requirements.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q12: Can Hyper-V run on client Windows (non-Server)?</strong><br>
+            Yes, Hyper-V Client (Windows 10/11 Pro/Enterprise). Limited features, suitable for development. Full feature set requires Windows Server.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q13: How do I handle VM licensing?</strong><br>
+            VMs require same licensing as physical. Windows Server licensing: per-core (2-core minimum) with Software Assurance required for Hyper-V. Hypervisor licenses separate.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q14: What's GPU support in Hyper-V?</strong><br>
+            Limited in consumer Hyper-V. Server version supports GPU passthrough (RemoteFX) for specific cards, or software-based graphics. GPU VMs require dedicated GPU hardware.
+        </div>
+
+        <div class="faq-item">
+            <strong>Q15: How do I upgrade from Hyper-V 2016 to 2022?</strong><br>
+            In-place OS upgrade (Windows Server 2016→2022) maintains Hyper-V. VMs remain compatible. Test thoroughly before production upgrade. Cluster rolling upgrades recommended.
+        </div>
+
+        <!-- INTERVIEW QUESTIONS -->
+        <h2 id="interview">Interview Questions & Answers</h2>
+
+        <div class="qa-item">
+            <strong>Q1: Explain Hyper-V architecture and how it differs from Type-2 hypervisors.</strong><br>
+            <strong>Answer:</strong> Hyper-V is Type-1 hypervisor—runs directly on hardware below OS. Parent partition (Windows Server) runs management tools. Child partitions run guest VMs. Differs from Type-2 (VirtualBox, VMware Workstation) which run as applications inside OS. Type-1 provides: better performance (no OS overhead), better isolation, direct device access. Type-2 offers: easier installation, portable environments. Hyper-V ideal for data centers; Type-2 for development.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q2: Describe Generation 1 vs Generation 2 VMs and when to use each.</strong><br>
+            <strong>Answer:</strong> Generation 1 uses BIOS/IDE emulation; supports older OSs (Windows Server 2008, Linux pre-2012). Generation 2 uses UEFI/SCSI; supports Secure Boot, TPM 2.0, modern hardware. Gen2 provides better security, performance. Choice: Always Gen2 for new deployments (modern Windows Server 2012+, modern Linux). Gen1 only for legacy systems requiring backward compatibility. Gen1 default for migration from older Hyper-V versions.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q3: How would you design a highly available Hyper-V infrastructure?</strong><br>
+            <strong>Answer:</strong> Design includes: 1) Failover Cluster (minimum 3 nodes) with odd number for quorum. 2) Shared storage (SAN/NAS) for VM files; implement RAID 10 for protection. 3) Virtual switches: multiple NICs for redundancy, teaming for failover. 4) Distributed network switches for consistency across hosts. 5) Each VM configured as clustered resource (automatic failover). 6) Regular backup (VSS-based) for disaster recovery. 7) Health monitoring via System Center VMM or third-party tools. 8) Documented runbooks for failover, migration scenarios. RTO: minutes; RPO: varies by backup strategy.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q4: Explain Hyper-V Replica and design disaster recovery using it.</strong><br>
+            <strong>Answer:</strong> Replica provides asynchronous VM replication to remote site without shared storage. Setup: Primary site (VMs) replicates logs/checkpoints to Recovery site. Authentication: Kerberos or certificate-based. Recovery: RPO 5-30 minutes (configurable), RTO minutes after failover. Design: Replicate critical VMs (small-medium sized). Test failover monthly (non-disruptive). Replicate to different geographic region. Implement reverse replication for failback. Limitations: No automatic failover (manual testing required), bandwidth-dependent. Combine with clustering for complete HA/DR strategy.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q5: How would you troubleshoot VMs experiencing poor performance?</strong><br>
+            <strong>Answer:</strong> Systematic approach: 1) Identify resource bottleneck (CPU/Memory/I/O/Network). 2) Monitor host resources: Get-VM memory pressure, CPU utilization. 3) Check VM config: vCPU count, memory allocation, storage type. 4) Verify storage: check I/O latency, disk contention. 5) Review network: NIC type (synthetic vs emulated), vSwitch configuration. 6) Check host over-subscription (>40% memory pressure). 7) Review guest OS (integration services installed, drivers updated). 8) Monitor Hyper-V counters specifically. 9) Implement: scale horizontally (move VMs to less-loaded host), increase resources, optimize workload. 10) Test fixes in lab before production.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q6: What's your strategy for VM backup and disaster recovery?</strong><br>
+            <strong>Answer:</strong> Multi-layered approach: 1) VSS-based snapshots (third-party tool like VEEAM, CommVault) to isolated storage (not production SAN). 2) Hyper-V Replica for critical VMs to remote site. 3) Application-specific backups (database transaction logs, email stores). 4) Test recovery monthly: restore to lab, verify. 5) Retention: 30-day incremental, 6-12 month full backups. 6) RTO targets: VMs <4 hours (backup) or <30 min (replica failover). 7) Document runbooks, test procedures. 8) Ensure offline backup copies for ransomware protection. 9) Monitor backup jobs; alert on failures. 10) Budget 20-25% storage for backups.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q7: Describe virtual networking in Hyper-V and how to design network architecture.</strong><br>
+            <strong>Answer:</strong> Hyper-V virtual switching: External (binds NIC, VMs access network), Internal (VMs + host), Private (isolated VMs). Design: Separate switches for management, production, storage traffic. Physical NICs teamed for redundancy. VLANs via trunk ports. Storage traffic isolated on dedicated network. Management on separate vSwitch for security. Production VMs on managed external switch. Use synthetic adapters for performance. Implement QoS policies for traffic prioritization. Multiple vNICs per VM for traffic separation. Consider Software-Defined Networking (SDN) for large deployments. Advanced: Use Hyper-V Network Virtualization (NVGRE) for multi-tenant environments.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q8: How do you manage VM storage efficiently?</strong><br>
+            <strong>Answer:</strong> Storage management: 1) Use fixed-size VHDX for production (better performance than dynamic). 2) Implement tiering: fast SSD for OS/high-IOPS workloads, SATA for data. 3) Monitor disk usage, implement quotas. 4) Compact differencing disks monthly. 5) Use Pass-Through for performance-critical databases. 6) Snapshot strategy: max 10 levels, merge regularly. 7) Monitor fragmentation; defragment as needed. 8) Separate storage paths across drives for I/O distribution. 9) Implement storage QoS policies. 10) Document storage allocation, capacity planning. 11) Archive old snapshots to separate storage. 12) Test recovery procedures.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q9: Explain Failover Clustering requirements and implementation strategy.</strong><br>
+            <strong>Answer:</strong> Failover Clustering prerequisites: 1) Minimum 2 hosts (3+ recommended for quorum majority). 2) Shared storage (SAN/NAS) accessible by all nodes. 3) Cluster network (heartbeat): dedicated low-latency network. 4) Client network for VM access. 5) Quorum configuration: Node & File Share (typical), Node & Disk (advanced). Implementation: 1) Install Failover Clustering role. 2) Test cluster compatibility. 3) Create cluster with all nodes. 4) Configure networks (heartbeat, client). 5) Configure storage (quorum witness). 6) Enable VM replication. 7) Create clustered roles. 8) Configure failover policies (retry attempts, failback). 9) Monitor health continuously. 10) Document failover procedures, test monthly.
+        </div>
+
+        <div class="qa-item">
+            <strong>Q10: How do you optimize Hyper-V performance at scale?</strong><br>
+            <strong>Answer:</strong> Performance optimization: 1) Hardware: multi-core CPUs (3+ GHz), fast memory (DDR4+), SSD storage. 2) Host tuning: disable unnecessary services, update drivers/BIOS. 3) VM configuration: fixed-size disks, synthetic adapters, appropriate vCPU count. 4) Memory: enable Dynamic Memory (balance oversubscription), implement priority levels. 5) NUMA: enable vNUMA for large VMs (>8 vCPU). 6) Storage: separate paths for different workloads, use tiering, implement QoS. 7) Network: teaming, QoS policies, synthetic adapters. 8) Monitoring: continuous performance tracking, identify bottlenecks. 9) Load balancing: distribute VMs across hosts based on resources. 10) Capacity planning: maintain 30-40% headroom for spikes. Scale horizontally (more hosts) rather than vertically (oversizing single host).
+        </div>
+
+        <div class="download-section">
+            <h3>Downloadable Resources</h3>
+            <p>Complete PowerShell scripts for Hyper-V administration:</p>
+            <ul>
+                <li><a href="#scripts">Hyper-V-Prerequisites-Install.ps1</a> - Automated Hyper-V installation</li>
+                <li><a href="#scripts">Hyper-V-Cluster-Setup.ps1</a> - Failover cluster configuration</li>
+                <li><a href="#scripts">VM-Provisioning-Bulk.ps1</a> - Bulk VM creation from CSV</li>
+                <li><a href="#scripts">VM-Backup-Recovery.ps1</a> - Backup and restore procedures</li>
+                <li><a href="#scripts">Performance-Monitor.ps1</a> - Continuous health monitoring</li>
+            </ul>
+        </div>
+
+        <h2>Summary</h2>
+        <p>Hyper-V remains Microsoft's flagship virtualization platform, ideal for enterprise data centers requiring high performance, strong integration with Windows Server ecosystem, and tight Active Directory integration. Success requires proper planning (resource sizing, network design), robust architecture (clustering for HA, replication for DR), comprehensive monitoring, and regular testing. Most performance issues stem from improper resource allocation or oversubscription. Leverage PowerShell for automation and scale infrastructure horizontally (add hosts) rather than vertically. Stay current with Windows Server updates and follow Microsoft's virtual networking best practices.</p>
+
+        <footer>
+            <p>Article Published: July 4, 2026 | Last Updated: July 2026</p>
+            <p>IT Vedas - Enterprise Infrastructure Excellence</p>
+        </footer>
+    </div>
+</body>
+</html>

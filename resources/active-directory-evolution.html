@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Directory Evolution - Server 2019/2022/2025</title>
+    <meta name="description" content="Complete analysis of Active Directory evolution across Windows Server versions including schema changes, security features, management improvements, and migration strategy.">
+    <meta name="keywords" content="Active Directory 2019 2022 2025, AD schema, security features, forest functional level, migration">
+    <meta name="author" content="IT Vedas">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #0078d4 0%, #107c10 100%); color: white; padding: 40px 20px; margin: -20px -20px 30px -20px; border-radius: 8px; }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        header p { font-size: 1.1em; opacity: 0.9; }
+
+        nav { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+        nav a { color: #0078d4; text-decoration: none; font-weight: 500; }
+
+        section { margin-bottom: 40px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { color: #0078d4; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #0078d4; }
+        h3 { color: #107c10; margin-top: 20px; margin-bottom: 15px; }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #f0f0f0; padding: 15px; text-align: left; font-weight: 600; border-bottom: 3px solid #0078d4; }
+        td { padding: 12px 15px; border-bottom: 1px solid #ddd; }
+        tr:hover { background: #f8f9fa; }
+
+        .feature-matrix th, .feature-matrix td { padding: 12px; text-align: center; }
+        .feature-matrix .feature-name { text-align: left; }
+        .checkmark { color: #107c10; font-weight: bold; font-size: 1.2em; }
+        .cross { color: #d13438; font-weight: bold; }
+        .partial { color: #ff8c00; font-weight: bold; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+        .grid-item { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+
+        .info { background: #e3f2fd; padding: 15px; border-radius: 5px; border-left: 4px solid #0078d4; margin: 15px 0; }
+        .warning { background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ff9800; margin: 15px 0; }
+        .success { background: #e8f5e9; padding: 15px; border-radius: 5px; border-left: 4px solid #107c10; margin: 15px 0; }
+        .highlight { background: #ffffcc; padding: 15px; border-radius: 5px; border-left: 4px solid #ffd700; margin: 15px 0; }
+
+        .functional-level-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #0078d4;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .comparison-card.new-feature { border-left: 4px solid #107c10; }
+        .comparison-card.improved { border-left: 4px solid #0078d4; }
+        .comparison-card.deprecated { border-left: 4px solid #d13438; }
+
+        .faq-item { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        .faq-question { font-weight: 600; color: #0078d4; margin-bottom: 10px; }
+        .faq-answer { color: #555; line-height: 1.8; }
+
+        ul { margin-left: 20px; }
+        li { margin: 8px 0; }
+
+        .responsive-table { overflow-x: auto; }
+        .responsive-table table { min-width: 600px; }
+
+        footer { text-align: center; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            nav ul { flex-direction: column; gap: 10px; }
+            table { font-size: 0.9em; }
+            th, td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Active Directory Evolution</h1>
+        <p>Comprehensive analysis of Active Directory changes across Windows Server 2019, 2022, and 2025</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#schema">Schema Changes</a></li>
+            <li><a href="#security">Security Features</a></li>
+            <li><a href="#functional-levels">Functional Levels</a></li>
+            <li><a href="#management">Management Tools</a></li>
+            <li><a href="#compatibility">Compatibility</a></li>
+            <li><a href="#migration">Migration</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </nav>
+
+    <section id="overview">
+        <h2>Active Directory Overview by Version</h2>
+
+        <div class="grid">
+            <div class="grid-item">
+                <h3>Server 2019</h3>
+                <p><strong>Schema Version:</strong> 88</p>
+                <p><strong>Release:</strong> October 2018</p>
+                <p><strong>Status:</strong> Mainstream support ended January 2024</p>
+                <ul>
+                    <li>Still-current security features</li>
+                    <li>Good for mixed environments</li>
+                    <li>Limited cloud integration</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Server 2022</h3>
+                <p><strong>Schema Version:</strong> 88 (with 2022 enhancements)</p>
+                <p><strong>Release:</strong> August 2021</p>
+                <p><strong>Status:</strong> Current mainstream support until Oct 2026</p>
+                <ul>
+                    <li>Azure AD integration</li>
+                    <li>Enhanced security defaults</li>
+                    <li>Improved management tools</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Server 2025</h3>
+                <p><strong>Schema Version:</strong> 89</p>
+                <p><strong>Release:</strong> September 2024</p>
+                <p><strong>Status:</strong> Latest version, support until Oct 2034</p>
+                <ul>
+                    <li>New schema version</li>
+                    <li>Zero Trust support</li>
+                    <li>AI-powered features</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>📌 Important:</strong> Schema version 88 is used for both 2019 and 2022. Windows Server 2025 introduces Schema version 89. You can have mixed 2019/2022 forests at schema 88, but upgrading to 2025 requires schema extension.
+        </div>
+    </section>
+
+    <section id="schema">
+        <h2>Schema Changes & Extensions</h2>
+
+        <h3>Schema Version Timeline</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Schema Version</th>
+                        <th>First Introduced</th>
+                        <th>Included in Versions</th>
+                        <th>Key Changes</th>
+                        <th>Backwards Compatible</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Schema 88</strong></td>
+                        <td>Server 2019</td>
+                        <td>2019, 2022</td>
+                        <td>Azure AD Hybrid Identity, TPM attributes</td>
+                        <td>Yes (from 87)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Schema 89</strong></td>
+                        <td>Server 2025</td>
+                        <td>2025</td>
+                        <td>Zero Trust attributes, device compliance</td>
+                        <td>Yes (from 88)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Major Schema Additions in Server 2025 (Schema 89)</h3>
+        <div class="comparison-card new-feature">
+            <h4>Device Identity Attributes</h4>
+            <ul>
+                <li>Enhanced device compliance attributes</li>
+                <li>Zero Trust device posture storage</li>
+                <li>Device health status attributes</li>
+                <li>Compliance policy tracking</li>
+            </ul>
+        </div>
+
+        <div class="comparison-card new-feature">
+            <h4>Certificate & PKI Enhancements</h4>
+            <ul>
+                <li>Extended certificate attribute support</li>
+                <li>Certificate template versioning</li>
+                <li>Enhanced ECC support</li>
+                <li>Post-quantum cryptography preparation</li>
+            </ul>
+        </div>
+
+        <div class="comparison-card improved">
+            <h4>Enhanced User Attributes</h4>
+            <ul>
+                <li>Extended authentication policy attributes</li>
+                <li>FIDO2 credential storage</li>
+                <li>Multi-factor authentication flags</li>
+                <li>Passwordless sign-in support</li>
+            </ul>
+        </div>
+
+        <div class="comparison-card improved">
+            <h4>Forest/Domain Attributes</h4>
+            <ul>
+                <li>Enhanced security baseline tracking</li>
+                <li>Forest policy versioning</li>
+                <li>Audit policy attributes</li>
+                <li>Configuration tracking</li>
+            </ul>
+        </div>
+
+        <h3>Schema Changes in Server 2022 (Schema 88)</h3>
+        <ul>
+            <li><strong>Azure AD Join:</strong> Attributes for hybrid identity</li>
+            <li><strong>Device Registration:</strong> Device credential storage</li>
+            <li><strong>TPM Attributes:</strong> TPM version and status tracking</li>
+            <li><strong>Windows Hello:</strong> Biometric credential attributes</li>
+            <li><strong>Compliance Attributes:</strong> Device compliance status</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Schema Extension Warning:</strong> Schema extensions are irreversible. Test thoroughly in lab environments. Ensure all DC hardware supports the new schema version. Have rollback plans (though practical rollback from 89 to 88 is very difficult).
+        </div>
+    </section>
+
+    <section id="security">
+        <h2>Security Features Evolution</h2>
+
+        <h3>Security Feature Comparison Matrix</h3>
+        <div class="responsive-table">
+            <table class="feature-matrix">
+                <thead>
+                    <tr>
+                        <th class="feature-name">Security Feature</th>
+                        <th>Server 2019</th>
+                        <th>Server 2022</th>
+                        <th>Server 2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name"><strong>Kerberos Armoring</strong></td>
+                        <td class="partial">Limited</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Flexible Authentication Secure Tunneling (FAST)</strong></td>
+                        <td class="partial">Partial</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>PKINIT Support</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Authentication Policies</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>FIDO2/Passwordless</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="partial">Limited</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Zero Trust Integration</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="partial">Partial</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Azure AD Conditional Access</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Advanced Audit Policies</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Account Security Monitoring</strong></td>
+                        <td class="partial">Basic</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Tier Model Enforcement</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Kerberos Enhancements</h3>
+        <div class="comparison-card improved">
+            <h4>Server 2022 Kerberos Improvements</h4>
+            <ul>
+                <li><strong>Kerberos Armoring (FAST):</strong> Protection against brute-force attacks on Kerberos</li>
+                <li><strong>RC4-HMAC Deprecation:</strong> Encouraging migration to AES encryption</li>
+                <li><strong>Delegated Credential:</strong> Support for s4u2proxy scenarios</li>
+                <li><strong>Enhanced Logging:</strong> Detailed Kerberos event tracking</li>
+            </ul>
+        </div>
+
+        <div class="comparison-card new-feature">
+            <h4>Server 2025 Zero Trust Features</h4>
+            <ul>
+                <li><strong>Device Posture Evaluation:</strong> Real-time device compliance checking</li>
+                <li><strong>Conditional Access Integration:</strong> Risk-based authentication decisions</li>
+                <li><strong>Passwordless Authentication:</strong> Default-enable FIDO2</li>
+                <li><strong>Implicit Trust Disable:</strong> Never trust, always verify enforced</li>
+            </ul>
+        </div>
+
+        <h3>Password Policy Evolution</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Policy Area</th>
+                        <th>Server 2019</th>
+                        <th>Server 2022</th>
+                        <th>Server 2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Min Password Length Default</strong></td>
+                        <td>7 characters (legacy)</td>
+                        <td>8 characters (recommended)</td>
+                        <td>12 characters (recommended)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Password Expiration</strong></td>
+                        <td>42 days (default)</td>
+                        <td>90 days (recommended)</td>
+                        <td>Never (encourage MFA instead)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Account Lockout</strong></td>
+                        <td>5 attempts / 30 min</td>
+                        <td>5 attempts / 30 min</td>
+                        <td>3 attempts / 15 min (recommended)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MFA Requirement</strong></td>
+                        <td>Optional</td>
+                        <td>Recommended</td>
+                        <td>Required for privileged access</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Password History</strong></td>
+                        <td>24 passwords remembered</td>
+                        <td>24 passwords remembered</td>
+                        <td>N/A (passwordless preferred)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="success">
+            <strong>✓ Security Recommendation:</strong> Implement passwordless sign-in with Server 2025. Use FIDO2 tokens or Windows Hello for Business with certificate-based authentication. This eliminates password-based attacks entirely.
+        </div>
+    </section>
+
+    <section id="functional-levels">
+        <h2>Forest & Domain Functional Levels</h2>
+
+        <h3>Functional Level Reference</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Functional Level</th>
+                        <th>First Introduced</th>
+                        <th>Forest Capable</th>
+                        <th>Domain Capable</th>
+                        <th>Key Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>2016</strong></td>
+                        <td>Server 2016</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>PAM (Privileged Access Management)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2019</strong></td>
+                        <td>Server 2019</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>AES encryption for Kerberos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2022</strong></td>
+                        <td>Server 2022</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>Windows Server 2022 features (FAST, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2025</strong></td>
+                        <td>Server 2025</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                        <td>Schema 89, Zero Trust features</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Supported Domain Controller Combinations by Functional Level</h3>
+
+        <div class="functional-level-box">
+            <h4>2022 Functional Level</h4>
+            <ul>
+                <li>✓ Windows Server 2022 DCs</li>
+                <li>✓ Windows Server 2019 DCs</li>
+                <li>✓ Windows Server 2016 DCs</li>
+                <li>✗ Windows Server 2012 R2 or earlier</li>
+            </ul>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                <strong>Action Required:</strong> All DCs must run 2016 or higher. Cannot have 2012 R2 DCs at 2022 functional level.
+            </p>
+        </div>
+
+        <div class="functional-level-box">
+            <h4>2025 Functional Level</h4>
+            <ul>
+                <li>✓ Windows Server 2025 DCs</li>
+                <li>✓ Windows Server 2022 DCs</li>
+                <li>✗ Windows Server 2019 DCs or earlier</li>
+            </ul>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                <strong>Action Required:</strong> All DCs must run 2022 or higher (schema 88 minimum). Immediate upgrade of 2019 DCs required.
+            </p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Critical:</strong> Raising functional level is irreversible. You cannot lower it afterward. Ensure all DCs support the target functional level before raising.
+        </div>
+    </section>
+
+    <section id="management">
+        <h2>Management & Administration Tools</h2>
+
+        <h3>Active Directory Administration Tools Evolution</h3>
+        <div class="responsive-table">
+            <table class="feature-matrix">
+                <thead>
+                    <tr>
+                        <th class="feature-name">Management Tool</th>
+                        <th>2019</th>
+                        <th>2022</th>
+                        <th>2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name"><strong>Active Directory Users & Computers</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Active Directory Administrative Center</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Windows Admin Center AD Features</strong></td>
+                        <td class="partial">Limited</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>PowerShell AD Module</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Graph PowerShell Module (AD)</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="partial">Preview</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Azure AD/Entra ID Integration</strong></td>
+                        <td class="partial">Basic</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Cloud-based Management</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>PowerShell Enhancements</h3>
+        <div class="comparison-card improved">
+            <h4>Server 2022 Improvements</h4>
+            <ul>
+                <li>PowerShell 7.x support</li>
+                <li>Cross-platform AD module compatibility (Windows Admin Center)</li>
+                <li>Graph API integration in preview</li>
+                <li>Enhanced error handling</li>
+            </ul>
+        </div>
+
+        <div class="comparison-card new-feature">
+            <h4>Server 2025 Enhancements</h4>
+            <ul>
+                <li>Microsoft Graph PowerShell module (GA)</li>
+                <li>Cloud-native management patterns</li>
+                <li>AI-powered diagnostics in Windows Admin Center</li>
+                <li>Automated remediation suggestions</li>
+            </ul>
+        </div>
+
+        <h3>Windows Admin Center AD Features</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>2022 Features</h4>
+                <ul>
+                    <li>Domain join management</li>
+                    <li>DNS server management</li>
+                    <li>DHCP server management</li>
+                    <li>Certificate services</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>2025 New Features</h4>
+                <ul>
+                    <li>AI-powered optimization</li>
+                    <li>Predictive diagnostics</li>
+                    <li>Compliance checking</li>
+                    <li>Zero Trust configuration</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="compatibility">
+        <h2>Compatibility & Coexistence</h2>
+
+        <h3>Mixed Forest Scenarios</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Supported</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Server 2022 + 2019 DCs (same forest)</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Schema 88 compatible. Max functional level 2022.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Server 2022 + 2016 DCs (same forest)</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Schema 88 compatible. Max functional level 2016.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Server 2025 + 2022 DCs (same forest)</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Schema 89 compatible. Max functional level 2022 (until all 2025).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Server 2025 + 2019 DCs (same forest)</strong></td>
+                        <td><span class="cross">✗ No</span></td>
+                        <td>Schema mismatch. Must upgrade all 2019 DCs to 2022 first.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cross-forest trust 2019↔2022</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Full trust/external trust supported.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cross-forest trust 2022↔2025</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Full trust/external trust supported.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Replica sets 2019↔2022</strong></td>
+                        <td><span class="checkmark">✓ Yes</span></td>
+                        <td>Replication fully compatible.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Backwards Compatibility Matrix</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>2025 DCs with 2022 Functional Level</th>
+                        <th>2022 DCs with 2019 Functional Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Replication</strong></td>
+                        <td><span class="checkmark">✓ Full compatibility</span></td>
+                        <td><span class="checkmark">✓ Full compatibility</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Authentication</strong></td>
+                        <td><span class="checkmark">✓ Full compatibility</span></td>
+                        <td><span class="checkmark">✓ Full compatibility</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Schema Extensions</strong></td>
+                        <td><span class="partial">✓ Limited (89→88 subset)</span></td>
+                        <td><span class="checkmark">✓ Full compatibility</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>New Features</strong></td>
+                        <td><span class="cross">✗ Not available</span></td>
+                        <td><span class="cross">✗ Not available</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info">
+            <strong>📌 Coexistence Strategy:</strong> You can have mixed version forests during migration. Upgrade gradually: 2019→2022→2025. Each step takes 2-4 weeks to complete for a full forest. Only after all DCs are upgraded can you raise the functional level to the new version.
+        </div>
+    </section>
+
+    <section id="migration">
+        <h2>Migration Strategy & Planning</h2>
+
+        <h3>Recommended Upgrade Path</h3>
+        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h4 style="margin-top: 0;">Multi-Hop Migration Path</h4>
+            <p style="margin: 10px 0;"><strong>Starting from:</strong> Windows Server 2012 R2 or 2016</p>
+            <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+                <code style="font-size: 0.95em;">
+                    2012 R2 → 2016 → 2019 → 2022 → 2025
+                </code>
+            </div>
+            <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Each step: 2-4 weeks per DC (staggered to maintain HA)</p>
+        </div>
+
+        <h3>Step-by-Step Migration Plan</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>Phase 1: Prepare (Weeks 1-2)</h4>
+                <ul>
+                    <li>☐ Inventory all DCs and roles</li>
+                    <li>☐ Document forest structure</li>
+                    <li>☐ Check hardware compatibility</li>
+                    <li>☐ Backup AD database</li>
+                    <li>☐ Test in lab environment</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Phase 2: Schema Extension (Week 2)</h4>
+                <ul>
+                    <li>☐ Prepare schema extensions</li>
+                    <li>☐ Test schema changes in dev forest</li>
+                    <li>☐ Document all schema additions</li>
+                    <li>☐ Get change approval</li>
+                    <li>☐ Prepare rollback procedure</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Phase 3: DC Upgrade (Weeks 3-8)</h4>
+                <ul>
+                    <li>☐ Upgrade RODCs first</li>
+                    <li>☐ Verify replication</li>
+                    <li>☐ Upgrade regional DCs</li>
+                    <li>☐ Test authentication</li>
+                    <li>☐ Upgrade bridgehead DCs</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Phase 4: Raise Functional Level (Week 9)</h4>
+                <ul>
+                    <li>☐ Verify all DCs upgraded</li>
+                    <li>☐ Test applications compatibility</li>
+                    <li>☐ Raise domain functional level</li>
+                    <li>☐ Raise forest functional level</li>
+                    <li>☐ Monitor for issues</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Pre-Migration Checklist</h3>
+        <ul>
+            <li><strong>□ Hardware:</strong> Verify CPU, RAM, storage meet requirements</li>
+            <li><strong>□ Network:</strong> Test replication links performance</li>
+            <li><strong>□ Backup:</strong> Full forest backup completed</li>
+            <li><strong>□ Documentation:</strong> Current topology documented</li>
+            <li><strong>□ Applications:</strong> Compatibility verified (SharePoint, Exchange, SQL, etc.)</li>
+            <li><strong>□ Monitoring:</strong> Monitoring configured for new version</li>
+            <li><strong>□ Rollback:</strong> Rollback procedure tested</li>
+            <li><strong>□ Training:</strong> Admin team trained on new features</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Critical Steps:</strong>
+            <ul>
+                <li>Always upgrade RODCs and non-critical DCs first</li>
+                <li>Keep at least 2 DCs of previous version during initial upgrade</li>
+                <li>Test replication thoroughly after each DC upgrade</li>
+                <li>Wait 24-48 hours before upgrading next DC for stability observation</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What's the schema version for each Windows Server version?</div>
+            <div class="faq-answer">
+                A: Server 2019 and 2022 both use Schema 88. Server 2025 uses Schema 89. Schema version is separate from the Windows Server version and determines which DC versions can coexist in a forest.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Can I have Server 2019 and 2025 DCs in the same forest?</div>
+            <div class="faq-answer">
+                A: No. 2025 DCs use Schema 89, while 2019 DCs use Schema 88. You must first upgrade 2019 DCs to 2022 (still Schema 88), then to 2025. Mixed Schema forests are not supported.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: How long does a DC upgrade take?</div>
+            <div class="faq-answer">
+                A: A single DC upgrade takes 30-60 minutes, including reboots. However, you should allow 24-48 hours between upgrades for monitoring and stability verification. A full forest with 10 DCs could take 2-3 months with proper staggering.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Is schema extension required when upgrading from 2022 to 2025?</div>
+            <div class="faq-answer">
+                A: Yes, schema must be extended from 88 to 89. This is a one-time operation that must be performed by a member of the Schema Admins group. After extension, you can gradually upgrade DCs and then raise the functional level.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What happens if I raise functional level too early?</div>
+            <div class="faq-answer">
+                A: Raising functional level before all DCs are upgraded causes that DC to stop operating properly in replication and authentication. Always verify all DCs are upgraded before raising the functional level. Functional level raises are irreversible.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Should we upgrade to 2025 immediately?</div>
+            <div class="faq-answer">
+                A: No. Plan to be on 2022 for 1-2 years to establish stability. Upgrade to 2025 when you want to use new features (Zero Trust, passwordless auth, AI diagnostics). 2022 support runs until October 2031, so there's no rush.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What security improvements should we prioritize?</div>
+            <div class="faq-answer">
+                A: Priority 1: Upgrade to 2022 for Kerberos Armoring and SMB 3.1.1. Priority 2: Enable Azure AD Hybrid Identity. Priority 3: Upgrade to 2025 for Zero Trust and passwordless authentication. These provide the best security ROI.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Can we skip 2022 and go directly from 2019 to 2025?</div>
+            <div class="faq-answer">
+                A: Technically no - there's no direct in-place upgrade. You must upgrade 2019→2022 first. However, you can upgrade to 2022, immediately plan 2022→2025, and do that quickly if desired. Many organizations do this to minimize extended support costs.
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>Active Directory Evolution Guide</strong> | Updated July 2026 | Created for IT Vedas</p>
+        <p>Verify all information with Microsoft documentation before making deployment decisions.</p>
+    </footer>
+</div>
+</body>
+</html>

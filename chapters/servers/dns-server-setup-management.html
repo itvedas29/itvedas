@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DNS Server setup and management guide: configure zones, create records, implement dynamic DNS, and troubleshoot resolution issues.">
+<meta name="keywords" content="DNS Server, domain name resolution, DNS zones, DNS records, FQDN, DNS troubleshooting, dynamic DNS">
+<property="og:title" content="DNS Server: Setup & Management | ITVedas">
+<property="og:description" content="Learn to set up and manage Windows DNS servers, configure zones, DNS records, and resolve name resolution issues.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/dns-server-setup-management.html">
+<title>DNS Server: Setup & Management — Complete Guide | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--hw);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>DNS Server</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">DNS Server: Setup & Management</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 14 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>DNS (Domain Name System) is the internet's address book. It translates human-readable domain names (like www.example.com) into IP addresses (like 192.168.1.100) that computers use to communicate. Without DNS, you'd need to memorize IP addresses for every website and server you want to access.</p>
+
+<h2>DNS Fundamentals</h2>
+
+<p>DNS operates on a hierarchical system. When you type a URL, your computer queries a DNS server with a question: "What's the IP address for this domain?" The DNS server responds with the answer, and your computer can then connect to that server.</p>
+
+<div class="concept-box">
+<h4>🌐 How DNS Resolution Works</h4>
+<ol>
+<li><strong>Client Query:</strong> Your computer asks local DNS server for www.example.com</li>
+<li><strong>Recursive Query:</strong> If local DNS doesn't have answer, it queries root nameserver</li>
+<li><strong>Root Nameserver Response:</strong> Points to TLD (Top-Level Domain) server for .com</li>
+<li><strong>TLD Query:</strong> DNS server queries TLD server for example.com</li>
+<li><strong>Authoritative Response:</strong> TLD server points to authoritative nameserver</li>
+<li><strong>Final Response:</strong> Authoritative server returns IP address to local DNS</li>
+<li><strong>Caching and Response:</strong> Local DNS caches result and returns to client</li>
+</ol>
+</div>
+
+<h2>DNS Record Types</h2>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Record Type</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+<tr>
+<td>A</td>
+<td>Maps hostname to IPv4 address</td>
+<td>www.example.com = 192.168.1.100</td>
+</tr>
+<tr>
+<td>AAAA</td>
+<td>Maps hostname to IPv6 address</td>
+<td>www.example.com = 2001:db8::1</td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>Alias one hostname to another</td>
+<td>www.example.com → example.com</td>
+</tr>
+<tr>
+<td>MX</td>
+<td>Specifies mail servers</td>
+<td>mail.example.com priority 10</td>
+</tr>
+<tr>
+<td>NS</td>
+<td>Specifies authoritative nameservers</td>
+<td>ns1.example.com, ns2.example.com</td>
+</tr>
+<tr>
+<td>SOA</td>
+<td>Start of Authority - zone configuration</td>
+<td>Zone parameters, serial, refresh, retry</td>
+</tr>
+<tr>
+<td>SRV</td>
+<td>Service records (used by AD)</td>
+<td>_ldap._tcp.example.com</td>
+</tr>
+<tr>
+<td>PTR</td>
+<td>Reverse DNS (IP to hostname)</td>
+<td>192.168.1.100 = server01.example.com</td>
+</tr>
+<tr>
+<td>TXT</td>
+<td>Text records (SPF, DKIM, DMARC)</td>
+<td>v=spf1 include:example.com ~all</td>
+</tr>
+</table>
+</div>
+
+<h2>Installing DNS Server on Windows</h2>
+
+<div class="step-guide">
+<h4>Step-by-Step DNS Installation</h4>
+<ol>
+<li>Open <strong>Server Manager</strong></li>
+<li>Click <strong>Add Roles and Features</strong></li>
+<li>Select <strong>Role-based or feature-based installation</strong></li>
+<li>Select target server</li>
+<li>Check <strong>DNS Server</strong> in Server Roles</li>
+<li>Accept additional features</li>
+<li>Proceed through configuration pages</li>
+<li>Click <strong>Install</strong> and wait for completion</li>
+<li>Open <strong>DNS Manager</strong> from Administrative Tools</li>
+<li>Verify DNS service is running</li>
+</ol>
+</div>
+
+<div class="code-block">
+# PowerShell: Install DNS Server
+Install-WindowsFeature -Name DNS -IncludeManagementTools
+
+# Start DNS service
+Start-Service DNS
+
+# Verify DNS service status
+Get-Service DNS
+</div>
+
+<h2>Creating and Managing DNS Zones</h2>
+
+<p><strong>Zone Types:</strong></p>
+<ul>
+<li><strong>Primary Zone:</strong> Authoritative copy where you make changes</li>
+<li><strong>Secondary Zone:</strong> Read-only copy for redundancy and load balancing</li>
+<li><strong>Stub Zone:</strong> Contains only NS, SOA, and glue records</li>
+<li><strong>Forward Lookup Zone:</strong> Maps names to IP addresses</li>
+<li><strong>Reverse Lookup Zone:</strong> Maps IP addresses back to names</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating a Primary Forward Lookup Zone</h4>
+<ol>
+<li>Open <strong>DNS Manager</strong></li>
+<li>Expand your server</li>
+<li>Right-click <strong>Forward Lookup Zones</strong></li>
+<li>Select <strong>New Zone</strong></li>
+<li>Choose <strong>Primary Zone</strong></li>
+<li>Enter zone name (e.g., example.com)</li>
+<li>Choose to create new file or use existing</li>
+<li>Complete the wizard</li>
+<li>Right-click zone and add DNS records</li>
+</ol>
+</div>
+
+<h2>Creating DNS Records</h2>
+
+<div class="concept-box">
+<h4>Common Record Creation</h4>
+<p><strong>A Record (Host):</strong></p>
+<ul>
+<li>Right-click zone → New Host (A or AAAA)</li>
+<li>Enter hostname and IP address</li>
+<li>Click Add Host</li>
+</ul>
+
+<p><strong>CNAME Record (Alias):</strong></p>
+<ul>
+<li>Right-click zone → New Alias (CNAME)</li>
+<li>Enter alias name</li>
+<li>Browse to target host</li>
+<li>Click OK</li>
+</ul>
+
+<p><strong>MX Record (Mail Exchange):</strong></p>
+<ul>
+<li>Right-click zone → New Mail Exchanger (MX)</li>
+<li>Enter mail server hostname</li>
+<li>Set priority (lower = higher priority)</li>
+<li>Click OK</li>
+</ul>
+</div>
+
+<div class="code-block">
+# PowerShell: Create DNS records
+
+# Add A record
+Add-DnsServerResourceRecordA -Name "web" -ZoneName "example.com" `
+  -IPv4Address "192.168.1.100" -CreatePtr
+
+# Add CNAME record
+Add-DnsServerResourceRecordCName -Name "www" -HostNameAlias "web.example.com" `
+  -ZoneName "example.com"
+
+# Add MX record
+Add-DnsServerResourceRecordMx -Name "@" -MailExchange "mail.example.com" `
+  -Preference 10 -ZoneName "example.com"
+
+# Add SRV record (for Active Directory)
+Add-DnsServerResourceRecordSrv -Name "_ldap._tcp" -Target "dc1.example.com" `
+  -Port 389 -Priority 0 -Weight 100 -ZoneName "example.com"
+</div>
+
+<h2>Dynamic DNS (DDNS)</h2>
+
+<p>Dynamic DNS allows computers to automatically register and update their DNS records when their IP addresses change. This is essential for domain-joined computers and DHCP clients.</p>
+
+<div class="step-guide">
+<h4>Enabling Dynamic DNS Updates</h4>
+<ol>
+<li>Open DNS Manager</li>
+<li>Right-click your zone → Properties</li>
+<li>Under <strong>General</strong> tab, set <strong>Allow dynamic updates</strong> to Secure only (recommended)</li>
+<li>On Domain Controller, run: <code>ipconfig /registerdns</code></li>
+<li>On DHCP servers, enable DDNS to update non-DHCP clients</li>
+<li>Verify records appear in DNS zone after 30 seconds</li>
+</ol>
+</div>
+
+<div class="warning">
+<strong>⚠️ Security Note:</strong> "Secure only" mode for dynamic updates is critical. This ensures only authorized computers can register their records, preventing DNS spoofing and security issues.
+</div>
+
+<h2>DNS Replication and Secondary Zones</h2>
+
+<p><strong>Zone Transfer Process:</strong></p>
+<ul>
+<li>Secondary zone queries primary zone for full copy</li>
+<li>SOA record contains Serial number for change tracking</li>
+<li>Secondary zone syncs when Serial increases</li>
+<li>Full zone transfer (AXFR) copies all records</li>
+<li>Incremental transfer (IXFR) copies only changes</li>
+</ul>
+
+<div class="code-block">
+# PowerShell: Create Secondary Zone
+Add-DnsServerSecondaryZone -Name "example.com" `
+  -ZoneFile "example.com.dns" `
+  -MasterServers @("192.168.1.10")
+
+# Force zone transfer
+Start-DnsServerZoneTransfer -Name "example.com"
+</div>
+
+<h2>DNS Troubleshooting</h2>
+
+<div class="concept-box">
+<h4>Problem: DNS Resolution Not Working</h4>
+<p><strong>Diagnosis:</strong></p>
+<ol>
+<li>Check DNS service running: <code>Get-Service DNS</code></li>
+<li>Verify zone exists: Open DNS Manager</li>
+<li>Check zone file permissions: Everyone needs read access</li>
+<li>Test with: <code>nslookup example.com 192.168.1.10</code></li>
+<li>Check DNS event logs for errors</li>
+<li>Verify forwarders configuration if applicable</li>
+</ol>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Start DNS service: <code>Start-Service DNS</code></li>
+<li>Repair zone database: Right-click zone → All Tasks → Reload</li>
+<li>Reset forwarders if misconfigured</li>
+<li>Check firewall allows DNS traffic (port 53 UDP/TCP)</li>
+<li>Restart DNS service after major changes</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: Clients Cannot Resolve Domain Names</h4>
+<p><strong>Causes:</strong> Incorrect DNS server IP, DNS server unreachable, zone not configured, records missing</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Verify client DNS settings: <code>ipconfig /all</code></li>
+<li>Ensure DNS server IP is correct</li>
+<li>Ping DNS server to verify connectivity</li>
+<li>Query DNS directly: <code>nslookup domain.com DNSServerIP</code></li>
+<li>Check zone exists and is Active</li>
+<li>Verify A records exist for requested hosts</li>
+<li>Check for typos in record names</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: DNS Name Resolution Slow</h4>
+<p><strong>Causes:</strong> Zone transfer delays, too many recursive queries, forwarders misconfigured, DNS service overloaded</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Review DNS query logs to identify bottlenecks</li>
+<li>Check secondary zone transfer status</li>
+<li>Configure conditional forwarders for specific domains</li>
+<li>Implement DNS caching at multiple levels</li>
+<li>Monitor DNS server CPU and memory usage</li>
+<li>Consider load balancing with multiple DNS servers</li>
+</ul>
+</div>
+
+<h2>DNS Best Practices</h2>
+
+<ul>
+<li><strong>Redundancy:</strong> Deploy at least two DNS servers for each zone</li>
+<li><strong>Delegation:</strong> Use DNS delegation for subdomains to distribute load</li>
+<li><strong>Scavenging:</strong> Enable DNS record scavenging to clean up stale records</li>
+<li><strong>Monitoring:</strong> Monitor DNS service health and query response times</li>
+<li><strong>Security:</strong> Restrict zone transfers to authorized servers only</li>
+<li><strong>Forwarders:</strong> Configure forwarders for external domain resolution</li>
+<li><strong>Documentation:</strong> Maintain detailed records of all zones and records</li>
+<li><strong>Testing:</strong> Regularly test DNS resolution and failover scenarios</li>
+</ul>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>DNS translates names to IP addresses</li>
+<li>Multiple record types serve different purposes (A, CNAME, MX, SRV, etc.)</li>
+<li>Zones are managed collections of DNS records</li>
+<li>Dynamic DNS enables automatic registration</li>
+<li>Secondary zones provide redundancy</li>
+<li>Proper configuration ensures network-wide name resolution</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

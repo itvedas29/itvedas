@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Server 2019 vs 2022 vs 2025 - Comprehensive Comparison</title>
+    <meta name="description" content="Complete comparison of Windows Server 2019, 2022, and 2025 including system requirements, features, performance, security, licensing, and migration paths.">
+    <meta name="keywords" content="Windows Server 2019 2022 2025 comparison, upgrade path, feature matrix, licensing, security">
+    <meta name="author" content="IT Vedas">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #0078d4 0%, #107c10 100%); color: white; padding: 40px 20px; margin: -20px -20px 30px -20px; border-radius: 8px; }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        header p { font-size: 1.1em; opacity: 0.9; }
+        .meta { display: flex; gap: 30px; margin-top: 15px; font-size: 0.9em; }
+        .meta-item { display: flex; align-items: center; gap: 8px; }
+
+        nav { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+        nav a { color: #0078d4; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+
+        section { margin-bottom: 40px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { color: #0078d4; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #0078d4; }
+        h3 { color: #107c10; margin-top: 20px; margin-bottom: 15px; }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #f0f0f0; padding: 15px; text-align: left; font-weight: 600; border-bottom: 3px solid #0078d4; }
+        td { padding: 12px 15px; border-bottom: 1px solid #ddd; }
+        tr:hover { background: #f8f9fa; }
+
+        .feature-matrix { width: 100%; margin: 20px 0; }
+        .feature-matrix th, .feature-matrix td { padding: 12px; text-align: center; }
+        .feature-matrix .feature-name { text-align: left; }
+        .checkmark { color: #107c10; font-weight: bold; font-size: 1.2em; }
+        .cross { color: #d13438; font-weight: bold; font-size: 1.2em; }
+        .partial { color: #ff8c00; font-weight: bold; }
+
+        .comparison-row { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .version-card { flex: 1; min-width: 250px; background: #f5f5f5; padding: 20px; border-radius: 8px; border-left: 4px solid #0078d4; }
+        .version-card.v2022 { border-left-color: #107c10; }
+        .version-card.v2025 { border-left-color: #ff8c00; }
+        .version-card h3 { margin-top: 0; }
+
+        .highlight { background: #ffffcc; padding: 15px; border-radius: 5px; border-left: 4px solid #ffd700; margin: 15px 0; }
+        .warning { background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ff9800; margin: 15px 0; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 5px; border-left: 4px solid #0078d4; margin: 15px 0; }
+        .success { background: #e8f5e9; padding: 15px; border-radius: 5px; border-left: 4px solid #107c10; margin: 15px 0; }
+
+        .toc { background: #f0f0f0; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .toc ol { margin-left: 20px; }
+        .toc li { margin: 10px 0; }
+        .toc a { color: #0078d4; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+
+        .migration-path { background: linear-gradient(to right, #f0f0f0, #fff); padding: 20px; border-radius: 8px; border: 2px solid #ddd; margin: 20px 0; }
+        .migration-arrow { display: inline-block; margin: 0 10px; color: #0078d4; font-weight: bold; }
+
+        .cost-comparison { width: 100%; margin: 20px 0; }
+        .cost-low { background: #e8f5e9; }
+        .cost-medium { background: #fff9c4; }
+        .cost-high { background: #ffebee; }
+
+        .faq-item { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        .faq-question { font-weight: 600; color: #0078d4; margin-bottom: 10px; cursor: pointer; user-select: none; }
+        .faq-answer { color: #555; line-height: 1.8; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+        .grid-item { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+
+        footer { text-align: center; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; }
+
+        .responsive-table { overflow-x: auto; }
+        .responsive-table table { min-width: 600px; }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .comparison-row { flex-direction: column; }
+            .version-card { min-width: 100%; }
+            nav ul { flex-direction: column; gap: 10px; }
+            table { font-size: 0.9em; }
+            th, td { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Windows Server Versions Comparison</h1>
+        <p>Complete feature, performance, and licensing comparison across Windows Server 2019, 2022, and 2025</p>
+        <div class="meta">
+            <div class="meta-item">📅 Updated: July 2026</div>
+            <div class="meta-item">🎯 For: Infrastructure Teams</div>
+            <div class="meta-item">⏱️ Read Time: 15-20 minutes</div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#system-requirements">System Requirements</a></li>
+            <li><a href="#feature-matrix">Features</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#licensing">Licensing</a></li>
+            <li><a href="#migration">Migration Paths</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </nav>
+
+    <section id="system-requirements">
+        <h2>System Requirements Comparison</h2>
+
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Windows Server 2019</th>
+                        <th>Windows Server 2022</th>
+                        <th>Windows Server 2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Processor</strong></td>
+                        <td>1.4 GHz 64-bit compatible with x64 instruction set</td>
+                        <td>1.4 GHz 64-bit compatible with x64 instruction set</td>
+                        <td>1.4 GHz 64-bit compatible with x64 instruction set</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Processor Compatibility</strong></td>
+                        <td>Supports Intel & AMD processors</td>
+                        <td>Supports Intel & AMD processors (newer models)</td>
+                        <td>Optimized for modern processors (Intel 3rd Gen Xeon & AMD EPYC)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAM (Minimum)</strong></td>
+                        <td>2 GB (Server with Desktop Experience)</td>
+                        <td>2 GB (Server with Desktop Experience)</td>
+                        <td>2 GB (Server with Desktop Experience)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAM (Recommended)</strong></td>
+                        <td>8 GB</td>
+                        <td>8 GB</td>
+                        <td>16 GB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAM (Maximum)</strong></td>
+                        <td>24 TB</td>
+                        <td>24 TB</td>
+                        <td>48 TB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disk Space (Minimum)</strong></td>
+                        <td>32 GB</td>
+                        <td>32 GB</td>
+                        <td>32 GB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TPM</strong></td>
+                        <td>TPM 2.0 recommended</td>
+                        <td>TPM 2.0 required for some security features</td>
+                        <td>TPM 2.0 strongly recommended (Secured-core)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Adapter</strong></td>
+                        <td>Gigabit Ethernet</td>
+                        <td>Gigabit Ethernet</td>
+                        <td>10 Gigabit Ethernet recommended</td>
+                    </tr>
+                    <tr>
+                        <td><strong>UEFI Firmware</strong></td>
+                        <td>UEFI 2.3.1 or later</td>
+                        <td>UEFI 2.3.1 or later</td>
+                        <td>UEFI 2.5 or later</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Secure Boot</strong></td>
+                        <td>Optional</td>
+                        <td>Optional</td>
+                        <td>Recommended for Secured-core</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="comparison-row">
+            <div class="version-card">
+                <h3>Windows Server 2019</h3>
+                <p><strong>Release Date:</strong> Oct 2018</p>
+                <p><strong>Support Window:</strong> Jan 2024 (Extended until Jan 2029)</p>
+                <p>Ideal for: Legacy deployments, backward compatibility requirements</p>
+            </div>
+            <div class="version-card v2022">
+                <h3>Windows Server 2022</h3>
+                <p><strong>Release Date:</strong> Aug 2021</p>
+                <p><strong>Support Window:</strong> Oct 2026 (Extended until Oct 2031)</p>
+                <p>Ideal for: Current production deployments, balanced features</p>
+            </div>
+            <div class="version-card v2025">
+                <h3>Windows Server 2025</h3>
+                <p><strong>Release Date:</strong> Sept 2024</p>
+                <p><strong>Support Window:</strong> Oct 2029 (Extended until Oct 2034)</p>
+                <p>Ideal for: New deployments, latest features and security</p>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>📌 Key Note:</strong> Windows Server 2019 has reached mainstream support end. Migration to 2022 or 2025 is recommended.
+        </div>
+    </section>
+
+    <section id="feature-matrix">
+        <h2>Feature Availability Matrix</h2>
+
+        <h3>Core Server Features</h3>
+        <div class="responsive-table">
+            <table class="feature-matrix">
+                <thead>
+                    <tr>
+                        <th class="feature-name">Feature</th>
+                        <th>2019</th>
+                        <th>2022</th>
+                        <th>2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name"><strong>Active Directory</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Hyper-V</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Failover Clustering</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Storage Spaces Direct</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Windows Admin Center</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>SMB 3.1.1</strong></td>
+                        <td class="partial">v3.0</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>ReFS Filesystem</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Shielded VM</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Guarded Fabric</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>WDAC (Device Guard)</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>New Features in 2022 vs 2019</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>Azure Hybrid Features</h4>
+                <ul>
+                    <li>Arc-enabled servers</li>
+                    <li>Azure Update Management</li>
+                    <li>Azure Monitor integration</li>
+                    <li>Azure Automation</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Security Enhancements</h4>
+                <ul>
+                    <li>IPv6 support improvements</li>
+                    <li>SMB 3.1.1 signing</li>
+                    <li>Kerberos armoring</li>
+                    <li>Enhanced Device Guard</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Performance Improvements</h4>
+                <ul>
+                    <li>Improved NIC performance</li>
+                    <li>Storage optimization</li>
+                    <li>Memory efficiency</li>
+                    <li>Boot time optimization</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Management Tools</h4>
+                <ul>
+                    <li>Enhanced Windows Admin Center</li>
+                    <li>Improved WSUS</li>
+                    <li>PowerShell 7.x support</li>
+                    <li>WMI improvements</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>New Features in 2025 vs 2022</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>AI & Machine Learning</h4>
+                <ul>
+                    <li>Copilot for Windows Server</li>
+                    <li>AI-powered diagnostics</li>
+                    <li>Predictive analytics</li>
+                    <li>ML-based optimization</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Cloud Integration</h4>
+                <ul>
+                    <li>Azure Stack Hub 2301+</li>
+                    <li>Seamless Azure integration</li>
+                    <li>Azure Policy support</li>
+                    <li>Cloud-native tools</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Container Support</h4>
+                <ul>
+                    <li>Enhanced Docker support</li>
+                    <li>Kubernetes improvements</li>
+                    <li>Container networking</li>
+                    <li>Windows Container updates</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Advanced Security</h4>
+                <ul>
+                    <li>Zero Trust networking</li>
+                    <li>Advanced threat protection</li>
+                    <li>Enhanced encryption</li>
+                    <li>Secured-core requirements</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="performance">
+        <h2>Performance Improvements</h2>
+
+        <h3>Performance Benchmarks (Relative Improvement)</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>2019 Baseline</th>
+                        <th>2022 vs 2019</th>
+                        <th>2025 vs 2022</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Boot Time</strong></td>
+                        <td>~45-60 seconds</td>
+                        <td>+15-20% faster</td>
+                        <td>+10-15% faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Usage (Idle)</strong></td>
+                        <td>~2-2.5 GB</td>
+                        <td>-10% less usage</td>
+                        <td>-5-10% less usage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Copy (Local)</strong></td>
+                        <td>~1000 MB/s</td>
+                        <td>+5-10% improvement</td>
+                        <td>+10-15% improvement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Throughput (SMB)</strong></td>
+                        <td>~1.2 Gbps</td>
+                        <td>+20-30% improvement</td>
+                        <td>+15-20% improvement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Storage Performance (S2D)</strong></td>
+                        <td>Baseline</td>
+                        <td>+25-35% IOPS</td>
+                        <td>+20-30% IOPS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hyper-V VM Density</strong></td>
+                        <td>~20-30 VMs/host</td>
+                        <td>+10-20% capacity</td>
+                        <td>+15-25% capacity</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight">
+            <strong>💡 Performance Note:</strong> Actual improvements depend on workload type, hardware, and configuration. Network-intensive workloads see the most benefit, while CPU-bound workloads show modest improvements.
+        </div>
+    </section>
+
+    <section id="security">
+        <h2>Security Enhancements</h2>
+
+        <h3>Security Features Comparison</h3>
+        <div class="responsive-table">
+            <table class="feature-matrix">
+                <thead>
+                    <tr>
+                        <th class="feature-name">Security Feature</th>
+                        <th>2019</th>
+                        <th>2022</th>
+                        <th>2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name"><strong>Windows Defender</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Credential Guard</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Device Guard (HVCI)</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Shielded VM</strong></td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Windows Defender for Servers</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>SMB 3.1.1 Signing</strong></td>
+                        <td class="partial">Optional</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Kerberos Armoring</strong></td>
+                        <td class="partial">Limited</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Azure Arc Integration</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Zero Trust Support</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="partial">Partial</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name"><strong>Secured-core Ready</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="partial">Supported</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Major Security Improvements by Version</h3>
+
+        <h4>Windows Server 2022 vs 2019</h4>
+        <ul>
+            <li><strong>Windows Defender for Servers:</strong> Cloud-based threat protection now included</li>
+            <li><strong>SMB 3.1.1 Encryption:</strong> Mandatory by default for domain members</li>
+            <li><strong>Kerberos Armoring:</strong> Enhanced Kerberos authentication security</li>
+            <li><strong>Azure Arc:</strong> Unified security management with Azure</li>
+            <li><strong>IPv6 Security:</strong> Improved IPv6 support and filtering</li>
+        </ul>
+
+        <h4>Windows Server 2025 vs 2022</h4>
+        <ul>
+            <li><strong>Zero Trust Architecture:</strong> Native support for Zero Trust networking</li>
+            <li><strong>Secured-core Enforcement:</strong> Stricter security baseline requirements</li>
+            <li><strong>Enhanced Encryption:</strong> Support for latest encryption algorithms</li>
+            <li><strong>AI-powered Threat Detection:</strong> Machine learning-based anomaly detection</li>
+            <li><strong>Supply Chain Security:</strong> Enhanced software verification</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Critical Security Update:</strong> Windows Server 2019 reached mainstream support end (January 2024). Immediate migration planning is required for security compliance.
+        </div>
+    </section>
+
+    <section id="licensing">
+        <h2>Licensing & Cost Comparison</h2>
+
+        <h3>Licensing Models</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Licensing Aspect</th>
+                        <th>Windows Server 2019</th>
+                        <th>Windows Server 2022</th>
+                        <th>Windows Server 2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>License Type</strong></td>
+                        <td>Core-based or CAL-based</td>
+                        <td>Core-based or CAL-based</td>
+                        <td>Core-based or CAL-based</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Minimum Cores</strong></td>
+                        <td>2 cores minimum</td>
+                        <td>2 cores minimum</td>
+                        <td>2 cores minimum</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost per 2-Core License</strong></td>
+                        <td>~$1,058 (Standard)</td>
+                        <td>~$1,058 (Standard)</td>
+                        <td>~$1,058 (Standard)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CAL Cost (User)</strong></td>
+                        <td>~$39/user</td>
+                        <td>~$39/user</td>
+                        <td>~$39/user</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CAL Cost (Device)</strong></td>
+                        <td>~$52/device</td>
+                        <td>~$52/device</td>
+                        <td>~$52/device</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Software Assurance</strong></td>
+                        <td>Available (~25%)</td>
+                        <td>Available (~25%)</td>
+                        <td>Available (~25%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cloud Hybrid Benefit</strong></td>
+                        <td>Limited</td>
+                        <td>Azure Hybrid Benefit available</td>
+                        <td>Enhanced Azure Hybrid Benefit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Datacenter Edition</strong></td>
+                        <td>~$6,155 per 2-core</td>
+                        <td>~$6,155 per 2-core</td>
+                        <td>~$6,155 per 2-core</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Edition Comparison</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature/Edition</th>
+                        <th>Essentials</th>
+                        <th>Standard</th>
+                        <th>Datacenter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>VM Licenses Included</strong></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max Virtual Processors</strong></td>
+                        <td>64</td>
+                        <td>Unlimited*</td>
+                        <td>Unlimited*</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hyper-V</strong></td>
+                        <td>Limited (2 VMs)</td>
+                        <td>✓ (Unlimited)</td>
+                        <td>✓ (Unlimited)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Storage Spaces Direct</strong></td>
+                        <td>✗</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Failover Clustering</strong></td>
+                        <td>Limited</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Use Case</strong></td>
+                        <td>Small businesses (max 25 users)</td>
+                        <td>General purpose deployments</td>
+                        <td>High-density virtualization</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="success">
+            <strong>✓ Cost Saving Tip:</strong> Azure Hybrid Benefit can significantly reduce cloud costs when migrating to Azure. With proper planning, cost savings can reach 40-60%.
+        </div>
+    </section>
+
+    <section id="migration">
+        <h2>Migration Paths & Recommendations</h2>
+
+        <h3>Recommended Migration Path</h3>
+        <div class="migration-path">
+            <div style="margin: 10px 0;">
+                <strong>Windows Server 2019</strong>
+                <span class="migration-arrow">→</span>
+                <strong>Windows Server 2022</strong>
+                <span class="migration-arrow">→</span>
+                <strong>Windows Server 2025</strong>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                Expected timeline: 12-24 months for full migration. Do not skip versions in production.
+            </p>
+        </div>
+
+        <h3>Migration Checklist</h3>
+        <div class="grid">
+            <div class="grid-item">
+                <h4>Pre-Migration Planning</h4>
+                <ul>
+                    <li>☐ Inventory current infrastructure</li>
+                    <li>☐ Identify dependencies</li>
+                    <li>☐ Document configurations</li>
+                    <li>☐ Plan downtime windows</li>
+                    <li>☐ Budget hardware upgrades</li>
+                    <li>☐ Plan licensing changes</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Testing Phase</h4>
+                <ul>
+                    <li>☐ Create test environments</li>
+                    <li>☐ Test application compatibility</li>
+                    <li>☐ Verify driver support</li>
+                    <li>☐ Test backup/restore</li>
+                    <li>☐ Performance benchmarking</li>
+                    <li>☐ Security configuration</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Pilot Deployment</h4>
+                <ul>
+                    <li>☐ Deploy non-critical servers</li>
+                    <li>☐ Monitor stability</li>
+                    <li>☐ Document issues</li>
+                    <li>☐ Train IT staff</li>
+                    <li>☐ Refine runbooks</li>
+                    <li>☐ Plan rollback</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>Full Deployment</h4>
+                <ul>
+                    <li>☐ Phase migrations</li>
+                    <li>☐ Monitor performance</li>
+                    <li>☐ Support end users</li>
+                    <li>☐ Optimize settings</li>
+                    <li>☐ Plan maintenance</li>
+                    <li>☐ Document new environment</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Migration Considerations by Role</h3>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Role Type</th>
+                        <th>Complexity</th>
+                        <th>Key Considerations</th>
+                        <th>Estimated Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Domain Controllers</strong></td>
+                        <td>High</td>
+                        <td>Schema upgrades, replication testing, DNS updates</td>
+                        <td>4-8 weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Servers</strong></td>
+                        <td>Medium</td>
+                        <td>Data migration, permission preservation, network throughput</td>
+                        <td>2-4 weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hyper-V Hosts</strong></td>
+                        <td>High</td>
+                        <td>Live migration, cluster coordination, VM compatibility</td>
+                        <td>3-6 weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exchange Servers</strong></td>
+                        <td>Very High</td>
+                        <td>DAG coordination, SLA impact, mailbox migration</td>
+                        <td>6-12 weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SQL Servers</strong></td>
+                        <td>High</td>
+                        <td>AG synchronization, backup strategy, application testing</td>
+                        <td>4-8 weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DHCP/DNS Servers</strong></td>
+                        <td>Low</td>
+                        <td>Failover capability, zone synchronization</td>
+                        <td>1-2 weeks</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight">
+            <strong>⚠️ Critical Consideration:</strong> Always test application compatibility in a lab environment. Third-party software may have compatibility issues or require updates.
+        </div>
+    </section>
+
+    <section id="deprecations">
+        <h2>Deprecation Warnings & Removed Features</h2>
+
+        <h3>Features Removed in Windows Server 2022</h3>
+        <ul>
+            <li><strong>Windows PowerShell ISE:</strong> Replaced with VS Code with PowerShell extension</li>
+            <li><strong>DHCP failover v1:</strong> Use v2 or higher</li>
+            <li><strong>WinRM SOAP listener:</strong> Use WinRM REST API</li>
+            <li><strong>SMB 1.0 disabled by default:</strong> Can still be enabled if required</li>
+        </ul>
+
+        <h3>Features Removed in Windows Server 2025</h3>
+        <ul>
+            <li><strong>Support for TLS 1.0/1.1:</strong> Only TLS 1.2+ supported</li>
+            <li><strong>Legacy authentication:</strong> NTLM limited to specific scenarios</li>
+            <li><strong>NetBIOS:</strong> Deprecated in new deployments</li>
+            <li><strong>IPv4 DHCPv6 dual-stack:</strong> Full IPv6 transition recommended</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Deprecation Notice:</strong> If your environment uses any of these features, plan migration before upgrading.
+        </div>
+    </section>
+
+    <section id="support-timeline">
+        <h2>Support Timeline & Lifecycle</h2>
+
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Release Date</th>
+                        <th>Mainstream End</th>
+                        <th>Extended Support End</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Windows Server 2019</strong></td>
+                        <td>Oct 2018</td>
+                        <td>Jan 2024 (Ended)</td>
+                        <td>Jan 2029</td>
+                        <td><span class="cross">CRITICAL</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Server 2022</strong></td>
+                        <td>Aug 2021</td>
+                        <td>Oct 2026</td>
+                        <td>Oct 2031</td>
+                        <td><span class="checkmark">Current</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Server 2025</strong></td>
+                        <td>Sept 2024</td>
+                        <td>Oct 2029</td>
+                        <td>Oct 2034</td>
+                        <td><span class="checkmark">Latest</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info">
+            <strong>📌 Timeline Note:</strong> Microsoft maintains 5 years of mainstream support and 5 years of extended support for each version, totaling 10 years of support.
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Should we migrate from Server 2019 to 2022 or 2025?</div>
+            <div class="faq-answer">
+                A: If you're migrating now, go directly to 2025 for long-term support (until 2034). If you prefer a more stable, proven platform, choose 2022. Do not stay on 2019 - it has exited mainstream support.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Can we perform in-place upgrades from 2019 to 2025?</div>
+            <div class="faq-answer">
+                A: No. Windows Server only supports in-place upgrades between consecutive versions. Recommended path: 2019 → 2022 → 2025. Plan approximately 2-3 months per hop for production environments.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: How much will hardware need to be upgraded?</div>
+            <div class="faq-answer">
+                A: Minimal hardware upgrades needed. 2025 recommends 16 GB RAM (vs 8 GB for 2022) and supports up to 48 TB RAM. Most existing hardware is compatible. Focus on storage and network capacity for improved performance.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What about licensing costs?</div>
+            <div class="faq-answer">
+                A: Core licensing costs remain similar across versions. However, Azure Hybrid Benefit provides significant savings in cloud scenarios (40-60% reduction). Calculate your specific ROI based on workload distribution.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: Are there security benefits to upgrading?</div>
+            <div class="faq-answer">
+                A: Significant. Windows Server 2025 includes Zero Trust support, enhanced encryption, and AI-powered threat detection. 2022 added Windows Defender for Servers. 2019 lacks many modern security features - upgrade is critical from a compliance perspective.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What's the expected performance improvement?</div>
+            <div class="faq-answer">
+                A: Network throughput improves 20-30% (2022) and 15-20% more (2025). File operations improve 5-10% per generation. Memory efficiency improves 10-15% with each version. Actual gains depend on your workload profile.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: How long should we plan for migration?</div>
+            <div class="faq-answer">
+                A: Plan 12-24 months for complete infrastructure migration. Start with DC migration (4-8 weeks), then file servers, then compute infrastructure. Parallel paths using load balancers can reduce downtime to near-zero.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Q: What about Azure Stack Hub compatibility?</div>
+            <div class="faq-answer">
+                A: Windows Server 2022 works with Azure Stack Hub 2102+. Windows Server 2025 requires Azure Stack Hub 2301 or newer. Verify your Azure Stack version before upgrading.
+            </div>
+        </div>
+    </section>
+
+    <section id="recommendations">
+        <h2>Recommendations by Scenario</h2>
+
+        <h3>Small Business (< 50 users)</h3>
+        <div class="grid-item" style="background: #e8f5e9;">
+            <h4>Recommended: Windows Server 2022 Standard</h4>
+            <p><strong>Why:</strong> Proven stability, good Azure integration, cost-effective licensing</p>
+            <ul>
+                <li>Single server deployment with integrated backup</li>
+                <li>Azure Hybrid Benefit for cloud DR</li>
+                <li>Support until 2031</li>
+            </ul>
+        </div>
+
+        <h3>Medium Enterprise (50-500 users)</h3>
+        <div class="grid-item" style="background: #e3f2fd;">
+            <h4>Recommended: Windows Server 2025 Standard with Clustering</h4>
+            <p><strong>Why:</strong> Long-term support, enhanced security, better scalability</p>
+            <ul>
+                <li>Failover Cluster with 2-4 nodes</li>
+                <li>Storage Spaces Direct for unified storage</li>
+                <li>Support until 2034</li>
+            </ul>
+        </div>
+
+        <h3>Large Enterprise (500+ users)</h3>
+        <div class="grid-item" style="background: #fff9c4;">
+            <h4>Recommended: Windows Server 2025 Datacenter</h4>
+            <p><strong>Why:</strong> Unlimited VM licensing, advanced features, best for hybrid cloud</p>
+            <ul>
+                <li>Hybrid cloud with Azure Stack Hub</li>
+                <li>Extensive virtualization consolidation</li>
+                <li>Advanced disaster recovery options</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>Windows Server Comparison Guide</strong> | Updated July 2026 | Created for IT Vedas</p>
+        <p>This guide is provided for informational purposes. Verify all information with Microsoft documentation before making deployment decisions.</p>
+    </footer>
+</div>
+</body>
+</html>
