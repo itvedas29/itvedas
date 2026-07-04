@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Server monitoring and performance guide: event logs, performance monitoring, resource utilization, alerts, and troubleshooting.">
+<meta name="keywords" content="server monitoring, performance monitoring, event logs, resource utilization, alerts, troubleshooting performance">
+<property="og:title" content="Server Monitoring & Performance | ITVedas">
+<property="og:description" content="Learn to monitor Windows servers, track performance metrics, and troubleshoot performance issues.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/server-monitoring-performance.html">
+<title>Server Monitoring & Performance — Complete Guide | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--hw);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>Monitoring & Performance</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">Server Monitoring & Performance</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 14 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>Monitoring is your early warning system. Before users call about slowness, you've already identified the bottleneck. Comprehensive monitoring tracks performance metrics, records events, and alerts to issues before they become outages. Proactive monitoring separates well-managed infrastructure from reactive firefighting.</p>
+
+<h2>Server Monitoring Fundamentals</h2>
+
+<p><strong>The Four Pillars of Monitoring:</strong></p>
+<ul>
+<li><strong>Metrics:</strong> Quantifiable data (CPU %, RAM usage, disk I/O)</li>
+<li><strong>Logs:</strong> Event records (application logs, security events)</li>
+<li><strong>Traces:</strong> Request/transaction flow (application performance)</li>
+<li><strong>Alerts:</strong> Proactive notifications when issues occur</li>
+</ul>
+
+<p>Modern monitoring combines all four to provide comprehensive visibility into system health.</p>
+
+<h2>Performance Monitor</h2>
+
+<p>Performance Monitor is Windows' built-in tool for real-time and historical performance tracking. It collects metrics from all system components.</p>
+
+<p><strong>Key Performance Indicators (KPIs):</strong></p>
+<ul>
+<li><strong>CPU Usage:</strong> Should average below 80%, spikes to 100% acceptable</li>
+<li><strong>Memory Usage:</strong> Should be below 80%, sustained high usage indicates issue</li>
+<li><strong>Disk Usage:</strong> Free space should be above 20% of total capacity</li>
+<li><strong>Disk I/O:</strong> Monitor queue length (should be <2 average)</li>
+<li><strong>Network Bandwidth:</strong> Monitor utilization (should be <70% of link capacity)</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating a Performance Monitor Counter Log</h4>
+<ol>
+<li>Open Performance Monitor from Administrative Tools</li>
+<li>Expand Data Collector Sets</li>
+<li>Right-click User-defined and select New → Data Collector Set</li>
+<li>Name it (e.g., "Daily-Server-Performance")</li>
+<li>Select "Create from template"</li>
+<li>Choose "System Diagnostics" or "System Performance"</li>
+<li>Complete the wizard</li>
+<li>Right-click created set and select Properties</li>
+<li>Configure schedule (e.g., daily at 11:00 PM)</li>
+<li>Set data retention (keep 7-30 days)</li>
+<li>Start the collector set</li>
+</ol>
+</step-guide>
+
+<div class="code-block">
+# PowerShell: Query key performance metrics
+# CPU Usage
+Get-WmiObject win32_processor | Select-Object LoadPercentage
+
+# Memory Usage
+$MemUsage = (Get-WmiObject -Class win32_operatingsystem).TotalVisibleMemorySize
+$MemFree = (Get-WmiObject -Class win32_operatingsystem).FreePhysicalMemory
+$PercentUsed = [Math]::Round(((($MemUsage - $MemFree) / $MemUsage) * 100), 2)
+Write-Host "Memory Usage: $PercentUsed%"
+
+# Disk Usage
+Get-PSDrive | Where-Object {$_.Provider -like "*FileSystem*"} |
+  Select-Object Name, Used, Free, @{Name="PercentUsed"; Expression={[math]::Round((($_.Used / ($_.Used + $_.Free)) * 100), 2)}}
+</code-block>
+
+<h2>Event Viewer and Event Logs</h2>
+
+<p>Event Viewer records system, application, and security events. Regular review identifies issues before they become problems.</p>
+
+<p><strong>Main Event Logs:</strong></p>
+<ul>
+<li><strong>System Log:</strong> Windows and hardware events (services starting/stopping, driver issues)</li>
+<li><strong>Application Log:</strong> Application-specific events and errors</li>
+<li><strong>Security Log:</strong> Authentication, access control, policy application events</li>
+<li><strong>PowerShell Operational Log:</strong> PowerShell script execution and errors</li>
+</ul>
+
+<p><strong>Event Severity Levels:</strong></p>
+<ul>
+<li><strong>Critical:</strong> System failure imminent, immediate action required</li>
+<li><strong>Error:</strong> Functionality lost, should be investigated</li>
+<li><strong>Warning:</strong> Issue detected, should be addressed but not urgent</li>
+<li><strong>Information:</strong> Normal operations, generally not concerning</li>
+</ul>
+
+<div class="step-guide">
+<h4>Configuring Event Log Retention</h4>
+<ol>
+<li>Open Event Viewer</li>
+<li>Right-click "Windows Logs" → Select log (e.g., System)</li>
+<li>Select Properties from right-click menu</li>
+<li>Configure Log Size: Set to 500MB minimum</li>
+<li>When log is full: Select "Archive the log when full"</li>
+<li>Retention: Keep logs for 30-90 days</li>
+<li>Click OK</li>
+<li>Repeat for all critical logs</li>
+</ol>
+</step-guide>
+
+<div class="code-block">
+# PowerShell: Query event logs
+# Get last 10 system errors
+Get-EventLog -LogName System -EntryType Error -Newest 10 | Format-Table TimeGenerated, Source, EventID, Message
+
+# Get failed logon attempts last 24 hours
+$Since = (Get-Date).AddDays(-1)
+Get-EventLog -LogName Security -InstanceId 4625 -After $Since |
+  Format-Table TimeGenerated, @{N="Account";E={$_.ReplacementStrings[5]}}, Message
+
+# Get PowerShell script execution errors
+Get-EventLog -LogName Application -Source PowerShell -EntryType Error -Newest 20
+</code-block>
+
+<h2>Resource Capacity Planning</h2>
+
+<p>Monitoring current state informs future capacity decisions. Track trends to predict when upgrades become necessary.</p>
+
+<p><strong>Capacity Planning Process:</strong></p>
+<ol>
+<li>Establish baseline usage (monitor for 2-4 weeks)</li>
+<li>Identify peak usage patterns (peak hours, peak days)</li>
+<li>Calculate growth rate (% increase per month/year)</li>
+<li>Project when resources will be exhausted</li>
+<li>Plan upgrades 3-6 months before reaching capacity</li>
+</ol>
+
+<div class="concept-box">
+<h4>📊 Example Capacity Planning</h4>
+<p><strong>Scenario:</strong> File server disk usage</p>
+<p>- Current usage: 3TB of 10TB (30%)</p>
+<p>- Usage growing at: 5% per month</p>
+<p>- Comfortable maximum: 80% (8TB)</p>
+<p>- Space available: 5TB (50%)</p>
+<p>- At 5% growth: Reaches 80% in 10 months</p>
+<p>- Action: Plan storage upgrade within 4-6 months</p>
+</div>
+
+<h2>Common Performance Issues and Diagnosis</h2>
+
+<div class="concept-box">
+<h4>Problem: High CPU Usage</h4>
+<p><strong>Diagnosis:</strong></p>
+<ol>
+<li>Open Task Manager (Ctrl+Shift+Esc)</li>
+<li>Click Processes tab</li>
+<li>Sort by CPU column</li>
+<li>Identify process consuming CPU</li>
+<li>Check if expected (backup, indexing, reporting job)</li>
+</ol>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Stop non-essential services or processes</li>
+<li>Schedule heavy processes for off-peak hours</li>
+<li>Add CPU capacity (more cores, faster processor)</li>
+<li>Check for runaway processes or infinite loops</li>
+<li>Update drivers and firmware</li>
+<li>Scan for malware using Windows Defender</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: High Memory Usage</h4>
+<p><strong>Diagnosis:</strong></p>
+<ol>
+<li>Open Performance Monitor</li>
+<li>Monitor Memory → Available MBytes</li>
+<li>If below 512MB, system is memory-starved</li>
+<li>Use Task Manager to identify memory hogs</li>
+<li>Check for memory leaks in applications</li>
+</ol>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Restart services with memory leaks</li>
+<li>Add physical RAM to server</li>
+<li>Increase virtual memory (paging file)</li>
+<li>Remove unnecessary services and applications</li>
+<li>Configure application memory limits</li>
+<li>Update application to fix memory leak</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: Disk Space Running Out</h4>
+<p><strong>Diagnosis:</strong></p>
+<ol>
+<li>Use File Explorer to check drive properties</li>
+<li>Right-click drive → Properties</li>
+<li>Identify free space vs. used space</li>
+<li>Use Disk Usage Analyzer to find large folders</li>
+</ol>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Delete unnecessary files (temp files, old logs)</li>
+<li>Archive old data to different location</li>
+<li>Enable disk compression for less critical files</li>
+<li>Implement file retention policies</li>
+<li>Add additional disk storage</li>
+<li>Schedule old file cleanup via scheduled task</li>
+</ul>
+</div>
+
+<h2>Proactive Monitoring Strategies</h2>
+
+<p><strong>Threshold-Based Alerting:</strong> Set alerts when metrics exceed defined thresholds.</p>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Metric</th>
+<th>Warning Threshold</th>
+<th>Critical Threshold</th>
+<th>Action</th>
+</tr>
+<tr>
+<td>CPU Usage</td>
+<td>60%</td>
+<td>85%</td>
+<td>Investigate process, schedule load shift, add capacity</td>
+</tr>
+<tr>
+<td>Memory Usage</td>
+<td>70%</td>
+<td>90%</td>
+<td>Identify leaks, restart services, add RAM</td>
+</tr>
+<tr>
+<td>Disk Usage</td>
+<td>70%</td>
+<td>90%</td>
+<td>Clean up old files, archive data, add storage</td>
+</tr>
+<tr>
+<td>Disk Queue Length</td>
+<td>2</td>
+<td>5+</td>
+<td>Reduce IOPS, upgrade disk subsystem, add RAM for caching</td>
+</tr>
+<tr>
+<td>Network Utilization</td>
+<td>60%</td>
+<td>80%</td>
+<td>Implement compression, upgrade link, optimize traffic</td>
+</tr>
+</table>
+</div>
+
+<h2>Monitoring Tools Comparison</h2>
+
+<p><strong>Built-in Tools (No Cost):</strong></p>
+<ul>
+<li>Performance Monitor: Real-time and historical metrics</li>
+<li>Event Viewer: Centralized logging</li>
+<li>Task Manager: Quick process overview</li>
+<li>Resource Monitor: Detailed resource utilization</li>
+</ul>
+
+<p><strong>Enterprise Monitoring Solutions (With Cost):</strong></p>
+<ul>
+<li><strong>System Center Operations Manager (SCOM):</strong> Microsoft's enterprise monitoring</li>
+<li><strong>Prometheus + Grafana:</strong> Open-source monitoring and visualization</li>
+<li><strong>Datadog, New Relic, Splunk:</strong> Cloud-based monitoring services</li>
+</ul>
+
+<p>Start with built-in tools, graduate to enterprise solutions as infrastructure grows.</p>
+
+<h2>Monitoring Best Practices</h2>
+
+<ul>
+<li><strong>Monitor continuously:</strong> Not just during problems—establish baselines</li>
+<li><strong>Set realistic thresholds:</strong> Too low = alert fatigue, too high = missed issues</li>
+<li><strong>Document baselines:</strong> Normal CPU is 20%, not 5% or 50%</li>
+<li><strong>Review logs regularly:</strong> Weekly review of critical logs</li>
+<li><strong>Centralize logging:</strong> Don't check 50 servers individually</li>
+<li><strong>Alert intelligently:</strong> Page for critical, email for warning, ignore info</li>
+<li><strong>Test alerts:</strong> Ensure they actually fire and notify correct people</li>
+<li><strong>Retain data:</strong> Keep historical data for trend analysis</li>
+<li><strong>Correlate events:</strong> Don't look at CPU in isolation—correlate with disk I/O, network, application logs</li>
+<li><strong>Automate responses:</strong> Automatically restart services, clear queues, scale resources when possible</li>
+</ul>
+
+<h2>Creating a Monitoring Dashboard</h2>
+
+<p>A good dashboard shows server health at a glance. Include:</p>
+<ul>
+<li>CPU utilization % (green <60%, yellow 60-80%, red >80%)</li>
+<li>Memory utilization % (same color coding)</li>
+<li>Disk space available (warning if <20% free)</li>
+<li>Critical services status (running/stopped)</li>
+<li>Recent errors from event log</li>
+<li>Network bandwidth utilization</li>
+<li>Last backup status</li>
+<li>Ping/connectivity status</li>
+</ul>
+
+<div class="tip">
+<strong>💡 Pro Tip:</strong> Display dashboards on NOC (Network Operations Center) monitors. Spend 10 seconds visually scanning health before diving into details.
+</div>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>Monitoring provides early warning of issues</li>
+<li>Key metrics are CPU, memory, disk, and network</li>
+<li>Event logs record all important system activities</li>
+<li>Trend analysis enables capacity planning</li>
+<li>Threshold-based alerting prevents surprises</li>
+<li>Centralized monitoring scales with infrastructure</li>
+<li>Regular review maintains system health</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

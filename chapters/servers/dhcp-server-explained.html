@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DHCP Server guide: IP address allocation, scopes, reservations, leases, failover, and troubleshooting DHCP issues.">
+<meta name="keywords" content="DHCP Server, IP address assignment, DHCP scopes, DHCP leases, DHCP reservations, IP allocation, automatic IP">
+<property="og:title" content="DHCP Server: IP Assignment Automation | ITVedas">
+<property="og:description" content="Learn to set up and manage DHCP servers for automatic IP address assignment in enterprise networks.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/dhcp-server-explained.html">
+<title>DHCP Server: IP Assignment Automation — Complete Guide | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--db);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>DHCP Server</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">DHCP Server: IP Assignment Automation</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 13 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses and network configuration to devices on your network. Without DHCP, you'd manually configure every computer, phone, and printer with an IP address—a tedious and error-prone process. DHCP eliminates this burden through automatic, centralized IP management.</p>
+
+<h2>DHCP Fundamentals</h2>
+
+<p>DHCP operates on a simple client-server model. When a device connects to the network, it sends a DHCP request asking for an IP address. The DHCP server responds with an available IP address, along with other network configuration parameters like default gateway, DNS servers, and subnet mask.</p>
+
+<div class="concept-box">
+<h4>🔄 DHCP Lease Process (DORA)</h4>
+<p><strong>Discover:</strong> Client broadcasts "I need an IP address" to all DHCP servers</p>
+<p><strong>Offer:</strong> DHCP server responds with an available IP address offer</p>
+<p><strong>Request:</strong> Client accepts offer and formally requests the IP address</p>
+<p><strong>Acknowledge:</strong> Server confirms the lease and sends configuration parameters</p>
+<p>The entire process typically completes in 1-2 seconds.</p>
+</div>
+
+<h2>DHCP Scopes and Configuration</h2>
+
+<p>A DHCP scope is a range of IP addresses that the server can assign. Each scope represents a specific subnet and contains all configuration parameters for that network segment.</p>
+
+<p><strong>Scope Components:</strong></p>
+<ul>
+<li><strong>Scope Name:</strong> Descriptive name (e.g., "Building A - Floor 3")</li>
+<li><strong>Start IP:</strong> First IP in range (e.g., 192.168.1.100)</li>
+<li><strong>End IP:</strong> Last IP in range (e.g., 192.168.1.200)</li>
+<li><strong>Subnet Mask:</strong> Defines network boundaries (e.g., 255.255.255.0)</li>
+<li><strong>Lease Duration:</strong> How long client can keep IP (default 8 days)</li>
+<li><strong>Router/Default Gateway:</strong> Path to other networks</li>
+<li><strong>DNS Servers:</strong> Servers for name resolution</li>
+<li><strong>WINS Servers:</strong> Legacy NetBIOS name servers (if needed)</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating a DHCP Scope</h4>
+<ol>
+<li>Open <strong>DHCP Manager</strong> from Administrative Tools</li>
+<li>Expand your server</li>
+<li>Right-click <strong>IPv4</strong> and select <strong>New Scope</strong></li>
+<li>Enter scope name and description</li>
+<li>Enter start IP address (e.g., 192.168.1.100)</li>
+<li>Enter end IP address (e.g., 192.168.1.200)</li>
+<li>Enter subnet mask (typically auto-calculated)</li>
+<li>Configure lease duration (default 8 days is typically fine)</li>
+<li>Configure DHCP options (router, DNS, etc.)</li>
+<li>Choose whether to activate scope immediately</li>
+<li>Click Finish</li>
+</ol>
+</div>
+
+<h2>DHCP Reservations</h2>
+
+<p>A DHCP reservation ensures a specific device always receives the same IP address. This is useful for servers, printers, and other infrastructure that needs a fixed IP but should still receive configuration from DHCP.</p>
+
+<div class="step-guide">
+<h4>Creating a DHCP Reservation</h4>
+<ol>
+<li>Identify the device's MAC address (physical address)</li>
+<li>On Windows: <code>ipconfig /all</code></li>
+<li>On Mac: System Preferences → Network → Advanced → Hardware</li>
+<li>On Linux: <code>ip link show</code> or <code>ifconfig</code></li>
+<li>In DHCP Manager, expand scope</li>
+<li>Right-click <strong>Reservations</strong> and select <strong>New Reservation</strong></li>
+<li>Enter device name and MAC address</li>
+<li>Enter IP address to reserve (must be within scope range)</li>
+<li>Click Add</li>
+</ol>
+</div>
+
+<div class="code-block">
+# PowerShell: Create DHCP Reservation
+Add-DhcpServerv4Reservation -ScopeId 192.168.1.0 `
+  -IPAddress 192.168.1.50 `
+  -ClientId "00-11-22-33-44-55" `
+  -Name "Printer-Floor3"
+</div>
+
+<h2>DHCP Exclusions</h2>
+
+<p>Exclusions are IP addresses within a scope that DHCP should not assign. Use exclusions for static IPs (servers, routers, firewalls) that exist within the DHCP scope range.</p>
+
+<div class="step-guide">
+<h4>Creating Exclusion Ranges</h4>
+<ol>
+<li>In DHCP Manager, expand scope</li>
+<li>Right-click <strong>Exclusion Ranges</strong></li>
+<li>Select <strong>New Exclusion Range</strong></li>
+<li>Enter start IP and end IP to exclude</li>
+<li>Click Add</li>
+</ol>
+</div>
+
+<p><strong>Example Scope Setup:</strong></p>
+<ul>
+<li>Subnet: 192.168.1.0/24 (192.168.1.1 - 192.168.1.254)</li>
+<li>Exclusion: 192.168.1.1 - 192.168.1.50 (for routers, servers, etc.)</li>
+<li>DHCP Scope: 192.168.1.51 - 192.168.1.254 (for user devices)</li>
+</ul>
+
+<h2>DHCP Leases and Renewal</h2>
+
+<p>A DHCP lease has a lifespan. After expiration, the IP address is returned to the pool and available for reassignment. To prevent interruption, clients attempt to renew their lease at 50% of lease duration, and again at 87.5%.</p>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Lease Event</th>
+<th>Timing</th>
+<th>Action</th>
+</tr>
+<tr>
+<td>Lease Granted</td>
+<td>T+0</td>
+<td>Client receives IP and configuration</td>
+</tr>
+<tr>
+<td>Renewal Attempt (T1)</td>
+<td>50% of lease time</td>
+<td>Client tries to renew with original server</td>
+</tr>
+<tr>
+<td>Rebind (T2)</td>
+<td>87.5% of lease time</td>
+<td>Client tries any DHCP server</td>
+</tr>
+<tr>
+<td>Lease Expiration</td>
+<td>100% of lease time</td>
+<td>IP returned to pool, connection stops</td>
+</tr>
+</table>
+</div>
+
+<h2>DHCP Failover</h2>
+
+<p>DHCP failover ensures IP assignment continues even if one server fails. Two DHCP servers share the same scope and automatically coordinate to assign IPs.</p>
+
+<div class="concept-box">
+<h4>Failover Configuration</h4>
+<p><strong>Load Balancing Mode:</strong> Both servers actively assign IPs, distributing load</p>
+<p><strong>Hot Standby Mode:</strong> One server active, second takes over if primary fails</p>
+<p><strong>Failover Ratio:</strong> Determines IP split (e.g., 70/30 or 50/50)</p>
+<p><strong>Recovery Time:</strong> How long secondary waits before assuming primary is down (default 60 minutes)</p>
+</div>
+
+<div class="code-block">
+# PowerShell: Configure DHCP Failover
+Add-DhcpServerv4Failover -ComputerName "DHCP1" `
+  -PartnerServer "192.168.1.20" `
+  -Name "Failover-Pool1" `
+  -ScopeId @("192.168.1.0") `
+  -LoadBalancePercent 50 `
+  -Mode "HotStandby" `
+  -MaxClientLeadTime 1:00:00
+</div>
+
+<h2>DHCP Options</h2>
+
+<p>DHCP Options configure additional parameters sent to clients. Common options include:</p>
+
+<ul>
+<li><strong>Option 3:</strong> Default Gateway/Router</li>
+<li><strong>Option 6:</strong> DNS Servers</li>
+<li><strong>Option 15:</strong> Domain Name</li>
+<li><strong>Option 51:</strong> Lease Duration</li>
+<li><strong>Option 252:</strong> WPAD (Web Proxy Auto-Discovery)</li>
+<li><strong>Option 121:</strong> Classless Static Route</li>
+</ul>
+
+<div class="step-guide">
+<h4>Configuring Scope Options</h4>
+<ol>
+<li>In DHCP Manager, select the scope</li>
+<li>Right-click <strong>Scope Options</strong></li>
+<li>Select <strong>Configure Options</strong></li>
+<li>Check desired options from list</li>
+<li>Enter values (e.g., 192.168.1.1 for Router)</li>
+<li>Click OK</li>
+<li>New clients receive these options automatically</li>
+</ol>
+</div>
+
+<h2>DHCP Troubleshooting</h2>
+
+<div class="concept-box">
+<h4>Problem: Clients Not Getting IP Addresses</h4>
+<p><strong>Diagnosis:</strong></p>
+<ul>
+<li>Check if DHCP server service is running</li>
+<li>Verify scope is configured and activated</li>
+<li>Check if scope has available IPs</li>
+<li>Verify network connectivity to DHCP server</li>
+<li>Check for DHCP relay agent misconfiguration</li>
+<li>Review DHCP server event logs</li>
+</ul>
+
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Start DHCP service: <code>Start-Service DHCP</code></li>
+<li>Verify scope activation: DHCP Manager → Scope Status</li>
+<li>Check available addresses: Statistics show usage percentage</li>
+<li>Restart client: <code>ipconfig /release</code> then <code>ipconfig /renew</code></li>
+<li>Verify firewall allows DHCP (ports 67-68 UDP)</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: DHCP Clients Getting APIPA Address (169.254.x.x)</h4>
+<p><strong>Cause:</strong> DHCP server unreachable, DHCP request times out</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Ping DHCP server: <code>ping DHCP_SERVER_IP</code></li>
+<li>Check network connectivity</li>
+<li>Verify DHCP service running on server</li>
+<li>Check firewall allows DHCP traffic</li>
+<li>Force renew on client: <code>ipconfig /renew</code></li>
+<li>On client, run: <code>ipconfig /release</code></li>
+</ul>
+</div>
+
+<h2>DHCP Best Practices</h2>
+
+<ul>
+<li><strong>Plan carefully:</strong> Design scopes to match subnets (never across subnets without relay)</li>
+<li><strong>Reserve infrastructure:</strong> Use exclusions or reservations for servers/printers</li>
+<li><strong>Implement failover:</strong> Always deploy at least two DHCP servers</li>
+<li><strong>Appropriate lease times:</strong> Shorter leases (4 hours) for mobile devices, longer (8 days) for stable devices</li>
+<li><strong>Backup database:</strong> Regularly backup DHCP database</li>
+<li><strong>Monitor scopes:</strong> Alert when usage exceeds 80%</li>
+<li><strong>Maintain security:</strong> Restrict DHCP server access to authorized administrators</li>
+<li><strong>Document configuration:</strong> Keep detailed records of scopes, options, and reservations</li>
+</ul>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>DHCP automates IP address assignment</li>
+<li>Scopes define IP ranges for specific subnets</li>
+<li>Reservations ensure specific devices get fixed IPs</li>
+<li>Leases prevent IP exhaustion through automatic renewal</li>
+<li>Failover provides redundancy and high availability</li>
+<li>Options configure additional network parameters</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>

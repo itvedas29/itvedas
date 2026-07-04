@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete Active Directory guide: user management, groups, organizational units, authentication, group policies, and access control in enterprise networks.">
+<meta name="keywords" content="Active Directory, AD, user management, groups, organizational units, authentication, group policy, access control, domain users">
+<property="og:title" content="Active Directory Complete Guide | ITVedas">
+<property="og:description" content="Learn how Active Directory manages users, groups, computers, and security policies across enterprise networks.">
+<link rel="canonical" href="https://itvedas.com/chapters/servers/active-directory-complete-guide.html">
+<title>Active Directory Complete Guide — User Management & Authentication | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--card:#111119;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--border:rgba(255,255,255,0.08);--net:#FF6B35;--cld:#3B82F6;--sec:#10B981;--dev:#8B5CF6;--db:#F59E0B;--os:#EF4444;--hw:#06B6D4;--comp:#EC4899;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--fl:'Lexend',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:#0A0A0F;}
+body{background:#0A0A0F;color:#F0F0F8;font-family:var(--fl);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:var(--cld);text-decoration:none;transition:color 0.2s;}
+a:hover{color:var(--net);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(32px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.35rem;color:var(--text);letter-spacing:-0.02em;}
+.logo span{color:var(--net);}
+.nav-links{display:flex;gap:1.75rem;list-style:none;}
+.nav-links a{color:var(--muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.container{max-width:900px;margin:0 auto;padding:7rem 2rem 4rem;}
+.breadcrumb{display:flex;gap:0.5rem;margin-bottom:2rem;font-size:0.875rem;color:var(--muted);}
+.breadcrumb a{color:var(--cld);}
+.article-header{margin-bottom:3rem;}
+.article-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;background:linear-gradient(135deg,#F0F0F8 0%,#C8C8E0 60%,#A0A0C8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.article-meta{display:flex;gap:1.5rem;font-size:0.875rem;color:var(--muted);margin-bottom:2rem;}
+.article-content{line-height:1.8;}
+.article-content h2{font-family:var(--fd);font-size:1.8rem;font-weight:700;margin:2rem 0 1rem;color:#F0F0F8;}
+.article-content h3{font-family:var(--fd);font-size:1.3rem;font-weight:600;margin:1.5rem 0 0.75rem;color:#D0D0E8;}
+.article-content p{margin-bottom:1rem;color:#D0D0E8;}
+.article-content ul,.article-content ol{margin:1rem 0 1rem 2rem;color:#D0D0E8;}
+.article-content li{margin-bottom:0.5rem;}
+.article-content strong{color:#F0F0F8;font-weight:600;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;overflow-x:auto;color:#06B6D4;}
+.concept-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:4px solid var(--sec);}
+.step-guide{background:linear-gradient(135deg,rgba(59,130,246,0.1) 0%,rgba(59,130,246,0.05) 100%);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.step-guide h4{color:var(--cld);margin-bottom:1rem;}
+.step-guide ol{margin-left:1.5rem;}
+.tip{background:rgba(16,185,129,0.1);border-left:4px solid var(--sec);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#B0F4D6;}
+.warning{background:rgba(239,68,68,0.1);border-left:4px solid var(--os);padding:1rem;margin:1.5rem 0;border-radius:8px;color:#FCA5A5;}
+.table-responsive{overflow-x:auto;margin:1.5rem 0;}
+.table-responsive table{width:100%;border-collapse:collapse;}
+.table-responsive th{background:var(--bg3);color:var(--cld);padding:1rem;text-align:left;border:1px solid var(--border);}
+.table-responsive td{padding:1rem;border:1px solid var(--border);color:#D0D0E8;}
+footer{border-top:1px solid var(--border);padding:3.5rem 2rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+@media(max-width:640px){
+nav{padding:0 1.25rem;}
+.container{padding:6rem 1.25rem 3rem;}
+.article-title{font-size:1.75rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="/" class="logo">IT<span>Vedas</span></a>
+<ul class="nav-links">
+<li><a href="/">Home</a></li>
+<li><a href="/#chapters">Chapters</a></li>
+<li><a href="/quiz.html">Quiz</a></li>
+<li><a href="/about.html">About</a></li>
+</ul>
+</nav>
+
+<div class="container">
+<div class="breadcrumb">
+<a href="/">Home</a> <span>/</span> <a href="/chapters/servers/">Servers</a> <span>/</span> <span>Active Directory</span>
+</div>
+
+<div class="article-header">
+<h1 class="article-title">Active Directory Complete Guide</h1>
+<div class="article-meta">
+<span>Published: July 4, 2026</span>
+<span>Reading Time: 15 minutes</span>
+</div>
+</div>
+
+<div class="article-content">
+<p>Active Directory (AD) is the backbone of Windows enterprise networks. It's the directory service that stores information about all network objects—users, computers, printers, groups, and resources—and enables centralized management, authentication, and access control across your entire organization.</p>
+
+<h2>Understanding Active Directory</h2>
+
+<p>Active Directory is a hierarchical database designed to manage network resources efficiently. When you implement AD, you create a domain—a logical grouping of network objects that share the same AD database and security policies. All computers and users in a domain trust the Domain Controller (DC) to authenticate credentials and enforce policies.</p>
+
+<div class="concept-box">
+<h4>🔑 Why Active Directory Matters</h4>
+<p>Without AD, managing 100 users and 100 computers means 10,000 individual configurations. With AD, you configure once and apply to all. This centralization saves time, reduces errors, and improves security.</p>
+</div>
+
+<h2>AD Core Components</h2>
+
+<h3>1. Users</h3>
+<p>User accounts represent people in your organization. Each user has:</p>
+<ul>
+<li><strong>Username:</strong> Unique identifier (sAMAccountName)</li>
+<li><strong>Email:</strong> For communication and authentication</li>
+<li><strong>Password:</strong> Encrypted and hashed in AD database</li>
+<li><strong>Profile:</strong> Home directory, logon scripts, preferences</li>
+<li><strong>Group Memberships:</strong> Determines resource access</li>
+<li><strong>Attributes:</strong> Title, department, manager, phone, location</li>
+</ul>
+
+<div class="step-guide">
+<h4>Creating a User in Active Directory</h4>
+<ol>
+<li>Open <strong>Active Directory Users and Computers</strong></li>
+<li>Navigate to the appropriate <strong>Organizational Unit</strong></li>
+<li>Right-click and select <strong>New → User</strong></li>
+<li>Enter first name, last name, and username</li>
+<li>Set password and configure password policy</li>
+<li>Add user to appropriate groups</li>
+<li>Click <strong>Finish</strong> to create the user</li>
+</ol>
+</div>
+
+<h3>2. Groups</h3>
+<p>Groups are collections of users, computers, and other groups. Instead of assigning permissions to individual users, you assign them to groups, making management scalable.</p>
+
+<p><strong>Group Types:</strong></p>
+<ul>
+<li><strong>Security Groups:</strong> Control access to resources (files, printers, applications)</li>
+<li><strong>Distribution Groups:</strong> Send emails to multiple people</li>
+</ul>
+
+<p><strong>Group Scopes:</strong></p>
+<ul>
+<li><strong>Global:</strong> Members from same domain, can be used in any domain</li>
+<li><strong>Domain Local:</strong> Control access to resources in same domain</li>
+<li><strong>Universal:</strong> Can span forests and contain members from any domain</li>
+</ul>
+
+<p><strong>Recommended Group Strategy:</strong> Global Group → Domain Local Group → Resource Permissions</p>
+
+<h3>3. Organizational Units (OUs)</h3>
+<p>OUs are containers within a domain that organize objects into a logical hierarchy. They're primarily used for:</p>
+<ul>
+<li>Organizing users and computers logically</li>
+<li>Applying Group Policies to specific collections</li>
+<li>Delegating administrative control</li>
+<li>Managing access permissions</li>
+</ul>
+
+<div class="code-block">
+# PowerShell: Create organizational unit structure
+New-ADOrganizationalUnit -Name "Departments" -Path "DC=company,DC=local"
+New-ADOrganizationalUnit -Name "Sales" -Path "OU=Departments,DC=company,DC=local"
+New-ADOrganizationalUnit -Name "IT" -Path "OU=Departments,DC=company,DC=local"
+New-ADOrganizationalUnit -Name "Finance" -Path "OU=Departments,DC=company,DC=local"
+
+# Create users in specific OU
+New-ADUser -Name "John Smith" -SamAccountName "jsmith" `
+  -Path "OU=Sales,OU=Departments,DC=company,DC=local" `
+  -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
+  -Enabled $true
+</div>
+
+<h3>4. Computers</h3>
+<p>Computer objects represent devices joined to the domain. They contain:</p>
+<ul>
+<li>Computer name and DNS name</li>
+<li>Operating system information</li>
+<li>Last logon timestamp</li>
+<li>Hardware configuration</li>
+<li>Security policies and GPO applications</li>
+</ul>
+
+<h2>Authentication Process</h2>
+
+<p><strong>How Kerberos Authentication Works (5 Steps):</strong></p>
+
+<ol>
+<li><strong>User Logon:</strong> User enters credentials (username and password)</li>
+<li><strong>Authentication Service (AS):</strong> Domain Controller validates credentials and issues Ticket-Granting Ticket (TGT)</li>
+<li><strong>Request Service Ticket:</strong> User presents TGT to request access to a resource</li>
+<li><strong>Grant Service Ticket:</strong> Domain Controller issues service ticket for requested resource</li>
+<li><strong>Access Resource:</strong> User presents service ticket to resource and gains access</li>
+</ol>
+
+<div class="tip">
+<strong>💡 Key Concept:</strong> Kerberos is a mutual authentication protocol. Both the user and the service verify each other's identity, preventing impersonation attacks. The user's password never travels over the network—only encrypted tickets.
+</div>
+
+<h2>Permissions and Access Control</h2>
+
+<p><strong>Access Control Lists (ACLs)</strong> determine who can access resources and what they can do with them. Each file or network resource has a list of users/groups with specific permissions.</p>
+
+<div class="table-responsive">
+<table>
+<tr>
+<th>Permission</th>
+<th>Effect</th>
+<th>Applied To</th>
+</tr>
+<tr>
+<td>Read</td>
+<td>View file/folder content</td>
+<td>Files & Folders</td>
+</tr>
+<tr>
+<td>Write</td>
+<td>Modify file/folder content</td>
+<td>Files & Folders</td>
+</tr>
+<tr>
+<td>Execute</td>
+<td>Run executable files</td>
+<td>Files</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td>Change files and properties</td>
+<td>Files & Folders</td>
+</tr>
+<tr>
+<td>Full Control</td>
+<td>Complete access including deletion and permission changes</td>
+<td>Files & Folders</td>
+</tr>
+<tr>
+<td>Traverse Folder</td>
+<td>Move through folder structure</td>
+<td>Folders</td>
+</tr>
+</table>
+</div>
+
+<h2>Group Policy Objects (GPOs)</h2>
+
+<p>GPOs are collections of policy settings that control the appearance and behavior of Windows systems and AD objects. They enable mass deployment of configurations without touching individual machines.</p>
+
+<p><strong>Common GPO Applications:</strong></p>
+<ul>
+<li>Enforce password complexity requirements</li>
+<li>Configure security settings and firewall rules</li>
+<li>Deploy software to specific users or computers</li>
+<li>Configure desktop backgrounds and screensavers</li>
+<li>Control access to Windows features</li>
+<li>Configure printer and network drive mappings</li>
+<li>Enable auditing and logging</li>
+</ul>
+
+<div class="step-guide">
+<h4>Applying a Group Policy to an OU</h4>
+<ol>
+<li>Open <strong>Group Policy Management</strong> console</li>
+<li>Navigate to the OU where you want to apply policy</li>
+<li>Right-click and select <strong>Create a GPO in this domain, and Link it here</strong></li>
+<li>Name the GPO descriptively</li>
+<li>Right-click the new GPO and select <strong>Edit</strong></li>
+<li>Navigate to Computer or User Configuration</li>
+<li>Apply desired policy settings</li>
+<li>Users/computers refresh group policy every 90 minutes (with 30-minute randomization)</li>
+</ol>
+</div>
+
+<h2>AD Replication and Sites</h2>
+
+<p>In large organizations, you deploy multiple Domain Controllers across different physical locations. AD replication keeps all DCs synchronized.</p>
+
+<p><strong>Replication Topology:</strong></p>
+<ul>
+<li><strong>Intra-site replication:</strong> Between DCs in same location (frequent, full updates)</li>
+<li><strong>Inter-site replication:</strong> Between DCs in different locations (less frequent, bandwidth-aware)</li>
+<li><strong>Replication delay:</strong> Typically 15 minutes within sites, depends on links between sites</li>
+</ul>
+
+<h2>Common AD Problems and Solutions</h2>
+
+<div class="concept-box">
+<h4>Problem: Users Cannot Logon to Domain</h4>
+<p><strong>Causes:</strong> DC unreachable, incorrect credentials, account disabled, account locked out, password expired</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Verify network connectivity to DC</li>
+<li>Check if user account is enabled in AD</li>
+<li>Verify account not locked out (check lockout duration)</li>
+<li>Reset user password through AD Users and Computers</li>
+<li>Check if password expired (requires change on next logon)</li>
+<li>Verify user's computer is joined to domain</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: Computer Cannot Join Domain</h4>
+<p><strong>Causes:</strong> DC unreachable, network issues, DNS not resolving DC, insufficient permissions</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Ping domain controller: <code>ping DC_NAME</code></li>
+<li>Verify DNS resolution: <code>nslookup DC_NAME</code></li>
+<li>Check network connectivity and firewall rules</li>
+<li>Ensure computer name doesn't already exist in AD</li>
+<li>Verify user account has permissions to add computers to domain</li>
+<li>Restart the computer and try joining again</li>
+</ul>
+</div>
+
+<div class="concept-box">
+<h4>Problem: User Cannot Access Resource</h4>
+<p><strong>Causes:</strong> User not in correct group, permissions misconfigured, NTFS and share permissions conflict</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Verify user is member of resource's access control list</li>
+<li>Check NTFS permissions (must have Read or Modify)</li>
+<li>Verify shared folder permissions</li>
+<li>Check inheritance settings (may override parent permissions)</li>
+<li>Test access from different computer to isolate user vs. computer issue</li>
+<li>Clear cached credentials: <code>gpupdate /force</code></li>
+</ul>
+</div>
+
+<h2>Best Practices for Active Directory</h2>
+
+<ul>
+<li><strong>Plan OU structure carefully:</strong> Design should reflect your organization and support Group Policy application</li>
+<li><strong>Use meaningful naming conventions:</strong> Users (jsmith), computers (W10-SALES-01), groups (GRP_Sales_FolderAccess)</li>
+<li><strong>Implement strong password policies:</strong> Minimum length 12 characters, complexity requirements, history</li>
+<li><strong>Regularly audit permissions:</strong> Identify unnecessary access and reduce attack surface</li>
+<li><strong>Document your infrastructure:</strong> Maintain current documentation of OUs, groups, and policies</li>
+<li><strong>Implement least privilege:</strong> Users should have minimum permissions necessary for their role</li>
+<li><strong>Regular backups:</strong> Back up AD database regularly and test recovery procedures</li>
+<li><strong>Monitor logons:</strong> Enable audit logon events to detect suspicious activity</li>
+<li><strong>Delegate administration:</strong> Use OUs to delegate management tasks to department administrators</li>
+</ul>
+
+<h2>Key Takeaways</h2>
+<ul>
+<li>Active Directory centralizes management of users, computers, and resources</li>
+<li>Users and groups form the foundation of access control</li>
+<li>Kerberos provides secure mutual authentication</li>
+<li>Group Policies enable mass configuration deployment</li>
+<li>OUs organize objects and support policy application</li>
+<li>Proper design prevents security issues and simplifies administration</li>
+</ul>
+
+</div>
+
+<footer>
+<div style="font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;">IT<span style="color:var(--net);">Vedas</span></div>
+<p>The complete IT knowledge hub — explained simply, for everyone.</p>
+<p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</div>
+</body>
+</html>
