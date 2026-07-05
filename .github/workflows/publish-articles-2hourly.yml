@@ -3,10 +3,17 @@ name: Publish Article Every 2 Hours
 on:
   schedule:
     # Run every 2 hours: 12 times per day
-    - cron: '0 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
+    # IST = UTC + 5:30, so for 12:00 PM IST, use 6:30 UTC
+    # Schedule: 6:30, 8:30, 10:30 AM IST onwards
+    - cron: '30 6,8,10,12,14,16,18,20,22,0,2,4 * * *'
 
   # Allow manual trigger
   workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Run in test mode (generate 1 article)'
+        required: false
+        default: 'true'
 
 jobs:
   publish:

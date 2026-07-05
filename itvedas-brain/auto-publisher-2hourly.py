@@ -14,66 +14,110 @@ import subprocess
 class AutoPublisher:
     """Publish articles every 2 hours on various IT topics"""
 
-    # Topic rotation (every 2 hours, 12 articles per day)
+    # Topic rotation (every 2 hours, 12 articles per day) - INDIA OPTIMIZED
     TOPICS = [
         {
             "category": "CVE/Security",
             "keywords": [
-                "critical vulnerability explained",
-                "zero-day exploit analysis",
-                "malware detection techniques",
-                "ransomware prevention guide",
-                "security patch importance"
+                "how to protect from ransomware attack India",
+                "critical vulnerability explained for beginners",
+                "zero-day exploit analysis and prevention",
+                "malware detection techniques for Windows Linux",
+                "latest security patch installation guide",
+                "cybersecurity threats India 2026",
+                "data breach prevention tips",
+                "antivirus software comparison India"
             ]
         },
         {
             "category": "Cloud Computing",
             "keywords": [
-                "AWS best practices",
-                "Azure deployment guide",
-                "cloud cost optimization",
-                "serverless computing",
-                "multi-cloud strategy"
+                "AWS pricing and cost optimization India",
+                "Azure deployment guide for beginners",
+                "cloud computing benefits for Indian startups",
+                "serverless computing explained simply",
+                "Google Cloud vs AWS vs Azure comparison",
+                "cloud security best practices",
+                "cloud storage solutions for small business India",
+                "how to migrate to cloud from on-premise"
             ]
         },
         {
             "category": "DevOps/Automation",
             "keywords": [
-                "CI/CD pipeline setup",
-                "Docker containerization",
-                "Kubernetes orchestration",
-                "infrastructure as code",
-                "automation tools comparison"
+                "Docker containerization tutorial for beginners",
+                "Kubernetes orchestration step by step",
+                "CI/CD pipeline setup with Jenkins",
+                "infrastructure as code with Terraform",
+                "DevOps tools comparison 2026",
+                "continuous deployment best practices",
+                "automation testing with Selenium",
+                "GitLab vs GitHub for DevOps"
             ]
         },
         {
             "category": "Networking",
             "keywords": [
-                "VPN technology explained",
-                "network security protocols",
-                "DNS and domain management",
-                "firewall configuration",
-                "network optimization"
+                "how does VPN work explained simply",
+                "best VPN for India legal issues",
+                "network security protocols explained",
+                "how to use VPN on mobile India",
+                "firewall configuration tutorial",
+                "DNS security and DNS over HTTPS",
+                "network troubleshooting commands",
+                "how to secure home WiFi network"
             ]
         },
         {
             "category": "Linux/System Admin",
             "keywords": [
-                "Linux commands tutorial",
-                "system hardening guide",
-                "performance tuning",
-                "user management",
-                "log analysis techniques"
+                "Linux commands every beginner should know",
+                "how to install Linux on Windows",
+                "Ubuntu vs CentOS which is better",
+                "Linux system hardening security guide",
+                "Linux performance tuning tips",
+                "how to manage users and permissions Linux",
+                "Linux system monitoring tools",
+                "bash scripting tutorial for beginners"
             ]
         },
         {
             "category": "Databases",
             "keywords": [
-                "SQL query optimization",
-                "NoSQL database guide",
-                "data replication",
-                "backup strategies",
-                "database security"
+                "MySQL vs PostgreSQL comparison 2026",
+                "how to optimize slow SQL queries",
+                "MongoDB tutorial for beginners",
+                "database backup and recovery strategies",
+                "database replication master slave setup",
+                "database indexing explained simply",
+                "NoSQL vs SQL when to use which",
+                "database security best practices"
+            ]
+        },
+        {
+            "category": "Web Development",
+            "keywords": [
+                "REST API design best practices",
+                "how to build secure web application",
+                "API authentication OAuth vs JWT",
+                "web server Apache vs Nginx comparison",
+                "how to deploy web application to production",
+                "HTTPS SSL certificate installation guide",
+                "web performance optimization techniques",
+                "web application firewall WAF explained"
+            ]
+        },
+        {
+            "category": "AI/Machine Learning",
+            "keywords": [
+                "machine learning for beginners explained",
+                "artificial intelligence vs machine learning",
+                "how to train machine learning model",
+                "deep learning neural networks tutorial",
+                "TensorFlow vs PyTorch comparison",
+                "natural language processing NLP explained",
+                "computer vision applications 2026",
+                "machine learning ethics and bias"
             ]
         }
     ]
