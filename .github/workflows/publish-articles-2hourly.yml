@@ -1,0 +1,62 @@
+name: Publish Article Every 2 Hours
+
+on:
+  schedule:
+    # Run every 2 hours: 12 times per day
+    - cron: '0 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install anthropic
+
+      - name: Generate and publish article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd /home/user/itvedas
+          python3 itvedas-brain/auto-publisher-2hourly.py test
+
+      - name: Check for new articles
+        id: check_new
+        run: |
+          git diff --name-only | grep -q "articles/auto-generated/" && echo "new_articles=true" >> $GITHUB_OUTPUT || echo "new_articles=false" >> $GITHUB_OUTPUT
+
+      - name: Commit and push new articles
+        if: steps.check_new.outputs.new_articles == 'true'
+        run: |
+          git config user.name "Article Bot"
+          git config user.email "bot@itvedas.com"
+          git add articles/auto-generated/*.html
+          git commit -m "chore: Auto-publish article $(date +%Y-%m-%d\ %H:%M:%S)"
+          git push origin claude/keen-keller-roy4d3
+
+      - name: Report status
+        run: |
+          echo "✅ Article published at $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "Articles in queue: $(ls -1 articles/auto-generated/*.html 2>/dev/null | wc -l)"
+
+      - name: Update build status
+        if: always()
+        run: |
+          echo "Status: ${{ job.status }}" >> itvedas-brain/publisher.log
