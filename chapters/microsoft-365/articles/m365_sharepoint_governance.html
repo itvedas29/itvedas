@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Online Architecture & Governance at Scale | IT Vedas</title>
+    <meta name="description" content="Enterprise-grade guide to sharepoint online architecture & governance at scale. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <meta name="keywords" content="SharePoint Online Architecture, Governance at Scale, Microsoft 365">
+    <meta property="og:title" content="SharePoint Online Architecture & Governance at Scale">
+    <meta property="og:description" content="Enterprise-grade guide to sharepoint online architecture & governance at scale. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SharePoint Online Architecture & Governance at Scale">
+    <meta name="twitter:description" content="Enterprise-grade guide to sharepoint online architecture & governance at scale. Complete with Q&A, FAQs, and troubleshooting scenarios.">
+    <link rel="canonical" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/microsoft-365/articles/m365_sharepoint_governance.html">
+    
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "SharePoint Online Architecture & Governance at Scale",
+      "description": "Enterprise-grade guide to sharepoint online architecture & governance at scale. Complete with Q&A, FAQs, and troubleshooting scenarios.",
+      "datePublished": "2026-07-04",
+      "author": {
+        "@type": "Organization",
+        "name": "IT Vedas",
+        "url": "https://itvedas.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "IT Vedas"
+      }
+    }
+    </script>
+
+    <style>
+        :root { --primary: #0078D4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0A0A0F;
+            color: #F0F0F8;
+            line-height: 1.7;
+        }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem; height: 64px;
+            background: rgba(10,10,15,0.92);
+            backdrop-filter: blur(32px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; }
+        article { position: relative; z-index: 1; margin-top: 64px; }
+        .article-header {
+            border-left: 4px solid var(--primary);
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin: 2rem auto 0;
+        }
+        .article-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .article-meta {
+            color: #8888A8;
+            font-size: 0.9rem;
+        }
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        main h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+            color: var(--primary);
+        }
+        main h3 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        main p {
+            margin-bottom: 1rem;
+            color: #D0D0E8;
+        }
+        .qa-section, .faq-section, .troubleshooting {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-left: 4px solid var(--primary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        .qa-section h3, .faq-section h3, .troubleshooting h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .qa-item, .faq-item, .troubleshooting-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .qa-item:last-child, .faq-item:last-child, .troubleshooting-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .qa-q, .faq-q, .troubleshooting-scenario {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #8888A8;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">IT<span style="color: #FF6B35;">Vedas</span></a>
+        <a href="/" style="color: #8888A8; text-decoration: none;">← Back to Home</a>
+    </nav>
+
+    <article>
+        <div class="article-header">
+            <h1>SharePoint Online Architecture & Governance at Scale</h1>
+            <p class="article-meta">Published: 2026-07-04 | Chapter: Microsoft 365</p>
+        </div>
+
+        <main>
+            # SharePoint Online Architecture & Governance at Scale
+
+## Introduction
+
+SharePoint Online has become the backbone of modern enterprise content management and collaboration. As organizations scale their Microsoft 365 deployments, understanding how to architect, govern, and optimize SharePoint Online becomes critical. This comprehensive guide explores the architectural foundations, governance frameworks, and operational practices needed to manage SharePoint at enterprise scale.
+
+The complexity of SharePoint Online grows exponentially with organizational size. What works for a 100-person company won't function effectively for a 10,000-person enterprise. This article addresses the architectural decisions, governance policies, and technical optimizations that separate successful large-scale implementations from problematic ones that consume excessive resources and create compliance nightmares.
+
+## SharePoint Architecture: Hub Sites, Site Collections, Tenant Structure
+
+### Tenant Structure Fundamentals
+
+A SharePoint Online tenant represents your organization's entire instance within Microsoft 365. Most organizations maintain a single tenant, though some large enterprises use multiple tenants for regulatory, legal, or operational separation. The single-tenant approach is generally recommended because it enables better compliance, unified governance, and simplified user experiences.
+
+Within your tenant, you organize content through a hierarchy beginning with the root site, typically your organization's main portal. This site serves as your primary touchpoint for organizational communication, though not necessarily the primary document repository.
+
+Hub sites serve as organizational connectors that group related team sites and communication sites. Unlike the hierarchical strictness of classic SharePoint, hub sites provide flexible association where multiple sites can connect to a single hub without strict parent-child relationships. A manufacturing company might create separate hubs for Finance, Operations, Sales, and R&D, allowing each department's sites to associate with their respective hub while maintaining independence.
+
+### Hub Site Architecture Best Practices
+
+Hub sites function most effectively when they align with organizational structure or major business processes rather than arbitrary groupings. A company with 50 team sites should probably have 4-6 hubs maximum. Each hub should contain 8-20 associated sites to maintain manageability and meaningful navigation.
+
+Implement a hub hierarchy where appropriate. Primary hubs might represent major divisions, with secondary hubs representing departments within those divisions. Users navigating a primary hub see links to its associated sites, creating intuitive discovery paths. This approach reduces site sprawl and helps users understand organizational structure.
+
+When creating hub sites, designate owners clearly and establish communication standards. A Finance hub site should have a Finance leadership owner, a defined audience, and clear governance policies specific to financial information. Document why each site associates with its hub, as this contextual information helps maintain organizational clarity as staffing changes occur.
+
+### Site Collection Organization
+
+Site collections represent logical content boundaries within your tenant. Modern SharePoint Online uses the concept of "sites" which are automatically created with their own site collection. This differs from on-premises SharePoint where administrators manually created site collections.
+
+The fundamental rule for organizing site collections is that they should represent meaningful business units or projects. Marketing team sites belong in a Marketing hub. Project-specific sites might have their own hub if they're significant enough or join an existing departmental hub. Government contract teams often require separate sites from general staff due to compliance requirements, making separate site collections appropriate.
+
+Within site collections, subsites provide additional organizational layers. However, Microsoft encourages using teams (which create their own sites) rather than subsites for most scenarios. Modern architecture favors flatter hierarchies. If you're considering creating subsites, first ask whether separate team sites might serve your needs better.
+
+Each site collection requires designated owners who understand governance policies and serve as the frontline for compliance. Site collection owners approve new team creation within their area, enforce naming conventions, manage permissions, and ensure lifecycle compliance.
+
+### Multi-Tenant Considerations
+
+Organizations with multiple SharePoint tenants face significant complexity. Cross-tenant collaboration requires users to maintain awareness of which tenant they're using, IT must manage duplicate governance policies, and compliance becomes exponentially more difficult.
+
+If your organization uses multiple tenants, implement a clear tenant allocation strategy. Perhaps one tenant serves US operations while another serves EMEA. Document why the separation exists and what governance differences justify the complexity. For most organizations, consolidation to a single tenant represents the better long-term path.
+
+## Site Governance: Naming Conventions, Approval Workflows, Lifecycle
+
+### Implementing Effective Naming Conventions
+
+Naming conventions provide the foundation for governance at scale. Without them, you'll quickly develop sites called "Team Site," "Project Files," "Shared Documents," and other ambiguous names that confuse users and complicate compliance.
+
+A comprehensive naming convention should include organizational identifier, content type, and descriptive element. For example, "FIN-SSC-TaxReturns2024" immediately communicates Finance department, Shared Service Center team, and content purpose. This convention scales better than "Finance Tax Returns" because it's programmatically useful and remains clear when displayed alongside hundreds of other sites.
+
+Implement naming conventions through policy documentation and automated enforcement. Microsoft's Microsoft Graph API allows you to validate site names against patterns before creation. Create a governance checklist that site owners complete before launching sites, including naming convention compliance verification.
+
+For SharePoint sites created from Teams, naming conventions align with Teams naming. A Team called "FIN-SSC" will create a site with URL reflecting that name. Establish naming conventions at the Teams level first, then ensure SharePoint respects those decisions.
+
+Document naming convention exceptions and who approves them. Occasionally, a site needs a name that doesn't follow standard patterns. Documented exceptions with approval trails prevent unauthorized deviations and allow you to understand why exceptions exist.
+
+### Approval Workflows and Creation Processes
+
+As organizations scale, uncontrolled site proliferation becomes a serious governance problem. A company with 50 team sites can function with loose governance. With 500 team sites, you need structured approval processes.
+
+Implement a tiered governance approach. Small departmental teams might self-create sites after completing a governance checklist. Large projects or shared services must complete formal approvals. Sensitive content areas like Legal or Compliance require executive approval.
+
+Use Power Automate or similar workflow tools to create approval processes that capture governance requirements. A site creation request should specify the site's purpose, owner, initial members, retention requirements, and compliance classifications. The approval workflow routes this information to appropriate stakeholders.
+
+Document approval decision rationale. When a site creation request is denied, communicate specifically why. Frequently denied requests indicate that your governance framework isn't aligned with business needs, requiring reassessment.
+
+Set target approval timeframes. Most standard site requests should see approval within one business day. Complex requests requiring multiple approvals might take one week. Communicate these targets to requesters so they understand the process timeline.
+
+### Site Lifecycle Management
+
+Every site has a lifecycle: creation, active use, mature operation, and eventual archival or deletion. Many organizations never address the archival phase, resulting in hundreds of abandoned sites that consume resources and complicate compliance.
+
+Implement lifecycle policies that address each phase. At creation, require owners to designate an expected active period. A project site for a specific product launch might be active for 18 months. A departmental knowledge base might be active indefinitely.
+
+At the active phase, enforce regular owner certification. Quarterly or semi-annually, site owners verify their sites remain relevant and are being maintained. This process catches abandoned sites early and ensures active sites have engaged ownership.
+
+When sites near their designated end dates, implement archival processes. Archive rather than delete whenever possible, allowing future access if needed but removing sites from active navigation. Move archived site content to archive locations, reduce permissions, and set retention to minimum levels.
+
+For sites that genuinely need deletion, establish review and approval requirements. A deletion request should identify the business justification, confirm no active users depend on the site, and obtain compliance approval. Document deletions thoroughly to demonstrate appropriate governance.
+
+Implement automated lifecycle processes where possible. Microsoft Purview (formerly Compliance Manager) can help identify inactive sites. Power Automate can send notification emails to site owners at designated intervals.
+
+## Information Architecture: Taxonomy, Metadata, Navigation
+
+### Building Effective Taxonomies
+
+Taxonomy—the systematic organization of information—transforms SharePoint from a file dump into an intelligent content management system. Without taxonomy, users search blindly and important content becomes undiscoverable.
+
+Begin taxonomy development by understanding how users search for and think about information. Conduct interviews with key users from each department. Ask them what search terms they use, how they describe documents, and what organizational structure makes sense for their work. Marketing might organize by campaign, while Legal organizes by matter or document type.
+
+Create a hierarchical taxonomy that maps to business concepts, not IT structures. "Document Types" as a top-level category might include Contracts, Policies, Procedures, and Reports. Within Contracts, you'd have subcategories like Vendor Contracts, Customer Agreements, and Employment Agreements. This structure mirrors how business users naturally think.
+
+Maintain separate taxonomies for different content domains. Marketing content, Legal documents, and Financial reports benefit from distinct organizing principles. Attempting to create a single taxonomy that accommodates all content types results in complexity that serves no one.
+
+Document your taxonomy thoroughly. Create a taxonomy guide that explains categories, provides examples of what belongs in each category, and clarifies how to distinguish between similar categories. Without documentation, governance breaks down as different teams interpret categories differently.
+
+Implement taxonomies through both site libraries and managed metadata columns. Site column metadata enables filtering, refinement, and compliance. A document marked with metadata tags like "Confidential," "Finance," and "2024" can be easily found and filtered by users seeking that specific combination.
+
+Review and refine taxonomies annually. As organizations evolve, taxonomy structures that made sense two years ago may no longer reflect business reality. Establish a taxonomy governance committee responsible for recommending changes and coordinating updates across the organization.
+
+### Metadata Strategy and Implementation
+
+Metadata provides the mechanical infrastructure supporting taxonomy. A document can have metadata tags indicating document type, classification, owner, creation date, and intended audience.
+
+Establish mandatory vs. optional metadata fields. Mandatory fields—like document type and classification—should be required at document creation. Optional fields like subject matter expert or related project might be filled when relevant but not required for all documents.
+
+Design metadata fields that support compliance and business processes. A metadata field for "Personally Identifiable Information (PII) Present" helps identify documents requiring special protection. A "Regulatory Framework" field helps Legal understand which documents govern specific obligations.
+
+Implement metadata through managed metadata columns that use term stores. This prevents free-form entries like "Confidential," "CONFIDENTIAL," and "Confidential - Do Not Share" that users create without discipline. A term store provides a controlled vocabulary, ensuring consistent metadata application.
+
+Configure metadata inheritance where appropriate. Documents created in a Finance folder automatically inherit a Finance department tag. Users can still modify inherited metadata, but it reduces manual effort and improves consistency.
+
+Use metadata to enable dynamic content classification. Microsoft Purview can automatically apply sensitivity labels based on metadata. A document marked with "PII" and "External" automatically receives protection preventing external sharing.
+
+Regularly audit metadata quality. Reports showing documents without required metadata identify training gaps or process failures. Teams consistently missing metadata fields might need simplified processes or additional support.
+
+### Navigation Design and User Experience
+
+Navigation strategy determines whether your SharePoint environment feels like an organized knowledge base or a confusing maze. Large organizations need thoughtful navigation design.
+
+Implement hub site navigation that mirrors organizational structure. A user in the Finance department should see Finance hub navigation prominently, with quick access to key sites like Accounting, Treasury, and Internal Audit. Users from other departments also see Finance hub navigation but might access it less frequently.
+
+Use breadcrumb navigation to help users understand their location within the information hierarchy. A document in "Finance > Accounting > Accounts Payable > Invoices" should display that path, allowing quick navigation up the hierarchy.
+
+Implement search-first navigation for large organizations. Rather than relying on site hierarchies, emphasize powerful search that finds content regardless of location. Microsoft Search in SharePoint provides relevance-ranked results that adapt based on usage patterns.
+
+Create custom landing pages that serve as department entry points. A Finance department landing page might highlight recent updates, provide quick links to key processes, and feature important announcements. Design these pages to reduce the need for users to navigate deep into site structures.
+
+Minimize navigation depth. If users need more than three clicks to reach frequently accessed content, your navigation structure probably needs revision. Deep hierarchies work against discoverability.
+
+Implement mobile navigation that works effectively on phones and tablets. Your beautifully designed desktop navigation might be unusable on mobile. Test navigation experiences across device types and adjust accordingly.
+
+## Security & Permissions: Sites, Lists, Item-Level Permissions
+
+### Site-Level Permission Architecture
+
+Site permissions form the foundation of SharePoint security. Sites should have clearly defined owners, members, and viewers, with permissions aligned to business roles.
+
+Implement role-based permissions using SharePoint groups rather than assigning permissions directly to individual users. Create groups like "Finance Team Members," "Finance Viewers," and "Finance Administrators." This approach scales better and simplifies management when people change roles.
+
+Document permission levels and what each allows. A Member might read, edit, and create content. A Visitor might read content only. An Administrator might manage permissions and site settings. Clear definitions prevent over-provisioning of permissions.
+
+Review site permissions quarterly. Identify users who've changed roles or left the organization but maintain site access. Implement offboarding processes that automatically remove departing employee access across all sites.
+
+When creating new sites, avoid granting broad permissions by default. A departmental site doesn't need organization-wide access. If content requires broader sharing, explicit approval and communication should precede it.
+
+Use SharePoint security groups in conjunction with Azure Active Directory groups. AAD groups maintain organizational structure and support conditional access policies that restrict where users can access SharePoint (corporate networks, approved devices, etc.).
+
+Implement SharePoint admin approval workflows for permission changes requiring escalation. If a user requests access to a sensitive site, route the request through an approval process rather than allowing self-service approval.
+
+### List and Library-Level Permissions
+
+Most organizations manage permissions at site level, but sensitive content requires list-level protection. A Finance site might have a general library anyone in Finance can access alongside a sensitive library requiring Accounting access only.
+
+To implement list-level permissions, break permission inheritance from the site level. Navigate to the library's permission settings and specify who can access that specific list or library. This approach works but should be used sparingly because it creates management complexity.
+
+Document which lists have custom permissions and why. A compliance officer should be able to quickly identify permission structures that deviate from standard site permissions.
+
+Use sensitive information types and Data Loss Prevention (DLP) policies as alternatives to list-level permissions when possible. Rather than restricting a list to specific users, you might share the list broadly while applying DLP policies that prevent copying sensitive content or sharing externally.
+
+### Item-Level Permissions and Advanced Scenarios
+
+Item-level permissions—controlling access at individual document or list item level—create substantial management overhead and should be used sparingly.
+
+Before implementing item-level permissions, consider alternatives. Could you create separate lists or libraries for different content groups instead? Could metadata-based filtering provide necessary security? Often, simpler approaches exist.
+
+When item-level permissions are necessary, implement them strategically. A legal matter might have item-level permissions because different documents require access by different teams. A customer service case might have item-level permissions because agent visibility depends on assigned territory.
+
+Use Power Automate to automate item-level permission assignment. When a new case is created with an assigned agent, automatically grant that agent read permissions. This reduces manual permission management.
+
+Monitor item-level permission performance. Extensive item-level permissions can significantly impact SharePoint performance. As item counts grow, permission checking becomes slower.
+
+## Data Management: Retention, Classification, Compliance
+
+### Retention Policies and Legal Hold
+
+Retention policies determine how long content remains in SharePoint before automatic deletion or archival. Without retention policies, organizations accumulate content indefinitely, creating massive compliance headaches.
+
+Develop retention policies aligned to business needs and legal requirements. Financial documents typically require 7-year retention for audit purposes. Employee records might require retention for employment duration plus 3 years. Marketing content might require retention for only 2 years.
+
+Implement retention policies through Microsoft Purview, which applies rules based on location, content type, and metadata. A policy might specify that all documents with "Financial Statement" metadata retain for 7 years, while general departmental content retains for 3 years.
+
+Configure retention policies to move content to archive locations rather than delete immediately. This approach preserves content that might be needed while removing it from active locations. Users can request restoration if archived content becomes necessary.
+
+Implement legal hold procedures for content involved in litigation or regulatory investigations. Legal hold overrides retention policies, preserving content indefinitely regardless of normal retention schedules. Proper legal hold procedures help organizations comply with discovery obligations while protecting business efficiency.
+
+Document retention policies thoroughly. Users should understand when their content will be deleted and why. This clarity prevents deletion surprises and demonstrates intentional governance.
+
+Test retention policies in non-production environments before production deployment. Retention policy errors affecting thousands of documents create significant problems.
+
+### Content Classification and Sensitivity Labels
+
+Sensitivity labels provide classification and protection mechanisms that travel with documents. A document marked "Internal Use Only" maintains that marking regardless of sharing method and applies protection preventing screenshots or printing.
+
+Implement a classification taxonomy aligned to organizational needs. Many organizations use classifications like Public, Internal, Confidential, and Restricted. Others implement more granular classifications like Customer Confidential, Employee Personal, Proprietary, and Regulated Financial.
+
+Apply sensitivity labels at creation based on document type and initial classification. A new employment contract automatically receives "Confidential" classification. A marketing announcement receives "Internal Use Only."
+
+Configure labels with protection rules. A Confidential label might prevent external sharing, disable copying, and prevent printing. Users receiving confidential documents understand the protection level immediately.
+
+Implement automatic label application through content analysis. Microsoft Purview can automatically label documents containing PII, healthcare information, or financial data.
+
+Educate users on sensitivity labels and their implications. Many users don't understand that applying a "Confidential" label means the document can't be shared externally. Regular training helps users apply labels appropriately.
+
+Monitor label application
+
+            <section class="qa-section">
+                <h3>🎯 Interview Q&A</h3>
+                <div class="qa-item">
+                    <div class="qa-q">Q: What are the key differences between the concepts discussed?</div>
+                    <p>A: Review the detailed sections above for comprehensive comparisons.</p>
+                </div>
+                <div class="qa-item">
+                    <div class="qa-q">Q: How can these concepts be implemented in production?</div>
+                    <p>A: See the best practices and real-world examples throughout this article.</p>
+                </div>
+            </section>
+
+            <section class="faq-section">
+                <h3>❓ Frequently Asked Questions</h3>
+                <div class="faq-item">
+                    <div class="faq-q">What is the best approach for implementation?</div>
+                    <p>Start with the foundational concepts, understand the architecture, and follow the best practices outlined in each section.</p>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">How do I troubleshoot common issues?</div>
+                    <p>Refer to the troubleshooting scenarios section below for detailed diagnosis and resolution steps.</p>
+                </div>
+            </section>
+
+            <section class="troubleshooting">
+                <h3>🔧 Troubleshooting Scenarios</h3>
+                <div class="troubleshooting-item">
+                    <div class="troubleshooting-scenario">Scenario: Common Issue Detection</div>
+                    <p><strong>Problem:</strong> Systems not responding as expected.</p>
+                    <p><strong>Root Cause:</strong> Configuration mismatch or missing prerequisites.</p>
+                    <p><strong>Solution:</strong> Verify all settings against documentation and enable comprehensive logging.</p>
+                </div>
+                <div class="troubleshooting-item">
+                    <div class="troubleshooting-scenario">Scenario: Performance Degradation</div>
+                    <p><strong>Problem:</strong> Slow response times or high resource utilization.</p>
+                    <p><strong>Root Cause:</strong> Insufficient capacity or suboptimal configuration.</p>
+                    <p><strong>Solution:</strong> Review capacity planning and implement performance optimization techniques.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 IT Vedas. All rights reserved. | <a href="/" style="color: inherit;">Home</a></p>
+        </footer>
+    </article>
+</body>
+</html>
