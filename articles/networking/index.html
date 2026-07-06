@@ -167,6 +167,53 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
     </div>
   </div>
 
+  <div class="section-label">Interactive Concept</div>
+  <h2 class="section-h">How Data Travels: The TCP/IP Stack</h2>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;max-width:600px;">
+    <svg viewBox="0 0 400 500" style="width:100%;height:auto;margin-bottom:1rem;">
+      <!-- Application Layer -->
+      <rect x="20" y="20" width="360" height="80" fill="rgba(255,107,53,0.15)" stroke="#FF6B35" stroke-width="2" rx="8"/>
+      <text x="200" y="55" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#FF6B35" text-anchor="middle">Application Layer (HTTP, HTTPS, DNS)</text>
+      <text x="200" y="80" font-family="Inter" font-size="12" fill="#9C9CBE" text-anchor="middle">Web browsers, email, messaging</text>
+
+      <!-- Transport Layer -->
+      <rect x="20" y="120" width="360" height="80" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="8"/>
+      <text x="200" y="155" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#8B5CF6" text-anchor="middle">Transport Layer (TCP, UDP)</text>
+      <text x="200" y="180" font-family="Inter" font-size="12" fill="#9C9CBE" text-anchor="middle">Reliable delivery, port management</text>
+
+      <!-- Internet Layer -->
+      <rect x="20" y="220" width="360" height="80" fill="rgba(6,182,212,0.15)" stroke="#06B6D4" stroke-width="2" rx="8"/>
+      <text x="200" y="255" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#06B6D4" text-anchor="middle">Internet Layer (IP)</text>
+      <text x="200" y="280" font-family="Inter" font-size="12" fill="#9C9CBE" text-anchor="middle">IP addressing, routing across networks</text>
+
+      <!-- Link Layer -->
+      <rect x="20" y="320" width="360" height="80" fill="rgba(16,185,129,0.15)" stroke="#10B981" stroke-width="2" rx="8"/>
+      <text x="200" y="355" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#10B981" text-anchor="middle">Link Layer (Ethernet, Wi-Fi)</text>
+      <text x="200" y="380" font-family="Inter" font-size="12" fill="#9C9CBE" text-anchor="middle">Physical transmission, MAC addresses</text>
+
+      <!-- Animated arrow -->
+      <defs>
+        <style>
+          @keyframes dataFlow {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+          }
+          .flow-arrow { stroke-dasharray: 100; animation: dataFlow 3s ease-in-out infinite; }
+        </style>
+      </defs>
+      <path class="flow-arrow" d="M 200 110 L 200 120" stroke="#FF6B35" stroke-width="3" marker-end="url(#arrowhead)" fill="none"/>
+      <path class="flow-arrow" d="M 200 210 L 200 220" stroke="#FF6B35" stroke-width="3" marker-end="url(#arrowhead)" fill="none" style="animation-delay: 0.3s;"/>
+      <path class="flow-arrow" d="M 200 310 L 200 320" stroke="#FF6B35" stroke-width="3" marker-end="url(#arrowhead)" fill="none" style="animation-delay: 0.6s;"/>
+
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+          <polygon points="0,0 10,5 0,10" fill="#FF6B35"/>
+        </marker>
+      </defs>
+    </svg>
+    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Data flows down the stack when sending, up when receiving</p>
+  </div>
+
   <div class="section-label">Networking Articles</div>
   <h2 class="section-h">All guides in this chapter</h2>
   <div class="art-list"><a href="/articles/2026-07-05-networking.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-05</span><span class="read-time">6 min</span></div><h3 class="art-title">What is DNS and How Does it Work? Step-by-Step Guide for Beginners</h3><p class="art-desc">Learn how domain names are translated to IP addresses, the backbone of internet communication.</p><span class="art-link">Read article</span></a></div>

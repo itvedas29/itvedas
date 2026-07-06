@@ -70,6 +70,10 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;}
 .flinks a:hover{color:#FF6B35;}
+@keyframes queryFlow{0%{stroke-dashoffset:8;}100%{stroke-dashoffset:0;}}
+@keyframes indexPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+.index-box{animation:indexPulse 2s ease-in-out infinite;}.index-box:nth-child(2){animation-delay:0.3s;}.index-box:nth-child(3){animation-delay:0.6s;}
+.query-arrow{stroke-dasharray:8,4;animation:queryFlow 1s linear infinite;}
 @media(max-width:640px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.content{padding-left:1.25rem;padding-right:1.25rem;}.art-list{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -88,6 +92,91 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">Indexing</span><span class="tag">Replication</span><span class="tag">Sharding</span></div>
 </div>
 <div class="content">
+  <div class="section-label">Interactive Concept</div>
+  <h2 class="section-h">Query Execution & Storage Hierarchy</h2>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
+    <svg viewBox="0 0 600 420" style="width:100%;height:auto;margin-bottom:1rem;">
+      <defs>
+        <style>
+          @keyframes queryGlow{0%,100%{fill-opacity:0.7;}50%{fill-opacity:1;}}
+          .query-stage{animation:queryGlow 2s ease-in-out infinite;}
+          .query-stage:nth-child(2){animation-delay:0.3s;}
+          .query-stage:nth-child(3){animation-delay:0.6s;}
+          .query-stage:nth-child(4){animation-delay:0.9s;}
+          @keyframes storagePulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+          .storage-layer{animation:storagePulse 2.5s ease-in-out infinite;}
+          .storage-layer:nth-child(2){animation-delay:0.4s;}
+          .storage-layer:nth-child(3){animation-delay:0.8s;}
+        </style>
+      </defs>
+
+      <!-- Query Path -->
+      <text x="300" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">Database Query Execution</text>
+
+      <!-- Stage 1: Parser -->
+      <g class="query-stage">
+        <rect x="50" y="50" width="90" height="50" fill="rgba(245,158,11,0.15)" stroke="#F59E0B" stroke-width="2" rx="6"/>
+        <text x="95" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#F59E0B" text-anchor="middle">Parser</text>
+        <text x="95" y="90" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">SQL Check</text>
+      </g>
+
+      <line x1="140" y1="75" x2="170" y2="75" stroke="#F59E0B" stroke-width="2" class="query-arrow"/>
+      <polygon points="175,75 170,71 170,79" fill="#F59E0B"/>
+
+      <!-- Stage 2: Optimizer -->
+      <g class="query-stage">
+        <rect x="180" y="50" width="90" height="50" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="6"/>
+        <text x="225" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#3B82F6" text-anchor="middle">Optimizer</text>
+        <text x="225" y="90" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Plan</text>
+      </g>
+
+      <line x1="270" y1="75" x2="300" y2="75" stroke="#3B82F6" stroke-width="2" class="query-arrow"/>
+      <polygon points="305,75 300,71 300,79" fill="#3B82F6"/>
+
+      <!-- Stage 3: Engine -->
+      <g class="query-stage">
+        <rect x="310" y="50" width="90" height="50" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="6"/>
+        <text x="355" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#22C55E" text-anchor="middle">Engine</text>
+        <text x="355" y="90" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Execute</text>
+      </g>
+
+      <line x1="400" y1="75" x2="430" y2="75" stroke="#22C55E" stroke-width="2" class="query-arrow"/>
+      <polygon points="435,75 430,71 430,79" fill="#22C55E"/>
+
+      <!-- Stage 4: Result -->
+      <g class="query-stage">
+        <rect x="440" y="50" width="90" height="50" fill="rgba(8,145,178,0.15)" stroke="#0891B2" stroke-width="2" rx="6"/>
+        <text x="485" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#0891B2" text-anchor="middle">Results</text>
+        <text x="485" y="90" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Return</text>
+      </g>
+
+      <!-- Storage Layers -->
+      <text x="50" y="140" font-family="Space Grotesk" font-weight="600" font-size="13" fill="var(--text)">Storage Layers</text>
+
+      <!-- Buffer Pool -->
+      <g class="storage-layer">
+        <rect x="40" y="160" width="520" height="60" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.5)" stroke-width="2" rx="6"/>
+        <text x="60" y="182" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#F59E0B">Buffer Pool (Cache)</text>
+        <text x="60" y="200" font-family="Inter" font-size="10" fill="var(--muted)">Hot data in memory for fast access • Usually 1-32GB</text>
+      </g>
+
+      <!-- Indexes -->
+      <g class="storage-layer">
+        <rect x="40" y="240" width="520" height="60" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.5)" stroke-width="2" rx="6"/>
+        <text x="60" y="262" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#3B82F6">Indexes (B-Trees)</text>
+        <text x="60" y="280" font-family="Inter" font-size="10" fill="var(--muted)">Sorted structures for fast lookups • Enable quick row location</text>
+      </g>
+
+      <!-- Data Files -->
+      <g class="storage-layer">
+        <rect x="40" y="320" width="520" height="60" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.5)" stroke-width="2" rx="6"/>
+        <text x="60" y="342" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#22C55E">Data Files (Disk)</text>
+        <text x="60" y="360" font-family="Inter" font-size="10" fill="var(--muted)">Persistent storage on disk • Accessed on cache miss</text>
+      </g>
+    </svg>
+    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Queries flow through parser → optimizer → engine → results, accessing data from fastest (cache) to slowest (disk) layers</p>
+  </div>
+
   <div class="section-label">Databases Articles</div>
   <h2 class="section-h">This chapter is just getting started</h2>
   <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>

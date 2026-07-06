@@ -98,6 +98,76 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">GCP</span><span class="tag">Serverless</span><span class="tag">CDN</span><span class="tag">Auto-scaling</span></div>
 </div>
 <div class="content">
+  <div class="section-label">Interactive Concept</div>
+  <h2 class="section-h">Cloud Service Models: IaaS, PaaS, SaaS</h2>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
+    <svg viewBox="0 0 500 400" style="width:100%;height:auto;margin-bottom:1rem;">
+      <defs>
+        <style>
+          @keyframes slideRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+          }
+          .service-box { animation: slideRight 4s ease-in-out infinite; }
+          .service-box:nth-child(2) { animation-delay: 0.5s; }
+          .service-box:nth-child(3) { animation-delay: 1s; }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+          }
+          .cloud-bg { animation: pulse 3s ease-in-out infinite; }
+        </style>
+      </defs>
+
+      <!-- Cloud background -->
+      <ellipse cx="250" cy="80" rx="200" ry="60" fill="rgba(59,130,246,0.1)" class="cloud-bg"/>
+      <text x="250" y="90" font-family="Space Grotesk" font-weight="700" font-size="18" fill="#3B82F6" text-anchor="middle">Cloud Provider</text>
+
+      <!-- IaaS -->
+      <g class="service-box">
+        <rect x="20" y="150" width="130" height="200" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="8"/>
+        <text x="85" y="180" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#3B82F6" text-anchor="middle">IaaS</text>
+        <text x="85" y="200" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle">Infrastructure</text>
+        <line x1="30" y1="220" x2="140" y2="220" stroke="rgba(59,130,246,0.3)"/>
+        <text x="85" y="245" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Servers</text>
+        <text x="85" y="260" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Storage</text>
+        <text x="85" y="275" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Networking</text>
+        <text x="85" y="310" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle" font-weight="600">You manage:</text>
+        <text x="85" y="330" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">OS, Apps,</text>
+        <text x="85" y="345" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">Data</text>
+      </g>
+
+      <!-- PaaS -->
+      <g class="service-box">
+        <rect x="185" y="150" width="130" height="200" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="8"/>
+        <text x="250" y="180" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#8B5CF6" text-anchor="middle">PaaS</text>
+        <text x="250" y="200" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle">Platform</text>
+        <line x1="195" y1="220" x2="305" y2="220" stroke="rgba(139,92,246,0.3)"/>
+        <text x="250" y="245" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Runtime</text>
+        <text x="250" y="260" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Frameworks</text>
+        <text x="250" y="275" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Databases</text>
+        <text x="250" y="310" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle" font-weight="600">You manage:</text>
+        <text x="250" y="330" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">Code,</text>
+        <text x="250" y="345" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">Data</text>
+      </g>
+
+      <!-- SaaS -->
+      <g class="service-box">
+        <rect x="350" y="150" width="130" height="200" fill="rgba(16,185,129,0.15)" stroke="#10B981" stroke-width="2" rx="8"/>
+        <text x="415" y="180" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#10B981" text-anchor="middle">SaaS</text>
+        <text x="415" y="200" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle">Software</text>
+        <line x1="360" y1="220" x2="470" y2="220" stroke="rgba(16,185,129,0.3)"/>
+        <text x="415" y="245" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Web Apps</text>
+        <text x="415" y="260" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Email</text>
+        <text x="415" y="275" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Productivity</text>
+        <text x="415" y="310" font-family="Inter" font-size="11" fill="#9C9CBE" text-anchor="middle" font-weight="600">You manage:</text>
+        <text x="415" y="330" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">Only your</text>
+        <text x="415" y="345" font-family="Inter" font-size="9" fill="#9C9CBE" text-anchor="middle">data</text>
+      </g>
+    </svg>
+    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Cloud models differ in what the provider manages vs. what you manage</p>
+  </div>
+
   <div class="section-label">Cloud Computing Articles</div>
   <h2 class="section-h">This chapter is just getting started</h2>
   <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>
