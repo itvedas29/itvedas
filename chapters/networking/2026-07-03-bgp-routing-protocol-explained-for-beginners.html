@@ -176,11 +176,11 @@
 
   <p><strong>Route Filtering Gaps:</strong> If routers don't filter BGP announcements properly, invalid routes can propagate across the internet.</p>
 
-  <p>Mitigation strategies include RPKI (Resource Public Key Infrastructure) for cryptographic validation of route origins, <a href="/chapters/networking/bgp-route-filtering-explained.html">BGP route filtering</a>, and TCP authentication options like MD5 and TCP-AO for securing BGP sessions.</p>
+  <p>Mitigation strategies include RPKI (Resource Public Key Infrastructure) for cryptographic validation of route origins, <a href="/chapters/networking/">BGP route filtering</a>, and TCP authentication options like MD5 and TCP-AO for securing BGP sessions.</p>
 
   <h2>BGP vs. Other Routing Protocols</h2>
 
-  <p>Different routing protocols serve different purposes. <a href="/chapters/networking/ospf-routing-protocol-explained.html">OSPF routing protocol</a> scales well within autonomous systems but isn't designed for internet-wide use. RIP is outdated and limited to 15 hops. BGP's real strength is supporting policy-based routing and managing thousands of routes across administrative boundaries without the scalability limits of protocols designed for single organizations.</p>
+  <p>Different routing protocols serve different purposes. <a href="/chapters/networking/">OSPF routing protocol</a> scales well within autonomous systems but isn't designed for internet-wide use. RIP is outdated and limited to 15 hops. BGP's real strength is supporting policy-based routing and managing thousands of routes across administrative boundaries without the scalability limits of protocols designed for single organizations.</p>
 
   <p>For internal network routing, most organizations use OSPF or IS-IS alongside BGP. BGP at the edges (border routers) connects to the internet, while internal routing protocols manage traffic within the data center or campus.</p>
 
@@ -190,7 +190,7 @@
 
   <p>Most importantly, understand why BGP makes specific decisions. When a route isn't advertised as expected, trace through the attribute selection process. When failover doesn't happen as planned, examine your route filtering and local policies. BGP is powerful precisely because it's flexible—but that flexibility requires understanding the mechanics beneath.</p>
 
-  <p>Advanced topics like <a href="/chapters/networking/bgp-route-reflectors-explained.html">BGP route reflectors</a>, confederation design, and advanced traffic engineering will make sense once you've mastered these fundamentals.</p>
+  <p>Advanced topics like <a href="/chapters/networking/">BGP route reflectors</a>, confederation design, and advanced traffic engineering will make sense once you've mastered these fundamentals.</p>
 
   <div class="faq">
     <h2>Frequently Asked Questions</h2>
