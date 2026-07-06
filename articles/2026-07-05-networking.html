@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn what DNS is and how it works in simple steps. Understand domain names, IP addresses, and internet routing today.">
+<meta name="keywords" content="what is DNS and how does it work step by step, Networking guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What is DNS and How Does it Work? Step-by-Step Guide for Beginners | ITVedas">
+<meta property="og:description" content="Learn what DNS is and how it works in simple steps. Understand domain names, IP addresses, and internet routing today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/2026-07-05-networking.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://itvedas.com/articles/2026-07-05-networking.html">
+<title>What is DNS and How Does it Work? Step-by-Step Guide for Beginners | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "What is DNS and How Does it Work? Step-by-Step Guide for Beginners", "description": "Learn what DNS is and how it works in simple steps. Understand domain names, IP addresses, and internet routing today.", "keywords": "what is DNS and how does it work step by step", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "datePublished": "2026-07-05", "dateModified": "2026-07-05", "articleSection": "Networking", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/networking/" class="nav-back">← Networking</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/networking/">Networking</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Networking</span>
+    <span class="badge-info">📅 2026-07-05</span>
+    
+    <span class="badge-info">⏱ 6 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>What is DNS and How Does it Work? Step-by-Step Guide for Beginners</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-dns">What is DNS?</a></li><li><a href="#how-does-dns-work-step-by-step">How Does DNS Work? Step-by-Step</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-your-netflix-night">A Real-World Example: Your Netflix Night</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    ```html
+
+<h1>What is DNS and How Does it Work? Step-by-Step Guide for Beginners</h1>
+
+<p>Ever wondered how your browser finds Netflix when you type "netflix.com"? That magic happens through something called <strong>DNS</strong>. It's one of the internet's most important invisible helpers—and you use it every single day without realizing it.</p>
+
+<p>Understanding DNS helps you troubleshoot internet problems, stay safer online, and grasp how the entire web actually works. Let's break it down together, step by step.</p>
+
+<h2 id="what-is-dns">What is DNS?</h2>
+
+<p>DNS stands for <strong>Domain Name System</strong>. Think of it as the internet's phone book. You don't memorize phone numbers anymore—you look up names in your contacts. DNS does exactly that for websites.</p>
+
+<blockquote>
+<p><strong>DNS is a system that translates human-friendly website names (like google.com) into computer-friendly numbers called IP addresses (like 142.250.80.46).</strong> Without DNS, you'd have to memorize long strings of numbers to visit any website.</p>
+</blockquote>
+
+<p>Your computer can't understand "amazon.com." It only understands numbers, called <strong>IP addresses</strong> (Internet Protocol addresses). An IP address is like your home's street address—it uniquely identifies where a website lives on the internet.</p>
+
+<p><strong>In simple terms:</strong> You say "Hey, where is google.com?" DNS replies "Google lives at this number: 142.250.80.46." Your browser then visits that address.</p>
+
+<h2 id="how-does-dns-work-step-by-step">How Does DNS Work? Step-by-Step</h2>
+
+<p>Let's walk through exactly what happens when you type a website address into your browser:</p>
+
+<ol>
+<li><strong>You type a web address.</strong> You open your browser and type "youtube.com" to watch videos.</li>
+
+<li><strong>Your computer asks your ISP's DNS server.</strong> Your <strong>ISP</strong> (Internet Service Provider—the company providing your internet) has a DNS server ready to help.</li>
+
+<li><strong>The ISP's DNS server doesn't have the answer.</strong> It doesn't know YouTube's IP address, so it asks a bigger DNS server called a <strong>root nameserver</strong>. Think of this as asking the main office for directions.</li>
+
+<li><strong>The root nameserver points the way.</strong> It says "I don't know YouTube's exact address, but ask the .com authority." (.com is the domain extension you see.)</li>
+
+<li><strong>The TLD server gets involved.</strong> The <strong>TLD nameserver</strong> (TLD = Top-Level Domain) handles all .com websites. It doesn't know YouTube exactly, but directs traffic to YouTube's own DNS server.</li>
+
+<li><strong>YouTube's DNS server answers.</strong> Finally, someone who knows! YouTube's DNS server says "YouTube's actual IP address is 142.250.185.46."</li>
+
+<li><strong>Your computer gets the answer.</strong> Your ISP's DNS server receives this number and sends it back to you.</li>
+
+<li><strong>You visit the website.</strong> Your browser now visits "142.250.185.46" and displays YouTube. Mission accomplished!</li>
+
+<li><strong>Your computer remembers (briefly).</strong> Your device caches (saves) this answer for a few hours. Next time you visit YouTube, it skips steps 2-7 and uses the saved number.</li>
+</ol>
+
+<p><strong>In simple terms:</strong> DNS is like asking directions from neighbor to neighbor until someone knows where you're going, then you save those directions for next time.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Your computer caches DNS answers for speed. If YouTube changes its IP address and you can't access it, try clearing your DNS cache or restarting your router. This forces a fresh lookup.</p>
+</div>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p><strong>Every time you use the internet, DNS is working.</strong> Here's why you should care:</p>
+
+<p><strong>Speed matters.</strong> Slow DNS servers mean slower website loading. When you click a link, DNS lookup happens first—before your browser even downloads the page. A fast DNS server saves precious seconds.</p>
+
+<p><strong>Security depends on it.</strong> Hackers can hijack DNS to redirect you to fake websites. You think you're visiting your bank, but DNS sends you to a criminal's fake bank site instead. You enter your password—and it's stolen.</p>
+
+<p><strong>Your privacy is involved.</strong> Your ISP's DNS server logs every website you visit. Some people switch to private DNS services like Cloudflare (1.1.1.1) or Google (8.8.8.8) for privacy.</p>
+
+<p><strong>In simple terms:</strong> Bad DNS = slow internet, fake websites, and lost privacy. Good DNS = fast, safe browsing.</p>
+
+<h2 id="a-real-world-example-your-netflix-night">A Real-World Example: Your Netflix Night</h2>
+
+<p>Let's follow exactly what happens when you settle down to watch Netflix:</p>
+
+<ol>
+<li>You open your browser and type "netflix.com" because you don't remember Netflix's IP address (and you shouldn't have to).</li>
+
+<li>Your computer sends a message: "Hey DNS, where is netflix.com?"</li>
+
+<li>Your ISP's DNS server checks its cache. If Netflix's IP address is saved there, it answers immediately. If not, it asks the root nameserver, then the .com TLD server, then Netflix's own DNS servers.</li>
+
+<li>The answer comes back: Netflix lives at IP address 52.7.15.133 (this is example; real addresses change).</li>
+
+<li>Your browser navigates to that IP address.</li>
+
+<li>Netflix's servers recognize your request and display their website.</li>
+
+<li>You log in, choose a show, and press play.</li>
+
+<li>Here's the cool part: Netflix is actually hosted on multiple servers worldwide (called <strong>CDN</strong> — Content Delivery Network). DNS routing technology ensures you connect to the server closest to you, so your video streams smoothly without buffering.</li>
+</ol>
+
+<p><strong>Without DNS:</strong> You'd type "52.7.15.133" instead of "netflix.com." Imagine remembering numbers for Netflix, Google, YouTube, WhatsApp, Amazon, and hundreds more. Impossible, right?</p>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<p><strong>Mistake #1: Ignoring DNS speed.</strong> Many people use their ISP's default DNS server without question. It might be slow, especially during peak hours when millions of people are online. Your ISP's DNS is busier than a public phone book during rush hour.</p>
+
+<p><em>Fix:</em> Try faster alternatives like Cloudflare (1.1.1.1) or Google DNS (8.8.8.8). Change your router settings, and your entire home network gets faster DNS lookups.</p>
+
+<p><strong>Mistake #2: Not checking for DNS hijacking.</strong> Malware can change your DNS settings without permission, redirecting you to scam websites. You think you're on Amazon, but you're actually on a fake site stealing your credit card.</p>
+
+<p><em>Fix:</em> Regularly check your router's DNS settings. If they show unfamiliar IP addresses you didn't set, you have a problem. Use antivirus software and avoid downloading from untrusted sources.</p>
+
+<p><strong>Mistake #3: Forgetting DNS can fail.</strong> If DNS servers are down (rare but happens), you can't visit any websites—even if your internet connection works perfectly. You can access the internet physically, but not through website names.</p>
+
+<p><em>Fix:</em> Know at least one backup DNS address by heart (like Google's 8.8.8.8). If your primary DNS fails, you can manually switch to a backup.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<p><strong>Q: Can I change my DNS server? How?</strong></p>
+
+<p>Yes! You can change DNS at two levels:</p>
+
+<ol>
+<li><strong>At your router level:</strong> Log into your router's settings (usually 192.168.1.1 in your browser), find DNS settings, and enter new server addresses. This affects your entire home network.</li>
+
+<li><strong>At your computer level:</strong> Change settings in your device's network preferences. On Windows, go to Settings > Network > Change Adapter Options > DNS Settings. This affects only that one device.</li>
+</ol>
+
+<p><strong>Q: Why would I want to change DNS?</strong></p>
+
+<p>Three main reasons: <strong>Speed</strong> (faster loading), <strong>Privacy</strong> (ISP can't see your browsing), or <strong>Safety</strong> (some DNS services block malware sites automatically).</p>
+
+<p><strong>Q: Is DNS the same as my ISP?</strong></p>
+
+<p>No. Your ISP provides your internet connection. Your ISP usually provides a DNS server too, but you can use someone else's DNS server instead. It's like having electricity from the power company but buying your gas from a different provider.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>DNS might sound complicated, but here's the truth: it's just a translator. Every website you love—Netflix, Google, YouTube, WhatsApp, Amazon—all depend on DNS to work. Now that you understand how it works, you can troubleshoot problems, improve your speed, and protect your privacy. The next time a website loads instantly, you'll know the invisible work DNS did behind the scenes. You're no longer a complete beginner at networking. You've got this!</p>
+```
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-dns">What is DNS?</a></li><li><a href="#how-does-dns-work-step-by-step">How Does DNS Work? Step-by-Step</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-your-netflix-night">A Real-World Example: Your Netflix Night</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
