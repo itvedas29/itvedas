@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes, and API keys.">
+<meta name="keywords" content="what is an API, API explained for beginners, REST API tutorial, HTTP methods explained, JSON basics, API status codes">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas">
+<meta property="og:description" content="What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods, JSON, status codes, and API keys.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/api/what-is-an-api.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas">
+<meta name="twitter:description" content="What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods, JSON, status codes, and API keys.">
+<link rel="canonical" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/api/what-is-an-api.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/api/what-is-an-api.html">
+<title>What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"What is an API? REST, HTTP Methods and JSON Explained for Beginners (2026)",
+"description":"What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes, and API keys.","keywords":"what is an API, API explained for beginners, REST API tutorial, HTTP methods explained, JSON basics",
+"author":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"},
+"datePublished":"2026-07-06","dateModified":"2026-07-06",
+"articleSection":"APIs","educationalLevel":"Beginner",
+"url":"https://itvedas.com/articles/api/what-is-an-api.html"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is an API in simple terms?","acceptedAnswer":{"@type":"Answer","text":"An API (Application Programming Interface) is a set of rules that lets one piece of software request data or actions from another. Like a restaurant menu: you don't need to know how the kitchen works — you just order from a fixed list, and the kitchen brings back exactly what you asked for."}},
+{"@type":"Question","name":"What is the difference between an API and a website?","acceptedAnswer":{"@type":"Answer","text":"A website returns pages formatted for humans (HTML, images, buttons). An API returns raw structured data (usually JSON) formatted for programs. Both often run on the same servers and use the same HTTP protocol — the difference is the audience: people vs software."}},
+{"@type":"Question","name":"Do I need to know programming to understand APIs?","acceptedAnswer":{"@type":"Answer","text":"No. The concepts — requests, responses, methods, status codes — are understandable without writing code. You can even call real APIs from your browser address bar or with a single curl command. Programming knowledge only becomes necessary when you build applications on top of APIs."}}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--subtle:#D0D0E8;--accent:#84CC16;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:transparent;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#06B6D4);width:0%;transition:width 0.1s;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;}
+.nav-back:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.badge-topic{background:rgba(132,204,22,0.12);border:1px solid rgba(132,204,22,0.25);color:var(--accent);padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;}
+.badge-info{color:var(--muted);font-size:0.82rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.75rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;padding:0;margin:0;}
+.toc li{margin-bottom:0.15rem;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all 0.2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;color:var(--text);}
+article p{margin-bottom:1.35rem;color:var(--subtle);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--subtle);}
+article li{margin-bottom:0.65rem;line-height:1.7;}
+article strong{color:var(--text);font-weight:600;}
+article blockquote{background:linear-gradient(135deg,rgba(132,204,22,0.06),rgba(6,182,212,0.06));border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--subtle);font-size:1.05rem;font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#A3E635;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;font-size:0.84rem;color:#C8E6A0;line-height:1.8;}
+.callout{background:linear-gradient(135deg,rgba(132,204,22,0.08),rgba(6,182,212,0.06));border:1px solid rgba(132,204,22,0.2);border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.comparison-table{width:100%;border-collapse:collapse;margin:2rem 0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.comparison-table th{background:rgba(132,204,22,0.1);padding:1rem;text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--accent);}
+.comparison-table td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);color:var(--subtle);}
+.comparison-table tr:last-child td{border-bottom:none;}
+.takeaway{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:3rem 0;}
+.takeaway h3{font-family:'Space Grotesk',sans-serif;color:var(--accent);font-size:1.05rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.takeaway ul{list-style:none;padding:0;margin:0;}
+.takeaway li{padding:0.65rem 0;border-bottom:1px solid var(--border);color:var(--subtle);font-size:0.95rem;display:flex;gap:0.75rem;align-items:flex-start;line-height:1.5;}
+.takeaway li:last-child{border:none;}
+.takeaway li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:0.1rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;padding:0;margin:0;}
+.sc li{margin-bottom:0.15rem;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color 0.2s;}
+.sc a:hover{color:var(--accent);}
+.related-articles{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.related-articles p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:2rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.flinks a:hover{color:var(--accent);}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  aside{display:none;}
+  .hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}
+  nav{padding:0 1.25rem;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← API Guides</a>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="/">Home</a>
+    <span>›</span>
+    <a href="/articles/api/">APIs</a>
+    <span>›</span>
+    <span style="color:var(--text);">Article</span>
+  </div>
+  <div class="badges">
+    <span class="badge-topic">APIs</span>
+    <span class="badge-info">📅 2026-07-06</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>What is an API? REST, HTTP Methods and JSON Explained for Beginners</h1>
+</div>
+
+<div class="layout">
+<article>
+
+<h2 id="the-restaurant-analogy">The Restaurant Analogy</h2>
+<p>API stands for <strong>Application Programming Interface</strong>, and the jargon hides a simple idea. Think of a restaurant. You (the customer) don't walk into the kitchen and cook your own meal. You look at a <strong>menu</strong> — a fixed list of things you're allowed to order — tell the <strong>waiter</strong> what you want, and the kitchen prepares it and sends it back through the waiter.</p>
+
+<p>An API is that menu-and-waiter system for software:</p>
+<ul>
+<li><strong>You</strong> = an app (the weather app on your phone, a website, a script you wrote)</li>
+<li><strong>The menu</strong> = the API documentation — the list of things you're allowed to ask for</li>
+<li><strong>The waiter</strong> = the API itself, carrying requests in and responses out</li>
+<li><strong>The kitchen</strong> = the servers and databases you never see and never need to understand</li>
+</ul>
+
+<div class="callout">
+<div class="callout-title">Quick Answer</div>
+<p>An API is a set of rules that lets one program request data or actions from another program — without either side needing to know how the other works internally. Every modern app depends on them: checking weather, paying online, logging in with Google, tracking a delivery.</p>
+</div>
+
+<h2 id="a-real-request-step-by-step">A Real Request, Step by Step</h2>
+<p>Here's what happens when you open a weather app and it shows today's temperature:</p>
+
+<ol>
+<li><strong>Your app builds a request:</strong> <code>GET https://api.weather.com/v1/current?city=delhi</code> — "give me the current weather for Delhi."</li>
+<li><strong>The request travels over HTTPS</strong> to the weather company's API server (the same protocol your browser uses, which is why networking fundamentals matter here).</li>
+<li><strong>The server validates it:</strong> Is the API key valid? Is the city name real? Is this app allowed to call this endpoint?</li>
+<li><strong>The server does the work:</strong> queries its database for Delhi's latest readings.</li>
+<li><strong>The server responds</strong> with a status code and structured data:</li>
+</ol>
+
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "city": "Delhi",
+  "temperature_c": 31,
+  "condition": "clear",
+  "humidity": 42,
+  "updated": "2026-07-06T14:30:00Z"
+}</code></pre>
+
+<p>Your app reads that data and paints it on screen as "31°C ☀️ Clear". The whole round trip usually takes under 200 milliseconds. Notice what your app <em>didn't</em> need: no access to the weather company's database, no knowledge of their code, no idea whether the kitchen runs on Linux or Windows. Just the menu.</p>
+
+<h2 id="http-methods-the-verbs">HTTP Methods: The Verbs</h2>
+<p>Every API request uses an HTTP <strong>method</strong> — a verb that says what kind of action you want. Four cover almost everything:</p>
+
+<table class="comparison-table">
+<tr>
+<th>Method</th>
+<th>Meaning</th>
+<th>Everyday Example</th>
+</tr>
+<tr>
+<td><strong>GET</strong></td>
+<td>Read data — changes nothing</td>
+<td>Fetch today's weather; load your profile</td>
+</tr>
+<tr>
+<td><strong>POST</strong></td>
+<td>Create something new</td>
+<td>Place an order; send a message; sign up</td>
+</tr>
+<tr>
+<td><strong>PUT / PATCH</strong></td>
+<td>Update something that exists</td>
+<td>Change your delivery address; edit a post</td>
+</tr>
+<tr>
+<td><strong>DELETE</strong></td>
+<td>Remove something</td>
+<td>Delete a photo; cancel a subscription</td>
+</tr>
+</table>
+
+<p>This maps to the classic <strong>CRUD</strong> pattern from databases — Create, Read, Update, Delete. POST creates, GET reads, PUT updates, DELETE deletes. If you've read our <a href="/articles/databases/">Databases chapter</a>, this should feel familiar: an API is very often just a safe, controlled front door to a database.</p>
+
+<h2 id="json-the-data-format">JSON: The Data Format</h2>
+<p><strong>JSON</strong> (JavaScript Object Notation) is the format almost every modern API uses for its answers. It's plain text, human-readable, and built from just two structures:</p>
+
+<ul>
+<li><strong>Objects</strong> — curly braces with key/value pairs: <code>{"name": "Priya", "age": 24}</code></li>
+<li><strong>Arrays</strong> — square brackets with lists: <code>["red", "green", "blue"]</code></li>
+</ul>
+
+<p>Nest them and you can describe anything:</p>
+
+<pre><code>{
+  "order_id": 8841,
+  "status": "shipped",
+  "items": [
+    {"name": "USB-C cable", "qty": 2, "price_inr": 349},
+    {"name": "NVMe SSD 1TB", "qty": 1, "price_inr": 4999}
+  ],
+  "delivery": {"city": "Mumbai", "eta_days": 2}
+}</code></pre>
+
+<p>Despite the name, JSON has nothing to do with knowing JavaScript — every language (Python, PowerShell, C#, Java, Go) reads and writes it natively. When people say an API is "RESTful", they usually mean: it uses HTTP methods as verbs, URLs as nouns (<code>/orders/8841</code>), and JSON as the data format.</p>
+
+<h2 id="status-codes-the-answer-signal">Status Codes: The Answer Signal</h2>
+<p>Every response starts with a three-digit code that tells you, at a glance, how the request went. The first digit is the category:</p>
+
+<table class="comparison-table">
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+<th>What It Tells You</th>
+</tr>
+<tr>
+<td><strong>200 OK</strong></td>
+<td>Success</td>
+<td>Here's your data, everything worked</td>
+</tr>
+<tr>
+<td><strong>201 Created</strong></td>
+<td>Success</td>
+<td>Your POST worked — the new thing exists now</td>
+</tr>
+<tr>
+<td><strong>301 / 302</strong></td>
+<td>Redirect</td>
+<td>What you want moved — look over there instead</td>
+</tr>
+<tr>
+<td><strong>400 Bad Request</strong></td>
+<td>Your mistake</td>
+<td>The request was malformed — fix it and retry</td>
+</tr>
+<tr>
+<td><strong>401 / 403</strong></td>
+<td>Your mistake</td>
+<td>Missing or invalid credentials / not allowed</td>
+</tr>
+<tr>
+<td><strong>404 Not Found</strong></td>
+<td>Your mistake</td>
+<td>That thing doesn't exist at this address</td>
+</tr>
+<tr>
+<td><strong>429 Too Many Requests</strong></td>
+<td>Your mistake</td>
+<td>Slow down — you hit the rate limit</td>
+</tr>
+<tr>
+<td><strong>500 / 503</strong></td>
+<td>Their mistake</td>
+<td>The server broke or is overloaded — retry later</td>
+</tr>
+</table>
+
+<div class="callout">
+<div class="callout-title">Rule of Thumb</div>
+<p><strong>2xx</strong> = it worked. <strong>3xx</strong> = look elsewhere. <strong>4xx</strong> = you (the caller) did something wrong. <strong>5xx</strong> = they (the server) did something wrong. This one rule instantly makes API error messages readable.</p>
+</div>
+
+<h2 id="api-keys-and-authentication">API Keys and Authentication</h2>
+<p>Most useful APIs need to know <strong>who is calling</strong> — to bill usage, enforce limits, and protect private data. The common mechanisms, simplest first:</p>
+
+<h3 id="api-keys">API Keys</h3>
+<p>A long random string (like <code>sk_live_9f8a7b...</code>) you attach to every request, usually in a header. It identifies your app the way a membership card identifies you. Simple, and fine for server-to-server calls — but treat keys like passwords: never paste them into public code, chats, or GitHub repositories.</p>
+
+<h3 id="oauth-login-with-google">OAuth (Login with Google)</h3>
+<p>When an app offers "Sign in with Google", that's <strong>OAuth</strong> — a protocol where you approve a permission screen and the app receives a limited, expiring <strong>token</strong> instead of your password. The app never sees your Google password, and you can revoke its access anytime. Tokens with scopes ("read your email address, nothing else") are what make third-party integrations safe.</p>
+
+<h3 id="rate-limits">Rate Limits</h3>
+<p>APIs cap how many requests you can make (say, 100 per minute). Exceed it and you get <code>429 Too Many Requests</code>. This protects the server from accidental floods and abuse — the same thinking you'll meet again in our <a href="/articles/security/">Security chapter</a>.</p>
+
+<h2 id="types-of-apis">Types of APIs You'll Hear About</h2>
+<ul>
+<li><strong>REST</strong> — the dominant style described in this article: HTTP verbs, URL paths, JSON. Learn this first.</li>
+<li><strong>GraphQL</strong> — one endpoint where the caller specifies exactly which fields it wants. Popular in modern web apps to avoid over-fetching.</li>
+<li><strong>SOAP</strong> — an older, XML-heavy standard still common in banking, government, and legacy enterprise systems.</li>
+<li><strong>WebSockets</strong> — a two-way, always-open connection for live data: chat apps, stock tickers, multiplayer games.</li>
+<li><strong>Webhooks</strong> — a "reverse API": instead of you asking repeatedly, the server calls <em>your</em> URL when something happens (payment completed, code pushed). This is how services like payment gateways notify shops instantly.</li>
+</ul>
+
+<h2 id="try-it-yourself">Try It Yourself (No Coding Required)</h2>
+<p>You can call a real API right now. Paste this into your browser's address bar:</p>
+
+<pre><code>https://api.github.com/users/torvalds</code></pre>
+
+<p>You'll get live JSON describing Linus Torvalds' GitHub profile — followers, repos, join date. Your browser just acted as an API client, sent a GET request, and received a <code>200 OK</code> with JSON. On Linux, macOS, or Windows you can do the same from a terminal:</p>
+
+<pre><code>curl https://api.github.com/users/torvalds</code></pre>
+
+<p>Congratulations — you've made your first API call. Everything else in this chapter is refinement of what you just did.</p>
+
+<h2 id="key-takeaways">Key Takeaways</h2>
+
+<div class="takeaway">
+<h3 id="api-fundamentals-checklist">API Fundamentals Checklist</h3>
+<ul>
+<li>An API is a contract: a fixed menu of requests one program can make to another</li>
+<li>REST APIs use HTTP methods as verbs — GET reads, POST creates, PUT updates, DELETE removes</li>
+<li>JSON is the universal response format: objects in braces, arrays in brackets, readable by every language</li>
+<li>Status codes tell the story: 2xx worked, 4xx you erred, 5xx they erred</li>
+<li>API keys and OAuth tokens identify callers — treat them like passwords</li>
+<li>Webhooks flip the direction: the server calls you when events happen</li>
+<li>You can explore real APIs today with just a browser or one curl command</li>
+</ul>
+</div>
+
+<h2 id="learn-more">Learn More</h2>
+<p>APIs sit at the crossroads of several chapters:</p>
+<ul>
+<li><a href="/articles/networking/">Networking — How Networks Talk</a> — the HTTP and DNS plumbing every API call rides on</li>
+<li><a href="/articles/databases/">Databases</a> — where API data actually lives, and why CRUD maps to HTTP methods</li>
+<li><a href="/articles/security/">Security</a> — authentication, tokens, and why leaked API keys cause breaches</li>
+<li><a href="/articles/devops/">DevOps</a> — deploying and monitoring the servers that host APIs</li>
+</ul>
+
+</article>
+
+<aside>
+<div class="toc">
+<div class="toc-label">On This Page</div>
+<ul>
+<li><a href="#the-restaurant-analogy">The Restaurant Analogy</a></li>
+<li><a href="#a-real-request-step-by-step">A Real Request</a></li>
+<li><a href="#http-methods-the-verbs">HTTP Methods</a></li>
+<li><a href="#json-the-data-format">JSON</a></li>
+<li><a href="#status-codes-the-answer-signal">Status Codes</a></li>
+<li><a href="#api-keys-and-authentication">Keys &amp; Auth</a></li>
+<li><a href="#types-of-apis">Types of APIs</a></li>
+<li><a href="#try-it-yourself">Try It Yourself</a></li>
+</ul>
+</div>
+
+<div class="related-articles">
+<p><strong>Related Chapters</strong></p>
+<ul>
+<li><a href="/articles/networking/">Networking Fundamentals</a></li>
+<li><a href="/articles/databases/">Databases</a></li>
+<li><a href="/articles/api/">Browse All API Guides</a></li>
+</ul>
+</div>
+</aside>
+
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Practical IT education for learners, from networking fundamentals to cloud architecture.</p>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  let scrollTop = window.scrollY;
+  let docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  let scrollPercent = scrollTop / docHeight;
+  document.getElementById('pb').style.width = scrollPercent * 100 + '%';
+});
+</script>
+
+</body>
+</html>

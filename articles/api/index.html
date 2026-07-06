@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="How software talks to software — REST, HTTP methods, JSON, status codes, authentication and webhooks, explained in plain English.">
+<meta name="keywords" content="API tutorials, What is an API, REST API, HTTP methods, JSON, API authentication, Webhooks, ITVedas">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="APIs — How Software Talks | ITVedas">
+<meta property="og:description" content="How software talks to software — REST, HTTP methods, JSON, status codes, authentication and webhooks, explained in plain English.">
+<link rel="canonical" href="https://itvedas.com/articles/api/">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/api/index.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/api/index.html">
+
+<title>API Tutorials — How Software Talks | ITVedas</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CollectionPage","name":"APIs — ITVedas","description":"How software talks to software — REST, HTTP methods, JSON, status codes, authentication and webhooks, explained in plain English.","url":"https://itvedas.com/articles/api/"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#84CC16;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-links{display:flex;gap:1.5rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.hero{padding:8rem 2rem 3rem;max-width:1000px;margin:0 auto;position:relative;}
+.hero-glow{position:absolute;top:4rem;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(circle,#84CC161a,transparent 70%);pointer-events:none;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;position:relative;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.ch-icon{width:72px;height:72px;border-radius:18px;background:#84CC161f;display:flex;align-items:center;justify-content:center;font-size:2.25rem;margin-bottom:1.5rem;position:relative;}
+.ch-num{font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#84CC16;margin-bottom:0.75rem;position:relative;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3.25rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;position:relative;}
+.hero p{font-size:1.1rem;color:var(--sub);max-width:640px;line-height:1.75;margin-bottom:1.75rem;position:relative;}
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;position:relative;}
+.tag{font-size:0.78rem;padding:0.3rem 0.85rem;background:var(--bg2);border:1px solid var(--border);border-radius:100px;color:var(--muted);}
+.content{max-width:1000px;margin:0 auto;padding:2rem 2rem 5rem;}
+.section-label{font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
+.section-h{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:2rem;display:flex;align-items:center;gap:0.75rem;}
+.section-h::before{content:'';display:inline-block;width:4px;height:32px;background:linear-gradient(180deg,#84CC16,transparent);border-radius:2px;}
+.art-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;animation:fadeIn .6s ease-out;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.art{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;text-decoration:none;color:inherit;transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.art::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#84CC16,transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.art:hover{transform:translateY(-6px);border-color:#84CC1655;background:rgba(132,204,22,0.05);}
+.art:hover::before{transform:scaleX(1);}
+.art-badges{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.diff-badge{font-size:0.65rem;padding:0.3rem 0.6rem;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+.diff-beginner{background:rgba(16,185,129,0.15);color:#10B981;}
+.diff-intermediate{background:rgba(245,158,11,0.15);color:#F59E0B;}
+.diff-advanced{background:rgba(239,68,68,0.15);color:#EF4444;}
+.art-meta{display:flex;gap:1rem;margin-bottom:1rem;font-size:0.75rem;color:var(--muted);flex-wrap:wrap;align-items:center;}
+.read-time{display:flex;align-items:center;gap:0.3rem;}
+.read-time::before{content:'⏱';font-size:0.85rem;}
+.article-date{display:flex;align-items:center;gap:0.3rem;}
+.article-date::before{content:'📅';font-size:0.85rem;}
+.progress-bar{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:1rem;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#84CC16,#06B6D4);width:65%;transition:width .5s ease;}
+.art-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;line-height:1.4;margin-bottom:0.75rem;color:var(--text);flex:1;}
+.art-desc{font-size:0.9rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+.art-link{font-size:0.82rem;color:#84CC16;font-weight:600;display:inline-flex;align-items:center;gap:0.4rem;transition:gap .2s;margin-top:auto;}
+.art-link:hover{gap:0.6rem;}
+.art-link::after{content:'→';}
+.other{margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);}
+.oc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.75rem;margin-top:1.5rem;}
+.oc{display:flex;align-items:center;gap:0.6rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;text-decoration:none;color:var(--sub);font-size:0.875rem;transition:border-color .2s,color .2s;}
+.oc:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#84CC16;}
+/* Visual wireframes & diagrams */
+.chapter-map{background:linear-gradient(135deg,rgba(132,204,22,0.08),rgba(6,182,212,0.05));border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;margin-bottom:3rem;position:relative;overflow:hidden;}
+.chapter-map::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(132,204,22,0.1),transparent);pointer-events:none;}
+.map-title{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;position:relative;color:var(--text);}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;position:relative;}
+.map-item{background:var(--bg);border:1px solid rgba(132,204,22,0.3);border-radius:10px;padding:1rem;text-align:center;transition:all .3s;}
+.map-item:hover{border-color:#84CC16;background:rgba(132,204,22,0.1);transform:translateY(-2px);}
+.map-item-icon{font-size:1.8rem;margin-bottom:0.5rem;}
+.map-item-label{font-size:0.8rem;font-weight:600;color:var(--muted);}
+.topic-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:3rem;}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:all .3s;position:relative;}
+.topic-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#84CC16,transparent);border-radius:12px 12px 0 0;}
+.topic-card:hover{border-color:#84CC1655;transform:translateY(-4px);}
+.topic-icon{font-size:2rem;margin-bottom:0.75rem;display:block;}
+.topic-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;margin-bottom:0.5rem;color:var(--text);}
+.topic-desc{font-size:0.85rem;color:var(--muted);line-height:1.5;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.content{padding-left:1.25rem;padding-right:1.25rem;}.art-list{grid-template-columns:1fr;}.map-grid{grid-template-columns:repeat(2,1fr);}.topic-cards{grid-template-columns:1fr;}.section-h::before{height:24px;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">All Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+</nav>
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/#chapters">Chapters</a> › APIs</div>
+  <div class="ch-icon">🔌</div>
+  <div class="ch-num">Chapter 14 · APIs</div>
+  <h1>How Software Talks</h1>
+  <p>Every app you use — weather, payments, maps, login with Google — runs on APIs. Learn how software talks to software: REST, HTTP methods, JSON, status codes, authentication and webhooks, all in plain English.</p>
+  <div class="tags"><span class="tag">REST</span><span class="tag">HTTP Methods</span><span class="tag">JSON</span><span class="tag">Status Codes</span><span class="tag">Authentication</span><span class="tag">Webhooks</span></div>
+</div>
+<div class="content">
+  <div class="chapter-map">
+    <div class="map-title">📍 Chapter Overview</div>
+    <div class="map-grid">
+      <div class="map-item"><span>🔌</span><div class="map-item-label">Foundations</div></div>
+      <div class="map-item"><span>🔁</span><div class="map-item-label">REST &amp; HTTP</div></div>
+      <div class="map-item"><span>📦</span><div class="map-item-label">Data Formats</div></div>
+      <div class="map-item"><span>🔑</span><div class="map-item-label">Authentication</div></div>
+      <div class="map-item"><span>🔔</span><div class="map-item-label">Integration</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Key Topics</div>
+  <div class="topic-cards">
+    <div class="topic-card">
+      <span class="topic-icon">🔌</span>
+      <div class="topic-name">What Is an API</div>
+      <div class="topic-desc">The contract that lets two programs exchange data safely</div>
+    </div>
+    <div class="topic-card">
+      <span class="topic-icon">🔁</span>
+      <div class="topic-name">REST &amp; HTTP Methods</div>
+      <div class="topic-desc">GET, POST, PUT, DELETE — the verbs of the web</div>
+    </div>
+    <div class="topic-card">
+      <span class="topic-icon">📦</span>
+      <div class="topic-name">JSON</div>
+      <div class="topic-desc">The universal data format APIs speak</div>
+    </div>
+    <div class="topic-card">
+      <span class="topic-icon">🚦</span>
+      <div class="topic-name">Status Codes</div>
+      <div class="topic-desc">200 OK, 404 Not Found, 500 Error — what responses mean</div>
+    </div>
+    <div class="topic-card">
+      <span class="topic-icon">🔑</span>
+      <div class="topic-name">API Keys &amp; OAuth</div>
+      <div class="topic-desc">How APIs know who's calling and what they're allowed to do</div>
+    </div>
+    <div class="topic-card">
+      <span class="topic-icon">🔔</span>
+      <div class="topic-name">Webhooks</div>
+      <div class="topic-desc">Reverse APIs — servers that call you when something happens</div>
+    </div>
+  </div>
+
+  <div class="section-label">Interactive Concept</div>
+  <h2 class="section-h">The API Request/Response Cycle</h2>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
+    <svg viewBox="0 0 650 300" style="width:100%;height:auto;margin-bottom:1rem;">
+      <defs>
+        <style>
+          @keyframes apiFlow{0%{stroke-dashoffset:60;}100%{stroke-dashoffset:0;}}
+          .api-arrow{stroke-dasharray:60;animation:apiFlow 2.5s ease-in-out infinite;}
+          @keyframes apiGlow{0%,100%{opacity:0.65;}50%{opacity:1;}}
+          .api-stage{animation:apiGlow 2.5s ease-in-out infinite;}
+          .api-d1{animation-delay:0.4s;}
+          .api-d2{animation-delay:0.8s;}
+        </style>
+      </defs>
+
+      <text x="325" y="28" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">One API Call, Step by Step</text>
+
+      <!-- Client app -->
+      <g class="api-stage">
+        <rect x="20" y="70" width="150" height="90" fill="rgba(132,204,22,0.15)" stroke="#84CC16" stroke-width="2" rx="8"/>
+        <text x="95" y="102" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#84CC16" text-anchor="middle">Your App</text>
+        <text x="95" y="122" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Weather app on</text>
+        <text x="95" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">your phone</text>
+      </g>
+
+      <!-- Request arrow -->
+      <line class="api-arrow" x1="175" y1="95" x2="250" y2="95" stroke="#84CC16" stroke-width="2"/>
+      <polygon points="256,95 248,90 248,100" fill="#84CC16"/>
+      <text x="215" y="82" font-family="monospace" font-size="10" fill="#84CC16" text-anchor="middle">GET /weather?city=delhi</text>
+
+      <!-- API server -->
+      <g class="api-stage api-d1">
+        <rect x="260" y="70" width="150" height="90" fill="rgba(6,182,212,0.15)" stroke="#06B6D4" stroke-width="2" rx="8"/>
+        <text x="335" y="102" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#06B6D4" text-anchor="middle">API Server</text>
+        <text x="335" y="122" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Checks your key,</text>
+        <text x="335" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">runs the logic</text>
+      </g>
+
+      <!-- DB arrow -->
+      <line class="api-arrow" x1="415" y1="95" x2="490" y2="95" stroke="#06B6D4" stroke-width="2"/>
+      <polygon points="496,95 488,90 488,100" fill="#06B6D4"/>
+      <text x="455" y="82" font-family="monospace" font-size="10" fill="#06B6D4" text-anchor="middle">query</text>
+
+      <!-- Database -->
+      <g class="api-stage api-d2">
+        <rect x="500" y="70" width="130" height="90" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="8"/>
+        <text x="565" y="102" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#8B5CF6" text-anchor="middle">Database</text>
+        <text x="565" y="122" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">Finds today's</text>
+        <text x="565" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">weather data</text>
+      </g>
+
+      <!-- Response path back -->
+      <line class="api-arrow" x1="560" y1="165" x2="560" y2="200" stroke="#8B5CF6" stroke-width="2"/>
+      <line class="api-arrow" x1="560" y1="200" x2="180" y2="200" stroke="#10B981" stroke-width="2"/>
+      <line class="api-arrow" x1="180" y1="200" x2="110" y2="168" stroke="#10B981" stroke-width="2"/>
+      <polygon points="105,165 115,166 108,174" fill="#10B981"/>
+      <rect x="255" y="212" width="240" height="52" fill="rgba(16,185,129,0.1)" stroke="#10B981" stroke-width="1.5" rx="6"/>
+      <text x="375" y="233" font-family="monospace" font-size="11" fill="#10B981" text-anchor="middle">200 OK</text>
+      <text x="375" y="251" font-family="monospace" font-size="11" fill="#10B981" text-anchor="middle">{"city":"Delhi","temp":31,"sky":"clear"}</text>
+
+      <text x="325" y="290" font-family="Inter" font-size="11" fill="var(--muted)" text-anchor="middle">Request goes out, JSON comes back — the whole cycle usually takes under 200 milliseconds</text>
+    </svg>
+    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Every tap in a modern app triggers this cycle: your app asks an API, the API asks its data sources, and a structured JSON answer travels back</p>
+  </div>
+
+  <div class="section-label">API Articles</div>
+  <h2 class="section-h">All guides in this chapter</h2>
+  <div class="art-list"><a href="/articles/api/what-is-an-api.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">10 min</span></div><h3 class="art-title">What is an API? REST, HTTP Methods and JSON Explained for Beginners</h3><p class="art-desc">The restaurant-menu analogy, a real request walkthrough, HTTP verbs, status codes, and why every modern app depends on APIs.</p><span class="art-link">Read article</span></a></div>
+  <div class="other">
+    <div class="section-label">Explore other chapters</div>
+    <div class="oc-grid">
+      <a href="/articles/networking/" class="oc">🌐 Networking</a>
+      <a href="/articles/cloud/" class="oc">☁️ Cloud</a>
+      <a href="/articles/security/" class="oc">🔐 Security</a>
+      <a href="/articles/devops/" class="oc">⚙️ DevOps</a>
+      <a href="/articles/databases/" class="oc">🗄️ Databases</a>
+      <a href="/articles/linux/" class="oc">🐧 Linux</a>
+      <a href="/articles/hardware/" class="oc">🖥️ Hardware</a>
+      <a href="/articles/compliance/" class="oc">📋 Compliance</a>
+      <a href="/articles/powershell/" class="oc">🔷 PowerShell</a>
+      <a href="/articles/azure/" class="oc">☁️ Azure</a>
+      <a href="/articles/iis/" class="oc">🌐 IIS</a>
+      <a href="/articles/sql-server/" class="oc">🗄️ SQL Server</a>
+      <a href="/articles/cve/" class="oc">🛡️ CVE Analysis</a>
+      <a href="/articles/api/" class="oc">🔌 APIs</a>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</body>
+</html>
