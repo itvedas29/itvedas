@@ -17,7 +17,7 @@ from core.llm import claude as _core_claude
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 
-ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "")
+ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 SITE    = "https://itvedas.com"
 
