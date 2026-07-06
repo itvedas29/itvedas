@@ -1,0 +1,80 @@
+name: Publish Article Every 2 Hours
+
+on:
+  schedule:
+    # Run every 2 hours: 12 times per day
+    # IST = UTC + 5:30, so for 12:00 PM IST, use 6:30 UTC
+    # Schedule: 6:30, 8:30, 10:30 AM IST onwards
+    - cron: '30 6,8,10,12,14,16,18,20,22,0,2,4 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Run in test mode (generate 1 article)'
+        required: false
+        default: 'true'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install anthropic
+
+      - name: Verify API Key
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "❌ ERROR: ANTHROPIC_API_KEY secret not set in GitHub!"
+            echo "Please add the secret in: Settings → Secrets and variables → Actions"
+            exit 1
+          else
+            echo "✅ API Key secret is configured"
+          fi
+
+      - name: Generate and publish article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd /home/user/itvedas
+          echo "API Key length: ${#ANTHROPIC_API_KEY}"
+          python3 itvedas-brain/auto-publisher-2hourly.py test
+
+      - name: Check for new articles
+        id: check_new
+        run: |
+          git diff --name-only | grep -q "articles/auto-generated/" && echo "new_articles=true" >> $GITHUB_OUTPUT || echo "new_articles=false" >> $GITHUB_OUTPUT
+
+      - name: Commit and push new articles
+        if: steps.check_new.outputs.new_articles == 'true'
+        run: |
+          git config user.name "Article Bot"
+          git config user.email "bot@itvedas.com"
+          git add articles/auto-generated/*.html
+          git commit -m "chore: Auto-publish article $(date +%Y-%m-%d\ %H:%M:%S)"
+          git push origin claude/keen-keller-roy4d3
+
+      - name: Report status
+        run: |
+          echo "✅ Article published at $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "Articles in queue: $(ls -1 articles/auto-generated/*.html 2>/dev/null | wc -l)"
+
+      - name: Update build status
+        if: always()
+        run: |
+          echo "Status: ${{ job.status }}" >> itvedas-brain/publisher.log
