@@ -75,7 +75,7 @@
   </ul>
 
   <h3>Lambda Pricing</h3>
-  <p>Lambda's free tier includes 1 million monthly requests and 400,000 GB-seconds of compute. Beyond that, you pay $0.0000002 per request and $0.0000166667 per GB-second. A function running 1GB for 1 second costs roughly $0.0000167. Provisioned Concurrency adds upfront costs to eliminate cold starts—typically $0.015 per GB-hour.</p>
+  <p>Lambda's free tier includes 1 million monthly requests and 400,000 GB-seconds of compute. Beyond that, you pay ₹1.7e-05 per request and ₹0.0014 per GB-second. A function running 1GB for 1 second costs roughly ₹0.0014. Provisioned Concurrency adds upfront costs to eliminate cold starts—typically ₹1.3 per GB-hour.</p>
 
   <h3>Lambda Code Example</h3>
   <pre><code>import json
@@ -114,7 +114,7 @@ def lambda_handler(event, context):
   </ul>
 
   <h3>Azure Functions Pricing</h3>
-  <p>Azure's Consumption plan costs $0.20 per million executions plus $0.000016667 per GB-second. Monthly grant includes 1 million free requests and 400,000 GB-seconds free. Premium plans start at $0.01 per hour per vCPU with instance reservation. This hybrid approach appeals to organizations with variable workloads seeking cost predictability.</p>
+  <p>Azure's Consumption plan costs ₹17 per million executions plus ₹0.0014 per GB-second. Monthly grant includes 1 million free requests and 400,000 GB-seconds free. Premium plans start at ₹0.85 per hour per vCPU with instance reservation. This hybrid approach appeals to organizations with variable workloads seeking cost predictability.</p>
 
   <h3>Azure Functions Code Example</h3>
   <pre><code>import azure.functions as func
@@ -206,7 +206,7 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
   <h2>Cold Starts and Performance Optimization</h2>
   <p>Cold starts occur when a serverless function receives its first request or during scale-up. AWS Lambda's cold start time ranges from 100-500ms for interpreted languages (Python, Node.js) and 500ms-1 second for compiled languages (Java, C#) on Consumption tier. Azure Functions experiences 200-800ms cold starts depending on language and plan type.</p>
 
-  <p>Lambda SnapStart, introduced in 2023, reduces Java cold starts to under 10ms by taking optimized snapshots. AWS Provisioned Concurrency keeps functions warm at $0.015 per GB-hour, eliminating cold starts entirely. Azure's Premium plan maintains warm instances automatically, providing similar guarantees without separate provisioning.</p>
+  <p>Lambda SnapStart, introduced in 2023, reduces Java cold starts to under 10ms by taking optimized snapshots. AWS Provisioned Concurrency keeps functions warm at ₹1.3 per GB-hour, eliminating cold starts entirely. Azure's Premium plan maintains warm instances automatically, providing similar guarantees without separate provisioning.</p>
 
   <p>For latency-sensitive applications, use Provisioned Concurrency on Lambda or Premium tier on Azure Functions. For non-critical workloads tolerating 200-500ms latency spikes, Consumption/standard tiers are cost-effective.</p>
 

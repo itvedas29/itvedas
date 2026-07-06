@@ -55,7 +55,7 @@
 
   <h2>1. Right-Size Your Instances</h2>
   <p>Over-provisioning is the #1 cost driver in cloud environments. Many teams launch a larger instance than needed "just in case," leaving resources underutilized. CloudWatch metrics reveal the truth: that t3.xlarge might only need 15% of allocated CPU and 20% of memory.</p>
-  <p>Use AWS Compute Optimizer or Azure Advisor to analyze your workloads. These tools examine 14 days of CloudWatch data and recommend downsizing opportunities. A single compute instance oversized by one tier wastes $200-400 monthly. Across 100 instances, that's $24,000 annually.</p>
+  <p>Use AWS Compute Optimizer or Azure Advisor to analyze your workloads. These tools examine 14 days of CloudWatch data and recommend downsizing opportunities. A single compute instance oversized by one tier wastes ₹17,000-34,000 monthly. Across 100 instances, that's ₹20 lakh annually.</p>
   <p>Start with non-critical environments. Right-size dev and test instances first, where the blast radius of a performance change is minimal. Production instances should be monitored for two weeks post-downsize to confirm metrics remain healthy.</p>
 
   <h2>2. Leverage Reserved Instances and Savings Plans</h2>
@@ -63,11 +63,11 @@
   <p>Three-year commitments deliver the deepest discounts (up to 72% for compute). If you're uncertain about long-term usage, start with one-year RIs (40-50% discount). AWS Savings Plans work across instance families and regions, offering flexibility while capturing commitment discounts.</p>
   <p>Calculate your breakeven point:</p>
   <ul>
-    <li>Monthly on-demand cost: $1,000</li>
-    <li>One-year RI cost: $7,200 (40% discount)</li>
+    <li>Monthly on-demand cost: ₹85,000</li>
+    <li>One-year RI cost: ₹6.1 lakh (40% discount)</li>
     <li>Breakeven: 7.2 months</li>
-    <li>Year 1 savings: $2,800</li>
-    <li>Years 2-3 (if renewed): $12,000 additional savings</li>
+    <li>Year 1 savings: ₹2.4 lakh</li>
+    <li>Years 2-3 (if renewed): ₹10 lakh additional savings</li>
   </ul>
   <p>Don't reserve everything. Maintain 60-70% of your compute under RIs, keeping 30-40% on-demand for traffic spikes and experimentation.</p>
 
@@ -81,7 +81,7 @@
     <li>Stateless microservices with autoscaling</li>
   </ul>
   <p>Don't use Spot for databases, long-running transactions, or user-facing APIs. Mix Spot and on-demand in your autoscaling groups. AWS Auto Scaling Groups let you specify capacity ratios—e.g., "2 on-demand + 4 Spot instances" provides cost efficiency with safety.</p>
-  <p>Real example: A company running 100 t3.medium on-demand instances at $0.04/hour costs $29,760 monthly. Switching 70 to Spot instances at $0.012/hour saves $21,168 annually while maintaining service SLA.</p>
+  <p>Real example: A company running 100 t3.medium on-demand instances at ₹3.4/hour costs ₹25 lakh monthly. Switching 70 to Spot instances at ₹1/hour saves ₹18 lakh annually while maintaining service SLA.</p>
 
   <h2>4. Eliminate Orphaned Resources</h2>
   <p>Forgotten resources drain budgets silently. Unattached EBS volumes, unused Elastic IPs, abandoned RDS snapshots, and idle load balancers accumulate rapidly in large deployments.</p>
@@ -94,22 +94,22 @@ aws ec2 describe-volumes \
 
 # Azure CLI: Find unattached disks
 az disk list --query "[?managedBy==null]" -o table</code></pre>
-  <p>An unattached 500GB EBS volume costs ~$50/month. In a 500-instance environment, you might find 50-100 orphaned volumes costing $2,500-5,000 monthly. Implement automated cleanup policies: delete snapshots older than 90 days, remove unattached volumes after 30 days.</p>
+  <p>An unattached 500GB EBS volume costs ~₹4,200/month. In a 500-instance environment, you might find 50-100 orphaned volumes costing ₹2.1-4.2 lakh monthly. Implement automated cleanup policies: delete snapshots older than 90 days, remove unattached volumes after 30 days.</p>
   <p>Tag all resources with lifecycle metadata (CreatedBy, CostCenter, ExpirationDate). Use lifecycle policies to auto-delete tagged resources after expiration.</p>
 
   <h2>5. Optimize Data Transfer and Egress Costs</h2>
-  <p>Data egress costs compound quickly. AWS charges $0.09/GB for data leaving a region, while egress within a region is free. International transfers cost even more.</p>
+  <p>Data egress costs compound quickly. AWS charges ₹7.6/GB for data leaving a region, while egress within a region is free. International transfers cost even more.</p>
   <p>Optimization tactics:</p>
   <ul>
     <li><span class="highlight">Collocate resources in the same region</span>—databases, APIs, and frontends should share regions when possible</li>
-    <li><span class="highlight">Use CloudFront (AWS) or CDN (Azure)</span>—caching at edge locations dramatically reduces origin egress. $0.085/GB cached cost vs. $0.09/GB direct egress is marginal, but the cache hit ratio justifies it</li>
+    <li><span class="highlight">Use CloudFront (AWS) or CDN (Azure)</span>—caching at edge locations dramatically reduces origin egress. ₹7.2/GB cached cost vs. ₹7.6/GB direct egress is marginal, but the cache hit ratio justifies it</li>
     <li><span class="highlight">VPC endpoints for AWS services</span>—accessing S3 or DynamoDB via VPC endpoint avoids internet gateway charges</li>
     <li><span class="highlight">Data compression</span>—gzip reduces payload size by 70-90%, cutting egress costs proportionally</li>
   </ul>
-  <p>Monitor CloudWatch metrics: <span class="highlight">EstimatedCharges</span> and <span class="highlight">DataTransferOut</span>. A single misconfigured Lambda writing 100GB daily to a different region costs ~$9,000 monthly.</p>
+  <p>Monitor CloudWatch metrics: <span class="highlight">EstimatedCharges</span> and <span class="highlight">DataTransferOut</span>. A single misconfigured Lambda writing 100GB daily to a different region costs ~₹7.6 lakh monthly.</p>
 
   <h2>6. Right-Size Storage and Archive Old Data</h2>
-  <p>Cloud storage is cheap per GB but scales linearly. A 10TB S3 bucket costs ~$230/month. Add logging, versioning, and failed cleanup, and costs double.</p>
+  <p>Cloud storage is cheap per GB but scales linearly. A 10TB S3 bucket costs ~₹20,000/month. Add logging, versioning, and failed cleanup, and costs double.</p>
   <p>Implement storage lifecycle policies:</p>
   <pre><code><!-- S3 Lifecycle Policy Example -->
 {
@@ -134,11 +134,11 @@ az disk list --query "[?managedBy==null]" -o table</code></pre>
   ]
 }
 </code></pre>
-  <p>Moving objects to Infrequent Access (IA) after 30 days costs $0.0125/GB vs. $0.023/GB for Standard. Glacier long-term archives cost $0.004/GB. A 50TB log bucket moved to Glacier after 90 days saves $11,000+ annually.</p>
+  <p>Moving objects to Infrequent Access (IA) after 30 days costs ₹1.1/GB vs. ₹2/GB for Standard. Glacier long-term archives cost ₹0.34/GB. A 50TB log bucket moved to Glacier after 90 days saves ₹9.4 lakh+ annually.</p>
   <p>Clean up incomplete multipart uploads (AWS S3)—failed uploads can accumulate into thousands of orphaned parts consuming storage and incurring costs.</p>
 
   <h2>7. Monitor and Control Database Costs</h2>
-  <p>Managed databases (RDS, Azure SQL) are convenient but expensive. A single db.r5.4xlarge instance costs $3,000+ monthly on-demand.</p>
+  <p>Managed databases (RDS, Azure SQL) are convenient but expensive. A single db.r5.4xlarge instance costs ₹2.6 lakh+ monthly on-demand.</p>
   <p>Optimization strategies:</p>
   <ul>
     <li><span class="highlight">Use Multi-AZ only where high availability is critical</span>—single-AZ environments cost 40-50% less. Dev/test databases don't need multi-AZ redundancy</li>
@@ -157,7 +157,7 @@ az disk list --query "[?managedBy==null]" -o table</code></pre>
     <li><span class="highlight">Lambda/Logic Apps triggers</span> running at 6 PM daily to stop dev environments</li>
     <li><span class="highlight">Tagging strategy</span>—tag all non-prod resources with "Environment: Dev" and apply schedules via tag-based rules</li>
   </ul>
-  <p>A t3.xlarge instance running 24/7 at $0.1664/hour costs $1,228 annually. Schedule it to run only 8 AM-6 PM weekdays, and the cost drops to $287—a 77% reduction. Multiply across 20 dev instances, and you're saving $18,820 annually.</p>
+  <p>A t3.xlarge instance running 24/7 at ₹14/hour costs ₹1 lakh annually. Schedule it to run only 8 AM-6 PM weekdays, and the cost drops to ₹24,000—a 77% reduction. Multiply across 20 dev instances, and you're saving ₹16 lakh annually.</p>
 
   <h2>9. Implement Chargeback and Cost Allocation</h2>
   <p>If your cloud bill isn't allocated to teams, nobody optimizes. A centralized bill creates a tragedy of the commons—no individual team feels responsible for waste.</p>

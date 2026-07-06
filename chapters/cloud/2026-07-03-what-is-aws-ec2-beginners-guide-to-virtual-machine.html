@@ -91,7 +91,7 @@
   <h3>Storage Optimized (I3, H1)</h3>
   <p>Fast local NVMe storage. For databases with heavy read/write patterns, NoSQL datastores, and Elasticsearch clusters. Less common than the others.</p>
 
-  <p>Within each family, sizes range from nano (tiny, cheap) to xlarge and larger. A <span class="highlight">t3.micro</span> might cost $0.01/hour while a <span class="highlight">c5.4xlarge</span> runs $0.68/hour. Pick based on your actual needs, not hopes.</p>
+  <p>Within each family, sizes range from nano (tiny, cheap) to xlarge and larger. A <span class="highlight">t3.micro</span> might cost ₹0.85/hour while a <span class="highlight">c5.4xlarge</span> runs ₹58/hour. Pick based on your actual needs, not hopes.</p>
 
   <h2>Pricing Models: Pay Smart</h2>
 
@@ -133,7 +133,7 @@
 
   <p>Some instance types also offer instance store—fast local NVMe storage physically attached to the host server. It's blazingly fast but ephemeral. Reboot? Data survives. Terminate the instance? Gone forever. Use it for caches and temporary data, never for anything you care about.</p>
 
-  <p>For most beginners, EBS is the safe choice. Volumes are affordable ($0.10/GB-month), reliable, and you can snapshot them for backups.</p>
+  <p>For most beginners, EBS is the safe choice. Volumes are affordable (₹8.5/GB-month), reliable, and you can snapshot them for backups.</p>
 
   <h2>Security Groups: Your Virtual Firewall</h2>
 
@@ -172,7 +172,7 @@ Custom TCP (Port 3306): Security Group ID — allow from app servers only</code>
 
   <p><strong>Forgetting to stop instances.</strong> They're not running up charges if they're stopped, but they drain money if left running. Set alarms or use AWS Cost Explorer.</p>
 
-  <p><strong>Choosing the wrong instance type.</strong> A t3.nano is cheap ($0.0035/hour) but painfully slow. A c5.4xlarge is powerful ($0.68/hour) but overkill for a blog. Right-size based on benchmarks, not guesses.</p>
+  <p><strong>Choosing the wrong instance type.</strong> A t3.nano is cheap (₹0.3/hour) but painfully slow. A c5.4xlarge is powerful (₹58/hour) but overkill for a blog. Right-size based on benchmarks, not guesses.</p>
 
   <p><strong>Storing secrets in code.</strong> Never hardcode passwords or API keys in code that runs on EC2. Use IAM roles, AWS Secrets Manager, or environment variables (stored securely).</p>
 
