@@ -57,8 +57,8 @@ def json_ld(obj):
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────
-API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "")
-OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
+API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
 GA4_ID     = os.environ.get("GA4_ID", "").strip()
 NOTIFY_TO  = os.environ.get("NOTIFY_EMAIL", "").strip()
 SMTP_FROM  = os.environ.get("SMTP_FROM", "").strip()

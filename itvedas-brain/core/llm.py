@@ -47,7 +47,7 @@ def claude(
     log_fn receives retry notices (defaults to core.log.log under the
     "llm" component); pass a no-op lambda to silence them.
     """
-    key = api_key if api_key is not None else os.environ.get("ANTHROPIC_API_KEY", "")
+    key = (api_key if api_key is not None else os.environ.get("ANTHROPIC_API_KEY", "")).strip()
     notify = log_fn or (lambda msg: _default_log("llm", msg))
 
     payload = {
@@ -91,7 +91,7 @@ def openai_chat(
 
     api_key defaults to the OPENAI_API_KEY environment variable.
     """
-    key = api_key if api_key is not None else os.environ.get("OPENAI_API_KEY", "")
+    key = (api_key if api_key is not None else os.environ.get("OPENAI_API_KEY", "")).strip()
     notify = log_fn or (lambda msg: _default_log("llm", msg))
 
     messages = []
