@@ -193,7 +193,7 @@ Video Topic: {topic}
 """
 
         try:
-            api_key = os.environ.get('ANTHROPIC_API_KEY')
+            api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
             if not api_key:
                 self.log("ERROR: ANTHROPIC_API_KEY not set")
                 return None
@@ -224,7 +224,7 @@ print(message.content[0].text)
     def generate_voiceover(self, script_text):
         """Generate voiceover using ElevenLabs API (if available)"""
         try:
-            api_key = os.environ.get('ELEVENLABS_API_KEY')
+            api_key = os.environ.get('ELEVENLABS_API_KEY', '').strip()
             if not api_key:
                 self.log("⚠ ElevenLabs API key not set, skipping voiceover generation")
                 return None

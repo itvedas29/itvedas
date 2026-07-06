@@ -181,7 +181,7 @@ Article category: {topic['category']}
     def call_claude_api(self, prompt):
         """Call Claude API via Anthropic SDK (in-process, no shell)"""
         try:
-            api_key = os.environ.get('ANTHROPIC_API_KEY')
+            api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
             if not api_key:
                 self.log("ERROR: ANTHROPIC_API_KEY not set")
                 return None

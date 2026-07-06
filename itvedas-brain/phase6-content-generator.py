@@ -15,7 +15,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from core.llm import claude as _core_claude
 from core.log import log as _core_log
 
-API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 MODEL = "claude-haiku-4-5-20251001"
 SITE = "https://itvedas.com"
 
