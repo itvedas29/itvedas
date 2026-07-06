@@ -8,14 +8,6 @@
 <meta property="og:title" content="Linux & OS — Own the Terminal | ITVedas">
 <meta property="og:description" content="The foundation every IT pro needs — shell scripting, processes, file systems, systemd, permissions and cron, step by step.">
 <link rel="canonical" href="https://itvedas.com/articles/linux/">
-    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/linux/index.html">
-    <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/linux/index.html">
-    
 <title>Linux & OS Tutorials — Own the Terminal | ITVedas</title>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"CollectionPage","name":"Linux & OS — ITVedas","description":"The foundation every IT pro needs — shell scripting, processes, file systems, systemd, permissions and cron, step by step.","url":"https://itvedas.com/articles/linux/"}
@@ -70,9 +62,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;}
 .flinks a:hover{color:#FF6B35;}
-@keyframes bootPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
-@keyframes processFlow{0%{transform:translateY(10px);opacity:0;}100%{transform:translateY(0);opacity:1;}}
-.process{animation:processFlow 0.8s ease-out forwards;}.process:nth-child(2){animation-delay:0.2s;}.process:nth-child(3){animation-delay:0.4s;}.process:nth-child(4){animation-delay:0.6s;}.process:nth-child(5){animation-delay:0.8s;}.process:nth-child(6){animation-delay:1s;}
 @media(max-width:640px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.content{padding-left:1.25rem;padding-right:1.25rem;}.art-list{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -91,104 +80,9 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">Bash</span><span class="tag">systemd</span><span class="tag">cron</span><span class="tag">Permissions</span><span class="tag">SSH</span><span class="tag">File systems</span></div>
 </div>
 <div class="content">
-  <div class="section-label">Interactive Concept</div>
-  <h2 class="section-h">Linux Boot Sequence & Process Hierarchy</h2>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
-    <svg viewBox="0 0 500 380" style="width:100%;height:auto;margin-bottom:1rem;">
-      <defs>
-        <style>
-          @keyframes bootGlow{0%,100%{opacity:0.7;}50%{opacity:1;}}
-          .boot-stage{animation:bootGlow 2.5s ease-in-out infinite;}
-          .boot-stage:nth-child(2){animation-delay:0.3s;}
-          .boot-stage:nth-child(3){animation-delay:0.6s;}
-          .boot-stage:nth-child(4){animation-delay:0.9s;}
-          .boot-stage:nth-child(5){animation-delay:1.2s;}
-          .boot-stage:nth-child(6){animation-delay:1.5s;}
-          @keyframes arrowFlow{0%{stroke-dashoffset:8;}100%{stroke-dashoffset:0;}}
-          .arrow-line{stroke-dasharray:8,4;animation:arrowFlow 1s linear infinite;}
-        </style>
-      </defs>
-
-      <!-- Title -->
-      <text x="250" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">Linux Boot Sequence</text>
-
-      <!-- Stage 1: BIOS/UEFI -->
-      <g class="boot-stage">
-        <rect x="50" y="50" width="100" height="60" fill="rgba(239,68,68,0.15)" stroke="#EF4444" stroke-width="2" rx="6"/>
-        <text x="100" y="75" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#EF4444" text-anchor="middle">BIOS/UEFI</text>
-        <text x="100" y="95" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Hardware Init</text>
-      </g>
-
-      <!-- Arrow 1 -->
-      <line x1="150" y1="80" x2="200" y2="80" stroke="#EF4444" stroke-width="2" class="arrow-line"/>
-      <polygon points="205,80 200,76 200,84" fill="#EF4444"/>
-
-      <!-- Stage 2: Bootloader -->
-      <g class="boot-stage">
-        <rect x="210" y="50" width="100" height="60" fill="rgba(251,146,60,0.15)" stroke="#FB923C" stroke-width="2" rx="6"/>
-        <text x="260" y="75" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#FB923C" text-anchor="middle">Bootloader</text>
-        <text x="260" y="95" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">GRUB/LILO</text>
-      </g>
-
-      <!-- Arrow 2 -->
-      <line x1="310" y1="80" x2="360" y2="80" stroke="#FB923C" stroke-width="2" class="arrow-line"/>
-      <polygon points="365,80 360,76 360,84" fill="#FB923C"/>
-
-      <!-- Stage 3: Kernel -->
-      <g class="boot-stage">
-        <rect x="370" y="50" width="100" height="60" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="6"/>
-        <text x="420" y="75" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#22C55E" text-anchor="middle">Kernel</text>
-        <text x="420" y="95" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Linux Core</text>
-      </g>
-
-      <!-- Arrow 3 -->
-      <line x1="250" y1="110" x2="250" y2="160" stroke="#22C55E" stroke-width="2" class="arrow-line"/>
-      <polygon points="250,165 246,160 254,160" fill="#22C55E"/>
-
-      <!-- Stage 4: Init System -->
-      <g class="boot-stage">
-        <rect x="150" y="170" width="200" height="60" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="6"/>
-        <text x="250" y="195" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#3B82F6" text-anchor="middle">Init System (systemd)</text>
-        <text x="250" y="215" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Service Manager</text>
-      </g>
-
-      <!-- Services -->
-      <g class="process">
-        <rect x="30" y="270" width="90" height="50" fill="var(--bg)" stroke="var(--border)" stroke-width="1" rx="6"/>
-        <text x="75" y="290" font-family="Space Grotesk" font-weight="600" font-size="11" fill="var(--text)" text-anchor="middle">SSH Daemon</text>
-        <text x="75" y="305" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">sshd</text>
-      </g>
-
-      <g class="process">
-        <rect x="145" y="270" width="90" height="50" fill="var(--bg)" stroke="var(--border)" stroke-width="1" rx="6"/>
-        <text x="190" y="290" font-family="Space Grotesk" font-weight="600" font-size="11" fill="var(--text)" text-anchor="middle">Database</text>
-        <text x="190" y="305" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">mysqld</text>
-      </g>
-
-      <g class="process">
-        <rect x="260" y="270" width="90" height="50" fill="var(--bg)" stroke="var(--border)" stroke-width="1" rx="6"/>
-        <text x="305" y="290" font-family="Space Grotesk" font-weight="600" font-size="11" fill="var(--text)" text-anchor="middle">Web Server</text>
-        <text x="305" y="305" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">nginx</text>
-      </g>
-
-      <g class="process">
-        <rect x="375" y="270" width="90" height="50" fill="var(--bg)" stroke="var(--border)" stroke-width="1" rx="6"/>
-        <text x="420" y="290" font-family="Space Grotesk" font-weight="600" font-size="11" fill="var(--text)" text-anchor="middle">App Service</text>
-        <text x="420" y="305" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Custom</text>
-      </g>
-
-      <!-- Connecting lines to services -->
-      <line x1="100" y1="230" x2="75" y2="270" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,2"/>
-      <line x1="200" y1="230" x2="190" y2="270" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,2"/>
-      <line x1="300" y1="230" x2="305" y2="270" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,2"/>
-      <line x1="400" y1="230" x2="420" y2="270" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,2"/>
-    </svg>
-    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">System initializes in layers: hardware → bootloader → kernel → services, each stage depends on the previous</p>
-  </div>
-
-  <div class="section-label">Linux Articles</div>
-  <h2 class="section-h">All guides in this chapter</h2>
-  <div class="art-list"><a href="/articles/2026-06-30-linux.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-30</span><span class="read-time">10 min</span></div><h3 class="art-title">Linux Commands Every Beginner Must Know in 2026: Your Complete Starter Guide</h3><p class="art-desc">Master essential Linux commands in 2026. Learn pwd, ls, cd, mkdir, and more with real examples for beginners.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-20-operating-systems.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-20</span><span class="read-time">6 min</span></div><h3 class="art-title">Operating Systems Explained: Types, Versions and End-of-Life Dates</h3><p class="art-desc">A complete beginner's guide to operating systems: Windows, Linux, macOS and more — with release dates and official end-of-life (EOL) support dates.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-17-complete-linux-guide.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-17</span><span class="read-time">3 min</span></div><h3 class="art-title">Complete Linux Guide with Real-World Examples</h3><p class="art-desc">A complete Linux guide covering the shell, files, permissions, processes, services, logs, SSH, cron and real-world server examples.</p><span class="art-link">Read article</span></a></div>
+  <div class="section-label">Linux & OS Articles</div>
+  <h2 class="section-h">This chapter is just getting started</h2>
+  <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>
   <div class="other">
     <div class="section-label">Explore other chapters</div>
     <div class="oc-grid">
@@ -200,12 +94,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
       <a href="/articles/linux/" class="oc">🐧 Linux</a>
       <a href="/articles/hardware/" class="oc">🖥️ Hardware</a>
       <a href="/articles/compliance/" class="oc">📋 Compliance</a>
-      <a href="/articles/powershell/" class="oc">🔷 PowerShell</a>
-      <a href="/articles/azure/" class="oc">☁️ Azure</a>
-      <a href="/articles/iis/" class="oc">🌐 IIS</a>
-      <a href="/articles/sql-server/" class="oc">🗄️ SQL Server</a>
-      <a href="/articles/cve/" class="oc">🛡️ CVE Analysis</a>
-      <a href="/articles/api/" class="oc">🔌 APIs</a>
     </div>
   </div>
 </div>
@@ -215,6 +103,5 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
 </footer>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

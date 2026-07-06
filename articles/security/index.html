@@ -80,86 +80,9 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">Encryption</span><span class="tag">Zero Trust</span><span class="tag">OAuth</span><span class="tag">OWASP</span><span class="tag">PKI</span><span class="tag">SIEM</span></div>
 </div>
 <div class="content">
-  <div class="section-label">Interactive Concept</div>
-  <h2 class="section-h">Defense in Depth: Layered Security</h2>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
-    <svg viewBox="0 0 400 500" style="width:100%;height:auto;margin-bottom:1rem;">
-      <defs>
-        <style>
-          @keyframes shieldPulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-          }
-          .shield { animation: shieldPulse 3s ease-in-out infinite; }
-          .shield:nth-child(2) { animation-delay: 0.3s; }
-          .shield:nth-child(3) { animation-delay: 0.6s; }
-          .shield:nth-child(4) { animation-delay: 0.9s; }
-          .shield:nth-child(5) { animation-delay: 1.2s; }
-          @keyframes attackWave {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-          }
-          .threat { animation: attackWave 2s ease-in-out infinite; }
-        </style>
-      </defs>
-
-      <!-- Threats from left -->
-      <text x="20" y="250" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#EF4444">THREATS</text>
-      <circle cx="60" cy="220" r="8" fill="#EF4444" opacity="0.4" class="threat"/>
-      <circle cx="60" cy="250" r="8" fill="#EF4444" opacity="0.4" class="threat" style="animation-delay: 0.5s;"/>
-      <circle cx="60" cy="280" r="8" fill="#EF4444" opacity="0.4" class="threat" style="animation-delay: 1s;"/>
-
-      <!-- Defense layers (shields) -->
-      <!-- Layer 1: Perimeter -->
-      <g class="shield">
-        <rect x="90" y="140" width="280" height="220" fill="none" stroke="#EF4444" stroke-width="2" rx="8"/>
-        <text x="365" y="255" font-family="Inter" font-size="11" fill="#EF4444" font-weight="600">Perimeter</text>
-        <text x="365" y="270" font-family="Inter" font-size="9" fill="#9C9CBE">Firewalls</text>
-      </g>
-
-      <!-- Layer 2: Network -->
-      <g class="shield">
-        <rect x="110" y="160" width="240" height="180" fill="none" stroke="#F59E0B" stroke-width="2" rx="8"/>
-        <text x="345" y="255" font-family="Inter" font-size="11" fill="#F59E0B" font-weight="600">Network</text>
-        <text x="345" y="270" font-family="Inter" font-size="9" fill="#9C9CBE">IDS/IPS</text>
-      </g>
-
-      <!-- Layer 3: Application -->
-      <g class="shield">
-        <rect x="130" y="180" width="200" height="140" fill="none" stroke="#3B82F6" stroke-width="2" rx="8"/>
-        <text x="325" y="255" font-family="Inter" font-size="11" fill="#3B82F6" font-weight="600">Application</text>
-        <text x="325" y="270" font-family="Inter" font-size="9" fill="#9C9CBE">WAF, Encryption</text>
-      </g>
-
-      <!-- Layer 4: Data -->
-      <g class="shield">
-        <rect x="150" y="200" width="160" height="100" fill="none" stroke="#10B981" stroke-width="2" rx="8"/>
-        <text x="310" y="255" font-family="Inter" font-size="11" fill="#10B981" font-weight="600">Data</text>
-        <text x="310" y="270" font-family="Inter" font-size="9" fill="#9C9CBE">Access Control</text>
-      </g>
-
-      <!-- Layer 5: Core asset -->
-      <g class="shield">
-        <rect x="170" y="220" width="120" height="60" fill="rgba(255,107,53,0.2)" stroke="#FF6B35" stroke-width="2" rx="8"/>
-        <text x="230" y="255" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#FF6B35" text-anchor="middle">Protected Asset</text>
-      </g>
-
-      <!-- Success arrow -->
-      <path d="M 350 100 L 230 140" stroke="#10B981" stroke-width="2" fill="none" marker-end="url(#arrowgreen)"/>
-      <text x="310" y="115" font-family="Inter" font-size="10" fill="#10B981" font-weight="600">Protected</text>
-
-      <defs>
-        <marker id="arrowgreen" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
-          <polygon points="0,0 10,5 0,10" fill="#10B981"/>
-        </marker>
-      </defs>
-    </svg>
-    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Multiple layers work together: no single layer protects everything alone</p>
-  </div>
-
   <div class="section-label">Security Articles</div>
-  <h2 class="section-h">All guides in this chapter</h2>
-  <div class="art-list"><a href="/articles/cve/2026-07-08-apache-httpd-rce-cve-2026-31337-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-08</span><span class="read-time">3 min</span></div><h3 class="art-title">Apache httpd RCE (CVE-2026-31337) Explained</h3><p class="art-desc">CVE-2026-31337 explained: Critical Apache HTTP Server vulnerability allowing unauthenticated remote code execution through malformed requests.</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-07-06-docker-container-escape-cve-2026-35712-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">3 min</span></div><h3 class="art-title">Docker Container Escape (CVE-2026-35712) Explained</h3><p class="art-desc">CVE-2026-35712 explained: Docker container escape vulnerability in cgroup management affects millions of containerized deployments worldwide.</p><span class="art-link">Read article</span></a><a href="/articles/iis/2026-07-04-iis-ssl-tls-https-certificates.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-04</span><span class="read-time">3 min</span></div><h3 class="art-title">IIS SSL/TLS Configuration: HTTPS and Certificate Management</h3><p class="art-desc">Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-07-04-spectre-meltdown-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-04</span><span class="read-time">5 min</span></div><h3 class="art-title">Spectre &amp;amp; Meltdown: CPU Vulnerabilities Explained</h3><p class="art-desc">Spectre and Meltdown explained: how CPU vulnerabilities leaked passwords and encryption keys. Real-world impact, affected hardware, and fixes.</p><span class="art-link">Read article</span></a><a href="/articles/2026-07-03-how-https-ssl-certificates-protect-you-online.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-03</span><span class="read-time">11 min</span></div><h3 class="art-title">How HTTPS and SSL Certificates Protect You Online in 2026</h3><p class="art-desc">Learn how HTTPS and SSL certificates keep your data safe online. A beginner-friendly guide with real-world analogies and practical tips.</p><span class="art-link">Read article</span></a><a href="/articles/2026-07-01-security.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-01</span><span class="read-time">9 min</span></div><h3 class="art-title">What Is Two Factor Authentication and How It Works: A Beginner&amp;#x27;s Complete Guide</h3><p class="art-desc">Learn what two factor authentication is and how it protects your accounts. Simple steps to enable 2FA on Google, Facebook, WhatsApp today.</p><span class="art-link">Read article</span></a><a href="/articles/2026-07-01-how-does-encryption-work.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-01</span><span class="read-time">15 min</span></div><h3 class="art-title">How Does Encryption Work? Explained Simply for Beginners</h3><p class="art-desc">How does encryption work? AES, SSL/TLS, end-to-end encryption explained in plain English — what it is, why it matters, and how it protects your data.</p><span class="art-link">Read article</span></a><a href="/articles/2026-07-01-what-is-firewall.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-01</span><span class="read-time">15 min</span></div><h3 class="art-title">What is a Firewall and How Does It Work? Beginner's Guide</h3><p class="art-desc">What is a firewall? How firewalls block hackers, filter traffic, and protect networks — explained simply with real examples. Free beginner's guide.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-21-phishing-recognize-prevent.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">9 min</span></div><h3 class="art-title">Phishing: How to Recognize It and Stop Falling For It</h3><p class="art-desc">How to recognize and prevent phishing attacks: real warning signs, what to do if you clicked a phishing link, and the habits that keep you and…</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-21-ransomware-removal-prevention.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">9 min</span></div><h3 class="art-title">Ransomware: How to Remove It and Stop the Next Attack</h3><p class="art-desc">Ransomware removal and prevention guide for beginners: what to do in the first hour of an attack, how recovery actually works, and the habits that…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-zerologon-cve-2020-1472-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">Zerologon (CVE-2020-1472) Explained</h3><p class="art-desc">Zerologon (CVE-2020-1472) explained for beginners: how a cryptographic flaw in Windows Netlogon let attackers take over an entire Active Directory…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-heartbleed-cve-2014-0160-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">Heartbleed (CVE-2014-0160) Explained</h3><p class="art-desc">Heartbleed (CVE-2014-0160) explained for beginners: how a missing bounds check in OpenSSL leaked server memory, and how it was fixed.</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-eternalblue-cve-2017-0144-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">EternalBlue (CVE-2017-0144) Explained</h3><p class="art-desc">EternalBlue (CVE-2017-0144) explained for beginners: the SMB vulnerability behind WannaCry and NotPetya, and how to defend against it.</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-proxylogon-cve-2021-26855-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">ProxyLogon (CVE-2021-26855) Explained</h3><p class="art-desc">ProxyLogon (CVE-2021-26855) explained for beginners: how attackers chained a Microsoft Exchange Server vulnerability to read mailboxes and install…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-shellshock-cve-2014-6271-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">Shellshock (CVE-2014-6271) Explained</h3><p class="art-desc">Shellshock (CVE-2014-6271) explained for beginners: how a 25-year-old bug in the Bash shell let attackers run commands through web servers, and…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-printnightmare-cve-2021-34527-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">PrintNightmare (CVE-2021-34527) Explained</h3><p class="art-desc">PrintNightmare (CVE-2021-34527) explained for beginners: how a flaw in the Windows Print Spooler service let attackers gain full control of…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-apache-struts-cve-2017-5638-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">CVE-2017-5638 (Apache Struts) Explained</h3><p class="art-desc">CVE-2017-5638 explained for beginners: the Apache Struts vulnerability behind the 2017 Equifax breach, why the patch wasn't applied in time, and…</p><span class="art-link">Read article</span></a><a href="/articles/cve/2026-06-21-log4shell-cve-2021-44228-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-21</span><span class="read-time">3 min</span></div><h3 class="art-title">Log4Shell (CVE-2021-44228) Explained</h3><p class="art-desc">Log4Shell (CVE-2021-44228) explained for beginners: what made this Log4j vulnerability so dangerous, who was affected, and how it was fixed.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-17-complete-security-guide.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-17</span><span class="read-time">3 min</span></div><h3 class="art-title">Complete Cybersecurity Guide with Real-World Examples</h3><p class="art-desc">A complete cybersecurity guide covering identity, encryption, endpoint security, network defense, backups, incident response and real-world examples.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-17-security.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-17</span><span class="read-time">5 min</span></div><h3 class="art-title">How to Protect Your Website from Hackers: A Beginner's Guide</h3><p class="art-desc">Learn 10 simple steps to protect your website from hackers. No tech skills needed. Secure your site today with this complete beginner guide.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-16-security.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-16</span><span class="read-time">7 min</span></div><h3 class="art-title">Zero Trust Architecture: A Complete Beginner's Guide to Implementing Zero Trust Security in 2026</h3><p class="art-desc">Learn what Zero Trust Architecture is and how to implement it step by step: MFA, device compliance, microsegmentation, and conditional access for…</p><span class="art-link">Read article</span></a></div>
+  <h2 class="section-h">This chapter is just getting started</h2>
+  <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>
   <div class="other">
     <div class="section-label">Explore other chapters</div>
     <div class="oc-grid">
@@ -171,12 +94,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
       <a href="/articles/linux/" class="oc">🐧 Linux</a>
       <a href="/articles/hardware/" class="oc">🖥️ Hardware</a>
       <a href="/articles/compliance/" class="oc">📋 Compliance</a>
-      <a href="/articles/powershell/" class="oc">🔷 PowerShell</a>
-      <a href="/articles/azure/" class="oc">☁️ Azure</a>
-      <a href="/articles/iis/" class="oc">🌐 IIS</a>
-      <a href="/articles/sql-server/" class="oc">🗄️ SQL Server</a>
-      <a href="/articles/cve/" class="oc">🛡️ CVE Analysis</a>
-      <a href="/articles/api/" class="oc">🔌 APIs</a>
     </div>
   </div>
 </div>
@@ -186,6 +103,5 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
 </footer>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

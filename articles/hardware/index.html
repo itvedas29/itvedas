@@ -8,14 +8,6 @@
 <meta property="og:title" content="Hardware — Silicon to System | ITVedas">
 <meta property="og:description" content="The physical layer software runs on — CPUs, RAM, storage, network cards and data centre architecture, made simple.">
 <link rel="canonical" href="https://itvedas.com/articles/hardware/">
-    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/hardware/index.html">
-    <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/hardware/index.html">
-    
 <title>Hardware Tutorials — Silicon to System | ITVedas</title>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"CollectionPage","name":"Hardware — ITVedas","description":"The physical layer software runs on — CPUs, RAM, storage, network cards and data centre architecture, made simple.","url":"https://itvedas.com/articles/hardware/"}
@@ -70,11 +62,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;}
 .flinks a:hover{color:#FF6B35;}
-@keyframes cpuClock{0%,100%{opacity:0.7;}50%{opacity:1;}}
-@keyframes hwLayer{0%{transform:scaleY(0.95);opacity:0.6;}100%{transform:scaleY(1);opacity:1;}}
-.hw-layer{animation:hwLayer 0.8s ease-out forwards;}.hw-layer:nth-child(1){animation-delay:0;}
-.hw-layer:nth-child(2){animation-delay:0.15s;}.hw-layer:nth-child(3){animation-delay:0.3s;}
-.hw-layer:nth-child(4){animation-delay:0.45s;}
 @media(max-width:640px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.content{padding-left:1.25rem;padding-right:1.25rem;}.art-list{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -93,69 +80,9 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">CPU</span><span class="tag">RAM</span><span class="tag">NVMe</span><span class="tag">RAID</span><span class="tag">Data Centre</span><span class="tag">NIC</span></div>
 </div>
 <div class="content">
-  <div class="section-label">Interactive Concept</div>
-  <h2 class="section-h">Hardware Architecture Layers</h2>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
-    <svg viewBox="0 0 500 420" style="width:100%;height:auto;margin-bottom:1rem;">
-      <defs>
-        <style>
-          @keyframes hwPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
-          .hw-component{animation:hwPulse 2s ease-in-out infinite;}
-          .hw-component:nth-child(1){animation-delay:0;}
-          .hw-component:nth-child(2){animation-delay:0.3s;}
-          .hw-component:nth-child(3){animation-delay:0.6s;}
-          .hw-component:nth-child(4){animation-delay:0.9s;}
-        </style>
-      </defs>
-
-      <text x="250" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">From CPU to Storage</text>
-
-      <!-- CPU -->
-      <g class="hw-component">
-        <rect x="80" y="50" width="340" height="70" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="8"/>
-        <text x="250" y="75" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#8B5CF6" text-anchor="middle">CPU (Processor)</text>
-        <text x="250" y="100" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Executes instructions • GHz speed determines throughput</text>
-      </g>
-
-      <!-- Arrow -->
-      <line x1="250" y1="120" x2="250" y2="145" stroke="var(--muted)" stroke-width="2"/>
-      <polygon points="250,150 246,145 254,145" fill="var(--muted)"/>
-
-      <!-- L-Cache -->
-      <g class="hw-component">
-        <rect x="80" y="155" width="340" height="70" fill="rgba(251,146,60,0.15)" stroke="#FB923C" stroke-width="2" rx="8"/>
-        <text x="250" y="180" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#FB923C" text-anchor="middle">L1/L2/L3 Cache</text>
-        <text x="250" y="205" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Ultra-fast on-CPU memory • KB to MB range</text>
-      </g>
-
-      <!-- Arrow -->
-      <line x1="250" y1="225" x2="250" y2="250" stroke="var(--muted)" stroke-width="2"/>
-      <polygon points="250,255 246,250 254,250" fill="var(--muted)"/>
-
-      <!-- RAM -->
-      <g class="hw-component">
-        <rect x="80" y="260" width="340" height="70" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="8"/>
-        <text x="250" y="285" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#22C55E" text-anchor="middle">System RAM</text>
-        <text x="250" y="310" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Main memory for processes • 4GB to 128GB+ typical</text>
-      </g>
-
-      <!-- Arrow -->
-      <line x1="250" y1="330" x2="250" y2="355" stroke="var(--muted)" stroke-width="2"/>
-      <polygon points="250,360 246,355 254,355" fill="var(--muted)"/>
-
-      <!-- Storage -->
-      <g class="hw-component">
-        <rect x="80" y="365" width="340" height="70" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="8"/>
-        <text x="250" y="390" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#3B82F6" text-anchor="middle">SSD/HDD Storage</text>
-        <text x="250" y="415" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Persistent storage • Slowest but permanent</text>
-      </g>
-    </svg>
-    <p style="text-align:center;color:var(--muted);font-size:0.9rem;">Hardware speed decreases from CPU → Cache → RAM → Disk, but capacity increases in the opposite direction</p>
-  </div>
-
   <div class="section-label">Hardware Articles</div>
-  <h2 class="section-h">All guides in this chapter</h2>
-  <div class="art-list"><a href="/articles/hardware/ram-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">8 min</span></div><h3 class="art-title">RAM Explained: DDR4 vs DDR5, Speed, Capacity, and How Much You Need (2026)</h3><p class="art-desc">DDR4 vs DDR5 RAM explained. Speed, timings, capacity requirements, single vs dual channel, and how much RAM you actually need for coding, VMs,…</p><span class="art-link">Read article</span></a><a href="/articles/hardware/storage-explained.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">9 min</span></div><h3 class="art-title">Computer Storage Explained: HDD vs SSD vs NVMe (2026 Guide)</h3><p class="art-desc">HDD vs SSD vs NVMe storage explained simply. Speed differences, lifespan, reliability, cost, and which storage type you actually need for OS,…</p><span class="art-link">Read article</span></a><a href="/articles/hardware/laptop-buying-guide-it-students.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">9 min</span></div><h3 class="art-title">How to Choose a Laptop for IT Students and Professionals (2026 Buying Guide)</h3><p class="art-desc">How to choose a laptop for IT students and professionals. Essential specs for coding, VMs, cert labs. Budget, mid-range, and performance tiers…</p><span class="art-link">Read article</span></a><a href="/articles/hardware/nvme-generations-compared.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-07-06</span><span class="read-time">8 min</span></div><h3 class="art-title">NVMe Generations Compared: PCIe 3.0 vs 4.0 vs 5.0 (2026)</h3><p class="art-desc">PCIe 3.0 vs 4.0 vs 5.0 NVMe comparison. Real speed differences, thermal considerations, backward compatibility, and when PCIe 5.0 is actually…</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-20-hardware.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-20</span><span class="read-time">5 min</span></div><h3 class="art-title">Computer Hardware Explained: CPU, RAM, Storage and the Physical Layer</h3><p class="art-desc">A beginner's guide to computer hardware — CPUs, RAM, storage, network cards, motherboards and data centre architecture, explained simply.</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-19-computer-hardware-generations.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-19</span><span class="read-time">3 min</span></div><h3 class="art-title">Generations of Computer Hardware: 1st to Latest, Compared</h3><p class="art-desc">The 5 generations of computer hardware explained end to end — vacuum tubes to AI chips — with a side-by-side comparison table and the key…</p><span class="art-link">Read article</span></a><a href="/articles/2026-06-17-complete-hardware-guide.html" class="art"><div class="art-badges"><span class="diff-badge diff-beginner">Beginner</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div><div class="art-meta"><span class="article-date">2026-06-17</span><span class="read-time">3 min</span></div><h3 class="art-title">Complete Hardware Guide with Real-World Examples</h3><p class="art-desc">A complete hardware guide covering CPU, RAM, storage, GPUs, network cards, servers, data centers and real-world performance examples.</p><span class="art-link">Read article</span></a></div>
+  <h2 class="section-h">This chapter is just getting started</h2>
+  <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>
   <div class="other">
     <div class="section-label">Explore other chapters</div>
     <div class="oc-grid">
@@ -167,12 +94,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
       <a href="/articles/linux/" class="oc">🐧 Linux</a>
       <a href="/articles/hardware/" class="oc">🖥️ Hardware</a>
       <a href="/articles/compliance/" class="oc">📋 Compliance</a>
-      <a href="/articles/powershell/" class="oc">🔷 PowerShell</a>
-      <a href="/articles/azure/" class="oc">☁️ Azure</a>
-      <a href="/articles/iis/" class="oc">🌐 IIS</a>
-      <a href="/articles/sql-server/" class="oc">🗄️ SQL Server</a>
-      <a href="/articles/cve/" class="oc">🛡️ CVE Analysis</a>
-      <a href="/articles/api/" class="oc">🔌 APIs</a>
     </div>
   </div>
 </div>
@@ -182,6 +103,5 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
 </footer>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>
