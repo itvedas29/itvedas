@@ -1177,8 +1177,8 @@ function loadSearchIndex(){
     if(Array.isArray(data)){
       const icons={Networking:"🌐",Cloud:"☁️",Security:"🔐",DevOps:"⚙️",Databases:"🗄️",Linux:"🐧",Hardware:"🖥️",Compliance:"📋"};
       const extra=data.map(a=>({
-        title:a.title, topic:a.topic||"Article", url:"/articles/"+a.file,
-        icon:(icons[a.topic]||"📄"), color:"#FF6B35", kw:(a.keyword||"")+" "+(a.title||"")
+        title:a.title, topic:a.topic||"Article", url:a.url||("/articles/"+a.file),
+        icon:(icons[a.topic]||"📄"), color:"#FF6B35", kw:(a.keyword||"")+" "+(a.title||"")+" "+(a.description||"")
       }));
       SEARCH_INDEX = extra.concat(SEARCH_INDEX);
     }
