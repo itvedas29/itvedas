@@ -78,7 +78,8 @@ nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;disp
 
 /* ============ HERO ============ */
 .hero{padding:9.5rem 2rem 4rem;max-width:1100px;margin:0 auto;text-align:center;position:relative;}
-.float{position:absolute;z-index:1;pointer-events:none;animation:float 7s ease-in-out infinite;}
+.float{position:absolute;z-index:1;animation:float 7s ease-in-out infinite;display:block;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;}
+.float:hover{transform:scale(1.05);box-shadow:0 24px 60px rgba(255,107,53,0.25);}
 @keyframes float{0%,100%{transform:translateY(0) rotate(var(--rot,0deg));}50%{transform:translateY(-14px) rotate(var(--rot,0deg));}}
 .f-term{left:-70px;top:11rem;--rot:-5deg;width:250px;background:rgba(14,14,23,0.85);backdrop-filter:blur(10px);
   border:1px solid var(--border);border-radius:14px;padding:0;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.5);text-align:left;}
@@ -254,7 +255,7 @@ footer{border-top:1px solid var(--border);margin-top:5rem;padding:3.5rem 2rem 2.
         <a href="/articles/iis/">🌐 IIS Server</a>
         <a href="/articles/sql-server/">🗄️ SQL Server</a>
         <a href="/tools/">🛠️ Free Tools</a>
-        <a href="/cve/">🛡️ CVE Database</a>
+        <a href="/articles/cve/">🛡️ CVE Database</a>
         <a href="/problems-solutions.html">🔧 Problems &amp; Solutions</a>
         <a href="/faq.html">FAQ</a>
         <a href="/deals.html">🔥 Deals</a>
@@ -266,24 +267,24 @@ footer{border-top:1px solid var(--border);margin-top:5rem;padding:3.5rem 2rem 2.
 </nav>
 
 <div class="hero">
-  <div class="float f-term">
+  <a href="/articles/linux/" class="float f-term" title="Explore Linux guides">
     <div class="tbar"><i></i><i></i><i></i></div>
     <pre>$ ping itvedas.com
 <span class="g">64 bytes: icmp_seq=1
 ttl=57 time=12ms</span>
 $ ssh student@lab
 <span class="c"># Welcome to Linux 🐧</span></pre>
-  </div>
-  <div class="float f-cve">
+  </a>
+  <a href="/articles/cve/" class="float f-cve" title="Browse CVE database">
     <span class="fc-badge">⚠ LIVE CVE FEED</span>
     <b id="fcveId">CVE Database</b>
     <span id="fcveDesc">Tracking the latest vulnerabilities</span>
     <div class="bar"><i></i></div>
     <span id="fcveSev" style="margin-top:0.4rem;color:#F87171;font-weight:700;">Updated daily</span>
-  </div>
-  <div class="float f-chip f-chip1">🎓 Learners across 190+ countries</div>
-  <div class="float f-chip f-chip2">📰 Fresh articles every 2 hours</div>
-  <div class="float f-chip f-chip3">☁️ AWS · Azure · GCP</div>
+  </a>
+  <a href="/#chapters" class="float f-chip f-chip1" title="View all topics">🎓 Learners across 190+ countries</a>
+  <a href="/news.html" class="float f-chip f-chip2" title="Read latest news">📰 Fresh articles every 2 hours</a>
+  <a href="/articles/cloud/" class="float f-chip f-chip3" title="Explore cloud services">☁️ AWS · Azure · GCP</a>
 
   <div class="hero-badge"><span class="pulse"></span> 500+ free guides · new articles every 2 hours</div>
   <h1>Master IT skills,<br><span class="grad">explained simply.</span></h1>

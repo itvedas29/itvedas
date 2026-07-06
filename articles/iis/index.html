@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Microsoft IIS (Internet Information Services) — installation, configuration, SSL/TLS, HTTPS certificates, and application pool management for Windows Server.">
+  <meta name="keywords" content="IIS, Internet Information Services, Windows Server, web server, SSL TLS HTTPS, application pools, web hosting, IT Vedas">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="IIS Server Setup & Configuration Hub | IT Vedas">
+  <meta property="og:description" content="Master Microsoft IIS (Internet Information Services) — installation, configuration, SSL/TLS, and application management.">
+  <meta property="og:url" content="https://itvedas.com/articles/iis/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://itvedas.com/articles/iis/">
+  <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/iis/index.html">
+  <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/iis/index.html">
+  <title>IIS Server Setup & Configuration Hub | IT Vedas</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "IIS Server Setup & Configuration Hub",
+    "description": "Comprehensive IIS guides for Windows Server web hosting and management",
+    "url": "https://itvedas.com/articles/iis/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "IT Vedas"
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --bg2: #13131C;
+      --text: #F0F0F8;
+      --muted: #8888A8;
+      --sub: #D0D0E8;
+      --accent: #8B5CF6;
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .hero {
+      padding: 8rem 2rem 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-glow {
+      position: absolute;
+      top: 4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.16), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ch-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      background: rgba(139, 92, 246, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .ch-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--sub);
+      max-width: 640px;
+      line-height: 1.75;
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tag {
+      font-size: 0.78rem;
+      padding: 0.3rem 0.85rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+    }
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      margin-top: 2rem;
+    }
+    .section-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+    .art-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .art {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .art:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.55);
+    }
+    .art-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-beginner { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+    .badge-intermediate { background: rgba(139, 92, 246, 0.2); color: #C4B5FD; }
+    .badge-advanced { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+    .art-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+    }
+    .art-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .art-link {
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .art-link:hover { text-decoration: underline; }
+    .learning-path {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    .path-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .path-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 48px;
+      width: 2px;
+      height: 40px;
+      background: rgba(139, 92, 246, 0.3);
+    }
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.2);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 1.5rem;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+    .step-content h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      margin-top: 4rem;
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .hero { padding: 6rem 1rem 2rem; }
+      .art-list { grid-template-columns: 1fr; }
+      .nav-links { gap: 0.75rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">IT<span>Vedas</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chapters.html">Chapters</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="ch-icon">🌐</div>
+    <div class="ch-num">IIS Hub</div>
+    <h1>Master IIS Server & Web Hosting</h1>
+    <p>From installation to advanced configuration — learn IIS setup, SSL/TLS certificate management, HTTPS, application pools, and production web server administration.</p>
+    <div class="tags">
+      <span class="tag">IIS</span>
+      <span class="tag">Web Server</span>
+      <span class="tag">SSL/TLS</span>
+      <span class="tag">HTTPS</span>
+      <span class="tag">Application Pools</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Learning Path -->
+    <div class="learning-path">
+      <div class="section-label">Recommended Learning Path</div>
+      <div class="path-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>IIS Installation & Configuration</h4>
+          <p>Install IIS, configure roles, features, and basic settings on Windows Server</p>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Application Pool Management</h4>
+          <p>Configure application pools, worker processes, recycling, and performance tuning</p>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>SSL/TLS & HTTPS Certificates</h4>
+          <p>Install certificates, configure HTTPS, manage SSL/TLS bindings, and security best practices</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Articles -->
+    <div class="section-label">Essential Reading</div>
+    <h2 class="section-h">IIS Foundation Articles</h2>
+    <div class="art-list">
+      <a href="/articles/iis/2026-07-04-iis-installation-configuration.html" class="art">
+        <span class="art-badge badge-beginner">Beginner</span>
+        <h3 class="art-title">IIS Installation & Configuration</h3>
+        <p class="art-desc">Step-by-step guide to installing Microsoft IIS on Windows Server. Learn role configuration, features, and initial setup.</p>
+        <span class="art-link">Read Article →</span>
+      </a>
+      <a href="/articles/iis/2026-07-04-iis-application-pool-management.html" class="art">
+        <span class="art-badge badge-intermediate">Intermediate</span>
+        <h3 class="art-title">IIS Application Pool Management</h3>
+        <p class="art-desc">Master application pool configuration, worker process management, recycling settings, and performance optimization.</p>
+        <span class="art-link">Read Article →</span>
+      </a>
+      <a href="/articles/iis/2026-07-04-iis-ssl-tls-https-certificates.html" class="art">
+        <span class="art-badge badge-intermediate">Intermediate</span>
+        <h3 class="art-title">IIS SSL/TLS & HTTPS Certificates</h3>
+        <p class="art-desc">Configure SSL/TLS certificates on IIS, install HTTPS bindings, and implement security best practices for encrypted web services.</p>
+        <span class="art-link">Read Article →</span>
+      </a>
+    </div>
+
+    <!-- CTA Section -->
+    <div style="text-align: center; margin-top: 4rem; padding: 3rem 2rem; background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 16px;">
+      <h3 style="font-family: 'Space Grotesk', sans-serif; margin-bottom: 1rem;">Start Your IIS Journey Today</h3>
+      <p style="color: var(--muted); margin-bottom: 1.5rem;">Master web server configuration and hosting. All resources are free.</p>
+      <a href="/articles/iis/2026-07-04-iis-installation-configuration.html" style="display: inline-block; background: var(--accent); color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: opacity 0.2s;">Get Started with IIS</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 IT Vedas. All rights reserved. | <a href="/about.html" style="color: var(--accent); text-decoration: none;">About</a> | <a href="/privacy-policy.html" style="color: var(--accent); text-decoration: none;">Privacy</a></p>
+  </footer>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-D98BFZSJYP');
+  </script>
+</body>
+</html>
