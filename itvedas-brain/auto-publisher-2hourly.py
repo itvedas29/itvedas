@@ -9,7 +9,6 @@ import json
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-import subprocess
 
 class AutoPublisher:
     """Publish articles every 2 hours on various IT topics"""
@@ -123,7 +122,7 @@ class AutoPublisher:
     ]
 
     def __init__(self):
-        self.base_dir = Path('/home/user/itvedas')
+        self.base_dir = Path(__file__).resolve().parent.parent
         self.articles_dir = self.base_dir / 'articles' / 'auto-generated'
         self.articles_dir.mkdir(parents=True, exist_ok=True)
         self.log_file = self.base_dir / 'itvedas-brain' / 'publisher.log'
@@ -163,6 +162,7 @@ Requirements:
 6. Internal link opportunities (mention related topics)
 7. SEO-optimized headings
 8. Include FAQ section with 5-7 questions
+9. All prices and money amounts must be in Indian Rupees (₹), never USD
 
 Write the article in HTML format with:
 - Proper semantic HTML5
@@ -179,35 +179,24 @@ Article category: {topic['category']}
         return prompt
 
     def call_claude_api(self, prompt):
-        """Call Claude API via Anthropic SDK"""
+        """Call Claude API via Anthropic SDK (in-process, no shell)"""
         try:
             api_key = os.environ.get('ANTHROPIC_API_KEY')
             if not api_key:
                 self.log("ERROR: ANTHROPIC_API_KEY not set")
                 return None
 
-            # Use subprocess to call Claude via Python SDK
-            cmd = f"""python3 -c "
-import anthropic
-client = anthropic.Anthropic(api_key='{api_key}')
-message = client.messages.create(
-    model='claude-opus-4-1',
-    max_tokens=4096,
-    messages=[{{'role': 'user', 'content': '''{{prompt}}'''}}]
-)
-print(message.content[0].text)
-"
-"""
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
-
-            if result.returncode == 0:
-                return result.stdout.strip()
-            else:
-                self.log(f"ERROR: API call failed: {result.stderr}")
-                return None
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key, timeout=300.0)
+            message = client.messages.create(
+                model='claude-sonnet-5',
+                max_tokens=8000,
+                messages=[{'role': 'user', 'content': prompt}]
+            )
+            return message.content[0].text.strip()
 
         except Exception as e:
-            self.log(f"ERROR: {str(e)}")
+            self.log(f"ERROR: API call failed: {str(e)}")
             return None
 
     def create_html_article(self, article_content, topic, keyword):

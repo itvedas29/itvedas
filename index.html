@@ -27,8 +27,7 @@
   "@type":"WebSite",
   "name":"ITVedas",
   "url":"https://itvedas.com",
-  "description":"The complete IT knowledge hub — networking, cloud, security, DevOps, databases, Linux, hardware, compliance.",
-  "potentialAction":{"@type":"SearchAction","target":"https://itvedas.com/search?q={search_term_string}","query-input":"required name=search_term_string"}
+  "description":"The complete IT knowledge hub — networking, cloud, security, DevOps, databases, Linux, hardware, compliance."
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1166,17 +1165,26 @@ let SEARCH_INDEX = [
   {title:"About ITVedas", topic:"About", url:"/about.html", icon:"ℹ️", color:"#64748B", kw:"about mission team contact"}
 ];
 
-// Load the brain's article index when available (grows as articles publish)
-fetch('/search-index.json').then(r=>r.ok?r.json():null).then(data=>{
-  if(Array.isArray(data)){
-    const icons={Networking:"🌐",Cloud:"☁️",Security:"🔐",DevOps:"⚙️",Databases:"🗄️",Linux:"🐧",Hardware:"🖥️",Compliance:"📋"};
-    const extra=data.map(a=>({
-      title:a.title, topic:a.topic||"Article", url:"/articles/"+a.file,
-      icon:(icons[a.topic]||"📄"), color:"#FF6B35", kw:(a.keyword||"")+" "+(a.title||"")
-    }));
-    SEARCH_INDEX = extra.concat(SEARCH_INDEX);
-  }
-}).catch(()=>{});
+// Load the brain's article index lazily on first search interaction (saves 185KB on page load)
+let searchIndexLoaded=false;
+function loadSearchIndex(){
+  if(searchIndexLoaded)return;
+  searchIndexLoaded=true;
+  fetch('/search-index.json').then(r=>r.ok?r.json():null).then(data=>{
+    if(Array.isArray(data)){
+      const icons={Networking:"🌐",Cloud:"☁️",Security:"🔐",DevOps:"⚙️",Databases:"🗄️",Linux:"🐧",Hardware:"🖥️",Compliance:"📋"};
+      const extra=data.map(a=>({
+        title:a.title, topic:a.topic||"Article", url:"/articles/"+a.file,
+        icon:(icons[a.topic]||"📄"), color:"#FF6B35", kw:(a.keyword||"")+" "+(a.title||"")
+      }));
+      SEARCH_INDEX = extra.concat(SEARCH_INDEX);
+    }
+  }).catch(()=>{});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const si=document.getElementById('searchInput');
+  if(si){si.addEventListener('focus',loadSearchIndex,{once:true});}
+});
 
 function runSearch(){
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
