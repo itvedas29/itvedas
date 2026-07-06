@@ -169,16 +169,23 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
     <svg viewBox="0 0 650 300" style="width:100%;height:auto;margin-bottom:1rem;">
       <defs>
         <style>
-          @keyframes apiFlow{0%{stroke-dashoffset:60;}100%{stroke-dashoffset:0;}}
-          .api-arrow{stroke-dasharray:60;animation:apiFlow 2.5s ease-in-out infinite;}
-          @keyframes apiGlow{0%,100%{opacity:0.65;}50%{opacity:1;}}
-          .api-stage{animation:apiGlow 2.5s ease-in-out infinite;}
-          .api-d1{animation-delay:0.4s;}
-          .api-d2{animation-delay:0.8s;}
+          @keyframes apiDraw{0%{stroke-dashoffset:60;}55%,100%{stroke-dashoffset:0;}}
+          .api-arrow{stroke-dasharray:60;stroke-dashoffset:60;animation:apiDraw 3.5s ease-in-out infinite;fill:none;}
+          .api-r1{animation-delay:0.1s;}
+          .api-r2{animation-delay:0.6s;}
+          .api-r3{animation-delay:1.2s;}
+          @keyframes apiGlow{0%,100%{opacity:0.7;}50%{opacity:1;}}
+          .api-stage{animation:apiGlow 3.5s ease-in-out infinite;}
+          .api-d1{animation-delay:0.6s;}
+          .api-d2{animation-delay:1.2s;}
         </style>
       </defs>
 
-      <text x="325" y="28" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">One API Call, Step by Step</text>
+      <text x="325" y="26" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">One API Call, Step by Step</text>
+
+      <!-- Step labels, kept clear of the boxes -->
+      <text x="212" y="60" font-family="monospace" font-size="10" fill="#84CC16" text-anchor="middle">GET /weather?city=delhi</text>
+      <text x="455" y="60" font-family="monospace" font-size="10" fill="#06B6D4" text-anchor="middle">query</text>
 
       <!-- Client app -->
       <g class="api-stage">
@@ -188,10 +195,9 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
         <text x="95" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">your phone</text>
       </g>
 
-      <!-- Request arrow -->
-      <line class="api-arrow" x1="175" y1="95" x2="250" y2="95" stroke="#84CC16" stroke-width="2"/>
-      <polygon points="256,95 248,90 248,100" fill="#84CC16"/>
-      <text x="215" y="82" font-family="monospace" font-size="10" fill="#84CC16" text-anchor="middle">GET /weather?city=delhi</text>
+      <!-- Request arrow: app -> API -->
+      <line class="api-arrow api-r1" pathLength="60" x1="175" y1="95" x2="248" y2="95" stroke="#84CC16" stroke-width="2"/>
+      <polygon points="256,95 246,90 246,100" fill="#84CC16"/>
 
       <!-- API server -->
       <g class="api-stage api-d1">
@@ -201,10 +207,9 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
         <text x="335" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">runs the logic</text>
       </g>
 
-      <!-- DB arrow -->
-      <line class="api-arrow" x1="415" y1="95" x2="490" y2="95" stroke="#06B6D4" stroke-width="2"/>
-      <polygon points="496,95 488,90 488,100" fill="#06B6D4"/>
-      <text x="455" y="82" font-family="monospace" font-size="10" fill="#06B6D4" text-anchor="middle">query</text>
+      <!-- Query arrow: API -> database -->
+      <line class="api-arrow api-r2" pathLength="60" x1="415" y1="95" x2="488" y2="95" stroke="#06B6D4" stroke-width="2"/>
+      <polygon points="496,95 486,90 486,100" fill="#06B6D4"/>
 
       <!-- Database -->
       <g class="api-stage api-d2">
@@ -214,14 +219,13 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
         <text x="565" y="137" font-family="Inter" font-size="10" fill="#9C9CBE" text-anchor="middle">weather data</text>
       </g>
 
-      <!-- Response path back -->
-      <line class="api-arrow" x1="560" y1="165" x2="560" y2="200" stroke="#8B5CF6" stroke-width="2"/>
-      <line class="api-arrow" x1="560" y1="200" x2="180" y2="200" stroke="#10B981" stroke-width="2"/>
-      <line class="api-arrow" x1="180" y1="200" x2="110" y2="168" stroke="#10B981" stroke-width="2"/>
-      <polygon points="105,165 115,166 108,174" fill="#10B981"/>
-      <rect x="255" y="212" width="240" height="52" fill="rgba(16,185,129,0.1)" stroke="#10B981" stroke-width="1.5" rx="6"/>
+      <!-- Response: one continuous path back to the app -->
+      <path class="api-arrow api-r3" pathLength="60" d="M 565 160 L 565 190 L 175 190 L 122 166" stroke="#10B981" stroke-width="2"/>
+      <polygon points="115,163 126,162 122,172" fill="#10B981"/>
+
+      <rect x="230" y="212" width="290" height="52" fill="rgba(16,185,129,0.1)" stroke="#10B981" stroke-width="1.5" rx="6"/>
       <text x="375" y="233" font-family="monospace" font-size="11" fill="#10B981" text-anchor="middle">200 OK</text>
-      <text x="375" y="251" font-family="monospace" font-size="11" fill="#10B981" text-anchor="middle">{"city":"Delhi","temp":31,"sky":"clear"}</text>
+      <text x="375" y="251" font-family="monospace" font-size="10" fill="#10B981" text-anchor="middle">{"city":"Delhi","temp":31,"sky":"clear"}</text>
 
       <text x="325" y="290" font-family="Inter" font-size="11" fill="var(--muted)" text-anchor="middle">Request goes out, JSON comes back — the whole cycle usually takes under 200 milliseconds</text>
     </svg>
