@@ -35,7 +35,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 </style>
 </head>
 <body>
-<nav><a href="/" class="logo">IT<span>Vedas</span></a><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/news.html">📰 News</a></li><li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li><li><a href="/#chapters">Chapters</a></li><li><a href="/career-paths.html">Career Paths</a></li><li><a href="/quiz.html" class="active">Quiz</a></li><li><a href="/deals.html" style="color:#F59E0B">🔥 Deals</a></li><li><a href="/about.html">About</a></li></ul></nav>
+<nav><a href="/" class="logo">IT<span>Vedas</span></a><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/news.html">📰 News</a></li><li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li><li><a href="/#chapters">Chapters</a></li><li><a href="/career-paths.html">Career Paths</a></li><li><a href="/quiz.html" class="active">Quiz</a></li><li><a href="/about.html">About</a></li></ul></nav>
 <div class="wrap">
   <div class="screen active" id="userinfo"><div class="eyebrow">Get Your IT Certificate</div><h1 class="intro-title">Test Your <span>IT Knowledge</span></h1><p class="lead">Answer 10 questions across networking, cloud, security, DevOps and more. Get your personalized certificate, instant score, and learning path.</p><div class="form-group"><label class="form-label">Full Name</label><input type="text" id="userName" class="form-input" placeholder="e.g., John Doe" required></div><div class="form-group"><label class="form-label">Email Address</label><input type="email" id="userEmail" class="form-input" placeholder="e.g., john@example.com" required></div><button class="btn-continue" id="continueBtn" onclick="continueToIntro()">Continue to Quiz →</button><p class="intro-note">Your certificate will include your name and score</p></div>
 
@@ -86,5 +86,6 @@ fetch('/quiz-data.json').then(r=>r.json()).then(data=>{
   b.addEventListener('click',startQuiz);
 }).catch(()=>{document.getElementById('startBtn').textContent='Failed to load — please refresh';});
 </script>
+<script src="/js/nav-search.js" defer></script>
 </body>
 </html>
