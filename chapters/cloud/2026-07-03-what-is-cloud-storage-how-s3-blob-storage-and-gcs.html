@@ -72,7 +72,7 @@
     <li><strong>Deep Archive</strong>: Long-term retention, retrieval takes 12+ hours</li>
   </ul>
 
-  <p>Pricing varies by region and class. Standard storage in us-east-1 costs roughly $0.023 per GB/month; Glacier drops to $0.004 per GB/month. Data retrieval from Glacier incurs additional per-GB fees, making it ideal for compliance backups you'll rarely access.</p>
+  <p>Pricing varies by region and class. Standard storage in us-east-1 costs roughly ₹2 per GB/month; Glacier drops to ₹0.34 per GB/month. Data retrieval from Glacier incurs additional per-GB fees, making it ideal for compliance backups you'll rarely access.</p>
 
   <p>You'd use S3 for static website hosting, machine learning training datasets, or application logs. Integration with Lambda, EC2, and other AWS services is seamless through IAM roles.</p>
 
@@ -95,7 +95,7 @@ aws s3api put-bucket-versioning --bucket my-bucket --versioning-configuration St
     <li><strong>Archive</strong>: Rare access, cheapest, slow retrieval (hours)</li>
   </ul>
 
-  <p>Pricing in East US is approximately $0.0184 per GB/month for Hot tier and $0.01 for Cool tier. Data egress (downloads) costs $0.087 per GB by default, though cross-region replication differs.</p>
+  <p>Pricing in East US is approximately ₹1.6 per GB/month for Hot tier and ₹0.85 for Cool tier. Data egress (downloads) costs ₹7.4 per GB by default, though cross-region replication differs.</p>
 
   <p>A key advantage: <strong>Azure Blob Storage can be accessed on-premises through Azure Stack</strong>, letting you maintain consistent tooling in hybrid environments. The integration with Azure Synapse, Data Lake Analytics, and Cosmos DB makes it compelling for data warehousing.</p>
 
@@ -119,7 +119,7 @@ az storage blob generate-sas --account-name myaccount --container-name mycontain
     <li><strong>Archive</strong>: Compliance and backup (retrieval in hours)</li>
   </ul>
 
-  <p>Pricing in us-central1 is $0.020 per GB/month for Standard, dropping to $0.004 for Archive. GCS <strong>doesn't charge for data egress between GCP services</strong>—uploading to BigQuery or Compute Engine doesn't incur bandwidth fees. This matters when processing terabytes of data.</p>
+  <p>Pricing in us-central1 is ₹1.7 per GB/month for Standard, dropping to ₹0.34 for Archive. GCS <strong>doesn't charge for data egress between GCP services</strong>—uploading to BigQuery or Compute Engine doesn't incur bandwidth fees. This matters when processing terabytes of data.</p>
 
   <p>GCS also supports FUSE mounts through Cloud Storage FUSE, letting you treat buckets like Linux filesystems. This is invaluable when legacy applications expect file-based interfaces.</p>
 
@@ -142,20 +142,20 @@ gsutil signurl -d 7d ~/key.json gs://my-bucket/document.pdf</code></pre>
     </tr>
     <tr>
       <td>Standard Pricing (per GB/month)</td>
-      <td>$0.023</td>
-      <td>$0.0184</td>
-      <td>$0.020</td>
+      <td>₹2</td>
+      <td>₹1.6</td>
+      <td>₹1.7</td>
     </tr>
     <tr>
       <td>Archive Tier</td>
-      <td>Glacier ($0.004)</td>
-      <td>Archive ($0.00099)</td>
-      <td>Archive ($0.004)</td>
+      <td>Glacier (₹0.34)</td>
+      <td>Archive (₹0.084)</td>
+      <td>Archive (₹0.34)</td>
     </tr>
     <tr>
       <td>Data Egress Cost</td>
-      <td>$0.09/GB</td>
-      <td>$0.087/GB</td>
+      <td>₹7.6/GB</td>
+      <td>₹7.4/GB</td>
       <td>Free (intra-GCP)</td>
     </tr>
     <tr>
@@ -211,7 +211,7 @@ gsutil signurl -d 7d ~/key.json gs://my-bucket/document.pdf</code></pre>
   </ul>
 
   <h2>Cost Optimization Tips</h2>
-  <p>Storage costs compound quickly. A 100 TB dataset at standard rates costs $2,300/month on S3 or Blob Storage, $2,000 on GCS. Here's how to optimize:</p>
+  <p>Storage costs compound quickly. A 100 TB dataset at standard rates costs ₹2 lakh/month on S3 or Blob Storage, ₹1.7 lakh on GCS. Here's how to optimize:</p>
 
   <ul>
     <li><strong>Use lifecycle policies</strong> to automatically move cold data to cheaper tiers after 30-90 days</li>
@@ -221,7 +221,7 @@ gsutil signurl -d 7d ~/key.json gs://my-bucket/document.pdf</code></pre>
     <li><strong>Compare multi-region costs</strong>; us-east-1 is cheaper than eu-west-1 on all three platforms</li>
   </ul>
 
-  <p>For example, moving a 10 TB archive from S3 Standard ($230/month) to Glacier ($40/month) saves $2,280 annually with negligible performance impact if retrieval happens quarterly.</p>
+  <p>For example, moving a 10 TB archive from S3 Standard (₹20,000/month) to Glacier (₹3,400/month) saves ₹1.9 lakh annually with negligible performance impact if retrieval happens quarterly.</p>
 
   <h2>Security and Compliance</h2>
   <p>All three services encrypt data in transit (TLS) and at rest. However, they differ in key management:</p>

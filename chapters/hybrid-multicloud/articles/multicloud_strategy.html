@@ -230,7 +230,7 @@ Practical implementation involves establishing ExpressRoute circuits in Azure co
 
 **Site-to-Site VPN Connections**: For lower bandwidth requirements or initial deployments, site-to-site VPNs connecting Azure VNet gateways with AWS VPC gateways provide cost-effective alternatives. Each cloud provider manages one side of the connection using IPSec encryption.
 
-Azure setup involves creating a VPN gateway in the virtual network, configuring local network gateways representing AWS VPCs, and establishing VPN connections. AWS requires Virtual Private Gateway setup with VPN connections configured similarly. This approach typically costs $35-50 monthly plus data transfer charges.
+Azure setup involves creating a VPN gateway in the virtual network, configuring local network gateways representing AWS VPCs, and establishing VPN connections. AWS requires Virtual Private Gateway setup with VPN connections configured similarly. This approach typically costs ₹3,000-4,200 monthly plus data transfer charges.
 
 **Networking Diagram Visualization**: Imagine a diagram showing Azure's Central US region connected via ExpressRoute to an AWS US-East-1 VPC. The connection flows through carrier infrastructure, with both cloud networks appearing as single unified network from the application perspective.
 
@@ -262,7 +262,7 @@ Moving data between Azure and AWS efficiently while managing costs requires stra
 
 For a practical example, a retailer might configure Data Factory pipelines to extract daily sales data from an AWS RDS database, transform it using Azure Databricks, and load it into Azure SQL for reporting. Reverse flows might read inventory data from Azure and update AWS EC2 instance configurations.
 
-**Minimizing Data Transfer Costs**: AWS charges $0.02 per GB for data transfer out of AWS to the internet, while Azure charges similar rates. However, inter-cloud transfer often routes through the public internet, attracting these charges.
+**Minimizing Data Transfer Costs**: AWS charges ₹1.7 per GB for data transfer out of AWS to the internet, while Azure charges similar rates. However, inter-cloud transfer often routes through the public internet, attracting these charges.
 
 Cost optimization strategies include:
 
@@ -329,7 +329,7 @@ Each cloud provider structures pricing differently. AWS offers Reserved Instance
 
 **AWS Reserved Instances**: Prepaying for compute capacity for 1-year or 3-year terms provides 30-72% discounts compared to on-demand pricing.
 
-For example, a compute instance costing $0.096 per hour on-demand costs $0.048 per hour with a 1-year reservation. Over 12 months, this saves $423 per instance if running continuously.
+For example, a compute instance costing ₹8.2 per hour on-demand costs ₹4.1 per hour with a 1-year reservation. Over 12 months, this saves ₹36,000 per instance if running continuously.
 
 **Azure Reserved Instances**: Operating similarly to AWS, Azure Reserved Instances offer 30-72% discounts for 1-year or 3-year commitments.
 

@@ -151,7 +151,7 @@ Object key example: /logs/app-server-errors.log</code></pre>
 
   <h2>S3 Pricing Essentials</h2>
 
-  <p>S3 pricing has three main components: storage (per GB/month), requests (per 1,000 requests), and data transfer (outbound data to the internet). Storage is most significant for large datasets. For Standard storage, you'll pay roughly $0.023 per GB per month in us-east-1. Standard-IA costs less storage but adds retrieval charges.</p>
+  <p>S3 pricing has three main components: storage (per GB/month), requests (per 1,000 requests), and data transfer (outbound data to the internet). Storage is most significant for large datasets. For Standard storage, you'll pay roughly ₹2 per GB per month in us-east-1. Standard-IA costs less storage but adds retrieval charges.</p>
 
   <p>A common optimization: lifecycle policies automatically archive old data to cheaper tiers. For example, data from a financial transaction system could be queried daily for the first month (Standard), then queried weekly for six months (Standard-IA), then accessed annually for audits (Glacier). This approach cuts storage costs dramatically while maintaining accessibility.</p>
 
@@ -170,7 +170,7 @@ Object key example: /logs/app-server-errors.log</code></pre>
 
   <p>New users often make the same mistakes. Making buckets public accidentally is the most dangerous—always review bucket policies. Another common issue: not understanding S3's eventual consistency model. When you delete an object, it takes moments to replicate deletion across all servers. Don't expect immediate consistency in heavily parallelized operations.</p>
 
-  <p>Forgetting to set bucket lifecycle policies is another missed opportunity. Your storage bill climbs unnecessarily when old data could move to cheaper tiers automatically. Finally, underestimating data transfer costs can shock you—downloading 1 TB monthly costs $92. Design to minimize outbound transfers where possible.</p>
+  <p>Forgetting to set bucket lifecycle policies is another missed opportunity. Your storage bill climbs unnecessarily when old data could move to cheaper tiers automatically. Finally, underestimating data transfer costs can shock you—downloading 1 TB monthly costs ₹7,800. Design to minimize outbound transfers where possible.</p>
 
   <h2>Getting Started Today</h2>
 
@@ -185,7 +185,7 @@ Object key example: /logs/app-server-errors.log</code></pre>
     <p>Not exactly. S3 is object storage optimized for independent files, not a traditional file system. You can't install applications on it or mount it like a network drive. For those needs, use <a href="https://itvedas.com/chapters/cloud/2026-04-10-aws-ebs-explained.html">Amazon EBS</a> or EFS. S3 excels at storing immutable data like logs, backups, and archives.</p>
     
     <h3>How much does S3 cost?</h3>
-    <p>Pricing varies by region and storage class. Standard storage costs approximately $0.023/GB/month in us-east-1. A 1 TB dataset costs roughly $23/month. Data transfer out (to the internet) costs $0.09/GB. Requests are inexpensive—about $0.0004 per 1,000 PUT requests. Use the AWS calculator to estimate your specific scenario.</p>
+    <p>Pricing varies by region and storage class. Standard storage costs approximately ₹2/GB/month in us-east-1. A 1 TB dataset costs roughly ₹2,000/month. Data transfer out (to the internet) costs ₹7.6/GB. Requests are inexpensive—about ₹0.034 per 1,000 PUT requests. Use the AWS calculator to estimate your specific scenario.</p>
     
     <h3>Can I host a website on S3?</h3>
     <p>Yes, for static websites (HTML, CSS, JavaScript, images). Enable static website hosting on your bucket, upload files, and S3 serves them. For dynamic sites requiring server-side logic, use EC2, Lambda, or Elastic Beanstalk instead. For better performance globally, pair S3 with CloudFront CDN.</p>

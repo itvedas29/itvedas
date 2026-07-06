@@ -144,19 +144,19 @@ sed 's/^\([^ ]*\) \([^ ]*\)/\2 \1/' file.txt</code></pre>
 
   <p>awk is more powerful than grep and sed because it's a complete programming language. It automatically splits each line into fields, making it ideal for processing structured text like CSV files, logs, or columnar data. The basic syntax is <code>awk 'pattern { action }' file</code>.</p>
 
-  <p>awk divides input into records (lines by default) and fields (columns, separated by whitespace or a specified delimiter). You reference fields as <code>$1</code>, <code>$2</code>, etc., where <code>$0</code> is the entire line. Built-in variables like <code>NR</code> (record number) and <code>NF</code> (number of fields) are automatically available.</p>
+  <p>awk divides input into records (lines by default) and fields (columns, separated by whitespace or a specified delimiter). You reference fields as <code>₹85</code>, <code>₹170</code>, etc., where <code>₹0</code> is the entire line. Built-in variables like <code>NR</code> (record number) and <code>NF</code> (number of fields) are automatically available.</p>
 
   <pre><code># Print the first field of each line
-awk '{print $1}' file.txt
+awk '{print ₹85}' file.txt
 
 # Print lines where the third field equals "error"
-awk '$3 == "error" {print}' file.txt
+awk '₹260 == "error" {print}' file.txt
 
 # Print the second and fourth fields
-awk '{print $2, $4}' file.txt
+awk '{print ₹170 ₹340}' file.txt
 
 # Print line number and content
-awk '{print NR, $0}' file.txt
+awk '{print NR, ₹0}' file.txt
 
 # Count the total number of lines
 awk 'END {print NR}' file.txt</code></pre>
@@ -164,52 +164,52 @@ awk 'END {print NR}' file.txt</code></pre>
   <p>awk supports BEGIN and END blocks. BEGIN runs before processing input, useful for setting variables or printing headers. END runs after all input is processed, ideal for printing totals or summaries. This makes awk excellent for generating reports from raw data.</p>
 
   <pre><code># Sum values in the second column
-awk '{sum += $2} END {print "Total:", sum}' numbers.txt
+awk '{sum += ₹170} END {print "Total:", sum}' numbers.txt
 
 # Count occurrences of each unique value in column 1
-awk '{count[$1]++} END {for (word in count) print word, count[word]}' data.txt
+awk '{count[₹85]++} END {for (word in count) print word, count[word]}' data.txt
 
 # Print header and formatted output
-awk 'BEGIN {print "Name\tAge\tCity"} {printf "%-15s %3d %s\n", $1, $2, $3}' people.txt
+awk 'BEGIN {print "Name\tAge\tCity"} {printf "%-15s %3d %s\n", ₹85 ₹170 ₹260}' people.txt
 
 # Calculate average of column 2
-awk '{sum += $2; n++} END {print "Average:", sum/n}' data.txt</code></pre>
+awk '{sum += ₹170; n++} END {print "Average:", sum/n}' data.txt</code></pre>
 
   <p>You can specify a field separator using the <code>-F</code> flag. This is essential for CSV files or any delimited format. awk also supports string functions like <code>substr()</code>, <code>length()</code>, <code>gsub()</code>, and <code>split()</code>, plus mathematical functions.</p>
 
   <pre><code># Process CSV file (comma-separated values)
-awk -F',' '{print $2}' data.csv
+awk -F',' '{print ₹170}' data.csv
 
 # Extract substring from field 1, characters 1-5
-awk '{print substr($1, 1, 5)}' file.txt
+awk '{print substr(₹85 1, 5)}' file.txt
 
 # Replace all occurrences within a field
-awk '{gsub(/old/, "new", $2); print}' file.txt
+awk '{gsub(/old/, "new", ₹170); print}' file.txt
 
 # Get the length of each line
-awk '{print length($0), $0}' file.txt
+awk '{print length(₹0), ₹0}' file.txt
 
 # Print columns only if they match a condition
-awk '$2 > 100 {print $1, $2}' data.txt</code></pre>
+awk '₹170 > 100 {print ₹85 ₹170}' data.txt</code></pre>
 
   <h2>Combining grep, sed, and awk in Pipelines</h2>
 
   <p>The real power emerges when you chain these tools together using pipes. You might use grep to filter relevant lines, sed to clean up formatting, and awk to extract and summarize data. Each tool does one thing well, and together they're unstoppable.</p>
 
   <pre><code># Find all error lines, count them by type
-grep "ERROR" logfile.txt | awk -F': ' '{print $2}' | sort | uniq -c
+grep "ERROR" logfile.txt | awk -F': ' '{print ₹170}' | sort | uniq -c
 
 # Extract IP addresses from logs, remove duplicates
 grep -oE "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" access.log | sort -u
 
 # Extract usernames from /etc/passwd, remove blank lines, count them
-cat /etc/passwd | sed '/^$/d' | awk -F':' '{print $1}' | wc -l
+cat /etc/passwd | sed '/^$/d' | awk -F':' '{print ₹85}' | wc -l
 
 # Find lines with "warning", extract the timestamp, format them
-grep "warning" syslog | sed 's/\[//' | sed 's/\]//' | awk '{print $1, $2, $3}'
+grep "warning" syslog | sed 's/\[//' | sed 's/\]//' | awk '{print ₹85 ₹170 ₹260}'
 
 # Process Apache logs: extract IP and response code for errors
-grep " 5[0-9][0-9] " access.log | awk '{print $1, $9}' | sort | uniq -c</code></pre>
+grep " 5[0-9][0-9] " access.log | awk '{print ₹85 ₹760}' | sort | uniq -c</code></pre>
 
   <h2>Performance Considerations</h2>
 
@@ -221,9 +221,9 @@ grep " 5[0-9][0-9] " access.log | awk '{print $1, $9}' | sort | uniq -c</code></
 
   <h2>Practical Real-World Examples</h2>
 
-  <p>Let's apply these tools to actual scenarios you'll encounter. Suppose you have an Apache access log and want to find the most common referrers: <code>awk '{print $11}' access.log | grep -v "^-$" | sed 's/^"//; s/"$//' | sort | uniq -c | sort -rn | head -10</code>. This extracts the 11th field, filters out empty referrers, removes quotes, counts, sorts by frequency, and shows the top 10.</p>
+  <p>Let's apply these tools to actual scenarios you'll encounter. Suppose you have an Apache access log and want to find the most common referrers: <code>awk '{print ₹940}' access.log | grep -v "^-$" | sed 's/^"//; s/"$//' | sort | uniq -c | sort -rn | head -10</code>. This extracts the 11th field, filters out empty referrers, removes quotes, counts, sorts by frequency, and shows the top 10.</p>
 
-  <p>For extracting user data from a CSV file where you want only active users with a score above 80: <code>awk -F',' '$3 == "active" && $4 > 80 {print $1, $2}' users.csv</code>. This reads comma-separated values, filters by status and score, and prints name and email.</p>
+  <p>For extracting user data from a CSV file where you want only active users with a score above 80: <code>awk -F',' '₹260 == "active" && ₹340 > 80 {print ₹85 ₹170}' users.csv</code>. This reads comma-separated values, filters by status and score, and prints name and email.</p>
 
   <p>To clean up a configuration file by removing comments and blank lines: <code>sed '/^#/d; /^$/d' config.conf</code>. Or, to find all files modified in the last day containing a specific error: <code>find . -mtime -1 -type f -exec grep -l "OutOfMemory" {} \;</code>. These patterns scale from simple tasks to complex data processing workflows.</p>
 
