@@ -37,11 +37,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install anthropic
 
+      - name: Verify API Key
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "❌ ERROR: ANTHROPIC_API_KEY secret not set in GitHub!"
+            echo "Please add the secret in: Settings → Secrets and variables → Actions"
+            exit 1
+          else
+            echo "✅ API Key secret is configured"
+          fi
+
       - name: Generate and publish article
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           cd /home/user/itvedas
+          echo "API Key length: ${#ANTHROPIC_API_KEY}"
           python3 itvedas-brain/auto-publisher-2hourly.py test
 
       - name: Check for new articles
