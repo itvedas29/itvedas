@@ -233,6 +233,20 @@ footer{border-top:1px solid var(--border);margin-top:5rem;padding:3.5rem 2rem 2.
   .nav-dropdown{display:none;}
 }
 @media(max-width:560px){.bento{grid-template-columns:1fr;}.card.span2{grid-column:span 1;}}
+/* Newsletter signup */
+.newsletter{max-width:560px;margin:3rem auto 0;padding:1.5rem;background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(139,92,246,0.08));border:1px solid rgba(255,107,53,0.2);border-radius:var(--radius);text-align:center;}
+.newsletter h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin-bottom:0.5rem;}
+.newsletter p{font-size:0.9rem;color:var(--muted);margin-bottom:1.25rem;}
+.nl-form{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.nl-form input{flex:1;min-width:200px;padding:0.75rem 1rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:0.9rem;transition:border-color .2s;}
+.nl-form input:focus{outline:none;border-color:var(--accent);}
+.nl-form button{background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:box-shadow .2s;}
+.nl-form button:hover{box-shadow:0 4px 16px rgba(255,107,53,0.35);}
+.nl-msg{margin-top:0.75rem;font-size:0.8rem;color:var(--muted);display:none;}
+.nl-msg.show{display:block;}
+.nl-msg.success{color:var(--green);}
+.nl-msg.error{color:#F87171;}
+@media(max-width:900px){.nl-form{flex-direction:column;}.nl-form input,.nl-form button{width:100%;}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
@@ -300,6 +314,16 @@ $ ssh student@lab
     <div class="stat"><b>13</b><span>Topics</span></div>
     <div class="stat"><b>268</b><span>News stories</span></div>
     <div class="stat"><b>₹0</b><span>Forever free</span></div>
+  </div>
+
+  <div class="newsletter">
+    <h3>Get Weekly IT News</h3>
+    <p>New articles, security alerts, and career tips delivered to your inbox every Friday.</p>
+    <form class="nl-form" id="nlForm">
+      <input type="email" id="nlEmail" placeholder="your@email.com" required aria-label="Newsletter email">
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="nl-msg" id="nlMsg"></div>
   </div>
   <div class="continue" id="continueCard">
     <div class="ring"><b>📖</b></div>
@@ -641,6 +665,56 @@ document.addEventListener('DOMContentLoaded',function(){
       document.getElementById('fcveSev').textContent='CVSS '+c.cvss_score+(c.cvss_score>=9?' · CRITICAL':c.cvss_score>=7?' · HIGH':'');
     }
   }).catch(function(){});
+
+  /* Newsletter subscription */
+  document.getElementById('nlForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var email = document.getElementById('nlEmail').value.trim();
+    var msg = document.getElementById('nlMsg');
+    var btn = document.querySelector('.nl-form button');
+
+    if(!email || !email.includes('@')){
+      msg.textContent = '❌ Please enter a valid email';
+      msg.classList.add('show', 'error');
+      return;
+    }
+
+    /* Save to subscribers list */
+    try {
+      btn.disabled = true;
+      btn.textContent = 'Subscribing...';
+
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, timestamp: new Date().toISOString() })
+      }).then(function(r){ return r.json(); })
+        .then(function(data){
+          if(data.success){
+            msg.textContent = '✓ Welcome! Check your email for confirmation.';
+            msg.classList.add('show', 'success');
+            msg.classList.remove('error');
+            document.getElementById('nlEmail').value = '';
+            btn.textContent = 'Subscribe';
+            btn.disabled = false;
+            setTimeout(function(){ msg.classList.remove('show'); }, 5000);
+          } else {
+            throw new Error(data.message || 'Subscription failed');
+          }
+        }).catch(function(err){
+          msg.textContent = '❌ ' + (err.message || 'Error subscribing. Try again later.');
+          msg.classList.add('show', 'error');
+          msg.classList.remove('success');
+          btn.textContent = 'Subscribe';
+          btn.disabled = false;
+        });
+    } catch(e){
+      msg.textContent = '❌ Error: ' + e.message;
+      msg.classList.add('show', 'error');
+      btn.textContent = 'Subscribe';
+      btn.disabled = false;
+    }
+  });
 });
 </script>
 </body>
