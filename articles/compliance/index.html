@@ -70,6 +70,11 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;}
 .flinks a:hover{color:#FF6B35;}
+@keyframes flowAnimation{0%{stroke-dashoffset:8;}100%{stroke-dashoffset:0;}}
+@keyframes stagePulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+.stage{animation:stagePulse 2s ease-in-out infinite;}.stage:nth-child(2){animation-delay:0.3s;}
+.stage:nth-child(3){animation-delay:0.6s;}.stage:nth-child(4){animation-delay:0.9s;}
+.anim-arrow{stroke-dasharray:8,4;animation:flowAnimation 1s linear infinite;}
 @media(max-width:640px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.content{padding-left:1.25rem;padding-right:1.25rem;}.art-list{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -88,7 +93,11 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="tags"><span class="tag">GDPR</span><span class="tag">HIPAA</span><span class="tag">SOC 2</span><span class="tag">PCI DSS</span><span class="tag">ISO 27001</span></div>
 </div>
 <div class="content">
-  <div class="section-label">Compliance Articles</div>
+    <!-- Interactive Concept -->
+    <div class="section-label">Interactive Concept</div>
+    <h2 class="section-h">Compliance Framework Layers</h2>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;"><svg viewBox="0 0 500 380"><defs><style>@keyframes compGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}.comp-layer{animation:compGlow 2.5s ease-in-out infinite;}.comp-layer:nth-child(1){animation-delay:0;}.comp-layer:nth-child(2){animation-delay:0.3s;}.comp-layer:nth-child(3){animation-delay:0.6s;}.comp-layer:nth-child(4){animation-delay:0.9s;}</style></defs><text x="250" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">Compliance &amp; Governance</text><g class="comp-layer"><rect x="60" y="50" width="380" height="70" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="8"/><text x="250" y="75" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#8B5CF6" text-anchor="middle">Regulations</text><text x="250" y="95" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">GDPR, HIPAA, SOC 2, ISO 27001, NIST</text></g><g class="comp-layer"><rect x="60" y="145" width="380" height="70" fill="rgba(251,146,60,0.15)" stroke="#FB923C" stroke-width="2" rx="8"/><text x="250" y="170" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#FB923C" text-anchor="middle">Policies &amp; Procedures</text><text x="250" y="190" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Data retention, access control</text></g><g class="comp-layer"><rect x="60" y="240" width="380" height="70" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="8"/><text x="250" y="265" font-family="Space Grotesk" font-weight="600" font-size="12" fill="#22C55E" text-anchor="middle">Technical Controls</text><text x="250" y="285" font-family="Inter" font-size="10" fill="var(--muted)" text-anchor="middle">Encryption, authentication, monitoring</text></g></svg></div>
+    <div class="section-label">Compliance Articles</div>
   <h2 class="section-h">This chapter is just getting started</h2>
   <div class="empty"><div class="empty-emoji">📝</div><h3>Articles coming soon</h3><p>New guides publish every Monday, Wednesday and Friday. This chapter's first articles are on the way.</p><a href="/#newsletter" class="btn">Subscribe for updates →</a></div>
   <div class="other">

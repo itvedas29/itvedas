@@ -323,6 +323,72 @@
   </div>
 
   <div class="content">
+    <!-- Interactive Concept -->
+    <div class="section-label">Interactive Concept</div>
+    <h2 class="section-h">PowerShell Pipeline Architecture</h2>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
+      <svg viewBox="0 0 600 300" style="width:100%;height:auto;margin-bottom:1rem;">
+        <defs>
+          <style>
+            @keyframes pipeGlow{0%,100%{fill-opacity:0.7;}50%{fill-opacity:1;}}
+            .pipe-stage{animation:pipeGlow 2s ease-in-out infinite;}
+            .pipe-stage:nth-child(1){animation-delay:0;}
+            .pipe-stage:nth-child(2){animation-delay:0.25s;}
+            .pipe-stage:nth-child(3){animation-delay:0.5s;}
+            .pipe-stage:nth-child(4){animation-delay:0.75s;}
+          </style>
+        </defs>
+
+        <text x="300" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">PowerShell Object Pipeline</text>
+
+        <!-- Stage 1: Get -->
+        <g class="pipe-stage">
+          <rect x="30" y="50" width="110" height="60" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="6"/>
+          <text x="85" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#8B5CF6" text-anchor="middle">Get-*</text>
+          <text x="85" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Source Data</text>
+        </g>
+
+        <line x1="140" y1="80" x2="170" y2="80" stroke="#8B5CF6" stroke-width="2" class="anim-arrow"/>
+        <polygon points="175,80 170,76 170,84" fill="#8B5CF6"/>
+
+        <!-- Stage 2: Where -->
+        <g class="pipe-stage">
+          <rect x="180" y="50" width="110" height="60" fill="rgba(251,146,60,0.15)" stroke="#FB923C" stroke-width="2" rx="6"/>
+          <text x="235" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#FB923C" text-anchor="middle">Where-*</text>
+          <text x="235" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Filter</text>
+        </g>
+
+        <line x1="290" y1="80" x2="320" y2="80" stroke="#FB923C" stroke-width="2" class="anim-arrow"/>
+        <polygon points="325,80 320,76 320,84" fill="#FB923C"/>
+
+        <!-- Stage 3: Select -->
+        <g class="pipe-stage">
+          <rect x="330" y="50" width="110" height="60" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="6"/>
+          <text x="385" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#22C55E" text-anchor="middle">Select-*</text>
+          <text x="385" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Transform</text>
+        </g>
+
+        <line x1="440" y1="80" x2="470" y2="80" stroke="#22C55E" stroke-width="2" class="anim-arrow"/>
+        <polygon points="475,80 470,76 470,84" fill="#22C55E"/>
+
+        <!-- Stage 4: Output -->
+        <g class="pipe-stage">
+          <rect x="480" y="50" width="110" height="60" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="6"/>
+          <text x="535" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#3B82F6" text-anchor="middle">Output</text>
+          <text x="535" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Console/File</text>
+        </g>
+
+        <!-- Data flow visualization -->
+        <text x="300" y="180" font-family="Inter" font-size="11" fill="var(--muted)" text-anchor="middle">Object Flow: Each stage passes objects down the pipeline</text>
+
+        <rect x="50" y="200" width="500" height="80" fill="var(--bg)" stroke="var(--border)" stroke-width="1" rx="8"/>
+        <text x="70" y="220" font-family="Space Grotesk" font-weight="600" font-size="11" fill="var(--text)">Example:</text>
+        <text x="70" y="242" font-family="Inter" font-size="10" fill="var(--muted)" font-family="monospace">Get-Process | Where {$_.CPU -gt 50} | Select Name, CPU</text>
+        <text x="70" y="262" font-family="Inter" font-size="10" fill="var(--muted)">Retrieves processes → filters high CPU → shows name &amp; usage</text>
+      </svg>
+      <p style="text-align:center;color:var(--muted);font-size:0.9rem;">PowerShell's pipeline passes rich objects between cmdlets, enabling powerful data transformations</p>
+    </div>
+
     <!-- Learning Path -->
     <div class="learning-path">
       <div class="section-label">Recommended Learning Path</div>

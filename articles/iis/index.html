@@ -321,6 +321,77 @@
   </div>
 
   <div class="content">
+    <!-- Interactive Concept -->
+    <div class="section-label">Interactive Concept</div>
+    <h2 class="section-h">IIS Request Processing Pipeline</h2>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:3rem;">
+      <svg viewBox="0 0 650 280" style="width:100%;height:auto;margin-bottom:1rem;">
+        <defs>
+          <style>
+            @keyframes reqGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}
+            .req-stage{animation:reqGlow 2s ease-in-out infinite;}
+            .req-stage:nth-child(1){animation-delay:0;}
+            .req-stage:nth-child(2){animation-delay:0.25s;}
+            .req-stage:nth-child(3){animation-delay:0.5s;}
+            .req-stage:nth-child(4){animation-delay:0.75s;}
+            .req-stage:nth-child(5){animation-delay:1s;}
+          </style>
+        </defs>
+
+        <text x="325" y="25" font-family="Space Grotesk" font-weight="700" font-size="16" fill="var(--text)" text-anchor="middle">IIS HTTP Request Lifecycle</text>
+
+        <!-- Client Request -->
+        <g class="req-stage">
+          <rect x="10" y="50" width="100" height="60" fill="rgba(139,92,246,0.15)" stroke="#8B5CF6" stroke-width="2" rx="6"/>
+          <text x="60" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#8B5CF6" text-anchor="middle">Client</text>
+          <text x="60" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">HTTP Request</text>
+        </g>
+
+        <line x1="110" y1="80" x2="140" y2="80" stroke="#8B5CF6" stroke-width="2" class="anim-arrow"/>
+        <polygon points="145,80 140,76 140,84" fill="#8B5CF6"/>
+
+        <!-- Web Server -->
+        <g class="req-stage">
+          <rect x="150" y="50" width="100" height="60" fill="rgba(251,146,60,0.15)" stroke="#FB923C" stroke-width="2" rx="6"/>
+          <text x="200" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#FB923C" text-anchor="middle">Web Server</text>
+          <text x="200" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">IIS Core</text>
+        </g>
+
+        <line x1="250" y1="80" x2="280" y2="80" stroke="#FB923C" stroke-width="2" class="anim-arrow"/>
+        <polygon points="285,80 280,76 280,84" fill="#FB923C"/>
+
+        <!-- Handler -->
+        <g class="req-stage">
+          <rect x="290" y="50" width="100" height="60" fill="rgba(34,197,94,0.15)" stroke="#22C55E" stroke-width="2" rx="6"/>
+          <text x="340" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#22C55E" text-anchor="middle">Handler</text>
+          <text x="340" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">ASP.NET/PHP</text>
+        </g>
+
+        <line x1="390" y1="80" x2="420" y2="80" stroke="#22C55E" stroke-width="2" class="anim-arrow"/>
+        <polygon points="425,80 420,76 420,84" fill="#22C55E"/>
+
+        <!-- Application -->
+        <g class="req-stage">
+          <rect x="430" y="50" width="100" height="60" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" stroke-width="2" rx="6"/>
+          <text x="480" y="75" font-family="Space Grotesk" font-weight="600" font-size="11" fill="#3B82F6" text-anchor="middle">Application</text>
+          <text x="480" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">Process Logic</text>
+        </g>
+
+        <line x1="530" y1="80" x2="560" y2="80" stroke="#3B82F6" stroke-width="2" class="anim-arrow"/>
+        <polygon points="565,80 560,76 560,84" fill="#3B82F6"/>
+
+        <!-- Response -->
+        <g class="req-stage">
+          <rect x="570" y="50" width="80" height="60" fill="rgba(236,72,153,0.15)" stroke="#EC4899" stroke-width="2" rx="6"/>
+          <text x="610" y="75" font-family="Space Grotesk" font-weight="600" font-size="10" fill="#EC4899" text-anchor="middle">Response</text>
+          <text x="610" y="93" font-family="Inter" font-size="9" fill="var(--muted)" text-anchor="middle">HTML/JSON</text>
+        </g>
+
+        <text x="325" y="170" font-family="Inter" font-size="11" fill="var(--muted)" text-anchor="middle">Request flows through modules, handlers, and app code before returning response</text>
+      </svg>
+      <p style="text-align:center;color:var(--muted);font-size:0.9rem;">IIS processes HTTP requests through an integrated pipeline with multiple modules for authentication, logging, and more</p>
+    </div>
+
     <!-- Learning Path -->
     <div class="learning-path">
       <div class="section-label">Recommended Learning Path</div>
