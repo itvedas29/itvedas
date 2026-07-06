@@ -190,12 +190,12 @@ resource "aws_s3_bucket_versioning" "example" {
 
   <p>Most teams use a workflow like this: create a feature branch for infrastructure changes, write or modify <code>.tf</code> files, run <code>terraform plan</code> and commit the plan output to your PR for review, get approval, then run <code>terraform apply</code> in your main branch. This gives you code review discipline around infrastructure, not just applications.</p>
 
-  <p>For larger organizations, tools like <a href="/chapters/cloud/terraform-best-practices.html">Terraform Cloud or Atlantis</a> automate this workflow further, running plans automatically on PRs and handling approvals.</p>
+  <p>For larger organizations, tools like <a href="/chapters/cloud/">Terraform Cloud or Atlantis</a> automate this workflow further, running plans automatically on PRs and handling approvals.</p>
 
   <h2>Common Pitfalls and Best Practices</h2>
 
   <h3>State Management</h3>
-  <p>Never commit your <code>terraform.tfstate</code> file to Git. It contains secrets and sensitive data. Store state remotely using <a href="/chapters/cloud/terraform-aws-s3-state.html">S3 with encryption and locking</a>, Terraform Cloud, or another backend.</p>
+  <p>Never commit your <code>terraform.tfstate</code> file to Git. It contains secrets and sensitive data. Store state remotely using <a href="/chapters/cloud/">S3 with encryption and locking</a>, Terraform Cloud, or another backend.</p>
 
   <h3>Sensitive Data</h3>
   <p>Use <code>sensitive = true</code> on outputs containing passwords or keys. Use AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault for actual secrets—don't hardcode them in your configuration.</p>
@@ -204,7 +204,7 @@ resource "aws_s3_bucket_versioning" "example" {
   <p>Be consistent with naming conventions. Include environment (dev, staging, prod) in resource names. Use variables for environment-specific values rather than duplicating configurations.</p>
 
   <h3>Testing</h3>
-  <p>Always run <code>terraform plan</code> before applying. Use <code>terraform fmt</code> and <code>terraform validate</code> to catch errors. Consider <a href="/chapters/cloud/terraform-testing-strategies.html">tools like Terratest for automated infrastructure testing</a>.</p>
+  <p>Always run <code>terraform plan</code> before applying. Use <code>terraform fmt</code> and <code>terraform validate</code> to catch errors. Consider <a href="/chapters/cloud/">tools like Terratest for automated infrastructure testing</a>.</p>
 
   <h2>Terraform vs. Other IaC Tools</h2>
 
