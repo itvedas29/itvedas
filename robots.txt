@@ -1,9 +1,47 @@
+# General crawling rules
 User-agent: *
 Allow: /
+Allow: /articles/
+Allow: /chapters/
+Allow: /news/
+Allow: /sitemap.xml
+
+# Disallow sensitive files and directories
 Disallow: /*.md$
 Disallow: /*.json$
 Disallow: /*.sh$
 Disallow: /cve-data/
-Allow: /sitemap.xml
+Disallow: /.env
+Disallow: /.git
+Disallow: /node_modules/
+Disallow: /deployment/
+Disallow: /scripts/
+Disallow: /functions/
+Disallow: /itvedas-brain/
+Disallow: /docs/
 
+# Allow but crawl slowly (for resource-intensive content)
+User-agent: *
+Crawl-delay: 1
+Request-rate: 10/1s
+
+# ADS bot - allow it
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Slurp
+User-agent: DuckDuckBot
+Allow: /
+
+# Block bad actors
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+Disallow: /
+
+# Sitemaps
 Sitemap: https://itvedas.com/sitemap.xml
+
+# Cache control
+# Crawlers should check for updates regularly
+# Cache-Control: max-age=604800
