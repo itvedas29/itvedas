@@ -1,0 +1,244 @@
+/* ============================================================
+   ITVEDAS DIAGRAM COMPONENTS
+   Styling for Mermaid diagrams and visual elements
+   ============================================================ */
+
+/* ============ MERMAID DIAGRAM STYLES ============ */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing-2xl);
+  margin: var(--spacing-2xl) 0;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============ MERMAID DARK THEME ============ */
+.mermaid {
+  --mermaid-bg: #0E0E17;
+  --mermaid-fg: #F2F2FA;
+  --mermaid-secondary: #8B5CF6;
+  --mermaid-tertiary: #FF6B35;
+}
+
+/* Update Mermaid colors for dark mode */
+.mermaid g.classGroup rect {
+  stroke: var(--border-hi);
+  fill: var(--bg3);
+}
+
+.mermaid g.classGroup text {
+  fill: var(--text);
+}
+
+.mermaid .classLabel text {
+  fill: var(--text);
+}
+
+.mermaid g.clickable {
+  cursor: pointer;
+}
+
+.mermaid g.note {
+  stroke: var(--cyan);
+  stroke-width: 1.5;
+  fill: rgba(6, 182, 212, 0.1);
+}
+
+.mermaid g.note text {
+  fill: var(--text);
+}
+
+.mermaid line {
+  stroke: var(--border-hi);
+  stroke-width: 1.5;
+}
+
+.mermaid polyline {
+  stroke: var(--border-hi);
+  stroke-width: 1.5;
+}
+
+.mermaid polygon {
+  fill: var(--bg2);
+  stroke: var(--border-hi);
+}
+
+.mermaid circle {
+  stroke: var(--border-hi);
+}
+
+.mermaid rect {
+  stroke: var(--border-hi);
+  fill: var(--bg3);
+}
+
+.mermaid text {
+  fill: var(--text);
+  font-family: var(--font-body);
+}
+
+.mermaid .label text {
+  fill: var(--text);
+}
+
+.mermaid .actor {
+  stroke: var(--accent);
+  fill: var(--bg3);
+}
+
+.mermaid .actor text {
+  fill: var(--text);
+}
+
+.mermaid .actor line {
+  stroke: var(--accent);
+}
+
+.mermaid .arrowheadPath {
+  fill: var(--accent);
+}
+
+.mermaid .sequenceNumber {
+  fill: var(--bg2);
+}
+
+/* ============ DIAGRAM WRAPPERS ============ */
+.diagram-container {
+  margin: var(--spacing-2xl) 0;
+  overflow-x: auto;
+}
+
+.diagram-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.diagram-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.diagram-description {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.diagram-footer {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+}
+
+.diagram-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.legend-item {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 0.9rem;
+  color: var(--sub);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .mermaid {
+    padding: var(--spacing-lg);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mermaid svg {
+    min-width: 600px;
+  }
+
+  .diagram-legend {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .mermaid {
+    padding: var(--spacing-md);
+  }
+
+  .mermaid svg {
+    min-width: 500px;
+  }
+
+  .diagram-legend {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ PREFERS LIGHT MODE ============ */
+@media (prefers-color-scheme: light) {
+  .mermaid {
+    background: #F9F9FB;
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .mermaid rect {
+    fill: #FFFFFF;
+    stroke: rgba(0, 0, 0, 0.15);
+  }
+
+  .mermaid text {
+    fill: #0B0B0F;
+  }
+
+  .mermaid line,
+  .mermaid polyline,
+  .mermaid polygon,
+  .mermaid circle {
+    stroke: rgba(255, 107, 53, 0.4);
+  }
+
+  .mermaid g.note {
+    fill: rgba(6, 182, 212, 0.05);
+  }
+}
+
+/* ============ PRINT STYLES ============ */
+@media print {
+  .mermaid {
+    background: white;
+    border: 1px solid #ccc;
+  }
+
+  .mermaid text {
+    fill: black;
+  }
+
+  .mermaid line,
+  .mermaid polyline,
+  .mermaid polygon,
+  .mermaid circle {
+    stroke: #333;
+  }
+}
