@@ -1,0 +1,400 @@
+/* ============================================================
+   ITVEDAS TOOLS SECTION
+   Styling for interactive tools and calculators
+   ============================================================ */
+
+/* ============ TOOLS HUB PAGE ============ */
+.tools-hub {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--spacing-4xl) var(--spacing-lg) var(--spacing-2xl);
+}
+
+.tools-header {
+  text-align: center;
+  margin-bottom: var(--spacing-4xl);
+}
+
+.tools-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--spacing-md);
+}
+
+.tools-header p {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tools category grid */
+.tools-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-4xl);
+}
+
+.tool-category {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.tool-category:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.tool-category-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.tool-category-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.tool-category-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ============ TOOL CARD ============ */
+.tool-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.tool-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.tool-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.tool-card-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tool-card-category {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tool-card-description {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+/* ============ TOOL INTERFACE ============ */
+.tool-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.form-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.tool-input,
+.tool-textarea,
+.tool-slider {
+  padding: var(--spacing-md);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.tool-input:focus,
+.tool-textarea:focus,
+.tool-slider:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.tool-textarea {
+  min-height: 150px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.tool-slider {
+  padding: 0;
+  height: 6px;
+  cursor: pointer;
+}
+
+.tool-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--accent);
+}
+
+.tool-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--accent);
+}
+
+/* ============ TOOL RESULT ============ */
+.tool-result {
+  background: var(--bg2);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.tool-result strong {
+  display: block;
+  margin-bottom: var(--spacing-md);
+  color: var(--green);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.tool-result p {
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.9rem;
+  color: var(--sub);
+  line-height: 1.5;
+  font-family: var(--font-mono);
+}
+
+.tool-result p:last-child {
+  margin-bottom: 0;
+}
+
+.tool-result pre {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-lg);
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--cyan);
+  line-height: 1.5;
+}
+
+/* ============ TOOLS GRID ============ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  margin: var(--spacing-2xl) 0;
+}
+
+/* ============ TOOLS SEARCH ============ */
+.tools-search {
+  max-width: 600px;
+  margin: 0 auto var(--spacing-2xl);
+}
+
+.tools-search input {
+  width: 100%;
+  padding: var(--spacing-lg);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  transition: border-color 0.2s;
+}
+
+.tools-search input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.tools-search input::placeholder {
+  color: var(--muted);
+}
+
+/* ============ TOOL USAGE ============ */
+.tool-usage {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+}
+
+.tool-usage p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--sub);
+  line-height: 1.6;
+}
+
+/* ============ TOOL FAQ ============ */
+.tool-faq {
+  margin: var(--spacing-2xl) 0;
+}
+
+.tool-faq h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+}
+
+.faq-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  overflow: hidden;
+}
+
+.faq-question {
+  padding: var(--spacing-lg);
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.faq-question:hover {
+  background: var(--bg3);
+}
+
+.faq-toggle {
+  font-size: 1.2rem;
+  transition: transform 0.2s;
+}
+
+.faq-item.open .faq-toggle {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  color: var(--muted);
+  line-height: 1.6;
+  display: none;
+}
+
+.faq-item.open .faq-answer {
+  display: block;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .tools-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  .tools-categories {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-categories {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tool-form {
+    padding: var(--spacing-md);
+  }
+}
+
+/* ============ PRINT STYLES ============ */
+@media print {
+  .tools-search,
+  .tool-form button,
+  .faq-question {
+    display: none;
+  }
+
+  .tool-result {
+    page-break-inside: avoid;
+  }
+}
