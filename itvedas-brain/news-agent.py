@@ -78,7 +78,7 @@ NEWS_FEEDS = [
 # calls / runtime in a single run.
 MAX_NEW_ARTICLES_PER_RUN = 25
 
-def write_with_openai(prompt, max_tokens=2500):
+def write_with_claude(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
                         api_key=ANTHROPIC_KEY, model=ANTHROPIC_MODEL, log_fn=log)
 
@@ -99,7 +99,7 @@ def fetch_feed(url):
             if title and len(title)>10:
                 items.append({"title":title,"link":link,"desc":desc,"source":source})
     except Exception as e:
-        print(f"Feed fetch error ({url}): {e}")
+        log(f"Feed fetch error ({url}): {e}")
     return items
 
 def classify(title):
@@ -168,7 +168,7 @@ Structure:
 
 Return ONLY meta block + HTML body. No html/head/body tags."""
 
-    return write_with_openai(prompt, max_tokens=2000)
+    return write_with_claude(prompt, max_tokens=2000)
 
 def parse_article(content, item):
     meta = {"headline":item['title'],"summary":item['desc'][:140],"topic":classify(item['title']),
@@ -214,7 +214,7 @@ Reply with ONLY JSON: {{"score":85,"verdict":"PUBLISH","fix":"short note"}}
 verdict = PUBLISH if score >= 75 else REWRITE.
 Article body (first 2500 chars): {body[:2500]}"""
     try:
-        reply = write_with_openai(prompt, max_tokens=200)
+        reply = write_with_claude(prompt, max_tokens=200)
         m = re.search(r'\{[^{}]+\}', reply, re.DOTALL)
         if m:
             r = json.loads(m.group())

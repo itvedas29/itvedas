@@ -35,7 +35,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
+from core.llm import claude as _core_claude
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 
@@ -58,14 +58,12 @@ def json_ld(obj):
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────
 API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
 GA4_ID     = os.environ.get("GA4_ID", "").strip()
 NOTIFY_TO  = os.environ.get("NOTIFY_EMAIL", "").strip()
 SMTP_FROM  = os.environ.get("SMTP_FROM", "").strip()
 SMTP_PASS  = os.environ.get("SMTP_PASS", "").strip()
 
 MODEL        = "claude-haiku-4-5-20251001"
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 SITE_URL   = "https://itvedas.com"
 SITE_NAME  = "ITVedas"
 CONTACT    = "info@itvedas.com"
@@ -183,10 +181,6 @@ def log(msg):
 def claude(prompt, system=None, max_tokens=4000):
     return _core_claude(prompt, system=system, max_tokens=max_tokens,
                          api_key=API_KEY, model=MODEL, log_fn=log)
-
-def openai_chat(prompt, system=None, max_tokens=4000):
-    return _core_openai_chat(prompt, system=system, max_tokens=max_tokens,
-                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
 
 def load_state():
     BRAIN_DIR.mkdir(exist_ok=True)
