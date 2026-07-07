@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root Variables */
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Typography */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  h1 {
+    @apply font-display text-5xl font-bold leading-tight tracking-tight;
+  }
+
+  h2 {
+    @apply font-display text-3xl font-bold leading-tight tracking-tight;
+  }
+
+  h3 {
+    @apply font-display text-2xl font-bold leading-tight;
+  }
+
+  h4 {
+    @apply font-display text-xl font-bold;
+  }
+
+  h5 {
+    @apply font-display text-lg font-bold;
+  }
+
+  h6 {
+    @apply font-display text-base font-bold uppercase tracking-wide;
+  }
+
+  p {
+    @apply leading-relaxed text-lg;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  code {
+    @apply font-mono text-sm;
+  }
+
+  pre {
+    @apply overflow-x-auto rounded-lg;
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  .container-readable {
+    @apply max-w-prose mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-full {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Focus styles */
+  .focus-ring {
+    @apply outline-2 outline-offset-2 outline-brand-500 dark:outline-brand-400;
+  }
+
+  .focus-ring-inset {
+    @apply outline-2 outline-offset-0 outline-brand-500 dark:outline-brand-400;
+  }
+
+  /* Animations */
+  .animate-enter {
+    animation: enter 0.3s ease-out;
+  }
+
+  .animate-exit {
+    animation: exit 0.2s ease-in;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes exit {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  /* Content utilities */
+  .prose-headings {
+    @apply font-display tracking-tight;
+  }
+
+  .prose-links {
+    @apply text-brand-600 dark:text-brand-400 underline decoration-2 underline-offset-4;
+  }
+
+  .prose-code {
+    @apply bg-neutral-100 dark:bg-neutral-900 px-2 py-1 rounded text-sm font-mono;
+  }
+}
+
+/* Markdown/MDX Styles */
+.mdx-content {
+  @apply prose dark:prose-invert max-w-none;
+}
+
+.mdx-content h2 {
+  @apply mt-8 mb-4 pt-8 border-t border-neutral-200 dark:border-neutral-800;
+}
+
+.mdx-content h3 {
+  @apply mt-6 mb-3;
+}
+
+.mdx-content p {
+  @apply mb-4;
+}
+
+.mdx-content ul,
+.mdx-content ol {
+  @apply mb-4 ml-6;
+}
+
+.mdx-content li {
+  @apply mb-2;
+}
+
+.mdx-content blockquote {
+  @apply border-l-4 border-brand-500 pl-4 italic text-neutral-600 dark:text-neutral-400 my-4;
+}
+
+.mdx-content code {
+  @apply bg-neutral-100 dark:bg-neutral-900 px-2 py-1 rounded text-sm font-mono;
+}
+
+.mdx-content pre {
+  @apply bg-neutral-900 dark:bg-neutral-950 text-neutral-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.mdx-content pre code {
+  @apply bg-transparent px-0 py-0 text-neutral-100;
+}
+
+.mdx-content table {
+  @apply w-full border-collapse my-4;
+}
+
+.mdx-content th {
+  @apply border border-neutral-200 dark:border-neutral-700 px-4 py-2 text-left bg-neutral-100 dark:bg-neutral-800;
+}
+
+.mdx-content td {
+  @apply border border-neutral-200 dark:border-neutral-700 px-4 py-2;
+}
+
+/* Skip to main link */
+.skip-to-main {
+  @apply absolute left-0 top-0 z-50 -translate-y-full px-4 py-2 bg-brand-600 text-white font-bold focus:translate-y-0;
+}
+
+/* Print styles */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+
+  a {
+    @apply underline;
+  }
+
+  .no-print {
+    @apply hidden;
+  }
+}
