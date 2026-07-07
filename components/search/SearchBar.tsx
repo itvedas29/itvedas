@@ -33,16 +33,28 @@ export function SearchBar(): JSX.Element {
   // Load search index
   useEffect(() => {
     fetch('/search-index.json')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
       .then((data: SearchIndex) => {
+        if (!data.articles || data.articles.length === 0) {
+          console.warn('Search index is empty');
+          return;
+        }
         const fuseInstance = new Fuse(data.articles, {
-          keys: ['title', 'description', 'category', 'tags', 'keywords'],
+          keys: ['title', 'description', 'category', 'tags', 'keywords', 'searchText'],
           threshold: 0.3,
-          minMatchCharLength: 2,
+          minMatchCharLength: 1,
+          shouldSort: true,
         });
         setFuse(fuseInstance);
       })
-      .catch((err) => console.error('Failed to load search index:', err));
+      .catch((err) => {
+        console.error('Failed to load search index:', err);
+      });
   }, []);
 
   // Handle search
