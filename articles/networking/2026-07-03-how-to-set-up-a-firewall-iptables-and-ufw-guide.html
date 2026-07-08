@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,follow">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firewall Setup: iptables and UFW Guide</title>
+  <meta name="description" content="Learn how to set up a firewall using iptables and UFW. Master Linux firewalls with practical commands and security best practices. Start protecting your system today."
+<meta property="og:title" content="Firewall Setup: iptables and UFW Guide">
+<meta property="og:description" content="Learn how to set up a firewall using iptables and UFW. Master Linux firewalls with practical commands and security best practices. Start protecting your system today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">>
+  <link rel="canonical" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/networking/2026-07-03-how-to-set-up-a-firewall-iptables-and-ufw-guide.html">
+    
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0;line-height:1.5}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+    .note{background:#1E293B;border-left:4px solid #FF6B35;padding:1rem;margin:1.5rem 0;border-radius:4px}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"How to Set Up a Firewall: iptables and UFW Guide",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/networking/" class="back">← Back to Networking</a>
+  <h1>How to Set Up a Firewall: iptables and UFW Guide</h1>
+
+  <p>A firewall filters incoming and outgoing network traffic based on predefined rules. Linux systems use iptables (the kernel firewall) or UFW (Uncomplicated Firewall), a user-friendly wrapper. Both protect your server by controlling which connections are allowed or denied.</p>
+
+  <h2>Understanding Linux Firewalls</h2>
+  <p>Linux firewalls operate at the kernel level through netfilter, which examines every network packet passing through your system. When you send or receive data, it passes through chains of rules that decide whether to accept, drop, or reject the traffic.</p>
+  
+  <p>There's often confusion between iptables and UFW. Here's the reality: UFW is built on top of iptables. When you use UFW, it's actually writing iptables rules for you behind the scenes. Think of UFW as the user-friendly frontend and iptables as the powerful engine underneath.</p>
+
+  <p>Most modern Linux distributions (Ubuntu, Debian) come with UFW, which is simpler for beginners. However, understanding iptables gives you more control for complex setups. We'll cover both approaches so you can choose what works for your environment.</p>
+
+  <h2>Getting Started with UFW</h2>
+  <p>UFW is the recommended starting point for most users. It's straightforward, and its syntax is memorable. Let's install and configure it.</p>
+
+  <h3>Installing and Enabling UFW</h3>
+  <p>On Ubuntu or Debian systems, UFW is usually pre-installed. Check its status:</p>
+  <pre><code>sudo ufw status</code></pre>
+
+  <p>If it's not installed, grab it with:</p>
+  <pre><code>sudo apt update && sudo apt install ufw -y</code></pre>
+
+  <p>Before enabling the firewall, you must allow SSH (port 22) if you're managing the server remotely. Skipping this step will lock you out:</p>
+  <pre><code>sudo ufw allow 22/tcp</code></pre>
+
+  <p>Now enable the firewall:</p>
+  <pre><code>sudo ufw enable</code></pre>
+
+  <p>Verify it's active:</p>
+  <pre><code>sudo ufw status verbose</code></pre>
+
+  <h3>Basic UFW Rules</h3>
+  <p>UFW rules follow a simple pattern: allow or deny traffic to specific ports or services. Here are the most common commands:</p>
+
+  <p><strong>Allow a specific port:</strong></p>
+  <pre><code>sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp</code></pre>
+
+  <p><strong>Allow a service by name:</strong></p>
+  <pre><code>sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow ssh</code></pre>
+
+  <p><strong>Deny a port:</strong></p>
+  <pre><code>sudo ufw deny 23/tcp</code></pre>
+
+  <p><strong>Allow traffic from a specific IP:</strong></p>
+  <pre><code>sudo ufw allow from 192.168.1.100 to any port 22</code></pre>
+
+  <p><strong>Delete a rule:</strong></p>
+  <pre><code>sudo ufw delete allow 8080</code></pre>
+
+  <p><strong>Check all rules with line numbers:</strong></p>
+  <pre><code>sudo ufw status numbered</code></pre>
+
+  <div class="note">
+    <strong>Pro Tip:</strong> Always allow SSH before enabling the firewall when accessing remotely. Otherwise, you'll lose connection and be unable to manage the system.
+  </div>
+
+  <h2>Advanced iptables Configuration</h2>
+  <p>When you need fine-grained control, iptables is your tool. It's more powerful but also more complex. Understand that iptables works with three built-in chains: INPUT (incoming traffic), OUTPUT (outgoing traffic), and FORWARD (traffic passing through).</p>
+
+  <h3>Understanding iptables Basics</h3>
+  <p>Every packet is evaluated against rules in a chain. The first matching rule determines the action (ACCEPT, DROP, or REJECT). If no rule matches, the default policy applies.</p>
+
+  <p><strong>View current iptables rules:</strong></p>
+  <pre><code>sudo iptables -L -n</code></pre>
+
+  <p><strong>View with more detail:</strong></p>
+  <pre><code>sudo iptables -L -n -v</code></pre>
+
+  <p><strong>Check a specific chain:</strong></p>
+  <pre><code>sudo iptables -L INPUT -n</code></pre>
+
+  <h3>Setting Default Policies</h3>
+  <p>Start with a restrictive approach: deny everything by default, then explicitly allow what you need.</p>
+
+  <pre><code>sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT</code></pre>
+
+  <p>This blocks all incoming traffic and anything being forwarded through your system, while allowing outgoing traffic. Now allow specific services.</p>
+
+  <h3>Writing iptables Rules</h3>
+  <p><strong>Allow loopback (localhost) traffic — this is essential:</strong></p>
+  <pre><code>sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT</code></pre>
+
+  <p><strong>Allow established connections to continue:</strong></p>
+  <pre><code>sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</code></pre>
+
+  <p><strong>Allow SSH (port 22):</strong></p>
+  <pre><code>sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code></pre>
+
+  <p><strong>Allow HTTP and HTTPS:</strong></p>
+  <pre><code>sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code></pre>
+
+  <p><strong>Allow DNS (port 53) for queries:</strong></p>
+  <pre><code>sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT</code></pre>
+
+  <p><strong>Drop all other incoming traffic (redundant but explicit):</strong></p>
+  <pre><code>sudo iptables -A INPUT -j DROP</code></pre>
+
+  <p><strong>Allow all outgoing traffic (optional — be more restrictive if needed):</strong></p>
+  <pre><code>sudo iptables -A OUTPUT -j ACCEPT</code></pre>
+
+  <h3>Persisting iptables Rules</h3>
+  <p>iptables rules exist in memory and vanish after reboot. Save them persistently using iptables-persistent:</p>
+
+  <pre><code>sudo apt install iptables-persistent -y</code></pre>
+
+  <p>When prompted, save current rules. To update saved rules later:</p>
+  <pre><code>sudo netfilter-persistent save</code></pre>
+
+  <p>Verify rules are saved in:</p>
+  <pre><code>cat /etc/iptables/rules.v4</code></pre>
+
+  <h2>Practical Firewall Scenarios</h2>
+
+  <h3>Web Server Setup with UFW</h3>
+  <p>You're running a web server and need to allow HTTP, HTTPS, and SSH:</p>
+  <pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable</code></pre>
+
+  <h3>Restricting Database Access with iptables</h3>
+  <p>Your MySQL server should only accept connections from specific application servers:</p>
+  <pre><code>sudo iptables -A INPUT -p tcp --dport 3306 -s 10.0.1.50 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 3306 -j DROP</code></pre>
+
+  <p>This accepts connections from 10.0.1.50 and drops all others trying to reach MySQL.</p>
+
+  <h3>Rate Limiting with iptables</h3>
+  <p>Prevent brute force attacks on SSH by limiting connection attempts:</p>
+  <pre><code>sudo iptables -A INPUT -p tcp --dport 22 -m limit --limit 5/min --limit-burst 10 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j DROP</code></pre>
+
+  <p>This allows a maximum of 5 new connections per minute with a burst of 10, dropping excess attempts.</p>
+
+  <h2>Monitoring and Troubleshooting</h2>
+
+  <h3>Checking Active Connections</h3>
+  <p>See which ports are listening and which connections are established:</p>
+  <pre><code>sudo netstat -tulpn</code></pre>
+
+  <p>Or with the modern alternative:</p>
+  <pre><code>sudo ss -tulpn</code></pre>
+
+  <h3>Testing Firewall Rules</h3>
+  <p>From another machine, test if a port is reachable:</p>
+  <pre><code>nc -zv example.com 22</code></pre>
+
+  <p>Or use telnet to check TCP ports:</p>
+  <pre><code>telnet example.com 80</code></pre>
+
+  <h3>Debugging UFW</h3>
+  <p>Enable UFW logging to track blocked connections:</p>
+  <pre><code>sudo ufw logging on</code></pre>
+
+  <p>Set logging level:</p>
+  <pre><code>sudo ufw logging high</code></pre>
+
+  <p>View logs:</p>
+  <pre><code>sudo tail -f /var/log/ufw.log</code></pre>
+
+  <h2>Best Practices for Firewall Security</h2>
+
+  <ul>
+    <li><strong>Start restrictive:</strong> Deny everything by default, then allow only necessary traffic.</li>
+    <li><strong>Document your rules:</strong> Comment why each rule exists. Future you will appreciate it.</li>
+    <li><strong>Test before deploying:</strong> Always test firewall changes on non-production systems first.</li>
+    <li><strong>Use non-standard ports:</strong> Run SSH on a non-standard port to reduce automated attacks (e.g., 2222 instead of 22).</li>
+    <li><strong>Combine with other tools:</strong> Firewalls work best with fail2ban, intrusion detection systems, and regular security audits.</li>
+    <li><strong>Keep rules minimal:</strong> Each rule increases processing overhead. Remove unused rules regularly.</li>
+    <li><strong>Monitor regularly:</strong> Review firewall logs for suspicious patterns and blocked legitimate traffic.</li>
+  </ul>
+
+  <p>For more on protecting your Linux system, check out our guides on <a href="/chapters/networking/">securing SSH connections</a> and <a href="/chapters/networking/">understanding network protocols</a>. Additionally, learn how <a href="/chapters/linux/">fail2ban works for intrusion prevention</a>.</p>
+
+  <h2>When to Use UFW vs iptables</h2>
+  <p><strong>Use UFW if:</strong> You're new to firewalls, managing a small number of rules, or need quick setup on Ubuntu/Debian systems.</p>
+
+  <p><strong>Use iptables if:</strong> You need complex stateful filtering, advanced NAT rules, rate limiting, or managing enterprise environments with many custom rules.</p>
+
+  <p>Remember: UFW is iptables underneath anyway, so learning iptables deepens your understanding of what UFW does.</p>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Can I use UFW and iptables together?</h3>
+    <p>Technically yes, but it's not recommended. UFW manages iptables rules automatically, and manually adding iptables rules can conflict with UFW's rule management. If you need advanced iptables functionality, consider disabling UFW and managing iptables directly.</p>
+
+    <h3>What happens if I accidentally block SSH?</h3>
+    <p>If you're accessing remotely, you'll lose connection immediately. Always have a recovery plan: use out-of-band access (

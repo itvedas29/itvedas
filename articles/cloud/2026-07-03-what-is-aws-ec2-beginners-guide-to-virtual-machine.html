@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,follow">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS EC2: Beginner's Guide to Cloud Virtual Machines</title>
+  <meta name="description" content="Learn what AWS EC2 is and how virtual machines work in the cloud. Complete beginner's guide with setup steps and real examples. Start your cloud journey today."
+<meta property="og:title" content="AWS EC2: Beginner's Guide to Cloud Virtual Machines">
+<meta property="og:description" content="Learn what AWS EC2 is and how virtual machines work in the cloud. Complete beginner's guide with setup steps and real examples. Start your cloud journey today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">>
+  <link rel="canonical" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/cloud/2026-07-03-what-is-aws-ec2-beginners-guide-to-virtual-machine.html">
+    
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+    .highlight{background:#1E293B;padding:.2rem .4rem;border-radius:4px}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"AWS EC2: Beginner's Guide to Cloud Virtual Machines",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/cloud/" class="back">← Back to Cloud Computing</a>
+  <h1>AWS EC2: Beginner's Guide to Cloud Virtual Machines</h1>
+
+  <p><strong>AWS EC2 (Elastic Compute Cloud) is Amazon's web service that lets you rent virtual computers on-demand.</strong> Instead of buying physical servers, you spin up instances in minutes, pay only for what you use, and scale up or down instantly. It's the foundational compute service that powers millions of applications worldwide.</p>
+
+  <h2>What Exactly Is AWS EC2?</h2>
+  
+  <p>EC2 stands for Elastic Compute Cloud, and it's Amazon's answer to the question: "What if you could rent a computer in the cloud instead of buying one?" Think of it as a vending machine for servers. You select the specs you need—CPU, memory, storage—and within seconds, you've got a running virtual machine.</p>
+
+  <p>The word "elastic" is key. Your infrastructure stretches and shrinks automatically. Running a web app that gets 10x traffic during Black Friday? Spin up 100 instances. Traffic dies down Monday? Shut them down. You only pay for those hours of compute time.</p>
+
+  <p>Before EC2, companies had three awful options: buy servers upfront (expensive and risky), lease dedicated hardware (inflexible contracts), or cobble together a hybrid nightmare. EC2 changed everything by offering on-demand, disposable compute resources priced by the second.</p>
+
+  <h2>How Does EC2 Actually Work?</h2>
+
+  <p>EC2 runs on top of Amazon's massive global infrastructure. AWS owns and operates data centers across the globe. Within each region, they've carved out isolated chunks called Availability Zones. Inside those zones, they run hypervisors—software that divides physical servers into multiple virtual machines.</p>
+
+  <p>When you launch an EC2 instance, you're essentially:</p>
+  <ol>
+    <li>Selecting an AMI (Amazon Machine Image)—a pre-configured template with your OS and software</li>
+    <li>Choosing an instance type—T3, M5, C5, etc., each optimized for different workloads</li>
+    <li>Specifying storage, networking, and security settings</li>
+    <li>Launching—your instance boots within seconds</li>
+  </ol>
+
+  <p>The instance gets a public IP address (if you want it), a hostname, and direct network access. You connect via SSH (Linux/Mac) or RDP (Windows) and interact with it like it's a physical machine sitting in front of you. It's not. It's running on a shared physical server in an AWS data center, virtualized alongside dozens of other customers' instances.</p>
+
+  <h2>Instance Types: Picking the Right Machine</h2>
+
+  <p>EC2 offers dozens of instance types, and choosing wrong wastes money. Here's the practical breakdown:</p>
+
+  <h3>General Purpose (T3, M5, M6)</h3>
+  <p>Jack-of-all-trades instances. Good for web servers, small databases, and development. They balance CPU, memory, and network. Start here unless you have a specific reason not to.</p>
+
+  <h3>Compute Optimized (C5, C6)</h3>
+  <p>High CPU performance. Use these for batch processing, machine learning, video transcoding, and anything CPU-bound. You pay more, but you get serious compute power.</p>
+
+  <h3>Memory Optimized (R5, R6)</h3>
+  <p>Tons of RAM. Perfect for in-memory databases (Redis, Memcached), data warehousing (Redshift), and real-time analytics. If your bottleneck is RAM, go here.</p>
+
+  <h3>Storage Optimized (I3, H1)</h3>
+  <p>Fast local NVMe storage. For databases with heavy read/write patterns, NoSQL datastores, and Elasticsearch clusters. Less common than the others.</p>
+
+  <p>Within each family, sizes range from nano (tiny, cheap) to xlarge and larger. A <span class="highlight">t3.micro</span> might cost ₹0.85/hour while a <span class="highlight">c5.4xlarge</span> runs ₹58/hour. Pick based on your actual needs, not hopes.</p>
+
+  <h2>Pricing Models: Pay Smart</h2>
+
+  <p>AWS offers three ways to pay for EC2:</p>
+
+  <h3>On-Demand</h3>
+  <p>Pay per second, no commitment. Most flexible, least cost-effective. Great for testing, development, and unpredictable workloads. Standard choice for beginners.</p>
+
+  <h3>Reserved Instances</h3>
+  <p>Commit to 1 or 3 years, get 30-70% discount. Ideal for stable workloads running 24/7. You're locked in, but savings are massive for production databases or always-on web servers.</p>
+
+  <h3>Spot Instances</h3>
+  <p>Bid on spare capacity, save up to 90%. AWS can terminate anytime with 2-minute notice. Perfect for fault-tolerant batch jobs, testing, and non-critical workloads. Risky for production.</p>
+
+  <p>Real-world strategy: Use Reserved Instances for your baseline (web servers, databases), On-Demand for variable load (autoscaling groups), and Spot for batch jobs and CI/CD.</p>
+
+  <h2>Getting Started: Launch Your First Instance</h2>
+
+  <p>The AWS Management Console makes this straightforward. Here's the basic flow:</p>
+
+  <ol>
+    <li>Go to EC2 Dashboard → Instances → Launch Instances</li>
+    <li>Select an AMI (Amazon Linux 2, Ubuntu, Windows Server, etc.)</li>
+    <li>Choose instance type (t3.micro is free tier eligible)</li>
+    <li>Configure network settings (VPC, subnet, security group)</li>
+    <li>Add storage (8-30 GB for small apps)</li>
+    <li>Review, create a key pair, and launch</li>
+  </ol>
+
+  <p>Within 30 seconds, your instance boots. You'll see it in the console with a public IP. Connect via:</p>
+
+  <pre><code>ssh -i your-key.pem ec2-user@your-instance-public-ip</code></pre>
+
+  <p>For Windows, use Remote Desktop with the decrypted password (AWS provides this). You're now logged into a computer running somewhere in the cloud, and you can install anything—databases, web servers, custom apps.</p>
+
+  <h2>Storage: EBS vs. Instance Store</h2>
+
+  <p>By default, EC2 instances use EBS (Elastic Block Storage)—network-attached drives that persist even after you stop the instance. Stop and start your instance? Your data's still there. Delete the instance? You can keep the volume or delete it (your choice).</p>
+
+  <p>Some instance types also offer instance store—fast local NVMe storage physically attached to the host server. It's blazingly fast but ephemeral. Reboot? Data survives. Terminate the instance? Gone forever. Use it for caches and temporary data, never for anything you care about.</p>
+
+  <p>For most beginners, EBS is the safe choice. Volumes are affordable (₹8.5/GB-month), reliable, and you can snapshot them for backups.</p>
+
+  <h2>Security Groups: Your Virtual Firewall</h2>
+
+  <p>Security Groups control inbound and outbound traffic to your instance. They're stateful firewalls—if you allow inbound HTTP traffic, responses automatically flow back out.</p>
+
+  <p>Common rules:</p>
+
+  <pre><code>SSH (Port 22): 0.0.0.0/0 — allow your IP only in production
+HTTP (Port 80): 0.0.0.0/0 — allow the world
+HTTPS (Port 443): 0.0.0.0/0 — allow the world
+Custom TCP (Port 3306): Security Group ID — allow from app servers only</code></pre>
+
+  <p>Defaults are restrictive (good). No inbound traffic is allowed until you explicitly permit it. Many security breaches happen because someone opens port 3306 (MySQL) to 0.0.0.0/0 "temporarily." Don't be that person.</p>
+
+  <h2>Elastic IPs: Keep Your Address</h2>
+
+  <p>When you stop and restart an EC2 instance, its public IP changes. For servers that need a fixed address (web servers, email, DNS), that's a disaster. Enter Elastic IPs—static public IPs you can allocate and associate with instances.</p>
+
+  <p>Allocate one, associate it with your instance, and you've got a permanent address. Stop and start? The IP sticks with your instance. Switch it to another instance? Done in seconds. They're free while associated with an instance, charged if allocated but unused.</p>
+
+  <h2>Connecting EC2 to Other AWS Services</h2>
+
+  <p>EC2 doesn't exist in isolation. Common integrations include:</p>
+
+  <ul>
+    <li><strong><a href="/chapters/cloud/">RDS (Relational Database Service)</a></strong>—host your MySQL, PostgreSQL database without managing servers</li>
+    <li><strong>S3 (Simple Storage Service)</strong>—store and retrieve files at scale</li>
+    <li><strong>ALB/NLB (Load Balancers)</strong>—distribute traffic across multiple instances</li>
+    <li><strong>Auto Scaling Groups</strong>—automatically add/remove instances based on demand</li>
+    <li><strong>CloudWatch</strong>—monitor CPU, memory, disk usage and trigger alarms</li>
+  </ul>
+
+  <p>A typical architecture might be: Users hit an Application Load Balancer, which routes traffic to 3-10 EC2 instances in an Auto Scaling Group, which read/write to an RDS database and store assets in S3. CloudWatch watches metrics and adds instances when CPU hits 70%.</p>
+
+  <h2>Common Pitfalls Beginners Hit</h2>
+
+  <p><strong>Forgetting to stop instances.</strong> They're not running up charges if they're stopped, but they drain money if left running. Set alarms or use AWS Cost Explorer.</p>
+
+  <p><strong>Choosing the wrong instance type.</strong> A t3.nano is cheap (₹0.3/hour) but painfully slow. A c5.4xlarge is powerful (₹58/hour) but overkill for a blog. Right-size based on benchmarks, not guesses.</p>
+
+  <p><strong>Storing secrets in code.</strong> Never hardcode passwords or API keys in code that runs on EC2. Use IAM roles, AWS Secrets Manager, or environment variables (stored securely).</p>
+
+  <p><strong>Ignoring security groups.</strong> Default to deny everything, allow only what's needed. Regularly audit your rules—old rules accumulate and widen your attack surface.</p>
+
+  <p><strong>No backups.</strong> EBS volumes can fail. Create snapshots regularly (AWS can automate this) or use RDS, which handles backups for you.</p>
+
+  <h2>Next Steps: Learning the Ecosystem</h2>
+
+  <p>EC2 is powerful but part of a larger ecosystem. Once comfortable with instances, explore:</p>
+
+  <ul>
+    <li>Auto Scaling Groups to handle traffic spikes automatically</li>
+    <li>Application Load Balancers to distribute traffic</li>
+    <li>CloudWatch for monitoring and alerting</li>
+    <li>VPCs and subnets for network segmentation</li>
+    <li>IAM roles to grant instances permissions safely</li>
+  </ul>
+
+  <p>The free tier includes 750 hours/month of t2.micro instances for 12 months, plus data transfer and storage. That's enough to run a small website or test application at zero cost. Sign up, launch an instance, and get hands-on. That's how you learn.</p>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Can I resize an EC2 instance after launching it?</h3>
+    <p>Yes, but with limitations. You can change instance type only if both the current and target types are compatible (EBS-backed). Stop the instance, change the type via the console, and restart. Changing between instance families or from instance store to EBS requires launching a new instance. Downtime is minimal (minutes) for most workloads.</p>
+
+    <h3>What's the difference between stopping and terminating an EC2 instance?</h3>
+    <p>Stopping pauses the instance—it's not running, not incurring compute charges, but the EBS volume is retained and charged. Restarting brings it back with the same IP and data. Terminating deletes the instance permanently. By default, the EBS root volume is deleted too (unless you change termination protection). Use stop for temporary pauses, terminate when you're done.</p>
+
+    <h3>How do I move an EC2 instance to another region?</h3>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACID Properties: Database Transactions Explained</title>
+  <meta name="description" content="Master ACID properties—Atomicity, Consistency, Isolation, Durability. Learn how database transactions work with real examples and code."
+<meta property="og:title" content="ACID Properties: Database Transactions Explained">
+<meta property="og:description" content="Master ACID properties—Atomicity, Consistency, Isolation, Durability. Learn how database transactions work with real examples and code.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">>
+  <link rel="canonical" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/databases/2026-07-03-acid-properties-explained-database-transactions-fo.html">
+    
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"ACID Properties: Database Transactions Explained",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/databases/" class="back">← Back to Databases</a>
+  <h1>ACID Properties Explained: Database Transactions for Beginners</h1>
+
+  <p>ACID properties are four guarantees that ensure database transactions are reliable and predictable. They stand for Atomicity, Consistency, Isolation, and Durability—and they're what keep your data safe when things go wrong.</p>
+
+  <p>Imagine transferring ₹8,500 between bank accounts. You need the withdrawal from one account and deposit into another to happen together, completely or not at all. That's what ACID promises. Without these guarantees, you could lose money or end up with duplicate transactions. Let's break down each property and see why they matter.</p>
+
+  <h2>What Is a Database Transaction?</h2>
+
+  <p>A transaction is a sequence of database operations grouped into a single logical unit. It's all-or-nothing: either every operation succeeds, or the entire transaction rolls back as if nothing happened.</p>
+
+  <p>Think of a transaction as a checkpoint. You start a transaction, make several changes, and then either commit them (save permanently) or rollback (undo everything). This prevents partial updates that could corrupt your data.</p>
+
+  <p>Here's a simple transaction in SQL:</p>
+
+  <pre><code>BEGIN TRANSACTION;
+  UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+  UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;</code></pre>
+
+  <p>If anything fails between the BEGIN and COMMIT, the database rolls back both updates automatically. Neither account balance changes.</p>
+
+  <h2>The Four ACID Properties</h2>
+
+  <h3>1. Atomicity: All or Nothing</h3>
+
+  <p>Atomicity means a transaction is atomic—indivisible. It either completes fully or doesn't execute at all. There's no in-between state.</p>
+
+  <p>Suppose your transaction has three steps: debit account A, credit account B, and log the transaction. If step two fails, atomicity guarantees that steps one and three are also rolled back. You won't have a debit without a credit, which would be a nightmare for accounting.</p>
+
+  <p>Here's an example of what atomicity prevents:</p>
+
+  <pre><code>-- Without atomicity, this could fail mid-way:
+BEGIN;
+  INSERT INTO transactions (id, amount, date) VALUES (5, 100, NOW());
+  UPDATE accounts SET balance = balance - 100 WHERE id = 1; -- What if this fails?
+  UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;</code></pre>
+
+  <p>With atomicity, if the second UPDATE fails, all three operations are undone. You won't have an orphaned transaction record.</p>
+
+  <h3>2. Consistency: Valid State to Valid State</h3>
+
+  <p>Consistency guarantees that the database moves from one valid state to another valid state. All rules, constraints, and triggers are enforced before a transaction commits.</p>
+
+  <p>For example, if you have a constraint that account balance can't be negative, a transaction that would violate this gets rejected outright. The database won't let you commit an invalid state.</p>
+
+  <p>Let's say you're enforcing a foreign key constraint:</p>
+
+  <pre><code>-- This transaction would fail due to consistency rules:
+BEGIN;
+  INSERT INTO orders (customer_id, amount) VALUES (999, 50);
+  -- If customer_id 999 doesn't exist, the foreign key constraint prevents this
+COMMIT;</code></pre>
+
+  <p>The database rejects this before committing, maintaining consistency. You're never left with an order pointing to a nonexistent customer.</p>
+
+  <h3>3. Isolation: No Interference</h3>
+
+  <p>Isolation ensures that concurrent transactions don't interfere with each other. Each transaction executes as if it's the only one running, even though others might be happening simultaneously.</p>
+
+  <p>Without isolation, Transaction A could read data that Transaction B is currently modifying, leading to "dirty reads." Or Transaction A could see different values for the same row at different points, causing "phantom reads."</p>
+
+  <p>Here's a scenario where isolation matters:</p>
+
+  <pre><code>-- Transaction 1
+BEGIN;
+  SELECT balance FROM accounts WHERE id = 1; -- Returns 1000
+  SLEEP(5); -- Simulate work
+  SELECT balance FROM accounts WHERE id = 1; -- Should still be 1000
+COMMIT;
+
+-- Transaction 2 (happens during Transaction 1)
+BEGIN;
+  UPDATE accounts SET balance = 500 WHERE id = 1;
+COMMIT;</code></pre>
+
+  <p>Isolation levels control how much transactions can see each other's changes. Most databases support four levels:</p>
+
+  <ul>
+    <li><strong>Read Uncommitted:</strong> Can read uncommitted data (dirty reads allowed)</li>
+    <li><strong>Read Committed:</strong> Only reads committed data (prevents dirty reads)</li>
+    <li><strong>Repeatable Read:</strong> Data doesn't change within a transaction (prevents non-repeatable reads)</li>
+    <li><strong>Serializable:</strong> Transactions execute completely isolated, as if in sequence</li>
+  </ul>
+
+  <p>PostgreSQL and MySQL let you set isolation levels per transaction:</p>
+
+  <pre><code>SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN;
+  -- Your queries here
+COMMIT;</code></pre>
+
+  <h3>4. Durability: Permanent Once Committed</h3>
+
+  <p>Durability guarantees that once a transaction commits, the data is permanent—even if the database crashes immediately after. It survives hardware failures, power outages, and software crashes.</p>
+
+  <p>This is why databases use write-ahead logging (WAL). Before committing, the database writes changes to a durable storage medium (usually disk). If it crashes, it recovers from this log.</p>
+
+  <p>You don't have to do anything special for durability; the database handles it. But it's why committing takes slightly longer than just updating memory—the data has to hit disk first.</p>
+
+  <pre><code>BEGIN;
+  UPDATE accounts SET balance = balance + 50 WHERE id = 1;
+COMMIT; -- Data is now guaranteed to survive crashes</code></pre>
+
+  <p>After COMMIT returns successfully, that update is durable. Period.</p>
+
+  <h2>Real-World Example: Money Transfer</h2>
+
+  <p>Let's tie this together with a complete banking example:</p>
+
+  <pre><code>BEGIN TRANSACTION;
+  -- Debit from source account
+  UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+  
+  -- Credit to destination account
+  UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+  
+  -- Log the transaction
+  INSERT INTO audit_log (source, destination, amount, timestamp)
+  VALUES (1, 2, 100, NOW());
+COMMIT;</code></pre>
+
+  <p><strong>Atomicity:</strong> All three operations succeed or all roll back. No partial transfers.</p>
+
+  <p><strong>Consistency:</strong> Balance constraints are checked. You can't transfer if source balance goes negative (if that's your rule).</p>
+
+  <p><strong>Isolation:</strong> Other transactions can't see intermediate states. No one reads the balance after the debit but before the credit.</p>
+
+  <p><strong>Durability:</strong> Once committed, the transfer survives any failure.</p>
+
+  <h2>When ACID Properties Break Down</h2>
+
+  <p>Not all databases enforce strict ACID properties. NoSQL databases like MongoDB and Cassandra often trade ACID guarantees for scalability and performance.</p>
+
+  <p>That doesn't make them bad—it makes them different. Use them when you need horizontal scaling and can tolerate eventual consistency. Use relational databases (PostgreSQL, MySQL, Oracle) when you need strong ACID guarantees.</p>
+
+  <p>Modern databases let you configure ACID levels. You might use READ COMMITTED isolation in high-throughput systems to reduce lock contention, trading some safety for speed. The key is understanding the tradeoffs.</p>
+
+  <h2>Testing ACID Compliance</h2>
+
+  <p>If you're building applications, you should test transaction behavior. Create scenarios where operations might fail—network timeouts, constraint violations, concurrent updates—and verify your database handles them correctly.</p>
+
+  <p>For PostgreSQL, use psql to experiment with isolation levels and see how concurrent transactions behave. For MySQL, try similar tests with multiple client connections. Understanding ACID in practice beats memorizing theory.</p>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    
+    <h3>What happens if a transaction is interrupted mid-execution?</h3>
+    <p>The database automatically rolls back the entire transaction. No partial changes persist. This is atomicity in action. The recovery happens transparently—you don't need to do anything.</p>
+
+    <h3>Can I use ACID properties with NoSQL databases?</h3>
+    <p>Some modern NoSQL databases (like MongoDB 4.0+) support ACID transactions, but typically only within a single document or a limited scope. Traditional relational databases offer ACID across entire tables and multiple tables by default.</p>
+
+    <h3>Does higher isolation level mean slower performance?</h3>
+    <p>Yes, generally. Serializable isolation requires more locking and coordination between transactions, which adds overhead. Read Committed is faster because it allows more concurrent transactions. Choose based on your consistency requirements, not just speed.</p>
+
+    <h3>How do databases ensure durability without slowing everything down?</h3>
+    <p>Databases use techniques like write-ahead logging and group commits. They batch multiple commits together before writing to disk, amortizing the cost. Some allow asynchronous commits for non-critical data, trading a tiny bit of safety for speed.</p>
+  </div>
+
+  <h2>Next Steps</h2>
+
+  <p>Now that you understand ACID properties, explore <a href="/chapters/databases/">database normalization</a> to design better schemas. Learn about <a href="/chapters/databases/">indexes and query optimization</a> to keep transactions fast. And dive into <a href="/chapters/databases/">locks and deadlocks</a> to handle concurrent transactions safely.</p>
+
+  <p>Practice writing transactions in your database of choice. Create test scenarios where things fail and verify your assumptions about atomicity and consistency. That hands-on experience is where ACID concepts truly click.</p>
+
+</div>
+</body>
+</html>

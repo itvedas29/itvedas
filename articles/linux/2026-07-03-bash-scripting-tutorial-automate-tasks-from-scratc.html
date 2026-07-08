@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bash Networking Scripts: Automate Network Tasks</title>
+  <meta name="description" content="Learn to write Bash scripts for network automation. Master SSH, DNS queries, port scanning, and system monitoring with real-world examples. Start today."
+<meta property="og:title" content="Bash Networking Scripts: Automate Network Tasks">
+<meta property="og:description" content="Learn to write Bash scripts for network automation. Master SSH, DNS queries, port scanning, and system monitoring with real-world examples. Start today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">>
+  <link rel="canonical" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/linux/2026-07-03-bash-scripting-tutorial-automate-tasks-from-scratc.html">
+    
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0A0A0F;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem 1rem}
+    .container{max-width:820px;margin:0 auto}
+    h1{color:#FF6B35;font-size:2rem;margin-bottom:1rem}
+    h2{color:#FF6B35;font-size:1.4rem;margin:2rem 0 .8rem}
+    h3{color:#94A3B8;font-size:1.1rem;margin:1.5rem 0 .5rem}
+    p{margin-bottom:1rem;color:#CBD5E1}
+    a{color:#FF6B35;text-decoration:none}a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:#FF6B35;font-size:.9rem}
+    pre{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.2rem;overflow-x:auto;margin:1rem 0}
+    code{font-family:'Fira Code',monospace;font-size:.85rem;color:#7DD3FC}
+    .faq{background:#111827;border:1px solid #1E293B;border-radius:8px;padding:1.5rem;margin:2rem 0}
+    .faq h3{color:#FF6B35;margin-top:1rem}
+    ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:#CBD5E1}
+    li{margin-bottom:.4rem}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Bash Networking Scripts: Automate Network Tasks from Scratch",
+    "datePublished":"2026-07-03",
+    "author":{"@type":"Organization","name":"ITVedas"},
+    "publisher":{"@type":"Organization","name":"ITVedas","url":"https://itvedas.com"}
+  }
+  </script>
+</head>
+<body>
+<div class="container">
+  <a href="/chapters/linux/" class="back">← Back to Linux</a>
+  <h1>Bash Networking Scripts: Automate Network Tasks from Scratch</h1>
+
+  <p>Bash scripts automate repetitive network tasks by combining command-line tools like ping, curl, ssh, and nslookup into reusable workflows. Instead of manually running commands dozens of times, you write a script once and execute it instantly. This guide teaches you to build production-ready networking scripts that save hours of manual work.</p>
+
+  <h2>Why Use Bash for Network Automation?</h2>
+  <p>Bash is the de facto standard for Unix-like systems because it's available everywhere—servers, cloud instances, containers. Unlike Python or Perl, you don't need to install dependencies. Bash scripts run immediately on any Linux or macOS system. It excels at orchestrating existing CLI tools and handling text processing, which is core to networking tasks.</p>
+  <p>Network administrators use Bash for monitoring uptime, bulk server configuration, automated backups, log analysis, and incident response. The skills transfer directly to DevOps, cloud engineering, and systems administration roles.</p>
+
+  <h2>Setting Up Your First Bash Script</h2>
+  <p>Every Bash script starts with a shebang—the line that tells the system to interpret the file as a Bash script.</p>
+  <pre><code>#!/bin/bash
+
+# This is a comment
+echo "Hello from Bash!"</code></pre>
+
+  <p>To make this executable:</p>
+  <pre><code>chmod +x script.sh
+./script.sh</code></pre>
+
+  <p>The shebang <code>#!/bin/bash</code> must be the first line. Without it, the system won't know how to run your script. Always use this rather than relying on the user to call <code>bash script.sh</code> manually.</p>
+
+  <h2>Building a Host Connectivity Monitor</h2>
+  <p>One of the most practical networking scripts checks whether multiple servers are reachable. This script pings a list of hosts and reports their status.</p>
+  <pre><code>#!/bin/bash
+
+# Define target hosts
+HOSTS=("8.8.8.8" "1.1.1.1" "example.com" "192.168.1.1")
+TIMEOUT=2
+
+echo "=== Host Connectivity Report ==" 
+echo "Timestamp: $(date)"
+echo
+
+for host in "${HOSTS[@]}"; do
+  if ping -c 1 -W $TIMEOUT "$host" &> /dev/null; then
+    echo "✓ $host is ONLINE"
+  else
+    echo "✗ $host is OFFLINE"
+  fi
+done</code></pre>
+
+  <p>This script loops through each host, sends a single ping request with a 2-second timeout, and prints the result. The <code>&> /dev/null</code> suppresses output so you only see your custom status messages. This is the foundation for uptime monitoring—extend it by logging results to a file and setting up cron jobs for continuous checks.</p>
+
+  <h2>Best Practices for Production Scripts</h2>
+  <ul>
+    <li><strong>Use absolute paths:</strong> Write <code>/usr/bin/curl</code> instead of <code>curl</code> because cron jobs have limited PATH variables.</li>
+    <li><strong>Add detailed comments:</strong> Future you will forget what the script does. Document the purpose, inputs, and outputs.</li>
+    <li><strong>Validate inputs:</strong> Check that files exist and variables aren't empty before using them.</li>
+    <li><strong>Log everything:</strong> Include timestamps and operation status. Logs are invaluable for troubleshooting failures.</li>
+    <li><strong>Test thoroughly:</strong> Run the script on a test server before running it on production systems.</li>
+    <li><strong>Handle cleanup:</strong> Remove temporary files and close connections properly.</li>
+  </ul>
+</div>
+</body>
+</html>
