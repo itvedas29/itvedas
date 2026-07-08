@@ -1,284 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid & Multi-Cloud Architecture | Azure, AWS, GCP Integration | IT Vedas</title>
-    <meta name="description" content="Hybrid cloud integration patterns, multi-cloud strategy for Azure/AWS/GCP, cross-platform operations, unified monitoring, and vendor interoperability.">
-    <meta name="keywords" content="hybrid cloud, multi-cloud, cloud integration, Azure, AWS, GCP, vendor interoperability, cross-cloud architecture">
-    <link rel="canonical" href="https://itvedas.com/chapters/hybrid-multicloud/">
-    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    <link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/hybrid-multicloud/index.html">
-    
-    <meta property="og:title" content="Hybrid & Multi-Cloud Architecture">
-    <meta property="og:description" content="Hybrid integration patterns and multi-cloud strategy for enterprise deployments">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://itvedas.com/chapters/hybrid-multicloud/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Hybrid & Multi-Cloud Architecture">
-    <meta name="twitter:description" content="Hybrid and multi-cloud infrastructure patterns and integration strategies">
-    <link rel="stylesheet" href="/css/shared.css">
-    <link rel="stylesheet" href="/css/documentation-standards.css">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Hybrid & Multi-Cloud Architecture Hub",
-      "description": "Hybrid cloud integration patterns and multi-cloud strategy",
-      "url": "https://itvedas.com/chapters/hybrid-multicloud/"
-    }
-    </script>
-    <style>
-        .hub-hero {
-            background: linear-gradient(135deg, #5c6bc0 0%, #1976d2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .hub-hero h1 {
-            font-size: 2.5em;
-            margin: 0 0 15px 0;
-            font-weight: 700;
-        }
-        .hub-hero p {
-            font-size: 1.2em;
-            margin: 0;
-            opacity: 0.95;
-        }
-        .hub-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .hub-section {
-            margin: 40px 0;
-        }
-        .hub-section h2 {
-            font-size: 1.8em;
-            color: #1976d2;
-            border-bottom: 3px solid #1976d2;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        .featured-articles {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .article-card {
-            background: #f5f5f5;
-            border-left: 4px solid #1976d2;
-            padding: 20px;
-            border-radius: 4px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .article-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
-        }
-        .article-card h3 {
-            margin-top: 0;
-            color: #1976d2;
-        }
-        .article-meta {
-            font-size: 0.9em;
-            color: #666;
-            margin: 10px 0;
-        }
-        .difficulty-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            background: #1976d2;
-            color: white;
-            margin-right: 8px;
-        }
-        .reading-time {
-            display: inline-block;
-            color: #666;
-            font-size: 0.9em;
-        }
-        .architecture-pattern {
-            background: #e3f2fd;
-            border-left: 4px solid #1976d2;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        .architecture-pattern h3 {
-            margin-top: 0;
-            color: #1976d2;
-        }
-        .cta-button {
-            display: inline-block;
-            background: #1976d2;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.2s;
-            margin-top: 15px;
-        }
-        .cta-button:hover {
-            background: #1565c0;
-        }
-        .cloud-provider {
-            display: inline-block;
-            background: white;
-            border: 2px solid #1976d2;
-            padding: 12px 18px;
-            margin: 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            color: #1976d2;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid & Multi-Cloud Architecture — ITVedas</title>
+<meta name="description" content="Hybrid integration patterns, multi-cloud strategy, cross-platform operations">
+<meta property="og:title" content="Hybrid & Multi-Cloud Architecture — ITVedas">
+<meta property="og:description" content="Hybrid integration patterns, multi-cloud strategy, cross-platform operations">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://itvedas.com/chapters/hybrid-multicloud/">
+<link rel="canonical" href="https://itvedas.com/chapters/hybrid-multicloud/">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0F;--card:#13131A;--orange:#FF6B35;--text:#E2E8F0;--muted:#94A3B8;--border:#1E1E2E}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
+nav{background:#0D0D14;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:60px;position:sticky;top:0;z-index:100}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+nav a:hover,nav a.active{color:var(--orange)}
+nav .brand{color:var(--text);font-weight:700;font-size:1.1rem;margin-right:auto}
+.hero{background:linear-gradient(135deg,#0D0D14 0%,#12121F 100%);border-bottom:1px solid var(--border);padding:3rem 2rem}
+.hero-inner{max-width:860px;margin:0 auto}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--orange)}
+h1{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:.75rem}
+.hero-desc{color:var(--muted);max-width:600px;font-size:1rem}
+main{max-width:860px;margin:0 auto;padding:2rem}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.section-header h2{font-size:1.1rem;font-weight:700;color:var(--text)}
+.count{background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:.75rem;padding:.2rem .6rem;border-radius:12px}
+ul#article-list{list-style:none;display:grid;gap:.75rem}
+ul#article-list li a{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:var(--text);transition:border-color .2s,transform .15s}
+ul#article-list li a:hover{border-color:var(--orange);transform:translateX(3px)}
+ul#article-list li a .icon{width:36px;height:36px;background:rgba(255,107,53,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+ul#article-list li a .icon svg{width:18px;height:18px;stroke:var(--orange);fill:none;stroke-width:2}
+ul#article-list li a .info{flex:1;min-width:0}
+ul#article-list li a .info .title{font-size:.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ul#article-list li a .info .meta{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.arrow{color:var(--muted);font-size:.8rem;flex-shrink:0}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--orange);text-decoration:none}
+</style>
 </head>
 <body>
-    <div class="hub-hero">
-        <h1>☁️ Hybrid & Multi-Cloud Architecture</h1>
-        <p>Hybrid integration patterns, multi-cloud strategy for Azure, AWS, GCP interoperability</p>
-    </div>
-
-    <div class="hub-content">
-        <section class="hub-section">
-            <h2>Overview</h2>
-            <p>Master hybrid cloud integration and multi-cloud strategies for enterprise deployments. Learn how to securely connect on-premises infrastructure with Azure, implement workload distribution across Azure/AWS/GCP, prevent vendor lock-in, and maintain unified operations across cloud providers.</p>
-        </section>
-
-        <section class="hub-section">
-            <h2>Hybrid Cloud Architecture</h2>
-
-            <div class="architecture-pattern">
-                <h3>🔗 Hub-Spoke Model</h3>
-                <p><strong>Best for:</strong> Enterprise deployments with central control</p>
-                <p>Central hub (on-premises or cloud) connected to multiple spokes. Provides unified security, identity, and network management.</p>
-            </div>
-
-            <div class="architecture-pattern">
-                <h3>🔀 Mesh Architecture</h3>
-                <p><strong>Best for:</strong> Distributed teams and multi-location deployments</p>
-                <p>All sites peer-to-peer with each other. Provides high availability and resilience but increased complexity.</p>
-            </div>
-
-            <div class="architecture-pattern">
-                <h3>🏝️ Islands Model</h3>
-                <p><strong>Best for:</strong> Gradual migration and separation of concerns</p>
-                <p>Isolated cloud environments for different departments or applications. Minimal initial integration.</p>
-            </div>
-        </section>
-
-        <section class="hub-section">
-            <h2>Featured Articles</h2>
-            <p>Comprehensive guides on hybrid and multi-cloud architecture patterns</p>
-
-            <div class="featured-articles">
-                <div class="article-card">
-                    <h3>Hybrid Cloud Architecture: On-Premises to Azure Integration</h3>
-                    <div class="article-meta">
-                        <span class="difficulty-badge">Advanced</span>
-                        <span class="reading-time">14 min read</span>
-                    </div>
-                    <p>Learn hybrid patterns: hub-spoke, mesh, islands. Master connectivity (VPN, ExpressRoute), identity hybrid sync, data synchronization, application integration, and disaster recovery strategies.</p>
-                    <a href="#" class="cta-button">Coming Soon</a>
-                </div>
-
-                <div class="article-card">
-                    <h3>Multi-Cloud Strategy: Azure, AWS, GCP Interoperability</h3>
-                    <div class="article-meta">
-                        <span class="difficulty-badge">Advanced</span>
-                        <span class="reading-time">13 min read</span>
-                    </div>
-                    <p>Explore multi-cloud use cases, vendor interoperability patterns, cost optimization across providers, unified monitoring, application portability, and preventing vendor lock-in in enterprise environments.</p>
-                    <a href="#" class="cta-button">Coming Soon</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="hub-section">
-            <h2>Supported Cloud Providers</h2>
-            <div style="text-align: center; margin: 30px 0;">
-                <span class="cloud-provider">☁️ Azure</span>
-                <span class="cloud-provider">☁️ AWS</span>
-                <span class="cloud-provider">☁️ GCP</span>
-            </div>
-            <p style="text-align: center; color: #666;">Learn interoperability patterns, networking integration, and unified operations across all major cloud platforms.</p>
-        </section>
-
-        <section class="hub-section">
-            <h2>Key Topics Covered</h2>
-            <ul style="column-count: 2; gap: 20px;">
-                <li>Hybrid Architecture Patterns</li>
-                <li>Site-to-Site VPN Setup</li>
-                <li>ExpressRoute / AWS Direct Connect</li>
-                <li>Azure AD Connect</li>
-                <li>Pass-Through Authentication</li>
-                <li>Data Synchronization</li>
-                <li>Service Bus Integration</li>
-                <li>Event Grid / SNS/SQS</li>
-                <li>Logic Apps & Functions</li>
-                <li>Cross-Cloud Monitoring</li>
-                <li>Multi-Cloud Cost Optimization</li>
-                <li>Container Orchestration (Kubernetes)</li>
-                <li>Application Portability</li>
-                <li>Disaster Recovery Planning</li>
-                <li>Vendor Lock-In Prevention</li>
-            </ul>
-        </section>
-
-        <section class="hub-section">
-            <h2>Who Should Learn This?</h2>
-            <ul>
-                <li><strong>Cloud Architects:</strong> Designing hybrid and multi-cloud infrastructure</li>
-                <li><strong>Infrastructure Engineers:</strong> Implementing connectivity and integration</li>
-                <li><strong>DevOps Engineers:</strong> Managing workloads across providers</li>
-                <li><strong>IT Directors:</strong> Planning multi-cloud strategy</li>
-                <li><strong>Enterprise Architects:</strong> Enterprise-scale hybrid deployments</li>
-            </ul>
-        </section>
-
-        <section class="hub-section">
-            <h2>Hybrid vs. Multi-Cloud: What's the Difference?</h2>
-            <div style="background: #e3f2fd; padding: 20px; border-radius: 4px; margin: 20px 0;">
-                <h3 style="margin-top: 0; color: #1976d2;">Hybrid Cloud</h3>
-                <p><strong>Definition:</strong> Integration between on-premises infrastructure and cloud provider(s)</p>
-                <p><strong>Focus:</strong> Migration, gradual adoption, disaster recovery</p>
-                <p><strong>Example:</strong> On-premises VMware vSphere + Azure Stack</p>
-            </div>
-            <div style="background: #e8f5e9; padding: 20px; border-radius: 4px; margin: 20px 0;">
-                <h3 style="margin-top: 0; color: #388e3c;">Multi-Cloud</h3>
-                <p><strong>Definition:</strong> Using multiple cloud providers (Azure, AWS, GCP) simultaneously</p>
-                <p><strong>Focus:</strong> Avoiding lock-in, optimal cost, resilience</p>
-                <p><strong>Example:</strong> Compute on Azure, Database on AWS, Analytics on GCP</p>
-            </div>
-        </section>
-
-        <section class="hub-section">
-            <h2>Articles Coming in Phase 6</h2>
-            <p>Two comprehensive architecture articles launching July 5-18, 2026:</p>
-            <ul>
-                <li><strong>Hybrid Architecture Guide:</strong> 14 min read, Advanced (July 8)</li>
-                <li><strong>Multi-Cloud Strategy:</strong> 13 min read, Advanced (July 11)</li>
-            </ul>
-            <p>Each includes practical deployment patterns, cost analysis, and case studies.</p>
-        </section>
-    </div>
-
-    <footer style="text-align: center; padding: 30px 20px; color: #666; border-top: 1px solid #ddd; margin-top: 60px;">
-        <p>☁️ IT Vedas | Hybrid & Multi-Cloud Architecture Hub</p>
-        <p><small>Phase 6 launching July 5, 2026 | 2 advanced architecture articles | 27+ minutes of content</small></p>
-    </footer>
-
-    <script src="/js/documentation-ui.js"></script>
+<nav>
+  <span class="brand"><a href="/" style="color:inherit;text-decoration:none">ITVedas</a></span>
+  <a href="/chapters/networking/">Networking</a>
+  <a href="/chapters/security/">Security</a>
+  <a href="/chapters/cloud/">Cloud</a>
+  <a href="/chapters/devops/">DevOps</a>
+  <a href="/chapters/databases/">Databases</a>
+  <a href="/chapters/linux/">Linux</a>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb"><a href="/">Home</a> / Chapters / Hybrid Multicloud</div>
+    <h1>Hybrid & Multi-Cloud Architecture</h1>
+    <p class="hero-desc">Hybrid integration patterns, multi-cloud strategy, cross-platform operations</p>
+  </div>
+</div>
+<main>
+  <div class="section-header">
+    <h2>All Articles</h2>
+    <span class="count">2 articles</span>
+  </div>
+  <ul id="article-list">
+    <li><a href="/chapters/hybrid-multicloud/2026-07-09-multicloud-strategy-azure-aws-gcp.html"><span class="icon"><svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><span class="info"><span class="title">Multi-Cloud Strategy: Azure, AWS, GCP Interoperability</span><span class="meta">Jul 08, 2026 &middot; 13 min</span></span><span class="arrow">&#8250;</span></a></li>
+    <li><a href="/chapters/hybrid-multicloud/2026-07-09-hybrid-cloud-onprem-azure-integration.html"><span class="icon"><svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span><span class="info"><span class="title">Hybrid Cloud Architecture: On-Premises to Azure Integration</span><span class="meta">Jul 08, 2026 &middot; 14 min</span></span><span class="arrow">&#8250;</span></a></li>
+  </ul>
+</main>
+<footer>
+  <p>&copy; 2026 <a href="/">ITVedas</a> &mdash; IT Education for Everyone</p>
+</footer>
 </body>
 </html>
