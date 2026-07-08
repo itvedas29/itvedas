@@ -510,5 +510,56 @@
     gtag('config', 'G-D98BFZSJYP');
   </script>
 <script src="/js/nav-search.js" defer></script>
+<script>
+async function loadArticles() {
+  const chapterName = 'powershell';
+  try {
+    const response = await fetch('/data/articles-metadata.json');
+    const articlesData = await response.json();
+    const articles = articlesData[chapterName] || [];
+
+    if (articles.length > 0) {
+      displayArticles(articles);
+    }
+  } catch (error) {
+    console.error('Error loading articles:', error);
+  }
+}
+
+function displayArticles(articles) {
+  const container = document.getElementById('articles-container');
+  const title = document.getElementById('articles-title');
+
+  title.textContent = `Explore our guides (${articles.length})`;
+
+  const articlesHTML = articles.map(article => `
+    <a href="/articles/powershell/${article.url}" class="art">
+      <div class="art-meta">
+        <span>${formatDate(article.date)}</span>
+      </div>
+      <h3 class="art-title">${decodeHTML(article.title)}</h3>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">${decodeHTML(article.description)}</p>
+      <span class="art-link">Read article →</span>
+    </a>
+  `).join('');
+
+  container.className = 'art-list';
+  container.innerHTML = articlesHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function decodeHTML(html) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  return txt.value;
+}
+
+loadArticles();
+</script>
 </body>
 </html>
