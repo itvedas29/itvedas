@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="IT Operations checklists covering daily, weekly, monthly tasks for IT administrators, system admins, help desk, IT managers, and NOC teams. Free downloadable templates.">
+<meta name="keywords" content="IT operations checklists, daily IT tasks, weekly operations, IT administrator, system admin, NOC operations">
+<meta property="og:title" content="IT Operations Checklists | Daily, Weekly, Monthly Templates | ITVedas">
+<meta property="og:description" content="11 comprehensive IT operations checklists for daily, weekly, monthly, quarterly, and annual operations. Includes admin and manager checklists.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://itvedas.com/checklists/it-operations/">
+<title>IT Operations Checklists | 11 Templates | ITVedas</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "IT Operations Checklists",
+  "description": "Collection of IT operations checklists for daily, weekly, monthly, and quarterly operations",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://itvedas.com"},
+      {"@type": "ListItem", "position": 2, "name": "Checklists", "item": "https://itvedas.com/checklists/"},
+      {"@type": "ListItem", "position": 3, "name": "IT Operations", "item": "https://itvedas.com/checklists/it-operations/"}
+    ]
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #07070C;
+  --bg2: #0E0E17;
+  --bg3: #161624;
+  --text: #F2F2FA;
+  --sub: #C8C8E0;
+  --muted: #9C9CBE;
+  --accent: #FF6B35;
+  --accent2: #8B5CF6;
+  --cyan: #06B6D4;
+  --green: #10B981;
+  --border: rgba(255,255,255,0.09);
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { text-decoration: none; }
+
+.mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 800px 500px at 15% -5%, rgba(255,107,53,0.13), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 10%, rgba(139,92,246,0.11), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 50% 110%, rgba(6,182,212,0.07), transparent 60%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+nav {
+  position: fixed;
+  top: 3px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.logo span { color: #FF6B35; }
+
+.nav-back {
+  color: var(--muted);
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+
+.nav-back:hover { color: var(--text); }
+
+.hero {
+  padding: 7.5rem 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumb a {
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover { color: var(--accent); }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.05rem;
+  color: var(--sub);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  transition: all 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px rgba(255,107,53,0.15);
+  transform: translateY(-4px);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.card p {
+  color: var(--sub);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.card-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.card a {
+  color: var(--accent);
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.card a:hover { transform: translateX(4px); }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 5rem 1.5rem 2rem; }
+  .content { padding: 1rem; }
+  nav { padding: 0 1.25rem; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="mesh"></div>
+<div class="grain"></div>
+
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/checklists/" class="nav-back">← All Checklists</a>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="/">Home</a> › <a href="/checklists/">Checklists</a> › IT Operations
+  </div>
+  <h1>IT Operations Checklists</h1>
+  <p>11 comprehensive checklists for daily, weekly, monthly, quarterly, and annual IT operations. From system administrators to IT managers and help desk teams.</p>
+</div>
+
+<div class="content">
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Daily IT Operations</h3>
+      <p>Essential daily tasks covering system monitoring, backup verification, incident review, and security checks.</p>
+      <div class="card-meta"><span>30 items</span><span>5 min read</span></div>
+      <a href="/checklists/it-operations/daily-it-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Weekly IT Operations</h3>
+      <p>Detailed weekly tasks including capacity review, performance analysis, and comprehensive health assessments.</p>
+      <div class="card-meta"><span>35 items</span><span>10 min read</span></div>
+      <a href="/checklists/it-operations/weekly-it-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Monthly IT Operations</h3>
+      <p>Monthly strategic review including trend analysis, reporting, compliance verification, and planning.</p>
+      <div class="card-meta"><span>40 items</span><span>15 min read</span></div>
+      <a href="/checklists/it-operations/monthly-it-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Quarterly IT Operations</h3>
+      <p>Quarterly strategic planning, vendor reviews, capacity planning, and business alignment activities.</p>
+      <div class="card-meta"><span>45 items</span><span>20 min read</span></div>
+      <a href="/checklists/it-operations/quarterly-it-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Annual IT Operations</h3>
+      <p>Comprehensive annual assessment covering budgeting, strategy review, compliance, and future planning.</p>
+      <div class="card-meta"><span>50 items</span><span>25 min read</span></div>
+      <a href="/checklists/it-operations/annual-it-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">👨‍💼</div>
+      <h3>IT Administrator Daily</h3>
+      <p>Role-specific tasks for IT administrators including user management, system updates, and troubleshooting.</p>
+      <div class="card-meta"><span>35 items</span><span>10 min read</span></div>
+      <a href="/checklists/it-operations/it-administrator-daily.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>System Administrator</h3>
+      <p>System administration tasks for server, storage, and infrastructure management and maintenance.</p>
+      <div class="card-meta"><span>40 items</span><span>12 min read</span></div>
+      <a href="/checklists/it-operations/system-administrator.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🎧</div>
+      <h3>Help Desk Daily</h3>
+      <p>Daily help desk operations covering user support, ticket management, and knowledge base maintenance.</p>
+      <div class="card-meta"><span>30 items</span><span>8 min read</span></div>
+      <a href="/checklists/it-operations/helpdesk-daily.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>IT Manager Checklist</h3>
+      <p>Management tasks including team coordination, performance review, budgeting, and strategic planning.</p>
+      <div class="card-meta"><span>40 items</span><span>15 min read</span></div>
+      <a href="/checklists/it-operations/it-manager.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <h3>NOC Operations</h3>
+      <p>Network operations center procedures covering monitoring, incident management, and escalation.</p>
+      <div class="card-meta"><span>35 items</span><span>10 min read</span></div>
+      <a href="/checklists/it-operations/noc-operations.html">Start Checklist →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>SOC Daily Checklist</h3>
+      <p>Security operations center tasks including threat monitoring, alert response, and incident handling.</p>
+      <div class="card-meta"><span>35 items</span><span>10 min read</span></div>
+      <a href="/checklists/it-operations/soc-daily.html">Start Checklist →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>IT Operations Checklists — Part of the ITVedas Checklist Library</p>
+  <p style="margin-top: 1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</body>
+</html>
