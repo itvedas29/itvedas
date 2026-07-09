@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<meta name="description" content="Network checklists for infrastructure health, firewall maintenance, switch/router configuration, wireless networks, VPN, and WAN management.">
+<meta name="keywords" content="network monitoring, firewall, switch maintenance, router, wireless, VPN, WAN, network health">
+<meta property="og:title" content="Network Checklists | Infrastructure & Health | ITVedas">
+<meta property="og:description" content="10 comprehensive network checklists for infrastructure health, firewall maintenance, and connectivity.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://itvedas.com/checklists/network/">
+<title>Network Checklists | Infrastructure | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: dark; --bg: #07070C; --bg2: #0E0E17; --bg3: #161624; --text: #F2F2FA; --sub: #C8C8E0; --muted: #9C9CBE; --accent: #FF6B35; --border: rgba(255,255,255,0.09); --font-display: 'Space Grotesk', sans-serif; --font-body: 'Inter', sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+.mesh { position: fixed; inset: 0; z-index: -2; background: radial-gradient(ellipse 800px 500px at 15% -5%, rgba(255,107,53,0.13), transparent 60%), radial-gradient(ellipse 700px 500px at 90% 10%, rgba(139,92,246,0.11), transparent 60%), radial-gradient(ellipse 900px 600px at 50% 110%, rgba(6,182,212,0.07), transparent 60%); }
+.grain { position: fixed; inset: 0; z-index: -1; opacity: 0.5; background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 22px 22px; }
+nav { position: fixed; top: 3px; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 64px; background: rgba(10,10,15,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--text); }
+.logo span { color: #FF6B35; }
+.nav-back { color: var(--muted); font-size: 0.875rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: color 0.2s; }
+.nav-back:hover { color: var(--text); }
+.hero { padding: 7.5rem 2rem 3rem; max-width: 900px; margin: 0 auto; text-align: center; }
+.breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+.breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--accent); }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 1rem; }
+.hero p { font-size: 1.05rem; color: var(--sub); max-width: 700px; margin: 0 auto; }
+.content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; transition: all 0.3s; text-decoration: none; display: flex; flex-direction: column; }
+.card:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(255,107,53,0.15); transform: translateY(-4px); }
+.card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
+.card p { color: var(--sub); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; margin-bottom: 1rem; }
+.card-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--muted); padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); }
+.card-link { color: var(--accent); font-weight: 600; display: inline-block; margin-top: 0.5rem; transition: transform 0.2s; }
+.card-link:hover { transform: translateX(4px); }
+footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.875rem; margin-top: 4rem; }
+@media (max-width: 768px) { .hero { padding: 5rem 1.5rem 2rem; } .content { padding: 1rem; } nav { padding: 0 1.25rem; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="mesh"></div>
+<div class="grain"></div>
+
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/checklists/" class="nav-back">← All Checklists</a>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="/">Home</a> › <a href="/checklists/">Checklists</a> › Network
+  </div>
+  <h1>Network Checklists</h1>
+  <p>10 comprehensive network checklists for infrastructure health, firewall maintenance, wireless networks, VPN, and WAN management.</p>
+</div>
+
+<div class="content">
+  <div class="grid">
+    <a href="/checklists/network/network-health.html" class="card">
+      <div class="card-icon">🌐</div>
+      <h3>Network Health</h3>
+      <p>Network infrastructure monitoring including routers, switches, connectivity, and performance verification.</p>
+      <div class="card-meta"><span>40 items</span></div>
+      <span class="card-link">Start →</span>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>Network Checklists — Part of the ITVedas Checklist Library</p>
+  <p style="margin-top: 1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+</body>
+</html>
