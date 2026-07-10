@@ -89,10 +89,17 @@ class CVEIngester:
             # Extract year from CVE ID (CVE-YYYY-NNNN)
             year = int(cve_id.split('-')[1]) if len(cve_id.split('-')) > 1 else datetime.now().year
 
-            # Extract CVSS score
+            # Extract CVSS score (NVD API v2.0 format)
             metrics = nvd_cve.get('metrics', {})
-            cvss_v3 = metrics.get('cvssV3', {})
-            cvss_score = cvss_v3.get('baseScore', 0.0) if cvss_v3 else 0.0
+            cvss_score = 0.0
+            # Try cvssMetricV31 first, then fall back to cvssMetricV30
+            for metric_key in ['cvssMetricV31', 'cvssMetricV30']:
+                cvss_metrics = metrics.get(metric_key, [])
+                if cvss_metrics:
+                    cvss_data = cvss_metrics[0].get('cvssData', {})
+                    cvss_score = cvss_data.get('baseScore', 0.0)
+                    if cvss_score > 0:
+                        break
 
             # Extract CWE
             weaknesses = nvd_cve.get('weaknesses', [])
