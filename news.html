@@ -399,7 +399,39 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Original reporting</p>
 </footer>
+<script src="/js/brand-logos.js"></script>
 <script>
+// Replace emoji with brand logos
+function initBrandLogos(){
+  let index=0;
+  document.querySelectorAll('.nc').forEach(card=>{
+    const title=card.querySelector('.nc-title')?.textContent||'';
+    const summary=card.querySelector('.nc-sum')?.textContent||'';
+    const topic=card.dataset.t||'General';
+    const vis=card.querySelector('.nc-vis');
+    if(!vis)return;
+
+    const visual=getNewsVisual(title, summary, topic, index++);
+
+    // Update background color
+    const bgColor=visual.color;
+    vis.style.background=`linear-gradient(135deg,${bgColor}22,${bgColor}08)`;
+
+    // Replace emoji with SVG
+    const emojiSpan=vis.querySelector('span');
+    if(emojiSpan){
+      const svgContainer=document.createElement('div');
+      svgContainer.style.width='100%';
+      svgContainer.style.height='100%';
+      svgContainer.style.display='flex';
+      svgContainer.style.alignItems='center';
+      svgContainer.style.justifyContent='center';
+      svgContainer.innerHTML=visual.svg;
+      emojiSpan.replaceWith(svgContainer);
+    }
+  });
+}
+
 function f(t){
   document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
   document.querySelector(`[data-t="${t}"]`).classList.add('active');
@@ -410,6 +442,13 @@ function f(t){
   document.getElementById('empty').style.display=v===0?'block':'none';
 }
 document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
+
+// Initialize brand logos when page loads
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',initBrandLogos);
+}else{
+  initBrandLogos();
+}
 </script>
 </body>
 </html>
