@@ -54,7 +54,19 @@
 <body>
 <div class="container">
   <a href="/chapters/linux/" class="back">← Back to Linux</a>
-  <h1>systemd Linux Init System Explained</h1>
+  <h1>systemd Linux Init System Explained</h1><!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
+<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
+<li><a href="/">Home</a></li>
+<li>/</li>
+<li><a href="/chapters/">Chapters</a></li>
+<li>/</li>
+<li><a href="/chapters/linux/">Linux</a></li>
+<li>/</li>
+<li>2026 07 03 What Is Systemd Linux Init System Explained</li>
+</ol>
+</nav>
+
 
   <p><strong>systemd is the modern init system and service manager for Linux that replaces SysVinit.</strong> It manages system startup, running services, and processes using unit files, targets, and the systemctl command. Since 2015, it's become the default on most major distributions including Red Hat, Ubuntu, Debian, and Fedora.</p>
 
@@ -278,6 +290,11 @@ systemctl list-dependencies myservice</code></pre>
     <h3>Why did my service fail to start?</h3>
     <p>Run <code>sudo systemctl status myservice -l</code> to see the error, then check logs with <code>sudo journalctl -u myservice</code>. Common causes: wrong executable path, missing dependencies, insufficient permissions, or syntax errors in the unit file. Verify the unit file with <code>systemd-analyze verify</code>.</p>
   </div>
+</div>
+<!-- Category Context -->
+<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
+<strong>Category:</strong> <a href="/chapters/linux/" style="color:#0066cc;">Linux</a>
+<br/><small>Browse more articles and resources in this category</small>
 </div>
 </body>
 </html>

@@ -48,7 +48,19 @@
 
 <div class="hero">
   <div class="ch-badge">🔷 PowerShell</div>
-  <h1>PowerShell Server Administration</h1>
+  <h1>PowerShell Server Administration</h1><!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
+<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
+<li><a href="/">Home</a></li>
+<li>/</li>
+<li><a href="/articles/">Articles</a></li>
+<li>/</li>
+<li><a href="/articles/powershell/">Powershell</a></li>
+<li>/</li>
+<li>2026 07 04 Powershell Server Administration</li>
+</ol>
+</nav>
+
   <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;">📅 July 04, 2026 | 11 min read</div>
 </div>
 
@@ -96,7 +108,12 @@ Get-Volume | Select-Object DriveLetter, Size, SizeRemaining, @{
 $oneHourAgo = (Get-Date).AddHours(-1)
 Get-EventLog -LogName Security -InstanceId 4625 -After $oneHourAgo |
   Select-Object TimeGenerated, Message | Head -20</code></pre>
-  </article>
+  <!-- Category Context -->
+<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
+<strong>Category:</strong> <a href="/articles/powershell/" style="color:#0066cc;">Powershell</a>
+<br/><small>Browse more articles and resources in this category</small>
+</div>
+</article>
 </div>
 
 <script src="/js/documentation-ui.js"></script>
