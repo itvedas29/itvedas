@@ -1,9 +1,39 @@
+# ITVedas robots.txt - Optimized for search engine crawling
+# Allow all content but protect sensitive directories and files
+
 User-agent: *
 Allow: /
+Allow: /sitemap.xml
+Allow: /index.html
+
+# Disallow non-content files
 Disallow: /*.md$
 Disallow: /*.json$
 Disallow: /*.sh$
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /scripts/
+Disallow: /functions/
+Disallow: /deployment/
 Disallow: /cve-data/
-Allow: /sitemap.xml
+Disallow: /itvedas-brain/
 
+# Crawl delay for polite crawling
+Crawl-delay: 1
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemaps for indexing
 Sitemap: https://itvedas.com/sitemap.xml
