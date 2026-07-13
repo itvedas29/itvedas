@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -14,6 +14,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate complete sitemap
+        run: python3 scripts/generate-sitemap.py
 
       - name: Validate JSON files
         run: |
@@ -44,3 +52,11 @@ jobs:
           for name, _ in checks:
               print(f'OK: {name}')
           PY
+
+      - name: Commit sitemap if changed
+        run: |
+          git config user.name "ITVedas Bot"
+          git config user.email "bot@itvedas.com"
+          git add sitemap.xml
+          git diff --staged --quiet || git commit -m "Regenerate sitemap.xml with all 530+ URLs"
+          git push origin main || true

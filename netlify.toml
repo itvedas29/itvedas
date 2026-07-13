@@ -1,0 +1,68 @@
+# ITVedas Netlify Configuration
+# Optimized for performance, security, and SEO
+
+[build]
+  command = "echo 'Static site - no build needed'"
+  publish = "."
+
+# Cache configuration
+[build.cache]
+  paths = [
+    ".cache",
+    "node_modules",
+    "build"
+  ]
+
+# Redirect configuration
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  conditions = {Country = ["US"]}
+
+# Security and performance headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+
+# Static assets - long cache
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML files - shorter cache with revalidation
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+    Content-Type = "text/html; charset=utf-8"
+
+# JSON files - short cache
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=600"
+    Content-Type = "application/json; charset=utf-8"
+
+# Disable indexing on staging
+[[headers]]
+  for = "/*"
+  query = {staging = "true"}
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Gzip compression enabled by default
+
+# Preload critical resources
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Link = "</fonts/googleapis.com>; rel=preconnect, </fonts/gstatic.com>; rel=preconnect"
