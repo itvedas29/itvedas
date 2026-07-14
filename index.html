@@ -540,9 +540,23 @@ $ ssh student@lab
     <span>© 2026 ITVedas · Knowledge for everyone</span>
     <span>Made with ❤️ in India</span>
   </div>
+  <!-- Affiliate Disclosure Component (disabled) -->
+  <div id="affiliateDisclosure" style="display:none;margin-top:2rem;padding:1rem;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.2);border-radius:8px;color:var(--muted);font-size:0.85rem;line-height:1.6;">
+    <strong style="color:var(--text);">Affiliate Disclosure:</strong>
+    <p>Some links on this site may be affiliate links. When you purchase through these links, we may earn a small commission at no additional cost to you. We only recommend products and services we believe in. See our <a href="/privacy-policy.html">Privacy Policy</a> for details.</p>
+  </div>
 </footer>
 
 <script>
+/* Affiliate Disclosure Configuration */
+var AFFILIATE_CONFIG={enabled:false};
+if(AFFILIATE_CONFIG.enabled){
+  document.addEventListener('DOMContentLoaded',function(){
+    var disc=document.getElementById('affiliateDisclosure');
+    if(disc)disc.style.display='block';
+  });
+}
+
 /* ===== Search: static base + lazy-loaded full index (all 497 pages) ===== */
 var SEARCH_INDEX=[
   {title:"Networking — How Networks Talk",topic:"Networking",url:"/articles/networking/",icon:"🌐",kw:"networking tcp ip dns subnetting routing vpn firewall"},
