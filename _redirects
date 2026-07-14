@@ -4,39 +4,11 @@
 http://itvedas.com/*  https://www.itvedas.com/:splat  301
 https://itvedas.com/* https://www.itvedas.com/:splat  301
 
-# CVE Database Routing
-
-# Main CVE listing page - all /cve/* requests except specific CVE IDs
-/cve              /cve-listing.html  200
-/cve/             /cve-listing.html  200
-
-# CVEs by year
-/cve/2024/*       /cve-listing.html  200
-/cve/2023/*       /cve-listing.html  200
-/cve/2022/*       /cve-listing.html  200
-/cve/2021/*       /cve-listing.html  200
-/cve/2020/*       /cve-listing.html  200
-/cve/201*/*       /cve-listing.html  200
-/cve/200*/*       /cve-listing.html  200
-/cve/199*/*       /cve-listing.html  200
-
-# CVEs by vendor
-/cve/vendors/*    /cve-listing.html  200
-
-# CVEs by severity
-/cve/severity/*   /cve-listing.html  200
-
-# Known exploited CVEs
-/cve/exploited    /cve-listing.html  200
-/cve/exploited/*  /cve-listing.html  200
-
-# Advanced search
-/cve/search       /cve-listing.html  200
-/cve/search/*     /cve-listing.html  200
-
-# Individual CVE detail pages (must be after other rules)
-/cve/cve-*        /cve-detail.html   200
-/cve/CVE-*        /cve-detail.html   200
+# CVE Database Routing - Consolidated to /articles/cve/
+# All /cve/* requests redirect to /articles/cve/ (301 for SEO)
+/cve              /articles/cve/     301
+/cve/             /articles/cve/     301
+/cve/:splat       /articles/cve/     301
 
 # Enforce .html canonical form for articles (301 redirect extensionless to .html)
 /articles/:category/:slug  /articles/:category/:slug.html  301
