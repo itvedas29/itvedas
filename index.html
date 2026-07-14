@@ -322,6 +322,12 @@ $ ssh student@lab
     <p>New articles, security alerts, and career tips delivered to your inbox every Friday.</p>
     <form class="nl-form" id="nlForm">
       <input type="email" id="nlEmail" placeholder="your@email.com" required aria-label="Newsletter email">
+      <div style="margin:1rem 0;text-align:left;font-size:0.85rem;">
+        <label style="display:flex;align-items:flex-start;gap:0.5rem;color:var(--muted);">
+          <input type="checkbox" id="nlConsent" required style="margin-top:0.2rem;flex-shrink:0;">
+          <span>I agree to receive weekly newsletters and acknowledge the <a href="/privacy-policy.html" style="color:var(--accent);text-decoration:none;">Privacy Policy</a></span>
+        </label>
+      </div>
       <button type="submit">Subscribe</button>
     </form>
     <div class="nl-msg" id="nlMsg"></div>
@@ -681,11 +687,18 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('nlForm').addEventListener('submit', function(e){
     e.preventDefault();
     var email = document.getElementById('nlEmail').value.trim();
+    var consent = document.getElementById('nlConsent').checked;
     var msg = document.getElementById('nlMsg');
     var btn = document.querySelector('.nl-form button');
 
     if(!email || !email.includes('@')){
       msg.textContent = '❌ Please enter a valid email';
+      msg.classList.add('show', 'error');
+      return;
+    }
+
+    if(!consent){
+      msg.textContent = '❌ Please agree to the Privacy Policy to subscribe';
       msg.classList.add('show', 'error');
       return;
     }
