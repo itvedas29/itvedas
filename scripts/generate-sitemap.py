@@ -9,7 +9,7 @@ import pathlib
 import datetime
 import xml.etree.ElementTree as ET
 
-SITE_URL = "https://itvedas.com"
+SITE_URL = "https://www.itvedas.com"
 ROOT = pathlib.Path(".")
 
 def get_html_files():
