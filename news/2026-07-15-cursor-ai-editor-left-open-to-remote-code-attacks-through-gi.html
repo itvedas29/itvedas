@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Security researchers discovered that Cursor automatically runs executable files, allowing attackers to inject malicious code through compromised projects.">
+<meta name="keywords" content="Security news, IT news, Cursor AI Editor Left Open to Remote Code Attacks ">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Cursor AI Editor Left Open to Remote Code Attacks Through Git Repositories | ITVedas News">
+<meta property="og:description" content="Security researchers discovered that Cursor automatically runs executable files, allowing attackers to inject malicious code through compromised projects.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://itvedas.com/news/2026-07-15-cursor-ai-editor-left-open-to-remote-code-attacks-through-gi.html">
+<title>Cursor AI Editor Left Open to Remote Code Attacks Through Git Repositories | ITVedas News</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Cursor AI Editor Left Open to Remote Code Attacks Through Git Repositories", "description": "Security researchers discovered that Cursor automatically runs executable files, allowing attackers to inject malicious code through compromised projects.", "datePublished": "2026-07-15", "dateModified": "2026-07-15", "author": {"@type": "Organization", "name": "ITVedas"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10B98122,#10B98108);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#10B98118,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #10B98144);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news.html" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🔐</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › Security</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-15 · 05:50 PM IST</span>
+    <span class="badge-info">⏱ 3 min read</span>
+  </div>
+  <h1>Cursor AI Editor Left Open to Remote Code Attacks Through Git Repositories</h1>
+  <p class="summary">Security researchers discovered that Cursor automatically runs executable files, allowing attackers to inject malicious code through compromised projects.</p>
+</div>
+<div class="article">
+  <h2 id="the-vulnerability">The Vulnerability</h2>
+
+<p>Cursor, a popular AI-powered code editor, has a serious security flaw that puts developers at significant risk. The problem is straightforward: when you open a project folder in Cursor, the application automatically looks for and executes a file called git.exe in that project's root directory. An attacker can exploit this by uploading a malicious git.exe file to a repository, and when developers clone or open that project, the harmful code runs without warning.</p>
+
+<p>Think of it like downloading a briefcase from the internet and automatically opening it without checking what's inside first. Except in this case, the moment you open it, whatever's inside instantly runs on your computer.</p>
+
+<h2 id="what-this-means">What This Means</h2>
+
+<p>This isn't a minor glitch—it's a direct pathway for attackers to execute whatever code they want on a developer's machine. Someone could hide malicious instructions inside that fake git.exe file, and Cursor would run them with the same privileges as your user account. This means attackers could:</p>
+
+<ul>
+<li>Steal sensitive information stored on your computer</li>
+<li>Install additional malware or spyware</li>
+<li>Compromise other projects you're working on</li>
+<li>Access credentials or API keys saved locally</li>
+<li>Use your machine to attack other systems on your network</li>
+</ul>
+
+<p>The vulnerability becomes especially dangerous because developers often work with multiple repositories, and many share code openly on platforms like GitHub. An attacker could create an attractive-looking open-source project, wait for it to gain popularity, then inject the malicious file—potentially compromising hundreds of developers at once.</p>
+
+<h2 id="why-you-should-care">Why You Should Care</h2>
+
+<p><strong>If you're a developer using Cursor:</strong> You're potentially at risk every time you open a new project, especially from sources you're not completely certain about. Even well-intentioned developers could accidentally share a compromised repository without realizing it.</p>
+
+<p><strong>If you work in cybersecurity:</strong> This highlights a growing problem with AI-assisted development tools. As these tools become more powerful and integrated into workflows, they introduce new attack surfaces that traditional security training may not cover.</p>
+
+<p><strong>If you manage developer teams:</strong> This vulnerability could affect your entire organization if developers are cloning untrusted or compromised repositories. The damage could range from stolen intellectual property to complete system compromise.</p>
+
+<blockquote>The real danger here is the assumption of trust. Developers expect that opening a folder is safe. They're focused on the code, not scanning for executable files.</blockquote>
+
+<h2 id="what-you-can-do">What You Can Do</h2>
+
+<ul>
+<li><strong>Update immediately:</strong> Check if Cursor has released a patch. If you use Cursor, look for security updates and install them right away.</li>
+<li><strong>Be selective about sources:</strong> Only work with repositories from trusted sources. Be cautious with popular open-source projects, especially newer ones.</li>
+<li><strong>Review folder contents:</strong> Before opening a new project in Cursor, take a moment to scan the root directory for any unexpected executable files.</li>
+<li><strong>Use security tools:</strong> Consider running antivirus or endpoint protection software that can catch malicious executables.</li>
+<li><strong>Follow principle of least privilege:</strong> Don't run Cursor with administrator privileges unless absolutely necessary.</li>
+</ul>
+
+<p>This vulnerability serves as an important reminder that even modern development tools need security audits, and developers should remain cautious about what code they execute on their machines.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://www.securityweek.com/unpatched-cursor-vulnerability-exposes-users-to-code-execution/" target="_blank" rel="noopener nofollow">source</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>
