@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Malicious code hidden in widely-used AsyncAPI npm packages puts thousands of developers at risk of credential theft.">
+<meta name="keywords" content="Security news, IT news, Popular JavaScript Library Packages Weaponized to ">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Popular JavaScript Library Packages Weaponized to Steal Developer Credentials | ITVedas News">
+<meta property="og:description" content="Malicious code hidden in widely-used AsyncAPI npm packages puts thousands of developers at risk of credential theft.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://itvedas.com/news/2026-07-15-popular-javascript-library-packages-weaponized-to-steal-deve.html">
+<title>Popular JavaScript Library Packages Weaponized to Steal Developer Credentials | ITVedas News</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Popular JavaScript Library Packages Weaponized to Steal Developer Credentials", "description": "Malicious code hidden in widely-used AsyncAPI npm packages puts thousands of developers at risk of credential theft.", "datePublished": "2026-07-15", "dateModified": "2026-07-15", "author": {"@type": "Organization", "name": "ITVedas"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10B98122,#10B98108);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#10B98118,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #10B98144);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news.html" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🔐</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news.html">News</a> › Security</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-15 · 09:37 PM IST</span>
+    <span class="badge-info">⏱ 3 min read</span>
+  </div>
+  <h1>Popular JavaScript Library Packages Weaponized to Steal Developer Credentials</h1>
+  <p class="summary">Malicious code hidden in widely-used AsyncAPI npm packages puts thousands of developers at risk of credential theft.</p>
+</div>
+<div class="article">
+  <h2 id="the-breach-how-developers-became-targets">The Breach: How Developers Became Targets</h2>
+
+<p>Several versions of AsyncAPI packages distributed through npm—a massive online repository where programmers download code libraries—have been discovered containing hidden malicious software. A threat actor operating under the name "bandcampro" inserted credential-stealing code into these packages, allowing them to capture login information and authentication tokens from developers who downloaded the compromised versions.</p>
+
+<p>The attack is particularly sneaky because it relied on a legitimate Google tool. The attacker weaponized Gemini CLI, Google's open-source artificial intelligence command-line interface, transforming it into a hacking instrument. By doing this, the malware could operate quietly in the background while performing unauthorized actions on infected systems, including stealing sensitive data and forming part of a larger network of compromised computers.</p>
+
+<h2 id="what-this-means-for-software-development">What This Means for Software Development</h2>
+
+<p>Think of npm packages like prefabricated building blocks that developers use to construct applications more quickly. When these blocks are poisoned, everything built with them becomes compromised. AsyncAPI is a widely-adopted framework used to design and document messaging systems—meaning this vulnerability potentially affected thousands of development teams across companies large and small.</p>
+
+<p>This attack demonstrates a fundamental vulnerability in how modern software is built. Developers often install hundreds of external packages without thoroughly inspecting the code inside them. It's like ordering pre-made components for your house without checking if someone has hidden listening devices inside the walls.</p>
+
+<blockquote>The use of a legitimate Google tool as a cover for malicious activity shows how attackers are becoming more sophisticated in hiding their tracks.</blockquote>
+
+<h2 id="why-you-should-care">Why You Should Care</h2>
+
+<p><strong>If you're a developer:</strong> Your login credentials could have been captured if you downloaded these packages during the infection window. This means attackers could potentially access your development accounts, cloud services, and company systems.</p>
+
+<p><strong>If you work in IT security:</strong> This breach highlights a critical weakness in supply chain security. The tools you trust to build software can be turned against you.</p>
+
+<p><strong>If you use software built by affected teams:</strong> There's potential that applications relying on these compromised libraries could be vulnerable to future attacks or data theft.</p>
+
+<h2 id="what-you-can-do-right-now">What You Can Do Right Now</h2>
+
+<ul>
+<li><strong>Check your systems:</strong> Review which versions of AsyncAPI packages you've installed. Compare them against published security advisories.</li>
+<li><strong>Rotate credentials:</strong> Change passwords for any development accounts, cloud platforms, and API keys if you downloaded affected versions.</li>
+<li><strong>Audit dependencies:</strong> Use automated tools to scan your projects for known vulnerable packages.</li>
+<li><strong>Update immediately:</strong> Download patched versions from npm as soon as they're released.</li>
+<li><strong>Monitor accounts:</strong> Watch for suspicious login activity across your development and company accounts.</li>
+<li><strong>Enable two-factor authentication:</strong> Add this extra security layer to critical accounts to prevent unauthorized access even if passwords are stolen.</li>
+</ul>
+
+<h2 id="moving-forward">Moving Forward</h2>
+
+<p>This incident should serve as a wake-up call for the entire software development community. The convenience of using shared code packages comes with real security risks that require constant vigilance. Companies and developers must implement stronger verification processes, automated scanning tools, and security monitoring to catch poisoned packages before they spread widely.</p>
+
+<p>Protect yourself by staying informed about security updates and treating every downloaded package as a potential risk until verified.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://www.bleepingcomputer.com/news/security/-asyncapi-npm-packages-infected-with-credential-stealing-malware/" target="_blank" rel="noopener nofollow">bleepingcomputer.com</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>
