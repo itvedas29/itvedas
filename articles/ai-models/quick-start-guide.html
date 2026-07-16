@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Quick start guide to AI models. Set up your first AI application in 5 minutes.">
+<title>Quick Start Guide: AI Models | ITVedas</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--border:rgba(255,255,255,0.09);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;}
+.container{max-width:900px;margin:0 auto;padding:2rem;}
+h1{font-size:2.5rem;margin:1.5rem 0;letter-spacing:-0.02em;}
+h2{font-size:1.8rem;margin:2rem 0 1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+h3{font-size:1.3rem;margin:1.5rem 0 0.5rem;}
+p{margin-bottom:1rem;color:var(--muted);}
+.badge{display:inline-block;background:var(--accent);color:#000;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem;}
+.intro-box{background:var(--bg2);border-left:4px solid var(--accent);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.step{background:var(--bg2);padding:1.5rem;border-radius:8px;margin:1.5rem 0;border-left:4px solid var(--accent2);}
+.step strong{display:block;margin-bottom:0.5rem;color:var(--accent);}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1rem 0;font-family:monospace;font-size:0.85rem;color:#06B6D4;overflow-x:auto;}
+.highlight{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid var(--border);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+</style>
+</head>
+<body>
+<div class="container">
+<nav style="margin-bottom:2rem;font-size:0.9rem;">
+<a href="/" style="color:var(--accent);text-decoration:none;">Home</a> / <a href="/articles/ai-models/" style="color:var(--accent);text-decoration:none;">AI Models</a> / Quick Start
+</nav>
+
+<div class="badge">Implementation Guide</div>
+<h1>Quick Start: Your First AI Model</h1>
+
+<div class="intro-box">
+<strong>🚀 Get started in 5 minutes:</strong> Learn to integrate an AI model into your application. We'll use GPT-4o as an example, but concepts apply to all models.
+</div>
+
+<h2>Step 1: Choose Your Model</h2>
+
+<div class="step">
+<strong>Decide based on your needs:</strong>
+<p><strong>For most projects:</strong> GPT-4o or Claude 3.5 Sonnet (best balance of quality and speed)</p>
+<p><strong>For budget-conscious:</strong> Gemini 2.0 Flash ($0.075/MTok) or Deepseek-V3 ($0.27/MTok)</p>
+<p><strong>For maximum reasoning:</strong> Claude 3.5 Sonnet or Mistral Large 2</p>
+<p><strong>For code generation:</strong> Deepseek-V3 (97.3% on HUMANEVAL)</p>
+<p><strong>For real-time data:</strong> Grok-2 (integrated web access)</p>
+</div>
+
+<h2>Step 2: Get API Access</h2>
+
+<h3>For OpenAI (GPT-4o)</h3>
+
+<div class="step">
+<strong>1. Sign up:</strong> Go to platform.openai.com<br>
+<strong>2. Create API key:</strong> Account → API keys → Create new secret key<br>
+<strong>3. Store securely:</strong> Save in environment variable OPENAI_API_KEY<br>
+<strong>4. Add payment:</strong> Billing → Payment methods → Add card
+</div>
+
+<h3>For Anthropic (Claude)</h3>
+
+<div class="step">
+<strong>1. Sign up:</strong> Go to console.anthropic.com<br>
+<strong>2. Create API key:</strong> Account settings → API keys → Create key<br>
+<strong>3. Store securely:</strong> Save in environment variable ANTHROPIC_API_KEY<br>
+<strong>4. Add payment:</strong> Billing → Payment method → Add card
+</div>
+
+<h3>For Google (Gemini)</h3>
+
+<div class="step">
+<strong>1. Sign up:</strong> Visit ai.google.dev<br>
+<strong>2. Create API key:</strong> Click "Get API Key"<br>
+<strong>3. Enable project:</strong> Select or create Google Cloud project<br>
+<strong>4. Free tier:</strong> $300 monthly credit included
+</div>
+
+<h2>Step 3: Install SDK</h2>
+
+<h3>Python (Recommended)</h3>
+
+<div class="code-block">
+# For OpenAI<br>
+pip install openai<br>
+<br>
+# For Anthropic<br>
+pip install anthropic<br>
+<br>
+# For Google<br>
+pip install google-generativeai<br>
+<br>
+# For Mistral<br>
+pip install mistralai
+</div>
+
+<h3>Node.js/JavaScript</h3>
+
+<div class="code-block">
+# For OpenAI<br>
+npm install openai<br>
+<br>
+# For Anthropic<br>
+npm install @anthropic-ai/sdk<br>
+<br>
+# For Google<br>
+npm install @google/generative-ai
+</div>
+
+<h2>Step 4: Write Your First Code</h2>
+
+<h3>Python - Using Claude</h3>
+
+<div class="code-block">
+import anthropic<br>
+<br>
+client = anthropic.Anthropic(api_key="your-api-key")<br>
+<br>
+message = client.messages.create(<br>
+    model="claude-3-5-sonnet-20241022",<br>
+    max_tokens=1024,<br>
+    messages=[<br>
+        {"role": "user", "content": "Explain AI models in 2 sentences"}<br>
+    ]<br>
+)<br>
+<br>
+print(message.content[0].text)
+</div>
+
+<h3>Python - Using GPT-4o</h3>
+
+<div class="code-block">
+from openai import OpenAI<br>
+<br>
+client = OpenAI(api_key="your-api-key")<br>
+<br>
+response = client.chat.completions.create(<br>
+    model="gpt-4o",<br>
+    messages=[<br>
+        {"role": "user", "content": "Explain AI models in 2 sentences"}<br>
+    ]<br>
+)<br>
+<br>
+print(response.choices[0].message.content)
+</div>
+
+<h3>JavaScript - Using Claude</h3>
+
+<div class="code-block">
+import Anthropic from "@anthropic-ai/sdk";<br>
+<br>
+const client = new Anthropic({<br>
+    apiKey: "your-api-key"<br>
+});<br>
+<br>
+const message = await client.messages.create({<br>
+    model: "claude-3-5-sonnet-20241022",<br>
+    max_tokens: 1024,<br>
+    messages: [<br>
+        { role: "user", content: "Explain AI models in 2 sentences" }<br>
+    ]<br>
+});<br>
+<br>
+console.log(message.content[0].text);
+</div>
+
+<h2>Step 5: Handle Responses</h2>
+
+<div class="highlight">
+<h3 style="margin-top:0;">Key Fields to Know</h3>
+
+<p><strong>message.content[0].text:</strong> The actual response from the model</p>
+
+<p><strong>message.usage:</strong> Token counts (input_tokens, output_tokens)</p>
+
+<p><strong>message.stop_reason:</strong> Why generation stopped ("end_turn", "max_tokens")</p>
+
+<p><strong>error.error_code:</strong> API errors (invalid_api_key, rate_limit_exceeded, etc.)</p>
+</div>
+
+<h2>Best Practices</h2>
+
+<div style="display:grid;gap:1rem;margin:1.5rem 0;">
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">🔐 Never hardcode API keys</strong> - Use environment variables or secure vaults
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">💰 Monitor token usage</strong> - Track input/output tokens to control costs
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">⏱️ Implement timeouts</strong> - Set connection and response timeouts to prevent hanging
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">🔄 Handle rate limits</strong> - Implement exponential backoff for API errors
+</div>
+</div>
+
+<h2>Common Issues & Solutions</h2>
+
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+<tr style="background:var(--bg3);">
+<th style="padding:1rem;text-align:left;border-bottom:1px solid var(--border);">Issue</th>
+<th style="padding:1rem;text-align:left;border-bottom:1px solid var(--border);">Solution</th>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td style="padding:1rem;">API Key Error</td>
+<td style="padding:1rem;">Verify key is set in environment, not expired, and has billing enabled</td>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td style="padding:1rem;">Rate Limited (429)</td>
+<td style="padding:1rem;">Implement exponential backoff: wait 1s, 2s, 4s, 8s between retries</td>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td style="padding:1rem;">Timeout</td>
+<td style="padding:1rem;">Increase timeout value (default 30s) or use streaming for long responses</td>
+</tr>
+<tr>
+<td style="padding:1rem;">Unexpected Output</td>
+<td style="padding:1rem;">Improve prompt clarity, add examples, or adjust temperature (0-1 scale)</td>
+</tr>
+</table>
+
+<h2>Next Steps</h2>
+
+<p>✓ Try with different prompts and models</p>
+<p>✓ Read the <a href="/articles/ai-models/api-integration-guide.html" style="color:var(--accent);">API Integration Guide</a> for advanced patterns</p>
+<p>✓ Check <a href="/articles/ai-models/pricing-guide.html" style="color:var(--accent);">Pricing Guide</a> for cost optimization</p>
+<p>✓ Review <a href="/articles/ai-models/model-selection-guide.html" style="color:var(--accent);">Model Selection Guide</a> for the best fit</p>
+
+<p style="margin-top:2rem;text-align:center;">
+<a href="/articles/ai-models/" style="background:var(--accent);color:#000;padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;display:inline-block;">← Back to All Models</a>
+</p>
+</div>
+</body>
+</html>

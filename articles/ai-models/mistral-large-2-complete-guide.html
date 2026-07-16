@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete guide to Mistral Large 2. Features, capabilities, API integration, and deployment options.">
+<title>Mistral Large 2: Complete Guide | ITVedas</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--border:rgba(255,255,255,0.09);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;}
+.container{max-width:900px;margin:0 auto;padding:2rem;}
+h1{font-size:2.5rem;margin:1.5rem 0;letter-spacing:-0.02em;}
+h2{font-size:1.8rem;margin:2rem 0 1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+p{margin-bottom:1rem;color:var(--muted);}
+.badge{display:inline-block;background:var(--accent);color:#000;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem;}
+.intro-box{background:var(--bg2);border-left:4px solid var(--accent);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+.spec-item{background:var(--bg2);padding:1rem;border-radius:8px;text-align:center;border:1px solid var(--border);}
+.spec-item strong{display:block;color:var(--accent);font-size:1.3rem;margin-bottom:0.5rem;}
+.spec-item span{font-size:0.85rem;color:var(--muted);}
+.highlight{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid var(--border);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+th,td{padding:1rem;text-align:left;border-bottom:1px solid var(--border);}
+th{background:var(--bg3);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<nav style="margin-bottom:2rem;font-size:0.9rem;">
+<a href="/" style="color:var(--accent);text-decoration:none;">Home</a> / <a href="/articles/ai-models/" style="color:var(--accent);text-decoration:none;">AI Models</a> / Mistral Large 2
+</nav>
+
+<div class="badge">Proprietary • Mistral AI</div>
+<h1>Mistral Large 2: Complete Guide</h1>
+
+<div class="intro-box">
+<strong>🎯 Overview:</strong> Mistral Large 2 is a highly efficient 123B frontier model with exceptional reasoning, function calling, and cost-effectiveness. Available via Mistral API, Azure, and open-weight variants.
+</div>
+
+<h2>Key Specifications</h2>
+
+<div class="specs-grid">
+<div class="spec-item">
+<strong>123B</strong>
+<span>Parameters</span>
+</div>
+<div class="spec-item">
+<strong>32K</strong>
+<span>Context Tokens</span>
+</div>
+<div class="spec-item">
+<strong>$0.27</strong>
+<span>Input Cost/MTok</span>
+</div>
+<div class="spec-item">
+<strong>3x faster</strong>
+<span>Than Large v1</span>
+</div>
+</div>
+
+<h2>Competitive Advantages</h2>
+
+<div style="display:grid;gap:1rem;margin:1.5rem 0;">
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Exceptional Efficiency:</strong> 123B parameters achieves frontier performance with lower latency and cost than competitors. 3x faster than Large v1.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Best Reasoning:</strong> Top scores on MMLU (84.4%), Math problems (89%), and code benchmarks (HUMANEVAL 91%). Specialized for complex tasks.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Function Calling:</strong> Native support for precise tool use. Reliable function argument generation for API integration.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Multiple Deployment Options:</strong> Mistral API, Azure Mistral integration, or self-hosted open weights.
+</div>
+</div>
+
+<h2>Pricing & Plans</h2>
+
+<div class="highlight">
+<h3 style="margin-top:0;">Mistral API</h3>
+<strong>Input:</strong> $0.27 per million tokens<br>
+<strong>Output:</strong> $0.81 per million tokens<br>
+<strong>Batch (50% discount):</strong> $0.135 input / $0.405 output<br>
+<br>
+<h3 style="margin-top:1rem;">Azure Deployments</h3>
+<strong>Pay-as-you-go:</strong> Variable pricing based on region<br>
+<strong>Commitment plans:</strong> 25-50% savings with prepaid tokens<br>
+<br>
+<h3 style="margin-top:1rem;">Cost Comparison (1M tokens/month)</h3>
+<strong>Mistral Large 2:</strong> $270 input + $810 output = $1,080/month<br>
+<strong>Claude 3.5 Sonnet:</strong> $3,000 input + $15,000 output = $18,000/month<br>
+<strong>Savings:</strong> ~95% cheaper than Claude for comparable reasoning
+</div>
+
+<h2>Performance Benchmarks</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Benchmark</th>
+<th>Mistral Large 2</th>
+<th>Llama 3.1 70B</th>
+<th>GPT-4o</th>
+</tr>
+<tr>
+<td>MMLU (Knowledge)</td>
+<td>84.4%</td>
+<td>85.2%</td>
+<td>92.3%</td>
+</tr>
+<tr>
+<td>GSM-8K (Math)</td>
+<td>89.0%</td>
+<td>93.0%</td>
+<td>95.1%</td>
+</tr>
+<tr>
+<td>HUMANEVAL (Code)</td>
+<td>91.0%</td>
+<td>85.9%</td>
+<td>92.3%</td>
+</tr>
+<tr>
+<td>Speed (tokens/sec)</td>
+<td>Very Fast</td>
+<td>Fast</td>
+<td>Very Fast</td>
+</tr>
+<tr>
+<td>Efficiency (params/performance)</td>
+<td>Best</td>
+<td>Good</td>
+<td>Excellent</td>
+</tr>
+</table>
+
+<h2>Best Use Cases</h2>
+
+<div style="display:grid;gap:1rem;margin:1.5rem 0;">
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">🛠️ API & Tool Integration</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Function calling enables reliable interaction with external systems, APIs, and databases</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">💡 Complex Problem Solving</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Mathematics, logic puzzles, multi-step reasoning tasks benefit from strong reasoning capabilities</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">💰 Cost-Optimized Enterprise</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Frontier-quality reasoning at 95% lower cost than competitors. Ideal for high-volume deployments</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">⚡ Low-Latency Systems</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Fast inference speed makes it suitable for real-time applications and high-throughput systems</span>
+</div>
+</div>
+
+<h2>API Integration Example</h2>
+
+<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.5rem 0;font-family:monospace;font-size:0.85rem;color:#06B6D4;overflow-x:auto;">
+from mistralai import Mistral<br>
+<br>
+client = Mistral(api_key="your-api-key")<br>
+<br>
+response = client.chat.complete(<br>
+    model="mistral-large-latest",<br>
+    messages=[{<br>
+        "role": "user",<br>
+        "content": "Solve this math problem: 5x + 3 = 18"<br>
+    }],<br>
+    tools=[{<br>
+        "type": "function",<br>
+        "function": {<br>
+            "name": "calculator",<br>
+            "description": "Performs mathematical operations"<br>
+        }<br>
+    }]<br>
+)<br>
+print(response.choices[0].message.content)
+</div>
+
+<h2>Comparison: Mistral vs Alternatives</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Feature</th>
+<th>Mistral Large 2</th>
+<th>Claude 3.5 Sonnet</th>
+<th>GPT-4o</th>
+<th>Llama 3.1 70B</th>
+</tr>
+<tr>
+<td>Cost/MTok</td>
+<td><strong>$0.27</strong></td>
+<td>$3</td>
+<td>$5</td>
+<td>Free (self-hosted)</td>
+</tr>
+<tr>
+<td>Context Window</td>
+<td>32K</td>
+<td>200K</td>
+<td>128K</td>
+<td>128K</td>
+</tr>
+<tr>
+<td>Reasoning</td>
+<td><strong>Strong</strong></td>
+<td>Best</td>
+<td>Strong</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td>Function Calling</td>
+<td><strong>Native</strong></td>
+<td>Native</td>
+<td>Native</td>
+<td>Can add via LoRA</td>
+</tr>
+<tr>
+<td>Inference Speed</td>
+<td><strong>Very Fast</strong></td>
+<td>Very Fast</td>
+<td>Very Fast</td>
+<td>Fast</td>
+</tr>
+</table>
+
+<p style="margin-top:2rem;text-align:center;">
+<a href="/articles/ai-models/" style="background:var(--accent);color:#000;padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;display:inline-block;">← Back to All Models</a>
+</p>
+</div>
+</body>
+</html>
