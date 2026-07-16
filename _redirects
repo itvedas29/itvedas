@@ -10,17 +10,8 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 /cve/             /articles/cve/     301
 /cve/:splat       /articles/cve/     301
 
-# Enforce .html canonical form for articles (301 redirect extensionless to .html)
-/articles/:category/:slug  /articles/:category/:slug.html  301
-/articles/:slug            /articles/:slug.html             301
-
-# Enforce .html form for top-level HTML pages
-/about         /about.html         301
-/contact       /contact.html       301
-/faq           /faq.html           301
-/privacy-policy /privacy-policy.html 301
-/terms-of-service /terms-of-service.html 301
-/quiz          /quiz.html          301
+# NOTE: Cloudflare Pages automatically serves .html files for extensionless URLs
+# No need for explicit .html redirects - they cause infinite loops!
 
 # Deals page removed 2026-07 — send old links home
 /deals.html       /                  301
