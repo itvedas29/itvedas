@@ -220,7 +220,7 @@ const MetaTagGenerator = (() => {
         distribution: {
           '@type': 'DataDownload',
           encodingFormat: 'application/json',
-          contentUrl: `${CONFIG.siteUrl}/cve-database-full.json`
+          contentUrl: `${CONFIG.siteUrl}/cve-data/cve-summary-index.json`
         },
         keywords: 'CVE, vulnerability, security, CVSS, remediation',
         creator: {
