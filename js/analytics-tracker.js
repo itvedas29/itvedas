@@ -1,1 +1,290 @@
-const AnalyticsTracker=(()=>{const e={enabled:!0,trackPageViews:!0,trackEvents:!0,trackPerformance:!0,trackClickTracking:!0,batchInterval:5e3};let n=`session_${Date.now()}_${Math.random().toString(36).substr(2,9)}`,t=[],o={},a=!1;function r(){i({type:"pageview",url:window.location.pathname,title:document.title,referrer:document.referrer,timestamp:Date.now(),sessionId:n})}function c(e,t={}){i({type:"event",name:e,data:t,url:window.location.pathname,timestamp:Date.now(),sessionId:n})}function i(e){t.push(e),t.length>=10&&s()}async function s(){if(a||0===t.length)return;a=!0;const e=[...t];t=[];try{const t={sessionId:n,userAgent:navigator.userAgent,timestamp:Date.now(),events:e};"localhost"===window.location.hostname&&console.log("📊 Analytics batch:",t)}catch(n){console.warn("Analytics send failed:",n),t.push(...e)}finally{a=!1}}return{init:function(n={}){Object.assign(e,n),e.enabled&&(r(),e.trackClickTracking&&document.addEventListener("click",e=>{const n=e.target.closest('a, button, [role="button"]');n&&c("click",{text:n.textContent?.substring(0,100),href:n.href,className:n.className,type:n.tagName.toLowerCase()})},!0),function(){if(!e.trackPerformance)return;if("PerformanceObserver"in window)try{new PerformanceObserver(e=>{const n=e.getEntries(),t=n[n.length-1];o.lcp=t.renderTime||t.loadTime,c("performance",{metric:"LCP",value:o.lcp,unit:"ms"})}).observe({entryTypes:["largest-contentful-paint"]});new PerformanceObserver(e=>{let n=0;e.getEntries().forEach(e=>{e.hadRecentInput||(n+=e.value)}),o.cls=n,c("performance",{metric:"CLS",value:o.cls.toFixed(3),unit:"score"})}).observe({entryTypes:["layout-shift"]});new PerformanceObserver(e=>{const n=e.getEntries();n.length>0&&(o.fcp=n[0].startTime,c("performance",{metric:"FCP",value:o.fcp,unit:"ms"}))}).observe({entryTypes:["paint"]})}catch(e){console.warn("Performance monitoring failed:",e)}window.performance&&window.performance.timing&&window.addEventListener("load",()=>{setTimeout(()=>{const e=window.performance.timing;o.navigationTiming={dns:e.domainLookupEnd-e.domainLookupStart,tcp:e.connectEnd-e.connectStart,ttfb:e.responseStart-e.navigationStart,download:e.responseEnd-e.responseStart,domParse:e.domInteractive-e.domLoading,domReady:e.domContentLoadedEventEnd-e.navigationStart,pageLoad:e.loadEventEnd-e.navigationStart},c("performance",{metric:"NavigationTiming",value:o.navigationTiming})},0)})}(),setInterval(()=>{t.length>0&&s()},e.batchInterval))},trackPageView:r,trackEvent:c,trackScrollDepth:function(){let e=0;window.addEventListener("scroll",()=>{const n=document.documentElement.scrollHeight-window.innerHeight,t=window.scrollY,o=n>0?Math.round(t/n*100):0;o>e&&(e=o,e%25==0&&c("scroll",{depth:e,unit:"percent"}))})},trackTimeOnPage:function(){const e=Date.now();window.addEventListener("beforeunload",()=>{c("engagement",{timeOnPage:Math.round((Date.now()-e)/1e3),unit:"seconds"})})},getSessionAnalytics:function(){return{sessionId:n,eventCount:t.length,performanceMetrics:o,config:e}},logSummary:function(){console.log("\n📊 Analytics Summary"),console.log("=".repeat(60)),console.log(`Session ID: ${n}`),console.log(`Queued Events: ${t.length}`),Object.keys(o).length>0&&(console.log("Performance Metrics:"),Object.entries(o).forEach(([e,n])=>{"object"==typeof n?console.log(`  ${e}:`,n):console.log(`  ${e}: ${n.toFixed?n.toFixed(2):n}`)})),console.log("=".repeat(60)+"\n")},processEventBatch:s,config:e}})();"loading"===document.readyState?document.addEventListener("DOMContentLoaded",()=>{AnalyticsTracker.init({enabled:!0,trackPageViews:!0,trackEvents:!0,trackPerformance:!0}),AnalyticsTracker.trackScrollDepth(),AnalyticsTracker.trackTimeOnPage()}):(AnalyticsTracker.init({enabled:!0,trackPageViews:!0,trackEvents:!0,trackPerformance:!0}),AnalyticsTracker.trackScrollDepth(),AnalyticsTracker.trackTimeOnPage());
+/**
+ * Analytics Tracker
+ * Tracks page views, events, performance metrics, and user engagement
+ * Uses secure random session ID generation
+ */
+
+const AnalyticsTracker = (() => {
+  const config = {
+    enabled: true,
+    trackPageViews: true,
+    trackEvents: true,
+    trackPerformance: true,
+    trackClickTracking: true,
+    batchInterval: 5000
+  };
+
+  // Generate cryptographically secure session ID
+  let sessionId = generateSecureSessionId();
+  let eventQueue = [];
+  let performanceMetrics = {};
+  let isSending = false;
+
+  function generateSecureSessionId() {
+    // Use crypto.getRandomValues if available (modern browsers)
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const arr = new Uint8Array(16);
+      crypto.getRandomValues(arr);
+      const hex = Array.from(arr, byte => byte.toString(16).padStart(2, '0')).join('');
+      return `session_${Date.now()}_${hex.substring(0, 16)}`;
+    }
+    // Fallback for older browsers - still better than Math.random alone
+    const timestamp = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substring(2, 15) +
+                       Math.random().toString(36).substring(2, 15);
+    return `session_${timestamp}_${randomPart}`;
+  }
+
+  function trackPageView() {
+    queueEvent({
+      type: 'pageview',
+      url: window.location.pathname,
+      title: document.title,
+      referrer: document.referrer,
+      timestamp: Date.now(),
+      sessionId: sessionId
+    });
+  }
+
+  function trackEvent(eventName, eventData = {}) {
+    queueEvent({
+      type: 'event',
+      name: eventName,
+      data: eventData,
+      url: window.location.pathname,
+      timestamp: Date.now(),
+      sessionId: sessionId
+    });
+  }
+
+  function queueEvent(event) {
+    eventQueue.push(event);
+    if (eventQueue.length >= 10) {
+      sendBatch();
+    }
+  }
+
+  async function sendBatch() {
+    if (isSending || eventQueue.length === 0) return;
+
+    isSending = true;
+    const batch = [...eventQueue];
+    eventQueue = [];
+
+    try {
+      const payload = {
+        sessionId: sessionId,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now(),
+        events: batch
+      };
+
+      if (window.location.hostname === 'localhost') {
+        console.log('📊 Analytics batch:', payload);
+      }
+    } catch (error) {
+      console.warn('Analytics send failed:', error);
+      eventQueue.push(...batch);
+    } finally {
+      isSending = false;
+    }
+  }
+
+  function setupClickTracking() {
+    document.addEventListener('click', (event) => {
+      const target = event.target.closest('a, button, [role="button"]');
+      if (target) {
+        trackEvent('click', {
+          text: target.textContent?.substring(0, 100),
+          href: target.href,
+          className: target.className,
+          type: target.tagName.toLowerCase()
+        });
+      }
+    }, true);
+  }
+
+  function setupPerformanceTracking() {
+    if (!config.trackPerformance) return;
+
+    if ('PerformanceObserver' in window) {
+      try {
+        // Track Largest Contentful Paint
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          performanceMetrics.lcp = lastEntry.renderTime || lastEntry.loadTime;
+          trackEvent('performance', {
+            metric: 'LCP',
+            value: performanceMetrics.lcp,
+            unit: 'ms'
+          });
+        }).observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // Track Cumulative Layout Shift
+        new PerformanceObserver((list) => {
+          let cls = 0;
+          list.getEntries().forEach((entry) => {
+            if (!entry.hadRecentInput) {
+              cls += entry.value;
+            }
+          });
+          performanceMetrics.cls = cls;
+          trackEvent('performance', {
+            metric: 'CLS',
+            value: performanceMetrics.cls.toFixed(3),
+            unit: 'score'
+          });
+        }).observe({ entryTypes: ['layout-shift'] });
+
+        // Track First Contentful Paint
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          if (entries.length > 0) {
+            performanceMetrics.fcp = entries[0].startTime;
+            trackEvent('performance', {
+              metric: 'FCP',
+              value: performanceMetrics.fcp,
+              unit: 'ms'
+            });
+          }
+        }).observe({ entryTypes: ['paint'] });
+      } catch (error) {
+        console.warn('Performance monitoring failed:', error);
+      }
+    }
+
+    // Track Navigation Timing
+    if (window.performance && window.performance.timing) {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const timing = window.performance.timing;
+          performanceMetrics.navigationTiming = {
+            dns: timing.domainLookupEnd - timing.domainLookupStart,
+            tcp: timing.connectEnd - timing.connectStart,
+            ttfb: timing.responseStart - timing.navigationStart,
+            download: timing.responseEnd - timing.responseStart,
+            domParse: timing.domInteractive - timing.domLoading,
+            domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+            pageLoad: timing.loadEventEnd - timing.navigationStart
+          };
+          trackEvent('performance', {
+            metric: 'NavigationTiming',
+            value: performanceMetrics.navigationTiming
+          });
+        }, 0);
+      });
+    }
+  }
+
+  // Public API
+  return {
+    init(options = {}) {
+      Object.assign(config, options);
+
+      if (!config.enabled) return;
+
+      trackPageView();
+
+      if (config.trackClickTracking) {
+        setupClickTracking();
+      }
+
+      setupPerformanceTracking();
+
+      // Send batches periodically
+      setInterval(() => {
+        if (eventQueue.length > 0) {
+          sendBatch();
+        }
+      }, config.batchInterval);
+    },
+
+    trackPageView,
+    trackEvent,
+
+    trackScrollDepth() {
+      let maxDepth = 0;
+      window.addEventListener('scroll', () => {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+        const depth = docHeight > 0 ? Math.round((scrolled / docHeight) * 100) : 0;
+
+        if (depth > maxDepth) {
+          maxDepth = depth;
+          if (maxDepth % 25 === 0) {
+            trackEvent('scroll', {
+              depth: maxDepth,
+              unit: 'percent'
+            });
+          }
+        }
+      });
+    },
+
+    trackTimeOnPage() {
+      const startTime = Date.now();
+      window.addEventListener('beforeunload', () => {
+        trackEvent('engagement', {
+          timeOnPage: Math.round((Date.now() - startTime) / 1000),
+          unit: 'seconds'
+        });
+      });
+    },
+
+    getSessionAnalytics() {
+      return {
+        sessionId,
+        eventCount: eventQueue.length,
+        performanceMetrics,
+        config
+      };
+    },
+
+    logSummary() {
+      console.log('\n📊 Analytics Summary');
+      console.log('='.repeat(60));
+      console.log(`Session ID: ${sessionId}`);
+      console.log(`Queued Events: ${eventQueue.length}`);
+
+      if (Object.keys(performanceMetrics).length > 0) {
+        console.log('Performance Metrics:');
+        Object.entries(performanceMetrics).forEach(([key, value]) => {
+          if (typeof value === 'object') {
+            console.log(`  ${key}:`, value);
+          } else {
+            console.log(`  ${key}: ${value.toFixed ? value.toFixed(2) : value}`);
+          }
+        });
+      }
+
+      console.log('='.repeat(60) + '\n');
+    },
+
+    processEventBatch: sendBatch,
+    config
+  };
+})();
+
+// Initialize analytics when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    AnalyticsTracker.init({
+      enabled: true,
+      trackPageViews: true,
+      trackEvents: true,
+      trackPerformance: true
+    });
+    AnalyticsTracker.trackScrollDepth();
+    AnalyticsTracker.trackTimeOnPage();
+  });
+} else {
+  AnalyticsTracker.init({
+    enabled: true,
+    trackPageViews: true,
+    trackEvents: true,
+    trackPerformance: true
+  });
+  AnalyticsTracker.trackScrollDepth();
+  AnalyticsTracker.trackTimeOnPage();
+}

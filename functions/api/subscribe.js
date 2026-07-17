@@ -50,9 +50,10 @@ export default {
 
     } catch (error) {
       console.error('Subscribe error:', error);
+      // Log full error server-side, return generic message to client
       return new Response(JSON.stringify({
         success: false,
-        message: 'Server error: ' + error.message
+        message: 'Unable to process subscription. Please try again later.'
       }), { status: 500 });
     }
   }
