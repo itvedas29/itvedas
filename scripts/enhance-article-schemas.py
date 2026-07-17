@@ -56,7 +56,7 @@ def update_article_schema(file_path):
             # Format back to JSON
             new_json = json.dumps(schema, separators=(',', ':'))
             return f'<script type="application/ld+json">{new_json}</script>'
-        except:
+        except (json.JSONDecodeError, TypeError, KeyError):
             return match.group(0)
 
     # Replace in HTML

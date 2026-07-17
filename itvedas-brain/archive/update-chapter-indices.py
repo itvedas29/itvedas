@@ -33,7 +33,7 @@ def get_chapter_articles(chapter_name):
                 date_str = html_file.stem.split('-', 1)[0]
                 try:
                     date_obj = datetime.strptime(date_str, "%Y%m%d")
-                except:
+                except ValueError:
                     date_obj = datetime.now()
                 
                 articles.append({
