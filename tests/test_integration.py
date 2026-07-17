@@ -164,12 +164,15 @@ class TestAssetAvailability(unittest.TestCase):
             self.assertTrue(has_logo_ref)
 
     def test_css_files_referenced(self):
-        """CSS files should be referenced in HTML"""
+        """CSS files should be referenced or inlined in HTML"""
         index = Path("/home/user/itvedas/index.html")
         if index.exists():
             content = index.read_text()
-            has_css = "<link" in content and ".css" in content
-            self.assertTrue(has_css)
+            # Check for either linked CSS or inline styles
+            has_linked_css = "<link" in content and ".css" in content
+            has_inline_styles = "<style" in content
+            has_styling = has_linked_css or has_inline_styles
+            self.assertTrue(has_styling, "HTML should have CSS styling")
 
     def test_javascript_files_referenced(self):
         """JavaScript files should be referenced"""

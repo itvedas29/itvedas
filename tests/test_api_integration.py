@@ -176,7 +176,9 @@ class TestAPICORSValidation(unittest.TestCase):
             "http://127.0.0.1:8080"
         ]
         for origin in valid_origins:
-            self.assertIn("itvedas", origin.lower() or "localhost" in origin.lower())
+            origin_lower = origin.lower()
+            is_valid = "itvedas" in origin_lower or "localhost" in origin_lower or "127.0.0.1" in origin_lower
+            self.assertTrue(is_valid)
 
     def test_invalid_origins_rejected(self):
         """Non-whitelisted origins should be rejected"""
@@ -186,10 +188,17 @@ class TestAPICORSValidation(unittest.TestCase):
             "http://localhost.evil.com",
             "http://itvedas.com.evil.com"
         ]
-        valid_origins = ["itvedas.com", "localhost", "127.0.0.1"]
+        valid_origins_set = {
+            "https://itvedas.com",
+            "https://www.itvedas.com",
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:8080"
+        }
         for invalid in invalid_origins:
-            # Should not match any valid origin exactly
-            is_blocked = not any(v in invalid for v in valid_origins)
+            # Should not be in the exact whitelist
+            is_blocked = invalid not in valid_origins_set
             self.assertTrue(is_blocked)
 
     def test_origin_header_required(self):
