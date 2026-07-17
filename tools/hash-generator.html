@@ -112,8 +112,8 @@
     <div class="input-section">
       <textarea id="input" placeholder="Enter text to hash..."></textarea>
       <div class="hash-options">
-        <button onclick="generateHashes()">Generate Hashes</button>
-        <button onclick="clearAll()" style="background:transparent;border:1px solid rgba(16,185,129,0.4);color:#10B981;">Clear</button>
+        <button data-onclick="generateHashes" class="handler-generateHashes">Generate Hashes</button>
+        <button data-onclick="clearAll" class="handler-clearAll" style="background:transparent;border:1px solid rgba(16,185,129,0.4);color:#10B981;">Clear</button>
       </div>
     </div>
 
@@ -121,22 +121,22 @@
       <div class="hash-item">
         <div class="hash-name">MD5:</div>
         <div class="hash-value" id="md5">-</div>
-        <button class="copy-btn" onclick="copyHash('md5')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="md5" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA1:</div>
         <div class="hash-value" id="sha1">-</div>
-        <button class="copy-btn" onclick="copyHash('sha1')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha1" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA256:</div>
         <div class="hash-value" id="sha256">-</div>
-        <button class="copy-btn" onclick="copyHash('sha256')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha256" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA512:</div>
         <div class="hash-value" id="sha512">-</div>
-        <button class="copy-btn" onclick="copyHash('sha512')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha512" class="handler-copyHash">Copy</button>
       </div>
     </div>
   </div>
@@ -168,5 +168,6 @@
       document.getElementById('results').style.display = 'none';
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

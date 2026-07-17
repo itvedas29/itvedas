@@ -119,14 +119,14 @@
     <div class="search-section">
       <div class="input-group">
         <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
-        <button onclick="lookupDNS()">Lookup</button>
+        <button data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
       </div>
       <div class="record-type-buttons">
-        <button class="record-btn active" onclick="setRecordType('A')">A</button>
-        <button class="record-btn" onclick="setRecordType('AAAA')">AAAA</button>
-        <button class="record-btn" onclick="setRecordType('CNAME')">CNAME</button>
-        <button class="record-btn" onclick="setRecordType('MX')">MX</button>
-        <button class="record-btn" onclick="setRecordType('TXT')">TXT</button>
+        <button class="record-btn active" data-onclick="setRecordType" data-arg="A" class="handler-setRecordType">A</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="AAAA" class="handler-setRecordType">AAAA</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="CNAME" class="handler-setRecordType">CNAME</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="MX" class="handler-setRecordType">MX</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="TXT" class="handler-setRecordType">TXT</button>
       </div>
     </div>
 
@@ -191,5 +191,6 @@
       document.getElementById('results').classList.add('active');
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

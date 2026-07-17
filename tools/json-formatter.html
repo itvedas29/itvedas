@@ -102,10 +102,10 @@
     <p class="description">Format, minify, and validate JSON with instant feedback and syntax highlighting.</p>
 
     <div class="controls">
-      <button onclick="formatJSON()">Format</button>
-      <button onclick="minifyJSON()" class="secondary">Minify</button>
-      <button onclick="copyOutput()" class="secondary">📋 Copy Output</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="formatJSON" class="handler-formatJSON">Format</button>
+      <button data-onclick="minifyJSON" class="handler-minifyJSON" class="secondary">Minify</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy Output</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -178,5 +178,6 @@
       window.formatTimeout = setTimeout(formatJSON, 500);
     });
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

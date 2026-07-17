@@ -382,11 +382,11 @@
         <table class="cve-table">
             <thead>
                 <tr>
-                    <th onclick="sortTable('id')">CVE ID ↕</th>
-                    <th onclick="sortTable('desc')">Description</th>
-                    <th onclick="sortTable('cvss')">CVSS Score ↕</th>
-                    <th onclick="sortTable('severity')">Severity ↕</th>
-                    <th onclick="sortTable('published')">Published ↕</th>
+                    <th data-onclick="sortTable" data-arg="id" class="handler-sortTable">CVE ID ↕</th>
+                    <th data-onclick="sortTable" data-arg="desc" class="handler-sortTable">Description</th>
+                    <th data-onclick="sortTable" data-arg="cvss" class="handler-sortTable">CVSS Score ↕</th>
+                    <th data-onclick="sortTable" data-arg="severity" class="handler-sortTable">Severity ↕</th>
+                    <th data-onclick="sortTable" data-arg="published" class="handler-sortTable">Published ↕</th>
                     <th>Source</th>
                 </tr>
             </thead>
@@ -565,9 +565,16 @@
 
             let html = '';
             for (let i = 1; i <= totalPages; i++) {
-                html += `<button class="pagination-btn${i === currentPage ? ' active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                html += `<button class="pagination-btn${i === currentPage ? ' active' : ''}" data-page="${i}">${i}</button>`;
             }
             pagination.innerHTML = html;
+
+            // Add event listeners to pagination buttons
+            pagination.querySelectorAll('.pagination-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    goToPage(parseInt(this.dataset.page));
+                });
+            });
         }
 
         function goToPage(page) {
@@ -642,5 +649,6 @@
 <strong>Category:</strong> <a href="/chapters/cve/" style="color:#0066cc;">Cve</a>
 <br/><small>Browse more articles and resources in this category</small>
 </div>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

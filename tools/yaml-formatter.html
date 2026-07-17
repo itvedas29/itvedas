@@ -100,10 +100,10 @@
     <p class="description">Format and validate YAML configuration files with instant feedback.</p>
 
     <div class="controls">
-      <button onclick="formatYAML()">Format</button>
-      <button onclick="validateYAML()" class="secondary">Validate</button>
-      <button onclick="copyOutput()" class="secondary">📋 Copy</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="formatYAML" class="handler-formatYAML">Format</button>
+      <button data-onclick="validateYAML" class="handler-validateYAML" class="secondary">Validate</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -167,5 +167,6 @@
       document.getElementById('inputStatus').className = 'status';
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

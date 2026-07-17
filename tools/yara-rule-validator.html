@@ -111,8 +111,8 @@
     <p class="description">Validate YARA rule syntax and structure for malware detection patterns.</p>
 
     <div class="controls">
-      <button onclick="validateRule()">Validate Rule</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="validateRule" class="handler-validateRule">Validate Rule</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -205,5 +205,6 @@
       document.getElementById('status').className = 'status';
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>

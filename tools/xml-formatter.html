@@ -100,10 +100,10 @@
     <p class="description">Format, minify, and validate XML with instant feedback and syntax highlighting.</p>
 
     <div class="controls">
-      <button onclick="formatXML()">Format</button>
-      <button onclick="minifyXML()" class="secondary">Minify</button>
-      <button onclick="copyOutput()" class="secondary">📋 Copy</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="formatXML" class="handler-formatXML">Format</button>
+      <button data-onclick="minifyXML" class="handler-minifyXML" class="secondary">Minify</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -175,5 +175,6 @@
       document.getElementById('inputStatus').className = 'status';
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
 </body>
 </html>
