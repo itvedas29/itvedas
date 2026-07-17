@@ -102,10 +102,10 @@
     <p class="description">Convert text to Base64 encoding and decode Base64 strings instantly with instant validation.</p>
 
     <div class="controls">
-      <button onclick="encodeBase64()">Encode to Base64</button>
-      <button onclick="decodeBase64()" class="secondary">Decode from Base64</button>
-      <button onclick="copyOutput()" class="secondary">📋 Copy Output</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="encodeBase64" class="handler-encodeBase64">Encode to Base64</button>
+      <button data-onclick="decodeBase64" class="handler-decodeBase64" class="secondary">Decode from Base64</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy Output</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -169,55 +169,7 @@
       document.getElementById('inputStatus').className = 'status';
     }
   </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Base64 Encoder/Decoder | IT Vedas",
-  "description": "Base64 encoder and decoder. Convert text and files to Base64 and decode Base64 strings instantly.",
-  "url": "https://www.itvedas.com/tools/base64-encoder.html",
-  "author": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "url": "https://www.itvedas.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.itvedas.com/logo.png"
-    }
-  },
-  "datePublished": "2026-07-17T00:00:00Z",
-  "dateModified": "2026-07-17T04:44:33.064648"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.itvedas.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Tools",
-      "item": "https://www.itvedas.com/tools"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Base64 Encoder/Decoder | IT Vedas",
-      "item": "https://www.itvedas.com/tools/base64-encoder.html"
-    }
-  ]
-}
-</script>
-</body>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html></body>
 </html>

@@ -119,14 +119,14 @@
     <div class="search-section">
       <div class="input-group">
         <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
-        <button onclick="lookupDNS()">Lookup</button>
+        <button data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
       </div>
       <div class="record-type-buttons">
-        <button class="record-btn active" onclick="setRecordType('A')">A</button>
-        <button class="record-btn" onclick="setRecordType('AAAA')">AAAA</button>
-        <button class="record-btn" onclick="setRecordType('CNAME')">CNAME</button>
-        <button class="record-btn" onclick="setRecordType('MX')">MX</button>
-        <button class="record-btn" onclick="setRecordType('TXT')">TXT</button>
+        <button class="record-btn active" data-onclick="setRecordType" data-arg="A" class="handler-setRecordType">A</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="AAAA" class="handler-setRecordType">AAAA</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="CNAME" class="handler-setRecordType">CNAME</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="MX" class="handler-setRecordType">MX</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="TXT" class="handler-setRecordType">TXT</button>
       </div>
     </div>
 
@@ -191,55 +191,7 @@
       document.getElementById('results').classList.add('active');
     }
   </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "DNS Lookup | IT Vedas",
-  "description": "DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.",
-  "url": "https://www.itvedas.com/tools/dns-lookup.html",
-  "author": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "url": "https://www.itvedas.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.itvedas.com/logo.png"
-    }
-  },
-  "datePublished": "2026-07-17T00:00:00Z",
-  "dateModified": "2026-07-17T04:44:33.063679"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.itvedas.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Tools",
-      "item": "https://www.itvedas.com/tools"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "DNS Lookup | IT Vedas",
-      "item": "https://www.itvedas.com/tools/dns-lookup.html"
-    }
-  ]
-}
-</script>
-</body>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html></body>
 </html>
