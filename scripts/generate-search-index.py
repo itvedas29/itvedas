@@ -115,7 +115,15 @@ def build_search_index():
 
     print("Indexing news...")
     news_count = 0
-    news_files = sorted((ROOT / "news").rglob("*.html"), key=lambda x: x.stat().st_mtime, reverse=True)
+    # Exclude news/archive/ paginated listing pages from the "50 most
+    # recent" news scan — they're navigational (a paginated index of
+    # every post), not standalone articles, and since they get
+    # rewritten on every pipeline run their mtime would otherwise push
+    # real articles out of the top 50.
+    news_files = sorted(
+        (f for f in (ROOT / "news").rglob("*.html") if f.parent.name != "archive"),
+        key=lambda x: x.stat().st_mtime, reverse=True,
+    )
 
     for news_file in news_files[:50]:
         try:

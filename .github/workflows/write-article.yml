@@ -71,6 +71,13 @@ jobs:
           GA4_ID:            ${{ secrets.GA4_ID }}
         run: python3 itvedas-brain/news-agent.py
 
+      # ── Rebuild the news archive (paginated index of every news/*.html
+      #    post) so newly-published stories get an on-site link pointing
+      #    to them once they age out of news.html/security-news.html's
+      #    "latest ~40" window ──
+      - name: Rebuild news archive
+        run: python3 scripts/generate-news-archive.py
+
       # ── Commit & push everything the agents produced ──
       - name: Commit and push
         run: |
