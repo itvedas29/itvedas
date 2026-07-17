@@ -16,10 +16,11 @@ def get_html_files():
     """Recursively find all HTML files and categorize them."""
     files = {
         "main": [],      # Root HTML files
-        "chapters": [],  # Article category index pages
+        "chapters": [],  # Article category index pages (articles/<cat>/index.html)
         "articles": [], # Individual article files
         "news": [],     # Individual news files
         "chapter_content": [],  # Chapter pages
+        "chapter_hubs": [],  # Chapter hub landing pages (chapters/<hub>/index.html)
     }
 
     # Root HTML files (home, about, faq, etc.)
@@ -38,6 +39,13 @@ def get_html_files():
     for article_file in (ROOT / "articles").rglob("*.html"):
         if article_file.name != "index.html":
             files["articles"].append(article_file)
+
+    # Chapter hub landing pages (chapters/cloud-security/index.html, etc.)
+    for hub_dir in (ROOT / "chapters").glob("*/"):
+        if hub_dir.is_dir():
+            hub_index = hub_dir / "index.html"
+            if hub_index.exists():
+                files["chapter_hubs"].append(hub_index)
 
     # Chapter content pages (chapters/cloud-security/, chapters/azure-certifications/, etc.)
     for chapter_file in (ROOT / "chapters").rglob("*.html"):
@@ -110,6 +118,11 @@ def build_sitemap():
         lastmod = get_file_modified_date(f)
         add_url(file_to_url(f), lastmod, "weekly", 0.7)
 
+    # Add chapter hub landing pages (chapters/<hub>/index.html)
+    for f in sorted(files["chapter_hubs"]):
+        lastmod = get_file_modified_date(f)
+        add_url(file_to_url(f), lastmod, "weekly", 0.8)
+
     # Add chapter content pages
     for f in sorted(files["chapter_content"]):
         lastmod = get_file_modified_date(f)
@@ -133,10 +146,11 @@ def build_sitemap():
 
     total_urls = (len(files["main"]) + len(files["chapters"]) +
                   len(files["articles"]) + len(files["chapter_content"]) +
-                  len(files["news"]))
+                  len(files["chapter_hubs"]) + len(files["news"]))
     print(f"✓ Sitemap generated: {total_urls} URLs")
     print(f"  - Main pages: {len(files['main'])}")
     print(f"  - Article categories: {len(files['chapters'])}")
+    print(f"  - Chapter hub pages: {len(files['chapter_hubs'])}")
     print(f"  - Chapter pages: {len(files['chapter_content'])}")
     print(f"  - Articles: {len(files['articles'])}")
     print(f"  - News: {len(files['news'])}")

@@ -23,6 +23,9 @@ jobs:
       - name: Generate complete sitemap
         run: python3 scripts/generate-sitemap.py
 
+      - name: Regenerate search index
+        run: python3 scripts/generate-search-index.py
+
       - name: Validate JSON files
         run: |
           python -m json.tool search-index.json > /tmp/search-index.json
@@ -53,10 +56,11 @@ jobs:
               print(f'OK: {name}')
           PY
 
-      - name: Commit sitemap if changed
+      - name: Commit sitemap and search index if changed
         run: |
           git config user.name "ITVedas Bot"
           git config user.email "bot@itvedas.com"
-          git add sitemap.xml
-          git diff --staged --quiet || git commit -m "Regenerate sitemap.xml with all 530+ URLs"
+          git add sitemap.xml search-index.json
+          git diff --staged --quiet || git commit -m "Regenerate sitemap.xml and search-index.json"
+          git pull --rebase --autostash origin main
           git push origin main || true
