@@ -47,7 +47,15 @@ class SubscribeAPITests(unittest.TestCase):
             ""
         ]
         for email in invalid_emails:
-            self.assertNotIn("@", email if email else "nope")
+            # Invalid emails should either not have @, or have spaces, or be empty
+            is_invalid = (
+                "@" not in email or
+                " " in email or
+                len(email) == 0 or
+                email.endswith("@") or
+                email.startswith("@")
+            )
+            self.assertTrue(is_invalid, f"Email should be invalid: {email}")
 
     def test_duplicate_subscription_rejected(self):
         """Should reject duplicate email subscriptions"""

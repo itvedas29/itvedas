@@ -100,10 +100,10 @@
     <p class="description">Format, minify, and validate XML with instant feedback and syntax highlighting.</p>
 
     <div class="controls">
-      <button onclick="formatXML()">Format</button>
-      <button onclick="minifyXML()" class="secondary">Minify</button>
-      <button onclick="copyOutput()" class="secondary">📋 Copy</button>
-      <button onclick="clearAll()" class="secondary">Clear</button>
+      <button data-onclick="formatXML" class="handler-formatXML">Format</button>
+      <button data-onclick="minifyXML" class="handler-minifyXML" class="secondary">Minify</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy</button>
+      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
     </div>
 
     <div class="editor-container">
@@ -175,55 +175,7 @@
       document.getElementById('inputStatus').className = 'status';
     }
   </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "XML Formatter | IT Vedas",
-  "description": "XML formatter and validator. Format, minify, and validate XML with syntax highlighting.",
-  "url": "https://www.itvedas.com/tools/xml-formatter.html",
-  "author": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "url": "https://www.itvedas.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.itvedas.com/logo.png"
-    }
-  },
-  "datePublished": "2026-07-17T00:00:00Z",
-  "dateModified": "2026-07-17T04:44:33.065388"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.itvedas.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Tools",
-      "item": "https://www.itvedas.com/tools"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "XML Formatter | IT Vedas",
-      "item": "https://www.itvedas.com/tools/xml-formatter.html"
-    }
-  ]
-}
-</script>
-</body>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html></body>
 </html>

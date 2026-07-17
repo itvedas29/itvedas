@@ -146,6 +146,166 @@ def build_search_index():
 
     print(f"  ✓ {news_count} news items indexed")
 
+    print("Indexing tools...")
+    tools_count = 0
+    for tool_file in (ROOT / "tools").rglob("*.html"):
+        try:
+            content = tool_file.read_text(encoding='utf-8')
+            url = f"/{tool_file.relative_to(ROOT)}".replace('.html', '/') if tool_file.name != 'index.html' else f"/{tool_file.relative_to(ROOT)}"
+
+            metadata = get_page_metadata(tool_file, content)
+            if not metadata['category']:
+                metadata['category'] = 'tools'
+            index['categories'].add(metadata['category'])
+
+            page_entry = {
+                'url': url,
+                'type': 'tool',
+                'path': str(tool_file.relative_to(ROOT)),
+                **metadata
+            }
+
+            index['pages'].append(page_entry)
+            tools_count += 1
+        except Exception as e:
+            pass
+
+    print(f"  ✓ {tools_count} tools indexed")
+
+    print("Indexing AI pages...")
+    ai_count = 0
+    for ai_file in (ROOT / "ai-tools").rglob("*.html"):
+        try:
+            content = ai_file.read_text(encoding='utf-8')
+            url = f"/{ai_file.relative_to(ROOT)}".replace('.html', '/') if ai_file.name != 'index.html' else f"/{ai_file.relative_to(ROOT)}"
+
+            metadata = get_page_metadata(ai_file, content)
+            if not metadata['category']:
+                metadata['category'] = 'ai-tools'
+            index['categories'].add(metadata['category'])
+
+            page_entry = {
+                'url': url,
+                'type': 'ai-tool',
+                'path': str(ai_file.relative_to(ROOT)),
+                **metadata
+            }
+
+            index['pages'].append(page_entry)
+            ai_count += 1
+        except Exception as e:
+            pass
+
+    print(f"  ✓ {ai_count} AI pages indexed")
+
+    print("Indexing main pages...")
+    main_count = 0
+    main_pages = [
+        'problems-solutions.html', 'cve-database-complete.html', 'cve-listing.html',
+        'quiz.html', 'cve-database.html', 'cve-dashboard-advanced.html',
+        'career-navigator.html', 'chapters.html', 'news.html', 'security-news.html',
+        'about.html', 'privacy-policy.html', 'terms-of-service.html',
+        'index.html', 'career-paths.html', 'faq.html'
+    ]
+
+    for page_name in main_pages:
+        page_path = ROOT / page_name
+        if page_path.exists():
+            try:
+                content = page_path.read_text(encoding='utf-8')
+                url = f"/{page_path.relative_to(ROOT)}".replace('.html', '/').replace('/index/', '/')
+
+                metadata = get_page_metadata(page_path, content)
+                if not metadata['category']:
+                    metadata['category'] = 'main'
+                index['categories'].add(metadata['category'])
+
+                page_entry = {
+                    'url': url,
+                    'type': 'page',
+                    'path': str(page_path.relative_to(ROOT)),
+                    **metadata
+                }
+
+                index['pages'].append(page_entry)
+                main_count += 1
+            except Exception as e:
+                pass
+
+    print(f"  ✓ {main_count} main pages indexed")
+
+    print("Indexing resources...")
+    resources_count = 0
+    for resource_file in (ROOT / "resources").rglob("*.html"):
+        try:
+            content = resource_file.read_text(encoding='utf-8')
+            url = f"/{resource_file.relative_to(ROOT)}".replace('.html', '/') if resource_file.name != 'index.html' else f"/{resource_file.relative_to(ROOT)}"
+
+            metadata = get_page_metadata(resource_file, content)
+            if not metadata['category']:
+                metadata['category'] = 'resources'
+            index['categories'].add(metadata['category'])
+
+            page_entry = {
+                'url': url,
+                'type': 'resource',
+                'path': str(resource_file.relative_to(ROOT)),
+                **metadata
+            }
+
+            index['pages'].append(page_entry)
+            resources_count += 1
+        except Exception as e:
+            pass
+
+    print(f"  ✓ {resources_count} resources indexed")
+
+    print("Indexing other pages...")
+    other_count = 0
+    # Index all HTML files not already indexed
+    indexed_paths = {p['path'] for p in index['pages']}
+    exclude_dirs = {'archive', 'node_modules', '.git', '__pycache__', 'cve-data'}
+
+    for html_file in ROOT.rglob("*.html"):
+        # Skip if already indexed
+        if str(html_file.relative_to(ROOT)) in indexed_paths:
+            continue
+
+        # Skip if in excluded directories
+        if any(excluded in html_file.parts for excluded in exclude_dirs):
+            continue
+
+        # Skip if in root scripts, functions, etc.
+        if html_file.parent.name in ['scripts', 'functions', '.github']:
+            continue
+
+        try:
+            content = html_file.read_text(encoding='utf-8')
+            url = f"/{html_file.relative_to(ROOT)}".replace('.html', '/') if html_file.name != 'index.html' else f"/{html_file.relative_to(ROOT)}"
+
+            metadata = get_page_metadata(html_file, content)
+            if not metadata['category']:
+                # Infer from directory structure
+                parts = html_file.relative_to(ROOT).parts
+                metadata['category'] = parts[0] if parts else 'other'
+
+            index['categories'].add(metadata['category'])
+
+            page_entry = {
+                'url': url,
+                'type': 'page',
+                'path': str(html_file.relative_to(ROOT)),
+                **metadata
+            }
+
+            index['pages'].append(page_entry)
+            other_count += 1
+        except Exception as e:
+            pass
+
+    if other_count > 0:
+        print(f"  ✓ {other_count} additional pages indexed")
+
     index['categories'] = sorted(list(index['categories']))
     index['total_pages'] = len(index['pages'])
 
