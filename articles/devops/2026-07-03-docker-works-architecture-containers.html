@@ -8,24 +8,24 @@
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="How Docker Works: Architecture &amp; Containers | ITVedas">
 <meta property="og:description" content="Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.">
-<meta property="og:image" content="https://itvedas.com/assets/og-default.png">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-07-03">
-<link rel="canonical" href="https://itvedas.com/articles/devops/docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en-AU" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en-CA" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
-    <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+<link rel="canonical" href="https://www.itvedas.com/articles/devops/docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
+    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers.html">
     
 <title>How Docker Works: Architecture &amp; Containers | ITVedas</title>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How Docker Works: Architecture & Containers", "description": "Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner's guide to containerization technology.", "datePublished": "2026-07-03", "dateModified": "2026-07-03", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "url": "https://itvedas.com/articles/devops/docker-works-architecture-containers.html"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture & Containers","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner's guide to containerization technology.","datePublished":"2026-07-03","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com"},"url":"https://www.itvedas.com/articles/devops/docker-works-architecture-containers.html","image":"https://www.itvedas.com/assets/og-default.png"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What&#x27;s the difference between a Docker image and a Docker container?", "acceptedAnswer": {"@type": "Answer", "text": "A Docker image is a read-only blueprint or template\u2014like a recipe. A Docker container is a running instance of that image\u2014like a cake made from the recipe. You build one image and create hundreds of containers from it. Images are immutable; containers are temporary and can be modified while running."}}, {"@type": "Question", "name": "Why is Docker faster than virtual machines?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containers share the host&#x27;s operating system kernel, using only ~5-15MB RAM and starting in ~50ms. Virtual machines emulate an entire OS, consuming 2GB+ RAM and taking 3-5 minutes to boot. Containers achieve isolation through namespaces and cgroups, not full OS emulation, making them dramatically faster and more efficient."}}, {"@type": "Question", "name": "What are Docker layers and why do they matter?", "acceptedAnswer": {"@type": "Answer", "text": "Each instruction in a Dockerfile creates an immutable layer. Docker caches layers, so rebuilding an image reuses unchanged layers instantly. If only your code changed, Docker rebuilds only that layer instead of re-running all previous steps, saving minutes of build time on large projects."}}, {"@type": "Question", "name": "How do containers on the same host communicate with each other?", "acceptedAnswer": {"@type": "Answer", "text": "Docker creates a bridge network where each container gets an internal IP. Containers reach each other by service name (e.g., a web app container can call &#x27;postgres:5432&#x27; to reach a database container). The Docker daemon handles name resolution automatically, so you never need to know IPs."}}, {"@type": "Question", "name": "Can I run Docker on Windows or Mac?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Docker Desktop for Windows and Mac includes a lightweight Linux VM that runs the Docker Engine. On Windows 10/11, you can also use WSL 2 (Windows Subsystem for Linux 2) for native Linux integration. On Linux, Docker runs directly without a VM, making it slightly faster."}}, {"@type": "Question", "name": "What&#x27;s the difference between Docker and Kubernetes?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containerizes single applications; Kubernetes orchestrates hundreds of containers across multiple servers. Docker is about packaging, Kubernetes is about managing at scale. Most teams use Docker containers inside Kubernetes clusters, so they complement each other."}}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://itvedas.com"}, {"@type": "ListItem", "position": 2, "name": "DevOps", "item": "https://itvedas.com/articles/devops/"}, {"@type": "ListItem", "position": 3, "name": "How Docker Works: Architecture & Containers", "item": "https://itvedas.com/articles/devops/docker-works-architecture-containers.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.itvedas.com"}, {"@type": "ListItem", "position": 2, "name": "DevOps", "item": "https://www.itvedas.com/articles/devops/"}, {"@type": "ListItem", "position": 3, "name": "How Docker Works: Architecture & Containers", "item": "https://www.itvedas.com/articles/devops/docker-works-architecture-containers.html"}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -111,7 +111,8 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://itvedas.com/assets/logo.svg"}}}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://itvedas.com/assets/logo.svg"}}}</script></head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -126,7 +127,19 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 <div class="hero">
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/devops/">DevOps</a> › How Docker Works: Architecture &amp; Containers</div>
   <div class="ch-badge">⚙️ DevOps</div>
-  <h1>How Docker Works: Architecture &amp; Containers</h1>
+  <h1>How Docker Works: Architecture &amp; Containers</h1><!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
+<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
+<li><a href="/">Home</a></li>
+<li>/</li>
+<li><a href="/articles/">Articles</a></li>
+<li>/</li>
+<li><a href="/articles/devops/">Devops</a></li>
+<li>/</li>
+<li>2026 07 03 Docker Works Architecture Containers</li>
+</ol>
+</nav>
+
   <div class="hero-meta"><span class="pub-date">📅 July 03, 2026</span><span class="new-badge">NEW</span><span>7 min read</span><span>ITVedas</span></div>
   <p class="intro">&lt;p&gt;Docker packages your entire application—code, libraries, settings—into a lightweight container that runs identically on any computer. Since Docker launched in 2013, over 13 million developers have adopted it because containers solve a massive problem: &quot;it works on my laptop but breaks on the server.&quot; This guide explains the architecture behind containers without assuming you know what a kernel is.&lt;/p&gt;</p>
 </div>
@@ -184,7 +197,12 @@ CMD ["python", "app.py"]</code></pre><p>Breaking this down:</p><ul><li><strong>F
       <a href="/articles/devops/"><div class="label">← Chapter</div>⚙️ DevOps</a>
       <a href="/#chapters"><div class="label">Explore →</div>All Chapters</a>
     </div>
-  </article>
+  <!-- Category Context -->
+<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
+<strong>Category:</strong> <a href="/articles/devops/" style="color:#0066cc;">Devops</a>
+<br/><small>Browse more articles and resources in this category</small>
+</div>
+</article>
   <aside class="toc">
     <h3>Contents</h3>
     <ol><li><a href="#what-is-a-container-start-here">What Is a Container? Start Here.</a></li>

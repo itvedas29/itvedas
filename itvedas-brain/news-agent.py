@@ -435,7 +435,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/news/archive/">Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-in">
@@ -453,7 +453,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
 </footer>
 <script>
@@ -468,6 +468,8 @@ function f(t){{
 }}
 document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
 </body>
 </html>"""
 
@@ -590,7 +592,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html" class="active" style="color:#10B981">🛡️ Security</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html" class="active" style="color:#10B981">🛡️ Security</a><a href="/news/archive/">Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-in">
@@ -614,7 +616,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">All News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">All News</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
 </footer>
 <script>
@@ -629,6 +631,8 @@ function f(t){{
 }}
 document.querySelectorAll('#filters .fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
 </body>
 </html>"""
 

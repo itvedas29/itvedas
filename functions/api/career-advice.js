@@ -30,10 +30,16 @@ export async function onRequestPost(context) {
   // Basic origin check — not a security boundary, just reduces casual abuse
   // from random hotlinking. Update this to your actual domain.
   const origin = request.headers.get("Origin") || "";
-  const allowedOrigins = ["https://itvedas.com", "https://www.itvedas.com"];
-  // Allow localhost during local dev/testing
-  const isDev = origin.includes("localhost") || origin.includes("127.0.0.1");
-  if (origin && !allowedOrigins.includes(origin) && !isDev) {
+  const allowedOrigins = [
+    "https://itvedas.com",
+    "https://www.itvedas.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+  ];
+
+  if (origin && !allowedOrigins.includes(origin)) {
     return jsonResponse({ error: "Origin not allowed" }, 403);
   }
 

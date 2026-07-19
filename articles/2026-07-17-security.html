@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn what two factor authentication is and how it protects your accounts. Simple steps to enable it on Gmail, WhatsApp, and more.">
+<meta name="keywords" content="what is two factor authentication and how it works, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What Is Two Factor Authentication and How It Works: A Beginner&#x27;s Guide | ITVedas">
+<meta property="og:description" content="Learn what two factor authentication is and how it protects your accounts. Simple steps to enable it on Gmail, WhatsApp, and more.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://itvedas.com/articles/2026-07-17-security.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://itvedas.com/articles/2026-07-17-security.html">
+<title>What Is Two Factor Authentication and How It Works: A Beginner&#x27;s Guide | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "What Is Two Factor Authentication and How It Works: A Beginner's Guide", "description": "Learn what two factor authentication is and how it protects your accounts. Simple steps to enable it on Gmail, WhatsApp, and more.", "keywords": "what is two factor authentication and how it works", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}, "datePublished": "2026-07-17", "dateModified": "2026-07-17", "articleSection": "Security", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-17</span>
+    
+    <span class="badge-info">⏱ 7 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>What Is Two Factor Authentication and How It Works: A Beginner&#x27;s Guide</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-two-factor-authentication">What Is Two Factor Authentication?</a></li><li><a href="#how-does-two-factor-authentication-work">How Does Two Factor Authentication Work?</a></li><li><a href="#the-three-main-types-of-two-factor-authentication">The Three Main Types of Two Factor Authentication</a></li><li><a href="#why-two-factor-authentication-matters-to-you">Why Two Factor Authentication Matters to You</a></li><li><a href="#a-real-world-example-protecting-your-gmail-account">A Real-World Example: Protecting Your Gmail Account</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#how-to-enable-two-factor-authentication-right-now">How to Enable Two Factor Authentication Right Now</a></li><li><a href="#conclusion-your-digital-safety-starts-today">Conclusion: Your Digital Safety Starts Today</a></li></ul></div>
+<h1>What Is Two Factor Authentication and How It Works: A Beginner's Guide</h1>
+
+<p>Your password is like a key to your house. But what if someone copies that key? <strong>Two factor authentication (2FA)</strong> is your second lock—making it nearly impossible for hackers to break in, even with your password. It's the security tool that protects Netflix, Google, Amazon, and WhatsApp accounts daily.</p>
+
+<p>In today's world, using just a password isn't enough anymore. Hackers steal millions of passwords every year through data breaches and phishing tricks. Two factor authentication adds a second verification step that only you can complete. This article will show you exactly how it works and why you need it.</p>
+
+<h2 id="what-is-two-factor-authentication">What Is Two Factor Authentication?</h2>
+
+<p><strong>Two factor authentication</strong> means proving your identity in two different ways before accessing your account. Instead of just typing a password, you'll need a second piece of proof that only you have.</p>
+
+<blockquote>
+<p><strong>Real-world analogy:</strong> Imagine entering a bank. The security guard checks your ID card (first factor: password). Then they ask you to answer a secret question only you know (second factor: verification code). Both checks together prove you're really you.</p>
+</blockquote>
+
+<p>The two factors work like this:</p>
+
+<ul>
+<li><strong>First factor:</strong> Something you know (your password)</li>
+<li><strong>Second factor:</strong> Something you have (your phone) or something you are (your fingerprint)</li>
+</ul>
+
+<p>In simple terms: Password alone isn't enough. You need password PLUS something else you control.</p>
+
+<h2 id="how-does-two-factor-authentication-work">How Does Two Factor Authentication Work?</h2>
+
+<p>Let's walk through what happens when you log into Gmail with two factor authentication enabled:</p>
+
+<ol>
+<li><strong>You visit Gmail and enter your email address.</strong> You type the address where your account lives.</li>
+<li><strong>You enter your password (first factor).</strong> This is something only you should know.</li>
+<li><strong>Google checks your password is correct.</strong> If wrong, access stops here. If right, it continues.</li>
+<li><strong>Google sends a verification code to your phone.</strong> You receive a text message (SMS) or notification in an app like Google Authenticator.</li>
+<li><strong>You check your phone and read the code.</strong> The code is usually 6 numbers that change every 30 seconds.</li>
+<li><strong>You type the code into the login screen.</strong> This code proves you have your phone with you right now.</li>
+<li><strong>Google verifies the code matches.</strong> If correct, you're logged in. If wrong, access is denied.</li>
+</ol>
+
+<p>In simple terms: Password gets you partway. Your phone completes the journey.</p>
+
+<h2 id="the-three-main-types-of-two-factor-authentication">The Three Main Types of Two Factor Authentication</h2>
+
+<p>Not all 2FA methods are the same. Here are the three most common types:</p>
+
+<h3>1. SMS Text Messages (Most Common)</h3>
+
+<p>Google sends a code via text to your phone number. It's the easiest method because everyone has a phone. But it's less secure because hackers can sometimes intercept texts.</p>
+
+<h3>2. Authenticator Apps (Most Secure)</h3>
+
+<p>Apps like <code>Google Authenticator</code>, <code>Microsoft Authenticator</code>, or <code>Authy</code> generate codes on your phone. These codes only exist on your device, making them much harder to steal than text messages. Hackers would need to physically take your phone.</p>
+
+<h3>3. Security Keys (Most Advanced)</h3>
+
+<p>A security key is a small USB device (looks like a car key) that you plug into your computer. It's the safest option because it cannot be hacked remotely. Only large companies and tech-savvy people use this.</p>
+
+<p>In simple terms: SMS = easiest, Authenticator apps = better security, Security keys = best protection.</p>
+
+<h2 id="why-two-factor-authentication-matters-to-you">Why Two Factor Authentication Matters to You</h2>
+
+<p>Imagine this scenario: A hacker buys your email password from a data breach for $5 on the dark web. They try logging into your Gmail. Without 2FA, they're instantly inside. They reset your password, lock you out forever, and steal your photos, contacts, and financial information.</p>
+
+<p>Now with 2FA enabled: They enter your password, but Gmail demands a verification code. The hacker doesn't have your phone. They cannot proceed. Your account stays safe.</p>
+
+<p><strong>Real-world impact for you:</strong></p>
+
+<ul>
+<li>Your email contains passwords to Netflix, Amazon, and bank accounts. Protect it with 2FA.</li>
+<li>Your social media (Facebook, Instagram) can be used to impersonate you. Add 2FA now.</li>
+<li>Your WhatsApp contains private messages with loved ones. Hackers could take over and message your contacts pretending to be you.</li>
+<li>Your Google account is a master key to your entire digital life. If compromised, everything is at risk.</li>
+</ul>
+
+<p>In simple terms: Without 2FA, one stolen password loses everything. With 2FA, you sleep soundly.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Enable 2FA on your Google, Facebook, and email accounts first. These three protect everything else you own online. Do it today—it takes 5 minutes and saves you endless trouble tomorrow.</p>
+</div>
+
+<h2 id="a-real-world-example-protecting-your-gmail-account">A Real-World Example: Protecting Your Gmail Account</h2>
+
+<p>Let's walk through exactly how to understand 2FA using Gmail, which 1.8 billion people use:</p>
+
+<p><strong>Before 2FA was enabled:</strong></p>
+
+<ol>
+<li>You visit gmail.com</li>
+<li>You type: <code>yourname@gmail.com</code></li>
+<li>You type your password</li>
+<li>You're instantly logged in (if password was correct)</li>
+</ol>
+
+<p><strong>After 2FA is enabled:</strong></p>
+
+<ol>
+<li>You visit gmail.com</li>
+<li>You type: <code>yourname@gmail.com</code></li>
+<li>You type your password</li>
+<li>Google says: "Is it really you? Check your phone for a verification code."</li>
+<li>Your phone buzzes. You open Google Authenticator app (or text message).</li>
+<li>You see: <code>482957</code></li>
+<li>You type this number into the login screen</li>
+<li>Google confirms: "Yes, it's really you!" and lets you in</li>
+</ol>
+
+<p><strong>What changed?</strong> An extra 15 seconds of proof. Huge security gain.</p>
+
+<p>Now imagine a hacker tries to log in instead:</p>
+
+<ol>
+<li>Hacker types your email: <code>yourname@gmail.com</code></li>
+<li>Hacker types your password (stolen from a breach)</li>
+<li>Google says: "Is it really you? Check your phone for a verification code."</li>
+<li>Hacker's phone doesn't buzz. They don't have your phone.</li>
+<li>Hacker cannot guess the code (it changes every 30 seconds)</li>
+<li>Google blocks the login</li>
+<li>You receive a notification: "Someone tried logging into your account"</li>
+</ol>
+
+<p>In simple terms: Your phone is your bodyguard at the door of your account.</p>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<h3>Mistake #1: Not Saving Your Backup Codes</h3>
+
+<p><strong>What happens:</strong> When you enable 2FA, Google gives you 8 backup codes. If you lose your phone, these codes are your only way back in. Most people ignore them. Then they lose their phone and cannot access their account for weeks.</p>
+
+<p><strong>How to fix it:</strong> Screenshot the codes. Write them on paper. Store them in a safe place at home (not in your phone). Print them and put them in a drawer.</p>
+
+<h3>Mistake #2: Using SMS Instead of Authenticator Apps</h3>
+
+<p><strong>What happens:</strong> SMS text messages are convenient but can be intercepted by skilled hackers. Law enforcement agencies have even hacked SMS codes to access suspects' accounts.</p>
+
+<p><strong>How to fix it:</strong> Download Google Authenticator (free app). Use it instead of SMS. It takes 3 seconds to open and copy the code.</p>
+
+<h3>Mistake #3: Only Protecting Your Email, Not Your Apps</h3>
+
+<p><strong>What happens:</strong> You enable 2FA on Gmail but not on Netflix, Instagram, or Amazon. A hacker accesses these accounts and changes your payment method.</p>
+
+<p><strong>How to fix it:</strong> Enable 2FA on every account that matters: email, social media, banking, shopping, and streaming services. Start with the top 5 today.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Q1: Does Two Factor Authentication slow down my login?</h3>
+
+<p><strong>A:</strong> Only by 10-20 seconds. You open your Authenticator app, see the 6-digit code, and type it. Takes less time than checking voicemail. The tiny inconvenience is worth the massive security gain.</p>
+
+<h3>Q2: What happens if I lose my phone?</h3>
+
+<p><strong>A:</strong> This is why backup codes exist. If you saved your 8 backup codes when enabling 2FA, you can use one to log in from a different device. Then disable 2FA temporarily until you get a new phone. Never skip saving backup codes.</p>
+
+<h3>Q3: Can hackers guess my six-digit code?</h3>
+
+<p><strong>A:</strong> Technically possible but practically impossible. The code changes every 30 seconds and lives only on your phone. To guess it, a hacker would need to try 1 million combinations in 30 seconds while also trying to log in (most sites block after 3 wrong attempts). It's like guessing a lottery number 100 times in a row.</p>
+
+<h2 id="how-to-enable-two-factor-authentication-right-now">How to Enable Two Factor Authentication Right Now</h2>
+
+<p><strong>For Gmail (protects everything):</strong></p>
+
+<ol>
+<li>Visit: <code>myaccount.google.com</code></li>
+<li>Click "Security" on the left side</li>
+<li>Scroll to "How you sign in to Google"</li>
+<li>Click "2-Step Verification"</li>
+<li>Follow the steps (takes 3 minutes)</li>
+<li>Choose Authenticator app, not SMS</li>
+<li>Save your backup codes</li>
+</ol>
+
+<p><strong>For WhatsApp:</strong></p>
+
+<ol>
+<li>Open WhatsApp</li>
+<li>Tap Settings (bottom right)</li>
+<li>Tap Account</li>
+<li>Tap Two-Step Verification</li>
+<li>Create a 6-digit PIN</li>
+<li>Save it somewhere safe</li>
+</ol>
+
+<p><strong>For Facebook:</strong></p>
+
+<ol>
+<li>Visit: <code>facebook.com</code></li>
+<li>Click the menu (top right)</li>
+<li>Click Settings & privacy</li>
+<li>Click Settings</li>
+<li>Click Security and login</li>
+<li>Click "Use two-factor authentication"</li>
+<li>Choose your method (Authenticator or SMS)</li>
+</ol>
+
+<h2 id="conclusion-your-digital-safety-starts-today">Conclusion: Your Digital Safety Starts Today</h2>
+
+<p>Two factor authentication isn't complicated—it's just one extra step. A text message or a code from your phone. That single step transforms your account from vulnerable to nearly bulletproof. Hackers move on to easier targets. You keep your photos, messages, money, and identity safe.</p>
+
+<p>The best time to enable 2FA was yesterday. The second best time is right now. Go to Gmail, WhatsApp, and Facebook today. Enable two factor authentication on each one. Save your backup codes. Spend 15 minutes now and protect yourself for years to come. Your future self will thank you.</p>
+
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-two-factor-authentication">What Is Two Factor Authentication?</a></li><li><a href="#how-does-two-factor-authentication-work">How Does Two Factor Authentication Work?</a></li><li><a href="#the-three-main-types-of-two-factor-authentication">The Three Main Types of Two Factor Authentication</a></li><li><a href="#why-two-factor-authentication-matters-to-you">Why Two Factor Authentication Matters to You</a></li><li><a href="#a-real-world-example-protecting-your-gmail-account">A Real-World Example: Protecting Your Gmail Account</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#how-to-enable-two-factor-authentication-right-now">How to Enable Two Factor Authentication Right Now</a></li><li><a href="#conclusion-your-digital-safety-starts-today">Conclusion: Your Digital Safety Starts Today</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

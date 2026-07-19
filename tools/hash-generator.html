@@ -7,9 +7,9 @@
 <meta property="og:title" content="Hash Generator | IT Vedas">
 <meta property="og:description" content="Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://itvedas.com/tools/hash-generator.html">>
+<meta property="og:url" content="https://www.itvedas.com/tools/hash-generator.html">>
   <title>Hash Generator | IT Vedas</title>
-<link rel="canonical" href="https://itvedas.com/tools/hash-generator.html">
+<link rel="canonical" href="https://www.itvedas.com/tools/hash-generator.html">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -112,8 +112,8 @@
     <div class="input-section">
       <textarea id="input" placeholder="Enter text to hash..."></textarea>
       <div class="hash-options">
-        <button onclick="generateHashes()">Generate Hashes</button>
-        <button onclick="clearAll()" style="background:transparent;border:1px solid rgba(16,185,129,0.4);color:#10B981;">Clear</button>
+        <button data-onclick="generateHashes" class="handler-generateHashes">Generate Hashes</button>
+        <button data-onclick="clearAll" class="handler-clearAll" style="background:transparent;border:1px solid rgba(16,185,129,0.4);color:#10B981;">Clear</button>
       </div>
     </div>
 
@@ -121,22 +121,22 @@
       <div class="hash-item">
         <div class="hash-name">MD5:</div>
         <div class="hash-value" id="md5">-</div>
-        <button class="copy-btn" onclick="copyHash('md5')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="md5" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA1:</div>
         <div class="hash-value" id="sha1">-</div>
-        <button class="copy-btn" onclick="copyHash('sha1')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha1" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA256:</div>
         <div class="hash-value" id="sha256">-</div>
-        <button class="copy-btn" onclick="copyHash('sha256')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha256" class="handler-copyHash">Copy</button>
       </div>
       <div class="hash-item">
         <div class="hash-name">SHA512:</div>
         <div class="hash-value" id="sha512">-</div>
-        <button class="copy-btn" onclick="copyHash('sha512')">Copy</button>
+        <button class="copy-btn" data-onclick="copyHash" data-arg="sha512" class="handler-copyHash">Copy</button>
       </div>
     </div>
   </div>
@@ -168,5 +168,18 @@
       document.getElementById('results').style.display = 'none';
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Hash Generator | IT Vedas",
+  "description": "Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.",
+  "url": "https://www.itvedas.com/tools/hash-generator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
 </body>
 </html>

@@ -1,13 +1,27 @@
 name: Publish Article Every 2 Hours
 
+# DISABLED 2026-07-17: audit found this workflow has never successfully
+# published anything. Its own itvedas-brain/publisher.log shows every
+# recorded run failing with "ERROR: ANTHROPIC_API_KEY not set", and
+# articles/auto-generated/ has zero files in the repo's entire commit
+# history despite dozens of scheduled runs. A prior fix attempt
+# (commit 2191eb9, "Add API key verification step to debug workflow
+# failures") didn't resolve it. This pipeline is also functionally
+# redundant with itvedas-brain/news-agent.py, which runs hourly via
+# write-article.yml and IS publishing successfully.
+#
+# Before re-enabling the schedule below: confirm ANTHROPIC_API_KEY is
+# set in Settings -> Secrets and variables -> Actions for this repo,
+# then run this workflow manually via workflow_dispatch and check that
+# a file actually lands in articles/auto-generated/ and gets committed.
 on:
-  schedule:
-    # Run every 2 hours: 12 times per day
-    # IST = UTC + 5:30, so for 12:00 PM IST, use 6:30 UTC
-    # Schedule: 6:30, 8:30, 10:30 AM IST onwards
-    - cron: '30 6,8,10,12,14,16,18,20,22,0,2,4 * * *'
+  # schedule:
+  #   # Run every 2 hours: 12 times per day
+  #   # IST = UTC + 5:30, so for 12:00 PM IST, use 6:30 UTC
+  #   # Schedule: 6:30, 8:30, 10:30 AM IST onwards
+  #   - cron: '30 6,8,10,12,14,16,18,20,22,0,2,4 * * *'
 
-  # Allow manual trigger
+  # Allow manual trigger only, for now (see note above)
   workflow_dispatch:
     inputs:
       test_mode:

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI model performance benchmarks. Compare accuracy, speed, and capabilities across models.">
+<title>AI Model Performance Benchmarks | ITVedas</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--border:rgba(255,255,255,0.09);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;}
+.container{max-width:900px;margin:0 auto;padding:2rem;}
+h1{font-size:2.5rem;margin:1.5rem 0;letter-spacing:-0.02em;}
+h2{font-size:1.8rem;margin:2rem 0 1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+p{margin-bottom:1rem;color:var(--muted);}
+.badge{display:inline-block;background:var(--accent);color:#000;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem;}
+.intro-box{background:var(--bg2);border-left:4px solid var(--accent);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+th,td{padding:1rem;text-align:left;border-bottom:1px solid var(--border);}
+th{background:var(--bg3);font-weight:600;}
+.highlight{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid var(--border);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.best{background:rgba(16,185,129,0.1);}
+</style>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AI Model Performance Benchmarks | ITVedas","description":"AI model performance benchmarks. Compare accuracy, speed, and capabilities across models.","image":"https://itvedas.com/assets/og-default.png","datePublished":"2026-07-17T05:48:27.267568","dateModified":"2026-07-17T05:48:27.267568","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://itvedas.com/assets/logo.svg"}}}</script></head>
+<body>
+<div class="container">
+<nav style="margin-bottom:2rem;font-size:0.9rem;">
+<a href="/" style="color:var(--accent);text-decoration:none;">Home</a> / <a href="/articles/ai-models/" style="color:var(--accent);text-decoration:none;">AI Models</a> / Benchmarks
+</nav>
+
+<div class="badge">Performance</div>
+<h1>AI Model Performance Benchmarks</h1>
+
+<div class="intro-box">
+<strong>📊 Overview:</strong> Compare frontier models across standardized benchmarks. Data from official sources and independent evaluations.
+</div>
+
+<h2>Reasoning & Knowledge (MMLU)</h2>
+
+<p><strong>MMLU (Massive Multitask Language Understanding):</strong> Tests knowledge across 57 domains. Higher is better.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>MMLU Score</th>
+<th>Training Cutoff</th>
+</tr>
+<tr class="best">
+<td><strong>GPT-4o</strong></td>
+<td>92.3%</td>
+<td>April 2024</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>88.3%</td>
+<td>Late 2024</td>
+</tr>
+<tr>
+<td>Mistral Large 2</td>
+<td>84.4%</td>
+<td>Q2 2024</td>
+</tr>
+<tr>
+<td>Deepseek-V3</td>
+<td>88.5%</td>
+<td>Q2 2024</td>
+</tr>
+<tr>
+<td>Llama 3.1 70B</td>
+<td>85.2%</td>
+<td>April 2024</td>
+</tr>
+<tr>
+<td>Gemini 2.0 Flash</td>
+<td>85.9%</td>
+<td>April 2024</td>
+</tr>
+</table>
+
+<h2>Mathematics (GSM-8K)</h2>
+
+<p><strong>GSM-8K:</strong> Grade school math problems. Tests mathematical reasoning.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>GSM-8K Score</th>
+<th>Advanced Math (AIME)</th>
+</tr>
+<tr class="best">
+<td><strong>GPT-4o</strong></td>
+<td>97.1%</td>
+<td>80.7%</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>96.5%</td>
+<td>71.3%</td>
+</tr>
+<tr>
+<td>Deepseek-V3</td>
+<td>96.0%</td>
+<td>79.4%</td>
+</tr>
+<tr>
+<td>Llama 3.1 70B</td>
+<td>93.0%</td>
+<td>65.7%</td>
+</tr>
+<tr>
+<td>Mistral Large 2</td>
+<td>89.0%</td>
+<td>N/A</td>
+</tr>
+</table>
+
+<h2>Code Generation (HUMANEVAL)</h2>
+
+<p><strong>HUMANEVAL:</strong> Python function implementation. Gold standard for code generation.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>HUMANEVAL Score</th>
+<th>Best Use Case</th>
+</tr>
+<tr class="best">
+<td><strong>Deepseek-V3</strong></td>
+<td>97.3%</td>
+<td>Code generation specialist</td>
+</tr>
+<tr>
+<td>GPT-4o</td>
+<td>92.3%</td>
+<td>Reliable production code</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>92.1%</td>
+<td>Complex refactoring, architecture</td>
+</tr>
+<tr>
+<td>Mistral Large 2</td>
+<td>91.0%</td>
+<td>Efficient code generation</td>
+</tr>
+<tr>
+<td>Llama 3.1 70B</td>
+<td>85.9%</td>
+<td>Open-source option</td>
+</tr>
+</table>
+
+<h2>Long Context Reasoning (NEEDLE-IN-HAYSTACK)</h2>
+
+<p><strong>Needle-in-Haystack:</strong> How well models find relevant info in long documents. Tests context window usage.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>Context Window</th>
+<th>Performance at 80%</th>
+<th>Practical Best Practice</th>
+</tr>
+<tr class="best">
+<td><strong>Gemini 2.0 Flash</strong></td>
+<td>1M tokens</td>
+<td>Excellent</td>
+<td>Analyze entire books/codebases</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>200K tokens</td>
+<td>Excellent</td>
+<td>Long documents, full conversations</td>
+</tr>
+<tr>
+<td>Llama 3.1 70B</td>
+<td>128K tokens</td>
+<td>Very Good</td>
+<td>Extended docs, moderate context</td>
+</tr>
+<tr>
+<td>GPT-4o</td>
+<td>128K tokens</td>
+<td>Very Good</td>
+<td>Production with large context</td>
+</tr>
+<tr>
+<td>Mistral Large 2</td>
+<td>32K tokens</td>
+<td>Good</td>
+<td>Smaller documents, conversations</td>
+</tr>
+</table>
+
+<h2>Latency & Speed Comparison</h2>
+
+<p><strong>Time to First Token (TTFT):</strong> How fast responses start appearing.</p>
+
+<p><strong>Tokens Per Second (TPS):</strong> How fast the model generates output.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>TTFT</th>
+<th>Tokens/Sec</th>
+<th>Rating</th>
+</tr>
+<tr class="best">
+<td><strong>Gemini 2.0 Flash</strong></td>
+<td>&lt;300ms</td>
+<td>&gt;100 t/s</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr class="best">
+<td><strong>GPT-4o</strong></td>
+<td>&lt;500ms</td>
+<td>&gt;80 t/s</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>Mistral Large 2</td>
+<td>&lt;800ms</td>
+<td>&gt;60 t/s</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>&lt;1s</td>
+<td>&gt;50 t/s</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>Llama 3.1 70B</td>
+<td>Variable</td>
+<td>&gt;40 t/s</td>
+<td>⭐⭐⭐</td>
+</tr>
+</table>
+
+<h2>Multimodal Performance</h2>
+
+<p><strong>Image Understanding:</strong> How well models understand visual content.</p>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>Vision</th>
+<th>OCR</th>
+<th>Chart Reading</th>
+<th>Visual Reasoning</th>
+</tr>
+<tr class="best">
+<td><strong>GPT-4o</strong></td>
+<td>Native</td>
+<td>Excellent</td>
+<td>Excellent</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td>Claude 3.5 Sonnet</td>
+<td>Native</td>
+<td>Excellent</td>
+<td>Very Good</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td>Gemini 2.0 Flash</td>
+<td>Native</td>
+<td>Good</td>
+<td>Good</td>
+<td>Very Good</td>
+</tr>
+<tr>
+<td>Grok-2</td>
+<td>Native</td>
+<td>Good</td>
+<td>Good</td>
+<td>Very Good</td>
+</tr>
+<tr>
+<td>Deepseek-V3</td>
+<td>Native</td>
+<td>Good</td>
+<td>Good</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>Llama 3.1 (base)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</table>
+
+<h2>Real-World Benchmark Summary</h2>
+
+<div class="highlight">
+<h3 style="margin-top:0;">⭐ Best Overall (Balanced)</h3>
+<strong>GPT-4o:</strong> Wins on MMLU (92.3%), HUMANEVAL (92.3%), Math (97.1%). Fastest. Best multimodal.
+</div>
+
+<div class="highlight">
+<h3 style="margin-top:0;">⭐ Best for Reasoning</h3>
+<strong>Claude 3.5 Sonnet:</strong> 88.3% MMLU, 96.5% GSM-8K. Excellent at nuance and complex analysis. 200K context.
+</div>
+
+<div class="highlight">
+<h3 style="margin-top:0;">⭐ Best for Code</h3>
+<strong>Deepseek-V3:</strong> 97.3% HUMANEVAL (highest). Perfect for code generation tasks.
+</div>
+
+<div class="highlight">
+<h3 style="margin-top:0;">⭐ Best for Large Context</h3>
+<strong>Gemini 2.0 Flash:</strong> 1M tokens. 75% cheaper than alternatives. Handles massive documents.
+</div>
+
+<div class="highlight">
+<h3 style="margin-top:0;">⭐ Best for Speed</h3>
+<strong>Gemini 2.0 Flash or GPT-4o:</strong> Both sub-500ms TTFT. Gemini fastest overall.
+</div>
+
+<h2>Benchmark Methodology</h2>
+
+<p><strong>Important Notes:</strong></p>
+
+<p>✓ Benchmarks are snapshots in time. Models improve frequently.<br>
+✓ Different sources may show variations (±2-3%)<br>
+✓ Benchmarks don't always correlate with real-world performance<br>
+✓ Your specific use case may have different winner than average<br>
+✓ Test with your actual data to validate model choice</p>
+
+<h2>When to Trust These Numbers</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Benchmark</th>
+<th>Useful For</th>
+<th>Not Useful For</th>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td>MMLU</td>
+<td>General knowledge, factual accuracy</td>
+<td>Creative writing, specific domains</td>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td>HUMANEVAL</td>
+<td>Code generation quality</td>
+<td>Code understanding, debugging, architecture</td>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td>GSM-8K</td>
+<td>Mathematical reasoning</td>
+<td>Real-world problem solving with ambiguity</td>
+</tr>
+<tr style="border-bottom:1px solid var(--border);">
+<td>Latency</td>
+<td>Relative speed comparison</td>
+<td>Actual deployment performance (varies with load)</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Maximum document size</td>
+<td>Practical retrieval accuracy (quality matters more)</td>
+</tr>
+</table>
+
+<p style="margin-top:2rem;text-align:center;">
+<a href="/articles/ai-models/" style="background:var(--accent);color:#000;padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;display:inline-block;">← Back to All Models</a>
+</p>
+</div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI Model Performance Benchmarks | ITVedas",
+  "description": "AI model performance benchmarks. Compare accuracy, speed, and capabilities across models.",
+  "url": "https://www.itvedas.com/articles/ai-models/performance-benchmarks.html",
+  "author": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "url": "https://www.itvedas.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.itvedas.com/logo.png"
+    }
+  },
+  "datePublished": "2026-07-17T00:00:00Z",
+  "dateModified": "2026-07-17T04:44:33.043866"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.itvedas.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://www.itvedas.com/articles"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Ai Models",
+      "item": "https://www.itvedas.com/articles/ai-models"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "AI Model Performance Benchmarks | ITVedas",
+      "item": "https://www.itvedas.com/articles/ai-models/performance-benchmarks.html"
+    }
+  ]
+}
+</script>
+</body>
+</html>

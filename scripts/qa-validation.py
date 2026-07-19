@@ -85,16 +85,20 @@ def validate_articles():
     try:
         import json
         with open('search-index.json', 'r') as f:
-            index = json.load(f)
+            raw_index = json.load(f)
 
-        if len(index) >= 419:
-            print(f"  ✓ Search index has {len(index)} entries")
+        # search-index.json is an object like {"version", "generated", "pages": [...]}.
+        # Support both that shape and a bare list, in case the format changes again.
+        pages = raw_index.get('pages', []) if isinstance(raw_index, dict) else raw_index
+
+        if len(pages) >= 419:
+            print(f"  ✓ Search index has {len(pages)} entries")
         else:
-            issues['warnings'].append(f"Search index has only {len(index)} entries (expected 419+)")
+            issues['warnings'].append(f"Search index has only {len(pages)} entries (expected 419+)")
 
         # Check for new article entries
         new_titles = ['Azure Virtual Machines', 'SQL Server Editions', 'IIS Installation']
-        found = sum(1 for entry in index if any(title in entry.get('title', '') for title in new_titles))
+        found = sum(1 for entry in pages if any(title in entry.get('title', '') for title in new_titles))
         if found >= 3:
             print(f"  ✓ New articles indexed ({found} samples)")
         else:

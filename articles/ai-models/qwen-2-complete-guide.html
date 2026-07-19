@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete guide to Qwen 2 by Alibaba. Features, capabilities, performance, and deployment options.">
+<title>Qwen 2: Complete Guide | ITVedas</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--border:rgba(255,255,255,0.09);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;}
+.container{max-width:900px;margin:0 auto;padding:2rem;}
+h1{font-size:2.5rem;margin:1.5rem 0;letter-spacing:-0.02em;}
+h2{font-size:1.8rem;margin:2rem 0 1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+p{margin-bottom:1rem;color:var(--muted);}
+.badge{display:inline-block;background:var(--accent);color:#000;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem;}
+.intro-box{background:var(--bg2);border-left:4px solid var(--accent);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+.spec-item{background:var(--bg2);padding:1rem;border-radius:8px;text-align:center;border:1px solid var(--border);}
+.spec-item strong{display:block;color:var(--accent);font-size:1.3rem;margin-bottom:0.5rem;}
+.spec-item span{font-size:0.85rem;color:var(--muted);}
+.highlight{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid var(--border);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+th,td{padding:1rem;text-align:left;border-bottom:1px solid var(--border);}
+th{background:var(--bg3);font-weight:600;}
+</style>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Qwen 2: Complete Guide | ITVedas","description":"Complete guide to Qwen 2 by Alibaba. Features, capabilities, performance, and deployment options.","image":"https://itvedas.com/assets/og-default.png","datePublished":"2026-07-17T05:48:27.269720","dateModified":"2026-07-17T05:48:27.269720","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://itvedas.com/assets/logo.svg"}}}</script></head>
+<body>
+<div class="container">
+<nav style="margin-bottom:2rem;font-size:0.9rem;">
+<a href="/" style="color:var(--accent);text-decoration:none;">Home</a> / <a href="/articles/ai-models/" style="color:var(--accent);text-decoration:none;">AI Models</a> / Qwen 2
+</nav>
+
+<div class="badge">Open Source • Alibaba</div>
+<h1>Qwen 2: Complete Guide</h1>
+
+<div class="intro-box">
+<strong>🎯 Overview:</strong> Qwen 2 is Alibaba Cloud's high-performance open-source language model with strong multilingual capabilities and excellent code generation. Available in multiple sizes (0.5B to 72B parameters).
+</div>
+
+<h2>Model Variants</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Model</th>
+<th>Parameters</th>
+<th>Context</th>
+<th>Best For</th>
+<th>Requirements</th>
+</tr>
+<tr>
+<td><strong>Qwen 2 0.5B</strong></td>
+<td>500M</td>
+<td>128K</td>
+<td>Mobile, edge devices</td>
+<td>≥1GB RAM</td>
+</tr>
+<tr>
+<td><strong>Qwen 2 1.5B</strong></td>
+<td>1.5B</td>
+<td>128K</td>
+<td>Resource-constrained</td>
+<td>≥4GB RAM</td>
+</tr>
+<tr>
+<td><strong>Qwen 2 7B</strong></td>
+<td>7B</td>
+<td>128K</td>
+<td>Local deployment</td>
+<td>≥8GB VRAM</td>
+</tr>
+<tr>
+<td><strong>Qwen 2 32B</strong></td>
+<td>32B</td>
+<td>128K</td>
+<td>Production quality</td>
+<td>≥32GB VRAM</td>
+</tr>
+<tr>
+<td><strong>Qwen 2 72B</strong></td>
+<td>72B</td>
+<td>128K</td>
+<td>Frontier quality</td>
+<td>2x A100 80GB or equiv.</td>
+</tr>
+</table>
+
+<h2>Key Strengths</h2>
+
+<div style="display:grid;gap:1rem;margin:1.5rem 0;">
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Multilingual Excellence:</strong> Native support for 30+ languages including Chinese, English, Hindi, Spanish, French. Best multilingual open-source model.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Code Generation:</strong> Strong performance on programming tasks. Supports 100+ programming languages. Excellent code understanding and generation.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Long Context:</strong> 128K token context window. Process entire documents, codebases, and conversations in one request.
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid #10B981;">
+<strong style="color:#10B981;">✓ Apache 2.0 License:</strong> Fully open-source with permissive license. Commercial use allowed. No restrictions on deployment or customization.
+</div>
+</div>
+
+<h2>Technical Specifications</h2>
+
+<div class="highlight">
+<strong>License:</strong> Apache 2.0 (fully open, commercial use allowed)<br>
+<strong>Training Data:</strong> Updated through September 2024<br>
+<strong>Context Window:</strong> 128,000 tokens<br>
+<strong>Languages Supported:</strong> 30+ languages (Chinese, English, Hindi, Spanish, French, German, Portuguese, Japanese, Korean, Thai, Arabic, Vietnamese, and more)<br>
+<strong>Code Support:</strong> 100+ programming languages<br>
+<strong>Quantization Support:</strong> GGML, GPTQ, AWQ, INT8<br>
+<strong>Deployment Options:</strong> Ollama, vLLM, Text Generation WebUI, Hugging Face
+</div>
+
+<h2>Performance Benchmarks</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Benchmark</th>
+<th>Qwen 2 72B</th>
+<th>Llama 3.1 70B</th>
+<th>Mistral Large 2</th>
+</tr>
+<tr>
+<td>MMLU (Knowledge)</td>
+<td>83.4%</td>
+<td>85.2%</td>
+<td>84.4%</td>
+</tr>
+<tr>
+<td>GSM-8K (Math)</td>
+<td>82.0%</td>
+<td>93.0%</td>
+<td>89.0%</td>
+</tr>
+<tr>
+<td>HUMANEVAL (Code)</td>
+<td>80.5%</td>
+<td>85.9%</td>
+<td>91.0%</td>
+</tr>
+<tr>
+<td>Chinese MMLU</td>
+<td>93.8%</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Multilingual</td>
+<td>Best</td>
+<td>Good</td>
+<td>Good</td>
+</tr>
+</table>
+
+<h2>Best Use Cases</h2>
+
+<div style="display:grid;gap:1rem;margin:1.5rem 0;">
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">🌍 Multilingual Applications</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Global content, translation, multilingual chatbots supporting 30+ languages</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">📱 Edge Deployment</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Mobile apps, IoT devices using smaller variants (0.5B-7B)</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">💻 Code Development</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Code generation, completion, analysis across 100+ programming languages</span>
+</div>
+
+<div style="background:var(--bg2);padding:1rem;border-radius:8px;">
+<strong style="color:var(--accent2);">🏢 Enterprise Deployment</strong><br>
+<span style="font-size:0.9rem;color:var(--muted);">Private on-premise deployment, no API costs, full customization control</span>
+</div>
+</div>
+
+<h2>Quick Start: Running Qwen 2</h2>
+
+<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.5rem 0;font-family:monospace;font-size:0.85rem;color:#06B6D4;overflow-x:auto;">
+# Using Ollama (easiest)<br>
+ollama run qwen:7b<br>
+<br>
+# Using vLLM<br>
+python -m vllm.entrypoints.openai.api_server \<br>
+  --model Qwen/Qwen2-72B-Instruct \<br>
+  --tensor-parallel-size 2<br>
+<br>
+# Using Hugging Face Transformers<br>
+from transformers import AutoModelForCausalLM, AutoTokenizer<br>
+model_name = "Qwen/Qwen2-72B-Instruct"<br>
+tokenizer = AutoTokenizer.from_pretrained(model_name)<br>
+model = AutoModelForCausalLM.from_pretrained(<br>
+    model_name,<br>
+    torch_dtype="auto",<br>
+    device_map="auto"<br>
+)
+</div>
+
+<h2>Cost Analysis</h2>
+
+<div class="highlight">
+<h3 style="margin-top:0;">Self-Hosted Deployment Costs</h3>
+
+<p><strong>0.5B/1.5B:</strong> Single consumer GPU or CPU inference (~$100-500 one-time)<br>
+<strong>7B:</strong> Single RTX 4090 or RTX 6000 ($1,500-3,000 one-time)<br>
+<strong>32B:</strong> Single A100 80GB ($15,000 one-time) or 2x RTX 4090 ($3,000)<br>
+<strong>72B:</strong> Dual A100 80GB ($30,000 one-time) or multiple RTX 6000</p>
+
+<p><strong>Monthly Infrastructure:</strong><br>
+7B on Runpod: $200-400/month<br>
+32B on Runpod: $1,000-1,500/month<br>
+72B on Runpod: $2,000-3,000/month</p>
+
+<p><strong>Zero Per-Token Costs:</strong> Unlike API-based models, no charges per token. Only infrastructure costs.</p>
+</div>
+
+<h2>Comparison: Qwen 2 vs Alternatives</h2>
+
+<table>
+<tr style="background:var(--bg3);">
+<th>Factor</th>
+<th>Qwen 2 72B</th>
+<th>Llama 3.1 70B</th>
+<th>Mistral 7B</th>
+<th>GPT-4o</th>
+</tr>
+<tr>
+<td>License</td>
+<td>Apache 2.0</td>
+<td>Llama License</td>
+<td>Apache 2.0</td>
+<td>Proprietary</td>
+</tr>
+<tr>
+<td>Multilingual</td>
+<td>Best (30+)</td>
+<td>Good (8)</td>
+<td>Good (8)</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td>Code Gen</td>
+<td>80.5%</td>
+<td>85.9%</td>
+<td>71.2%</td>
+<td>92.3%</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Self-hosted</td>
+<td>Self-hosted</td>
+<td>Self-hosted</td>
+<td>API only</td>
+</tr>
+<tr>
+<td>Cost/Token</td>
+<td>$0 (infra)</td>
+<td>$0 (infra)</td>
+<td>$0 (infra)</td>
+<td>$5-15/MTok</td>
+</tr>
+<tr>
+<td>Reasoning</td>
+<td>Good</td>
+<td>Strong</td>
+<td>Good</td>
+<td>Excellent</td>
+</tr>
+</table>
+
+<h2>Getting Started</h2>
+
+<h3>Option 1: Ollama (Recommended for Beginners)</h3>
+<p>1. Install Ollama from ollama.ai<br>
+2. Run: `ollama run qwen:7b`<br>
+3. Start chatting immediately<br>
+4. No GPU needed for small models</p>
+
+<h3>Option 2: Hugging Face (Recommended for Developers)</h3>
+<p>1. Install transformers: `pip install transformers torch`<br>
+2. Load model with AutoModelForCausalLM<br>
+3. Use standard HuggingFace pipeline<br>
+4. Full control over inference</p>
+
+<h3>Option 3: vLLM (Production Deployment)</h3>
+<p>1. Install vLLM: `pip install vllm`<br>
+2. Configure tensor parallelism for large models<br>
+3. Launch OpenAI-compatible API server<br>
+4. Scale horizontally</p>
+
+<h2>Multilingual Capabilities</h2>
+
+<p><strong>Supported Languages:</strong> English, Chinese (Simplified & Traditional), Japanese, Korean, German, French, Spanish, Italian, Portuguese, Russian, Turkish, Arabic, Hindi, Thai, Vietnamese, and 15+ more</p>
+
+<p><strong>Strength:</strong> Best multilingual open-source model. Excels in translation, multilingual QA, and cross-lingual information retrieval</p>
+
+<p style="margin-top:2rem;text-align:center;">
+<a href="/articles/ai-models/" style="background:var(--accent);color:#000;padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;display:inline-block;">← Back to All Models</a>
+</p>
+</div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Qwen 2: Complete Guide | ITVedas",
+  "description": "Complete guide to Qwen 2 by Alibaba. Features, capabilities, performance, and deployment options.",
+  "url": "https://www.itvedas.com/articles/ai-models/qwen-2-complete-guide.html",
+  "author": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "url": "https://www.itvedas.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.itvedas.com/logo.png"
+    }
+  },
+  "datePublished": "2026-07-17T00:00:00Z",
+  "dateModified": "2026-07-17T04:44:33.047043"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.itvedas.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://www.itvedas.com/articles"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Ai Models",
+      "item": "https://www.itvedas.com/articles/ai-models"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Qwen 2: Complete Guide | ITVedas",
+      "item": "https://www.itvedas.com/articles/ai-models/qwen-2-complete-guide.html"
+    }
+  ]
+}
+</script>
+</body>
+</html>

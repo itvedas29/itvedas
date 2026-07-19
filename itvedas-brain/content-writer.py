@@ -370,7 +370,11 @@ def build_page(content, meta, date_str, modified_date=None, filename=None):
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="article">
 <meta property="og:url" content="{url}">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
 <link rel="canonical" href="{url}">
 <title>{title} | {SITE_NAME}</title>
 <script type="application/ld+json">

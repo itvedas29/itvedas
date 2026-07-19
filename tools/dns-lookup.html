@@ -7,9 +7,9 @@
 <meta property="og:title" content="DNS Lookup | IT Vedas">
 <meta property="og:description" content="DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://itvedas.com/tools/dns-lookup.html">>
+<meta property="og:url" content="https://www.itvedas.com/tools/dns-lookup.html">>
   <title>DNS Lookup | IT Vedas</title>
-<link rel="canonical" href="https://itvedas.com/tools/dns-lookup.html">
+<link rel="canonical" href="https://www.itvedas.com/tools/dns-lookup.html">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -119,14 +119,14 @@
     <div class="search-section">
       <div class="input-group">
         <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
-        <button onclick="lookupDNS()">Lookup</button>
+        <button data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
       </div>
       <div class="record-type-buttons">
-        <button class="record-btn active" onclick="setRecordType('A')">A</button>
-        <button class="record-btn" onclick="setRecordType('AAAA')">AAAA</button>
-        <button class="record-btn" onclick="setRecordType('CNAME')">CNAME</button>
-        <button class="record-btn" onclick="setRecordType('MX')">MX</button>
-        <button class="record-btn" onclick="setRecordType('TXT')">TXT</button>
+        <button class="record-btn active" data-onclick="setRecordType" data-arg="A" class="handler-setRecordType">A</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="AAAA" class="handler-setRecordType">AAAA</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="CNAME" class="handler-setRecordType">CNAME</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="MX" class="handler-setRecordType">MX</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="TXT" class="handler-setRecordType">TXT</button>
       </div>
     </div>
 
@@ -191,5 +191,18 @@
       document.getElementById('results').classList.add('active');
     }
   </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "DNS Lookup | IT Vedas",
+  "description": "DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.",
+  "url": "https://www.itvedas.com/tools/dns-lookup/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
 </body>
 </html>

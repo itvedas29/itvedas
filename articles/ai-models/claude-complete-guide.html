@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete guide to Claude AI models by Anthropic. Covers Claude 3.5 Sonnet, Haiku, capabilities, pricing, API access, and use cases.">
+<meta name="keywords" content="Claude, Anthropic, Claude 3.5, Sonnet, Haiku, LLM, API, capabilities">
+<meta property="og:title" content="Complete Guide to Claude AI Models | ITVedas">
+<meta property="og:type" content="article">
+<title>Claude AI Complete Guide — Capabilities, Pricing, API | ITVedas</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<link rel="canonical" href="https://www.itvedas.com/articles/ai-models/claude-complete-guide/">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--cyan:#06B6D4;--green:#10B981;--border:rgba(255,255,255,0.09);--radius:16px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;}
+.container{max-width:900px;margin:0 auto;padding:2rem;}
+nav{margin-bottom:2rem;font-size:0.9rem;}
+nav a{color:var(--accent);text-decoration:none;}
+h1{font-size:2.5rem;margin:1.5rem 0;letter-spacing:-0.02em;}
+h2{font-size:1.8rem;margin:2rem 0 1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+h3{font-size:1.3rem;margin:1.5rem 0 0.5rem;color:var(--accent2);}
+h4{font-size:1.1rem;margin:1rem 0 0.5rem;color:var(--sub);}
+p{margin-bottom:1rem;color:var(--muted);}
+.intro-box{background:var(--bg2);border-left:4px solid var(--accent);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.intro-box strong{color:var(--text);}
+.specs-table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--bg2);border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.specs-table th{background:var(--bg3);padding:1rem;text-align:left;font-weight:600;border-bottom:1px solid var(--border);}
+.specs-table td{padding:1rem;border-bottom:1px solid var(--border);}
+.specs-table tr:last-child td{border-bottom:none;}
+.feature-list{display:grid;gap:1rem;margin:1.5rem 0;}
+.feature-item{background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid var(--accent2);}
+.feature-item strong{color:var(--accent2);display:block;margin-bottom:0.5rem;}
+.code-block{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;margin:1.5rem 0;font-family:monospace;font-size:0.9rem;color:var(--cyan);}
+.pricing-box{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid var(--border);padding:1.5rem;border-radius:8px;margin:1.5rem 0;}
+.use-case{background:var(--bg2);padding:1rem;border-radius:8px;margin:0.5rem 0;border-left:3px solid var(--green);}
+.use-case strong{color:var(--green);}
+.comparison-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.5rem 0;}
+.comparison-item{background:var(--bg2);padding:1.5rem;border-radius:8px;border:1px solid var(--border);}
+.comparison-item h4{margin-top:0;color:var(--text);}
+.badge{display:inline-block;background:var(--accent);color:#000;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;}
+.toc h3{margin-top:0;color:var(--text);}
+.toc ul{list-style:none;padding:0;}
+.toc li{margin-bottom:0.5rem;}
+.toc a{color:var(--accent);text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
+</style>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Claude AI Complete Guide \u2014 Capabilities, Pricing, API | ITVedas","description":"Complete guide to Claude AI models by Anthropic. Covers Claude 3.5 Sonnet, Haiku, capabilities, pricing, API access, and use cases.","image":"https://itvedas.com/assets/og-default.png","datePublished":"2026-07-17T05:48:27.271181","dateModified":"2026-07-17T05:48:27.271181","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://itvedas.com/assets/logo.svg"}}}</script></head>
+<body>
+<div class="container">
+<nav>
+<a href="/">Home</a> / <a href="/articles/ai-models/">AI Models</a> / Claude
+</nav>
+
+<div class="badge">Updated July 2026</div>
+<h1>Claude AI: Complete Capability & Implementation Guide</h1>
+
+<div class="intro-box">
+<strong>🎯 Overview:</strong> Claude is Anthropic's frontier AI model series, known for exceptional reasoning, long context windows (up to 200K tokens), and strong safety features. Claude 3.5 Sonnet is the most capable version, while Haiku offers speed and efficiency.
+</div>
+
+<div class="toc">
+<h3>📑 Quick Navigation</h3>
+<ul>
+<li><a href="#models-overview">Models Overview</a></li>
+<li><a href="#capabilities">Capabilities & Strengths</a></li>
+<li><a href="#technical-specs">Technical Specifications</a></li>
+<li><a href="#pricing">Pricing & Costs</a></li>
+<li><a href="#api-access">API Access & Setup</a></li>
+<li><a href="#use-cases">Real-World Use Cases</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+</ul>
+</div>
+
+<h2 id="models-overview">Claude Models Overview</h2>
+
+<p>Anthropic offers three Claude 3.5 variants, each optimized for different use cases:</p>
+
+<table class="specs-table">
+<thead>
+<tr>
+<th>Model</th>
+<th>Context</th>
+<th>Speed</th>
+<th>Cost</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude 3.5 Sonnet</strong></td>
+<td>200K tokens</td>
+<td>Fast</td>
+<td>$3-15/MTok</td>
+<td>Reasoning, coding, complex analysis</td>
+</tr>
+<tr>
+<td><strong>Claude 3.5 Haiku</strong></td>
+<td>200K tokens</td>
+<td>Fastest</td>
+<td>$0.80-4/MTok</td>
+<td>Real-time, high-volume, simple tasks</td>
+</tr>
+<tr>
+<td><strong>Claude 3 Opus</strong></td>
+<td>200K tokens</td>
+<td>Slower</td>
+<td>$15-75/MTok</td>
+<td>Complex multi-step reasoning (legacy)</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="capabilities">Core Capabilities & Strengths</h2>
+
+<div class="feature-list">
+<div class="feature-item">
+<strong>✓ Advanced Reasoning</strong>
+Claude excels at multi-step reasoning, logical analysis, and solving complex problems. Particularly strong with step-by-step mathematical reasoning and code architecture decisions.
+</div>
+
+<div class="feature-item">
+<strong>✓ Long Context Window (200K)</strong>
+Analyze entire documents, books, codebases, or long conversations without losing context. Process ~150,000 words in a single request.
+</div>
+
+<div class="feature-item">
+<strong>✓ Code Generation & Review</strong>
+Writes clean, production-ready code. Debugs complex issues, suggests optimizations, and explains architectural decisions.
+</div>
+
+<div class="feature-item">
+<strong>✓ Vision & Image Understanding</strong>
+Analyze charts, diagrams, screenshots, and images. Extract text (OCR), describe visual content, and answer questions about images.
+</div>
+
+<div class="feature-item">
+<strong>✓ Extended Thinking</strong>
+Claude can "think" through problems before responding, leading to better solutions for complex reasoning tasks.
+</div>
+
+<div class="feature-item">
+<strong>✓ Constitutional AI (Safety)</strong>
+Built with safety in mind. Lower tendency to generate harmful content while remaining helpful for legitimate use cases.
+</div>
+</div>
+
+<h2 id="technical-specs">Technical Specifications</h2>
+
+<h3>Claude 3.5 Sonnet (Latest)</h3>
+
+<div class="pricing-box">
+<strong>Model ID:</strong> claude-3-5-sonnet-20241022<br>
+<strong>Context Window:</strong> 200,000 input tokens | 4,096 output tokens<br>
+<strong>Training Data:</strong> Updated to April 2024<br>
+<strong>Vision:</strong> Yes (supports images in JPEG, PNG, GIF, WebP)<br>
+<strong>Max Output:</strong> 4,096 tokens per request<br>
+<strong>Batch Processing:</strong> Supported (24-hour processing, 50% discount)
+</div>
+
+<h3>Performance Benchmarks</h3>
+
+<table class="specs-table">
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>Claude 3.5 Sonnet</th>
+<th>Performance Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MMLU (Knowledge)</td>
+<td>88%</td>
+<td>Excellent (expert human: ~89%)</td>
+</tr>
+<tr>
+<td>Math (MATH dataset)</td>
+<td>92%</td>
+<td>Exceptional reasoning</td>
+</tr>
+<tr>
+<td>Code (HumanEval)</td>
+<td>92.3%</td>
+<td>Best-in-class coding</td>
+</tr>
+<tr>
+<td>Logic & Reasoning</td>
+<td>91%</td>
+<td>Best among available models</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="pricing">Pricing & Cost Optimization</h2>
+
+<h3>Current Pricing (July 2026)</h3>
+
+<div class="pricing-box">
+<h4 style="margin-top:0;">Claude 3.5 Sonnet</h4>
+<strong>Input:</strong> $3.00 per million tokens<br>
+<strong>Output:</strong> $15.00 per million tokens<br>
+<strong>Batch (50% discount):</strong> $1.50 input / $7.50 output<br>
+<br>
+<h4>Claude 3.5 Haiku</h4>
+<strong>Input:</strong> $0.80 per million tokens<br>
+<strong>Output:</strong> $4.00 per million tokens<br>
+<strong>Batch:</strong> $0.40 input / $2.00 output
+</div>
+
+<h3>Cost Calculation Example</h3>
+
+<div class="code-block">
+# Typical usage scenario:
+# 100 requests, 500 tokens input, 200 tokens output each
+
+Input cost: 100 × 500 / 1M × $3 = $0.15
+Output cost: 100 × 200 / 1M × $15 = $0.30
+Total: $0.45 per 100 requests
+
+Batch cost (50% savings): $0.225
+</div>
+
+<h3>Cost Optimization Tips</h3>
+
+<div class="use-case">
+<strong>📌 Use Batch Processing:</strong> For non-time-critical tasks, batch processing offers 50% discount and is perfect for overnight analysis.
+</div>
+
+<div class="use-case">
+<strong>📌 Use Haiku for Simple Tasks:</strong> Haiku is 75% cheaper than Sonnet and handles simple queries, summaries, and classifications perfectly.
+</div>
+
+<div class="use-case">
+<strong>📌 Optimize Prompts:</strong> Clearer prompts require fewer output tokens. Well-structured prompts reduce costs significantly.
+</div>
+
+<div class="use-case">
+<strong>📌 Cache Repeated Context:</strong> Use prompt caching for repeated long contexts (e.g., same document with multiple queries).
+</div>
+
+<h2 id="api-access">API Access & Setup</h2>
+
+<h3>Getting Started</h3>
+
+<h4>Step 1: Create an Account</h4>
+<p>Visit <strong>console.anthropic.com</strong> and sign up with your email.</p>
+
+<h4>Step 2: Get API Key</h4>
+<p>Navigate to API Keys section and create a new key. Save it securely.</p>
+
+<h4>Step 3: Install SDK</h4>
+
+<div class="code-block">
+# Python
+pip install anthropic
+
+# Node.js
+npm install @anthropic-ai/sdk
+
+# cURL (no installation needed)
+curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01"
+</div>
+
+<h4>Step 4: Make Your First Request</h4>
+
+<div class="code-block">
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain quantum computing in simple terms"
+        }
+    ]
+)
+
+print(message.content[0].text)
+</div>
+
+<h3>Advanced Features</h3>
+
+<h4>Vision (Image Analysis)</h4>
+
+<div class="code-block">
+import base64
+
+# Read image
+with open("image.jpg", "rb") as f:
+    image_data = base64.standard_b64encode(f.read()).decode("utf-8")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg",
+                        "data": image_data
+                    }
+                },
+                {
+                    "type": "text",
+                    "text": "What's in this image?"
+                }
+            ]
+        }
+    ]
+)
+</div>
+
+<h4>Extended Thinking</h4>
+
+<div class="code-block">
+# For complex reasoning problems, use thinking_budget
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=8000,  # More tokens for thinking + response
+    thinking={
+        "type": "enabled",
+        "budget_tokens": 5000  # Tokens for internal reasoning
+    },
+    messages=[
+        {
+            "role": "user",
+            "content": "Solve this complex mathematical problem..."
+        }
+    ]
+)
+</div>
+
+<h2 id="use-cases">Real-World Use Cases</h2>
+
+<h3>Business & Enterprise</h3>
+
+<div class="use-case">
+<strong>Document Analysis:</strong> Analyze contracts, legal documents, research papers. 200K context means entire documents in one request.
+</div>
+
+<div class="use-case">
+<strong>Customer Support:</strong> Haiku provides real-time responses to support tickets while keeping costs low.
+</div>
+
+<div class="use-case">
+<strong>Data Analysis:</strong> Extract insights from reports, analytics dashboards, spreadsheets.
+</div>
+
+<h3>Development & Engineering</h3>
+
+<div class="use-case">
+<strong>Code Review:</strong> Analyze entire codebases, identify bugs, suggest refactoring, review pull requests.
+</div>
+
+<div class="use-case">
+<strong>Documentation:</strong> Generate API docs, technical guides, code comments from source code.
+</div>
+
+<div class="use-case">
+<strong>Debugging:</strong> Analyze error logs, stack traces, and suggest solutions with context.
+</div>
+
+<h3>Content & Creative</h3>
+
+<div class="use-case">
+<strong>Content Generation:</strong> Write blog posts, articles, social media content with consistent tone.
+</div>
+
+<div class="use-case">
+<strong>Translation:</strong> High-quality translation maintaining tone and context from long documents.
+</div>
+
+<div class="use-case">
+<strong>Summarization:</strong> Condense long articles, books, or meetings into executive summaries.
+</div>
+
+<h2 id="best-practices">Best Practices & Optimization</h2>
+
+<h3>Prompt Engineering</h3>
+
+<div class="feature-list">
+<div class="feature-item">
+<strong>Be Specific:</strong> Instead of "write an essay," say "write a technical essay about quantum computing for software engineers with 3 examples."
+</div>
+
+<div class="feature-item">
+<strong>Use Format Examples:</strong> Show Claude the exact format you want for output (JSON, markdown, CSV, etc.).
+</div>
+
+<div class="feature-item">
+<strong>Break Complex Tasks:</strong> For multi-step tasks, break them into sequential messages for better quality.
+</div>
+
+<div class="feature-item">
+<strong>Use System Prompts:</strong> Set context and role with system messages for consistent behavior.
+</div>
+</div>
+
+<h3>Error Handling</h3>
+
+<div class="code-block">
+import anthropic
+
+try:
+    message = client.messages.create(
+        model="claude-3-5-sonnet-20241022",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello"}]
+    )
+except anthropic.APIError as e:
+    print(f"API Error: {e}")
+except anthropic.AuthenticationError:
+    print("Invalid API key")
+</div>
+
+<h3>Token Counting</h3>
+
+<div class="code-block">
+# Count tokens before sending request
+num_tokens = client.messages.count_tokens(
+    model="claude-3-5-sonnet-20241022",
+    messages=[
+        {"role": "user", "content": "Your text here"}
+    ]
+)
+print(f"Tokens: {num_tokens.input_tokens}")
+</div>
+
+<h2>Comparison with Other Models</h2>
+
+<div class="comparison-section">
+<div class="comparison-item">
+<h4>vs GPT-4o</h4>
+Claude wins: Longer context (200K vs 128K), better reasoning<br>
+GPT-4o wins: Faster, slightly better vision, lower cost
+</div>
+
+<div class="comparison-item">
+<h4>vs Gemini 2.0</h4>
+Claude wins: Better reasoning, more consistent quality<br>
+Gemini wins: 1M context, faster, cheaper
+</div>
+
+<div class="comparison-item">
+<h4>vs Llama 3.1 (Open)</h4>
+Claude wins: Better quality, no infrastructure costs<br>
+Llama wins: Free, customizable, private
+</div>
+</div>
+
+<div style="margin-top:3rem;padding:2rem;background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(139,92,246,0.1));border-radius:8px;border:1px solid var(--border);">
+<h3 style="margin-top:0;">Next Steps</h3>
+<p>
+Explore other AI models or dive deeper into implementation. Claude is production-ready and trusted by thousands of organizations.
+</p>
+<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+<a href="/articles/ai-models/" style="background:var(--accent);color:#000;padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;">Back to All Models →</a>
+<a href="/articles/ai-models/api-integration-guide/" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:0.7rem 1.5rem;border-radius:100px;text-decoration:none;font-weight:600;">API Integration Guide →</a>
+</div>
+</div>
+</div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Claude AI Complete Guide \u2014 Capabilities, Pricing, API | ITVedas",
+  "description": "Complete guide to Claude AI models by Anthropic. Covers Claude 3.5 Sonnet, Haiku, capabilities, pricing, API access, and use cases.",
+  "url": "https://www.itvedas.com/articles/ai-models/claude-complete-guide.html",
+  "author": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "url": "https://www.itvedas.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ITVedas",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.itvedas.com/logo.png"
+    }
+  },
+  "datePublished": "2026-07-17T00:00:00Z",
+  "dateModified": "2026-07-17T04:44:33.048485"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.itvedas.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://www.itvedas.com/articles"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Ai Models",
+      "item": "https://www.itvedas.com/articles/ai-models"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Claude AI Complete Guide \u2014 Capabilities, Pricing, API | ITVedas",
+      "item": "https://www.itvedas.com/articles/ai-models/claude-complete-guide.html"
+    }
+  ]
+}
+</script>
+</body>
+</html>

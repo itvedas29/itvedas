@@ -185,6 +185,8 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
   <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
 </footer>
 
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
 </body>
 </html>
 """
