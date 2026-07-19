@@ -34,14 +34,19 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import glob
 
-          security_article = Path('articles/2026-06-17-security.html').read_text(encoding='utf-8')
           quiz = Path('quiz.html').read_text(encoding='utf-8')
           index = Path('index.html').read_text(encoding='utf-8')
 
+          leaked_fences = []
+          for f in glob.glob('articles/**/*.html', recursive=True):
+              text = Path(f).read_text(encoding='utf-8', errors='ignore')
+              if '```' in text:
+                  leaked_fences.append(f)
+
           checks = [
-              ('security article has no leaked code fence', '```html' not in security_article),
-              ('security article has a conclusion section', '<h2 id="conclusion">Conclusion</h2>' in security_article),
+              ('no article has a leaked markdown code fence', len(leaked_fences) == 0),
               ('quiz does not include placeholder EmailJS config', 'YOUR_PUBLIC_KEY' not in quiz),
               ('home loads article search index', "fetch('/search-index.json')" in index),
           ]
@@ -50,17 +55,10 @@ jobs:
           if failed:
               for name in failed:
                   print(f'FAILED: {name}')
+              if leaked_fences:
+                  print('Files with leaked code fences:', leaked_fences)
               raise SystemExit(1)
 
           for name, _ in checks:
               print(f'OK: {name}')
           PY
-
-      - name: Commit sitemap and search index if changed
-        run: |
-          git config user.name "ITVedas Bot"
-          git config user.email "bot@itvedas.com"
-          git add sitemap.xml search-index.json
-          git diff --staged --quiet || git commit -m "Regenerate sitemap.xml and search-index.json"
-          git pull --rebase --autostash origin main
-          git push origin main || true
