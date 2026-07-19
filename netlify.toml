@@ -14,6 +14,21 @@
   ]
 
 # Redirect configuration
+
+# Enforce www.itvedas.com as canonical domain
+[[redirects]]
+  from = "http://itvedas.com/*"
+  to = "https://www.itvedas.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://itvedas.com/*"
+  to = "https://www.itvedas.com/:splat"
+  status = 301
+  force = true
+
+# SPA fallback for client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
