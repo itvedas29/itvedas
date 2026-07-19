@@ -1,0 +1,42 @@
+name: Fix article link bugs (one-time)
+
+# Manual, one-off repair for two broken-link bugs found in the 2026-07-20
+# site audit: a doubled /articles/articles/ path in "Related Articles"
+# sections, and a self-referencing "Category" link + breadcrumb with a
+# stray trailing slash after .html. See scripts/fix-article-link-bugs.py
+# for details. Safe to re-run; it only touches files that need it.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix-links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run fix script
+        run: python3 scripts/fix-article-link-bugs.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add articles/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Fix broken article self-links and doubled /articles/articles/ paths"
+            git pull --rebase --autostash origin main
+            git push origin HEAD:main
+          fi
