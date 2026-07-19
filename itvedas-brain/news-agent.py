@@ -468,6 +468,8 @@ function f(t){{
 }}
 document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
 </body>
 </html>"""
 
@@ -629,6 +631,8 @@ function f(t){{
 }}
 document.querySelectorAll('#filters .fb').forEach(b=>b.addEventListener('click',()=>f(b.dataset.t)));
 </script>
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
 </body>
 </html>"""
 
