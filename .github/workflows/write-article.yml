@@ -46,6 +46,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install Python dependencies
+        run: pip install pytrends
 
       # ── Deep article: Mon/Wed/Fri schedule, or manual both/article_only ──
       - name: Run Brain (deep article)
