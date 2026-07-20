@@ -39,6 +39,12 @@ from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 
+try:
+    from pytrends.request import TrendReq
+    _PYTRENDS_OK = True
+except Exception:
+    _PYTRENDS_OK = False
+
 
 def esc(value):
     """HTML-escape LLM-generated title/description text before it goes
@@ -215,36 +221,87 @@ def slugify(text, maxlen=60):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')[:maxlen]
 
 # ─────────────────────────────────────────────────────────────────
-#  STEP 1 — pick keyword
+# SEARCH DEMAND — score candidate keywords by real Google Trends
+# interest so publishing follows actual demand instead of a fixed
+# hand-picked order. Best-effort only: any failure (network, rate
+# limit, parsing) returns {} and callers fall back to the original
+# fixed order untouched — this must never block publishing.
+# ─────────────────────────────────────────────────────────────────
+def score_by_search_interest(keywords):
+    if not _PYTRENDS_OK or not keywords:
+        return {}
+    scores = {}
+    try:
+        pytrends = TrendReq(hl="en-US", tz=0, timeout=(5, 10), retries=1, backoff_factor=0.3)
+    except Exception as e:
+        log(f"Trends unavailable: {e}")
+        return {}
+    for i in range(0, len(keywords), 5):
+        batch = keywords[i:i + 5]
+        try:
+            pytrends.build_payload(batch, timeframe="today 3-m")
+            df = pytrends.interest_over_time()
+            if df is not None and not df.empty:
+                recent = df.tail(4)
+                for kw in batch:
+                    if kw in recent.columns:
+                        scores[kw] = float(recent[kw].mean())
+        except Exception as e:
+            log(f"Trends batch failed ({batch[0][:40]}...): {e}")
+        time.sleep(1.5)
+    return scores
+
+# ─────────────────────────────────────────────────────────────────
+# STEP 1 — pick keyword
 # ─────────────────────────────────────────────────────────────────
 def pick_keyword(state):
     """Returns (keyword, topic, is_refresh, existing_entry).
+
+    Remaining (never-published) calendar keywords are scored by current
+    Google Trends search interest and the highest-demand one is picked
+    first — publishing chases what people are actually searching for
+    instead of a fixed hand-picked sequence. If Trends data is
+    unavailable for any reason, falls back to the original fixed
+    calendar order with zero behaviour change.
 
     is_refresh is True once every calendar keyword already has a published
     article. Previously this reset used_keywords and started the calendar
     over, publishing a second page targeting the same exact-match keyword
     as an existing one — keyword cannibalization, splitting ranking signal
     across two competing URLs instead of concentrating it. Refreshing the
-    oldest article in place (same URL, new content, dateModified bumped)
-    is a freshness signal instead of a duplicate-content liability.
+    highest-demand article in place (same URL, new content, dateModified
+    bumped) is a freshness signal instead of a duplicate-content liability;
+    falls back to refreshing the oldest article if Trends is unavailable.
     """
     used = state.get("used_keywords", [])
     remaining = [(k, t) for (k, t) in CALENDAR if k not in used]
     if remaining:
-        keyword, topic = remaining[0]
-        log(f"Keyword: {keyword}  [{topic}]")
+        scores = score_by_search_interest([k for k, _ in remaining])
+        if scores:
+            ranked = sorted(remaining, key=lambda kt: scores.get(kt[0], 0), reverse=True)
+            keyword, topic = ranked[0]
+            log(f"Keyword (search interest={scores.get(keyword,0):.0f}): {keyword}  [{topic}]")
+        else:
+            keyword, topic = remaining[0]
+            log(f"Keyword (calendar order — Trends unavailable): {keyword}  [{topic}]")
         return keyword, topic, False, None
 
-    log("Calendar complete — refreshing oldest article instead of duplicating")
+    log("Calendar complete — refreshing highest-demand article instead of duplicating")
     calendar_keywords = {k for k, _ in CALENDAR}
     candidates = [a for a in state.get("published", []) if a.get("keyword") in calendar_keywords]
     if not candidates:
         keyword, topic = CALENDAR[0]
         log(f"Keyword: {keyword}  [{topic}]")
         return keyword, topic, False, None
-    oldest = candidates[0]
-    log(f"Refreshing: {oldest['keyword']}  [{oldest['topic']}]  (articles/{oldest['file']})")
-    return oldest["keyword"], oldest["topic"], True, oldest
+    scores = score_by_search_interest([c["keyword"] for c in candidates])
+    if scores:
+        candidates = sorted(candidates, key=lambda c: scores.get(c["keyword"], 0), reverse=True)
+        chosen = candidates[0]
+        log(f"Refreshing: {chosen['keyword']}  [{chosen['topic']}]  (articles/{chosen['file']})  — search interest={scores.get(chosen['keyword'],0):.0f}")
+    else:
+        chosen = candidates[0]
+        log(f"Refreshing: {chosen['keyword']}  [{chosen['topic']}]  (articles/{chosen['file']})  — oldest (Trends unavailable)")
+    return chosen["keyword"], chosen["topic"], True, chosen
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 2 — write article
