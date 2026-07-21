@@ -70,7 +70,7 @@ def claude(
     for attempt in range(RETRY_ATTEMPTS):
         try:
             res = json.load(urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS))
-            return res["content"][0]["text"].strip()
+            return strip_code_fence(res["content"][0]["text"].strip())
         except Exception as e:
             if attempt == RETRY_ATTEMPTS - 1:
                 raise
@@ -111,7 +111,7 @@ def openai_chat(
     for attempt in range(RETRY_ATTEMPTS):
         try:
             res = json.load(urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS))
-            return res["choices"][0]["message"]["content"].strip()
+            return strip_code_fence(res["choices"][0]["message"]["content"].strip())
         except Exception as e:
             if attempt == RETRY_ATTEMPTS - 1:
                 raise
