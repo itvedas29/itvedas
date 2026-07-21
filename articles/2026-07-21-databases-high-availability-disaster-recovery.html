@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="HA vs DR architecture patterns for production databases—replication topologies, failover mechanics, split-brain, and managed cloud services compared.">
+<meta name="keywords" content="database high availability disaster recovery architecture patterns, Databases guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Database High Availability and Disaster Recovery: Architecture Patterns Explained | ITVedas">
+<meta property="og:description" content="HA vs DR architecture patterns for production databases—replication topologies, failover mechanics, split-brain, and managed cloud services compared.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-21-databases-high-availability-disaster-recovery">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-21-databases-high-availability-disaster-recovery">
+<title>Database High Availability and Disaster Recovery: Architecture Patterns Explained | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Database High Availability and Disaster Recovery: Architecture Patterns Explained", "description": "HA vs DR architecture patterns for production databases\u2014replication topologies, failover mechanics, split-brain, and managed cloud services compared.", "keywords": "database high availability disaster recovery architecture patterns", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "Databases", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#F59E0B;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#F59E0B1f;border:1px solid #F59E0B44;color:#F59E0B;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#F59E0B10,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#F59E0B14,#8B5CF610);border:1px solid #F59E0B33;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#F59E0B14,#8B5CF614);border:1px solid #F59E0B33;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/databases/" class="nav-back">← Databases</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/databases/">Databases</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Databases</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 11 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Database High Availability and Disaster Recovery: Architecture Patterns Explained</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#ha-vs-dr-two-different-problems">HA vs DR: two different problems</a></li><li><a href="#replication-topologies-that-enable-ha">Replication topologies that enable HA</a></li><li><a href="#failover-mechanics-automatic-vs-manual-and-split-brain-risk">Failover mechanics: automatic vs manual, and split-brain risk</a></li><li><a href="#managed-cloud-database-services-change-the-calculus">Managed cloud database services change the calculus</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Database High Availability and Disaster Recovery: Architecture Patterns Explained</h1>
+<p>Every production incident post-mortem eventually arrives at the same question: why did the database stay down as long as it did? Usually the answer isn't a missing backup. It's an architecture that was never designed to fail gracefully — no tested failover path, no clear ownership of <code>RTO</code> and <code>RPO</code> targets, and a team that assumed "we take nightly backups" was a strategy rather than a single, fairly weak line of defense.</p>
+<p>Backups protect you against data loss. They do almost nothing for availability, and on their own they make a poor disaster recovery plan — restoring a multi-terabyte backup can take hours, during which the business is offline. High availability (<strong>HA</strong>) and disaster recovery (<strong>DR</strong>) are engineering disciplines with their own architecture patterns, failure models, and cost tradeoffs. This article works through the patterns that matter for engineers who own uptime and recoverability, not just schema design.</p>
+<h2 id="ha-vs-dr-two-different-problems">HA vs DR: two different problems</h2>
+<p><strong>High availability</strong> is about surviving the failure of a single component — a node, a disk, an availability zone — with minimal or zero downtime, while the overall system keeps serving traffic. It's measured in "nines" (99.95%, 99.99%) and in seconds of interruption. The failure domain is narrow and the response is typically automatic: a health check fails, a replica is promoted, traffic resumes.</p>
+<p><strong>Disaster recovery</strong> is about surviving the loss of an entire site, region, or the underlying infrastructure provider itself — floods, regional cloud outages, ransomware, a botched migration that corrupts data across all live replicas. DR is measured by two numbers: <code>RTO</code> (recovery time objective — how long you're down) and <code>RPO</code> (recovery point objective — how much data you can afford to lose). DR plans are invoked far less often, involve more manual judgment, and often trade off write latency and cost far more aggressively than HA does.</p>
+<p>The architectures diverge because the failure domains diverge. An HA design that keeps replicas in the same region survives a node crash but not a regional outage. A DR design that only fails over on human decision is too slow to be an HA mechanism. You need both, deliberately layered, not one masquerading as the other.</p>
+<blockquote>High availability keeps the lights on when a bulb blows; disaster recovery keeps the building standing when the block burns down.</blockquote>
+<h2 id="replication-topologies-that-enable-ha">Replication topologies that enable HA</h2>
+<p>Almost every HA pattern is built on replication. The differences are in consistency guarantees, failover speed, and what happens when nodes disagree.</p>
+<p>1. <strong>Asynchronous replication.</strong> The primary commits a write and returns success to the client before the replica has acknowledged it. This is the default in most self-managed <code>PostgreSQL</code> and <code>MySQL</code> deployments because it keeps write latency low regardless of replica distance. The cost is a non-zero <code>RPO</code> — if the primary dies before replicating the last few transactions, they're gone. Replication lag is the metric to watch; under load it can grow from milliseconds to minutes, silently expanding your real RPO far beyond what the architecture diagram implies.</p>
+<p>2. <strong>Synchronous replication.</strong> The primary waits for acknowledgment from one or more replicas before confirming the write to the client. <code>PostgreSQL</code>'s <code>synchronous_commit</code> parameter and <code>synchronous_standby_names</code> control this directly. This gets you an <code>RPO</code> of effectively zero for the covered replica set, at the cost of added write latency — every commit now pays the network round trip to the standby. Synchronous replication is practical within a metro area or across availability zones in the same region; it becomes a serious performance liability across geographic regions, which is why it's usually reserved for HA, not DR.</p>
+<p>3. <strong>Primary-replica (single-writer) failover.</strong> The most common topology: one primary accepts writes, one or more replicas serve reads and stand ready for promotion. Simple to reason about, simple to debug, and the default choice unless you have a specific reason to need multi-writer. The failover event itself is where the complexity lives — covered below.</p>
+<p>4. <strong>Multi-primary replication.</strong> Multiple nodes accept writes concurrently, replicating to each other. This removes the single-writer bottleneck and can reduce failover time to near zero since there's no promotion step, but it introduces write conflicts: two nodes accepting conflicting updates to the same row before the other has caught up. Conflict resolution strategies (last-write-wins, application-level merge logic, conflict-free replicated data types) add real engineering cost, and debugging a conflict-resolution bug in production is unpleasant. Multi-primary is the right call when you have a genuine requirement for multi-region active-active writes and the team to support it — not as a default HA pattern.</p>
+<p>5. <strong>Quorum-based consensus systems.</strong> Systems like <code>etcd</code>, <code>CockroachDB</code>, and <code>YugabyteDB</code> use <code>Raft</code> or <code>Paxos</code>-family consensus: a write is only committed once a majority of nodes acknowledge it. This gives you strong consistency and automatic leader election without a separate orchestration layer, because the consensus protocol itself defines who the leader is at any moment. The tradeoff is write latency bounded by quorum round-trip time, and operational complexity in understanding quorum loss scenarios — lose the majority and the cluster stops accepting writes entirely, which is a deliberate safety choice, not a bug.</p>
+<h2 id="failover-mechanics-automatic-vs-manual-and-split-brain-risk">Failover mechanics: automatic vs manual, and split-brain risk</h2>
+<p>Automatic failover looks simple from the outside: primary dies, replica gets promoted, traffic resumes. The mechanics underneath determine whether that promise holds under real failure conditions.</p>
+<p><strong>Health checks</strong> need to distinguish "the primary is dead" from "the primary is briefly unreachable from this one observer" — a network partition that isolates the health-check node from the primary looks identical to an actual primary failure. Naive failover systems that promote on a single missed heartbeat are a classic source of unnecessary failovers and, worse, split-brain.</p>
+<p><strong>Leader election</strong> is how the system decides which replica gets promoted when a failure is confirmed. Tools like <code>Patroni</code> for PostgreSQL, or the built-in election logic in <code>Raft</code>-based systems, use a consensus mechanism among the surviving nodes rather than trusting any single observer's judgement — this avoids two different nodes each independently deciding they're the new primary.</p>
+<p><strong>Fencing</strong> is the step people skip and later regret. After a new primary is elected, the old primary must be prevented from accepting writes if it comes back online — via <code>STONITH</code> (shoot the other node in the head), revoking its network access, or a fencing token that downstream consumers reject once a newer one is issued. Without fencing, a "recovered" old primary can start accepting writes again while a new primary is also live.</p>
+<p>That's <strong>split-brain</strong>: two nodes both believe they are the primary and both accept writes. It is arguably the worst failure mode in database HA, worse than downtime, because it silently produces divergent, conflicting data that has to be manually reconciled — and by the time anyone notices, the corruption has usually propagated to dependent systems. Quorum requirements (only a node that can see a majority of the cluster may become primary) and fencing are the two controls that prevent it. Any HA design that promotes based on a single node's opinion, without quorum, is one network blip away from split-brain.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>A backup job that succeeds every night tells you nothing about whether you can actually recover. Run scheduled restore drills — restore a real backup to a real environment, measure how long it takes, and verify the data — on a calendar, not "when someone finally asks." Your true RTO is whatever your last successful drill measured, not what the runbook claims.</div>
+<h2 id="managed-cloud-database-services-change-the-calculus">Managed cloud database services change the calculus</h2>
+<p><strong>Amazon RDS Multi-AZ</strong> and <code>Aurora</code>, <strong>Google Cloud SQL</strong> with regional high availability, and <strong>Azure SQL Managed Instance</strong> with its zone-redundant and auto-failover group options all implement synchronous replication and automated failover for you at the infrastructure layer. They handle the health checking, leader election, fencing, and DNS/endpoint cutover that you'd otherwise build with tools like <code>Patroni</code> or <code>Orchestrator</code>. They also typically bundle <strong>point-in-time recovery</strong> (<code>PITR</code>) — continuous transaction log backup that lets you restore to any second within a retention window, not just to the last nightly snapshot.</p>
+<p>This is a genuine reduction in operational burden, and for most teams it's the right default. But it doesn't eliminate the HA/DR design problem — it moves the boundary of what you're responsible for.</p>
+<p>What you still own: <strong>schema and query design</strong> that determines whether replication lag stays trivial or balloons under load; <strong>region strategy</strong> — Multi-AZ protects against a zone failure, not a regional one, so cross-region DR (Aurora Global Database, Cloud SQL cross-region replicas, Azure auto-failover groups) is a separate decision with separate cost; <strong>connection handling</strong> during failover, since a promoted endpoint doesn't help if your application connection pool holds onto dead connections for 30 seconds; and <strong>testing</strong> — cloud providers give you the mechanism, but nobody validates that your specific application tolerates a failover cleanly except you. Treating "it's on RDS Multi-AZ" as equivalent to "we have an HA/DR strategy" is a common and costly category error.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a payments platform for a financial services company with a contractual requirement: sub-minute <code>RTO</code> for a zonal failure, and near-zero data loss for anything short of full regional loss. The design that meets this typically looks like a two-tier setup.</p>
+<p><strong>Tier one, HA within the region:</strong> synchronous replication across three availability zones, with automated failover managed by the cloud provider or a self-hosted consensus-based orchestrator. A zone failure triggers promotion in seconds, and because replication is synchronous, no committed transaction is lost. Write latency absorbs the cross-AZ round trip — typically single-digit milliseconds within a region, an acceptable cost for a payments workload where correctness dominates.</p>
+<p><strong>Tier two, DR across regions:</strong> an asynchronous replica in a geographically distant region, replicating continuously but not in the write path. This protects against the scenario tier one can't: the entire primary region becoming unavailable. Because it's asynchronous, there's a real <code>RPO</code> — typically seconds, sometimes more under lag — which the team accepts explicitly rather than by omission, and documents in the DR runbook. Promoting the cross-region replica to primary is a decision made deliberately, often with a manual confirmation step, because falsely triggering a full regional failover is expensive and disruptive in its own right.</p>
+<p>The tradeoff made explicitly here: synchronous replication is confined to the region, where latency cost is tolerable, and the DR tier accepts a small, quantified data-loss window in exchange for keeping cross-region writes off the critical path. The alternative — synchronous replication across regions — was evaluated and rejected because it would have added tens to hundreds of milliseconds to every transaction, unacceptable for a transaction-processing system with strict throughput requirements.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Never testing an actual failover.</strong> A failover mechanism that has only ever run in a design document is unproven. Teams that discover their orchestrator's fencing logic doesn't actually work usually discover it during a real incident. Failover drills, like restore drills, belong on a calendar.</p>
+<p><strong>Using synchronous replication across regions to "be extra safe."</strong> This is one of the most common over-engineering mistakes in DR design. It feels more protective, but the latency penalty on every write can be severe enough to make the primary application slower than the business tolerates, and in the worst case a slow or unreachable DR replica can stall the primary entirely if the replication mode isn't configured to degrade gracefully. Reserve synchronous replication for same-region or same-metro HA; use asynchronous replication for cross-region DR and own the resulting RPO deliberately.</p>
+<p><strong>Treating a read replica as a DR plan.</strong> A read replica in the same region protects against neither a regional outage nor, in many configurations, logical corruption — a bad <code>DELETE</code> or a schema migration gone wrong replicates to the replica just as faithfully as a good write does. A real DR plan requires geographic separation, a defined promotion procedure, and — critically — a way to recover from logical corruption that replication alone can't undo, such as PITR or delayed replicas.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>What RPO and RTO should we target?</strong> There's no universal number — it should come from the business cost of downtime and data loss, not from what's technically convenient. A team that hasn't had this conversation with stakeholders is usually building to an implicit RTO of "however long the postmortem takes," which is not a target anyone chose.</p>
+<p><strong>Do we need multi-region active-active for HA, or is Multi-AZ enough?</strong> For most workloads, Multi-AZ (or the equivalent zone-redundant configuration) covers HA sufficiently, since zone failures are far more common than full regional outages. Multi-region active-active solves a narrower, harder problem — low write latency for geographically distributed users, or true DR against regional loss — and carries real conflict-resolution and operational cost. Don't reach for it unless the requirement is specific.</p>
+<p><strong>How often should we run failover and restore drills?</strong> Quarterly is a reasonable floor for most production systems; anything handling regulated or financial data often warrants monthly. The exact cadence matters less than the discipline of tracking whether the last drill's measured RTO still meets the target — if it doesn't, that's the signal to fix the architecture before the next real incident does it for you.</p>
+<p>HA and DR aren't a checkbox you get by enabling a managed service flag — they're an ongoing design discipline that combines replication topology, tested failover mechanics, and a clear-eyed accounting of what your cloud provider covers versus what you still own. Get the architecture right, then prove it works under drill conditions regularly, because the only RTO number that matters is the one you've actually measured.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#ha-vs-dr-two-different-problems">HA vs DR: two different problems</a></li><li><a href="#replication-topologies-that-enable-ha">Replication topologies that enable HA</a></li><li><a href="#failover-mechanics-automatic-vs-manual-and-split-brain-risk">Failover mechanics: automatic vs manual, and split-brain risk</a></li><li><a href="#managed-cloud-database-services-change-the-calculus">Managed cloud database services change the calculus</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

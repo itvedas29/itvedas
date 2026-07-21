@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="SAN vs NAS compared for infrastructure engineers—block vs file storage, Fibre Channel, iSCSI, NFS, SMB, and where HCI fits in enterprise design.">
+<meta name="keywords" content="SAN vs NAS enterprise storage architecture explained, Hardware guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="SAN vs NAS: Enterprise Storage Architecture Explained | ITVedas">
+<meta property="og:description" content="SAN vs NAS compared for infrastructure engineers—block vs file storage, Fibre Channel, iSCSI, NFS, SMB, and where HCI fits in enterprise design.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-21-hardware-san-vs-nas-storage">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-21-hardware-san-vs-nas-storage">
+<title>SAN vs NAS: Enterprise Storage Architecture Explained | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "SAN vs NAS: Enterprise Storage Architecture Explained", "description": "SAN vs NAS compared for infrastructure engineers\u2014block vs file storage, Fibre Channel, iSCSI, NFS, SMB, and where HCI fits in enterprise design.", "keywords": "SAN vs NAS enterprise storage architecture explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "Hardware", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#06B6D4;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#06B6D41f;border:1px solid #06B6D444;color:#06B6D4;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#06B6D410,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#06B6D414,#8B5CF610);border:1px solid #06B6D433;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#06B6D414,#8B5CF614);border:1px solid #06B6D433;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/hardware/" class="nav-back">← Hardware</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/hardware/">Hardware</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Hardware</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>SAN vs NAS: Enterprise Storage Architecture Explained</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#block-storage-vs-file-storage-the-core-difference">Block storage vs file storage: the core difference</a></li><li><a href="#how-a-san-actually-works">How a SAN actually works</a></li><li><a href="#how-nas-actually-works">How NAS actually works</a></li><li><a href="#where-hyperconverged-infrastructure-hci-changes-the-picture">Where hyperconverged infrastructure (HCI) changes the picture</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>SAN vs NAS: Enterprise Storage Architecture Explained</h1>
+<p>Local disk works fine until it doesn't. The moment you're running more than a handful of servers, local storage turns into a liability: every host becomes a single point of failure, capacity planning turns into a per-server spreadsheet nightmare, and migrating a VM or rebuilding a database server means physically moving data instead of just repointing a connection. Enterprise storage architecture exists to decouple compute from the disks underneath it.</p>
+<p>That's where <strong>storage area networks (SAN)</strong> and <strong>network-attached storage (NAS)</strong> come in — two very different answers to the same problem. Both centralize storage so multiple servers can share it, but they present that storage to the network in fundamentally different ways, and picking the wrong one for a workload creates performance and reliability problems that are painful to unwind later. This article breaks down how each actually works, where <strong>hyperconverged infrastructure (HCI)</strong> fits into the modern picture, and how to decide what belongs where.</p>
+<h2 id="block-storage-vs-file-storage-the-core-difference">Block storage vs file storage: the core difference</h2>
+<p>Everything about SAN and NAS design traces back to one architectural decision: what layer of abstraction gets exposed to the client. A <strong>SAN</strong> delivers <strong>block-level storage</strong> — raw, unformatted blocks of storage capacity that the connecting server's operating system sees and treats exactly like a local disk. The server partitions it, formats it with a filesystem (NTFS, ext4, VMFS, whatever it needs), and manages it directly. The SAN itself has no concept of files, folders, or permissions — it just serves numbered blocks on request.</p>
+<p><strong>NAS</strong>, by contrast, delivers <strong>file-level storage</strong>. The NAS device owns the filesystem, and clients talk to it over a network file-sharing protocol, requesting specific files and directories rather than raw blocks. The NAS handles the filesystem logic, metadata, permissions, and locking on its own, and hands back files, not disk sectors.</p>
+<p>This distinction cascades into everything else: latency characteristics, protocol choice, how many hosts can safely touch the same data at once, and which workloads each is suited for. A database engine wants direct, low-latency block access it fully controls. A team file share wants concurrent, permission-aware access from dozens of users at once. You cannot swap one architecture in for the other without consequences.</p>
+<blockquote>A SAN hands a server an empty disk over the network; a NAS hands it a folder.</blockquote>
+<h2 id="how-a-san-actually-works">How a SAN actually works</h2>
+<p>A SAN is a dedicated network — separate from your regular LAN in traditional designs — connecting servers to shared storage arrays. Two protocols dominate: <code>Fibre Channel</code> and <code>iSCSI</code>.</p>
+<p><code>Fibre Channel (FC)</code> runs over purpose-built optical fabric using HBAs (host bus adapters) instead of regular NICs, switched through dedicated FC switches. It's low-latency, high-throughput, and predictable — the tradeoff is cost and operational complexity, since it requires its own cabling, switching hardware, and administrative skill set separate from IP networking. <code>iSCSI</code> takes the opposite approach: it encapsulates SCSI commands inside IP packets and runs over standard Ethernet, meaning you can build a SAN using the switches and NICs you already understand. It's cheaper and simpler to deploy, but shares bandwidth and congestion characteristics with whatever Ethernet fabric it rides on unless you isolate it properly.</p>
+<p>Storage on a SAN is carved up into <strong>LUNs</strong> (logical unit numbers) — logical slices of the array's physical capacity presented to a specific host or cluster as if they were dedicated disks. <strong>Zoning</strong> (on FC fabrics) and equivalent access-control lists on iSCSI restrict which initiators (servers) can see which LUNs, which is your primary security and blast-radius control on a shared array — get zoning wrong and you can accidentally expose one server's LUN to another, with catastrophic filesystem-corruption potential.</p>
+<p><strong>Multipathing</strong> is the other pillar of SAN design: each host maintains multiple independent physical paths to the same LUN (multiple HBAs or NICs, multiple switches, multiple array controller ports), with multipathing software handling failover and load balancing across them. A SAN without redundant paths has a single point of failure baked into the architecture regardless of how resilient the array itself is.</p>
+<p>This combination — dedicated low-latency fabric, direct block access, and the host owning its own filesystem — is exactly why SANs are the default for <strong>databases</strong> and <strong>VM cluster storage</strong>. A database engine issuing thousands of small, latency-sensitive IOPS needs a storage layer that doesn't add file-protocol overhead on every read and write, and hypervisor clusters need shared block storage so VMs can be live-migrated between hosts without copying data.</p>
+<h2 id="how-nas-actually-works">How NAS actually works</h2>
+<p>NAS operates at the file layer using network file-sharing protocols, primarily <code>NFS</code> (Network File System, dominant in Linux/Unix environments) and <code>SMB</code>/<code>CIFS</code> (Server Message Block, dominant in Windows environments). Modern deployments increasingly use <code>NFSv4</code>, which folds in stronger security (Kerberos-based authentication), stateful locking, and better firewall friendliness compared to the older NFSv3.</p>
+<p>Because the NAS device owns the filesystem, it's also responsible for the coordination problems that come with many clients touching the same data: <strong>file locking</strong> (preventing two users from corrupting a file they're both writing to simultaneously), <strong>permissions</strong> enforcement, and <strong>concurrent access</strong> arbitration. This is the fundamental capability a block device does not have — a SAN LUN mounted by two hosts simultaneously without a clustering filesystem will corrupt data, because neither host knows the other is writing. A NAS is built for exactly this multi-writer scenario.</p>
+<p>That makes NAS the natural fit for <strong>shared file storage</strong>: home directories, team drives, department shares, and content repositories where dozens or hundreds of users and applications need simultaneous, permission-scoped access to the same file tree. It's also common for media and backup workloads where sequential throughput matters more than the ultra-low random-IO latency a database needs.</p>
+<h2 id="where-hyperconverged-infrastructure-hci-changes-the-picture">Where hyperconverged infrastructure (HCI) changes the picture</h2>
+<p><strong>Hyperconverged infrastructure</strong> takes a different architectural bet entirely: instead of a dedicated storage array that compute nodes reach over a SAN, HCI pools the local disks inside each compute node using a software-defined storage layer, replicating and distributing data across the cluster so any node can serve any VM's I/O. There's no separate storage array to rack, cable, zone, or manage — storage and compute scale together as you add nodes.</p>
+<p>The tradeoffs are real in both directions. HCI collapses SAN fabric, dedicated array hardware, and much of the associated operational overhead into a single, more homogeneous cluster — fewer moving parts, faster time-to-deploy, and a management plane that treats compute and storage as one resource pool. For many mid-sized virtualization estates this is a genuine operational win. But it also couples storage and compute scaling together: if you need more storage capacity but not more compute (or vice versa), you're still buying whole nodes, which is less efficient than a SAN where you scale the array independently of the servers attached to it. HCI clusters also depend heavily on node-to-node network bandwidth and latency for replication traffic, so the "network" doesn't go away — it just moves from a dedicated FC fabric to the HCI cluster's east-west interconnect, which needs to be sized just as seriously.</p>
+<p>HCI isn't a strict replacement for SAN or NAS so much as a third architectural option that trades some scaling flexibility and peak performance ceiling for operational simplicity — a good fit for standardized virtualization platforms and edge/ROBO deployments, less obviously a fit for workloads with extreme or unpredictable storage-scaling requirements decoupled from compute.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a mid-sized company running a VMware cluster that hosts both its transactional database tier and its general-purpose file shares. The infrastructure team doesn't put everything on one storage platform — they split it deliberately.</p>
+<p>The database VMs — an OLTP system backing the order-management platform — sit on <strong>SAN-backed block storage</strong> over iSCSI, with LUNs presented to the hypervisor cluster and multipathing configured across two independent Ethernet fabrics for redundancy. The database engine needs consistent, low-latency block I/O and the ability to live-migrate between hosts without touching the underlying data, which is exactly what shared block storage with a clustering-aware filesystem provides.</p>
+<p>Team file storage — shared drives, department folders, home directories for a few hundred employees — runs on a separate <strong>NAS</strong> appliance serving SMB shares to Windows clients and NFS exports to a handful of Linux build servers. The NAS handles user-level permissions through Active Directory integration and manages locking automatically when multiple people have the same spreadsheet open.</p>
+<p>They didn't consolidate onto one platform because the workloads have opposite requirements: the database needs a small number of hosts doing high-IOPS, low-latency block access to storage they fully control at the filesystem level, while the file shares need hundreds of concurrent users doing lighter, permission-gated file access where the storage device manages coordination on their behalf. Forcing either workload onto the other's architecture would mean either exposing a raw LUN to hundreds of untrusted concurrent writers (a corruption risk) or routing latency-sensitive database transactions through file-protocol overhead they don't need.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Putting latency-sensitive database workloads on NAS instead of SAN.</strong> File-protocol overhead (NFS/SMB round-trips, filesystem arbitration on the NAS side) adds latency that a database engine issuing high volumes of small random I/O will feel immediately. NAS can serve databases in specific supported configurations, but as a default architecture choice, transactional workloads belong on block storage.</p>
+<p><strong>Undersizing SAN fabric bandwidth and multipathing.</strong> Teams often size the storage array carefully and then treat the fabric connecting hosts to it as an afterthought — a single HBA, a single switch, or insufficiently sized ISLs (inter-switch links) turn a resilient array into a system with one physical dependency that takes everything down when it fails. Multipathing isn't optional redundancy; it's a required part of the design, not a bolt-on.</p>
+<p><strong>Ignoring IOPS requirements and sizing storage on capacity alone.</strong> A storage array sized purely on "how many terabytes do we need" routinely gets deployed under workloads that need far more random-read/write performance than the underlying disk count and RAID/erasure-coding scheme can deliver. Capacity and performance are separate sizing exercises — spinning-heavy arrays that look fine on a capacity spreadsheet can become a severe IOPS bottleneck the moment a real database or VM cluster lands on them.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Size storage for IOPS and latency first, capacity second. Work backward from your workload's actual I/O profile — random vs. sequential, read/write ratio, queue depth, and required latency under peak load — then confirm the array or cluster can sustain that profile with headroom, before you ever look at how many terabytes it holds. A storage system with plenty of free space but insufficient IOPS will still bring your database to its knees.</div>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Can a single storage array serve both SAN and NAS protocols?</strong><br>Yes — many modern arrays are "unified storage," exposing the same underlying disk pool as both block LUNs (over FC/iSCSI) and file shares (over NFS/SMB) from one platform. This simplifies management but means SAN and NAS workloads can compete for the same backend disk and controller resources, so capacity and performance planning still needs to account for both sides.</p>
+<p><strong>Is iSCSI "good enough" to replace Fibre Channel entirely?</strong><br>For most mid-sized enterprise workloads, yes — modern Ethernet (10/25/100GbE) with properly isolated, dedicated storage VLANs and jumbo frames closes much of the historical latency gap. Fibre Channel still holds an edge in the most demanding, latency-critical environments and in shops that already have deep FC operational expertise, but it's no longer the automatic choice it once was.</p>
+<p><strong>Does HCI eliminate the need to understand SAN and NAS concepts?</strong><br>No — HCI abstracts away the physical SAN fabric, but the underlying concepts (replication, data locality, network bandwidth for storage traffic, failure domains) still apply inside the HCI cluster's software-defined layer. Engineers who understand SAN and NAS architecture troubleshoot and design HCI deployments more effectively than those who treat it as a black box.</p>
+<p>SAN, NAS, and HCI aren't competing for the same job — they're different architectural answers shaped by whether a workload needs raw block access it controls itself, coordinated multi-user file access, or a simplified, converged operational model. The engineers who get enterprise storage design right aren't the ones who pick a favorite; they're the ones who map each workload's actual I/O and access pattern to the architecture built for it, and size for performance as rigorously as they size for capacity.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#block-storage-vs-file-storage-the-core-difference">Block storage vs file storage: the core difference</a></li><li><a href="#how-a-san-actually-works">How a SAN actually works</a></li><li><a href="#how-nas-actually-works">How NAS actually works</a></li><li><a href="#where-hyperconverged-infrastructure-hci-changes-the-picture">Where hyperconverged infrastructure (HCI) changes the picture</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A deep dive into BGP path selection, multi-area OSPF, route reflectors, and MPLS/SD-WAN for engineers running production networks.">
+<meta name="keywords" content="BGP vs OSPF advanced routing explained, Networking guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="BGP and OSPF Explained: Advanced Routing Protocols for Network Engineers | ITVedas">
+<meta property="og:description" content="A deep dive into BGP path selection, multi-area OSPF, route reflectors, and MPLS/SD-WAN for engineers running production networks.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-21-networking-advanced-bgp-ospf-routing">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-21-networking-advanced-bgp-ospf-routing">
+<title>BGP and OSPF Explained: Advanced Routing Protocols for Network Engineers | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "BGP and OSPF Explained: Advanced Routing Protocols for Network Engineers", "description": "A deep dive into BGP path selection, multi-area OSPF, route reflectors, and MPLS/SD-WAN for engineers running production networks.", "keywords": "BGP vs OSPF advanced routing explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "Networking", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/networking/" class="nav-back">← Networking</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/networking/">Networking</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Networking</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 13 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>BGP and OSPF Explained: Advanced Routing Protocols for Network Engineers</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#ospf-at-scale-areas-lsas-and-route-summarization">OSPF at scale: areas, LSAs, and route summarization</a></li><li><a href="#bgp-path-selection-how-routers-actually-choose-a-route">BGP path selection: how routers actually choose a route</a></li><li><a href="#route-reflectors-and-confederations-at-scale">Route reflectors and confederations at scale</a></li><li><a href="#where-mpls-and-sd-wan-fit-in">Where MPLS and SD-WAN fit in</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>BGP and OSPF Explained: Advanced Routing Protocols for Network Engineers</h1>
+<p>Most engineers can recite that <strong>OSPF</strong> is a link-state IGP and <strong>BGP</strong> is a path-vector EGP within their first year on the job. That definition is useless the first time you're debugging a route flap across three ABRs, or trying to figure out why a customer route is taking the long way around your backbone despite a "better" path existing on paper. At that point you need to know how these protocols actually make decisions, not what category they belong to.</p>
+<p>This article assumes you've already deployed single-area OSPF and peered a basic eBGP session. We're going past that: multi-area design, the full BGP best-path algorithm, route reflectors, and where MPLS and SD-WAN actually sit in relation to all of it. If you run or design production networks — enterprise WAN, data center fabric, or service provider edge — this is the layer you need to operate at.</p>
+<h2 id="ospf-at-scale-areas-lsas-and-route-summarization">OSPF at scale: areas, LSAs, and route summarization</h2>
+<p>Single-area OSPF works fine until it doesn't. Every router in an area carries the full link-state database for that area and runs <strong>SPF</strong> (Dijkstra) against it. Push enough routers and prefixes into one area and you get SPF runs that are slow, CPU spikes on every topology change, and a database that's expensive to keep synchronized. <strong>Multi-area OSPF</strong> exists to bound that blast radius.</p>
+<p>The design is hierarchical by requirement, not convention: <code>area 0</code> (the backbone) must exist, and every non-backbone area must connect to it, either directly or via a <strong>virtual link</strong> when physical topology doesn't cooperate. Routers that sit on the boundary between area 0 and another area are <strong>Area Border Routers (ABRs)</strong>; routers connecting OSPF to another routing domain (typically BGP) are <strong>Autonomous System Boundary Routers (ASBRs)</strong>.</p>
+<p>What actually moves through this hierarchy are <strong>Link-State Advertisements (LSAs)</strong>, and knowing the types matters for troubleshooting:</p>
+<ul>
+<li><strong>Type 1 (Router LSA)</strong> and <strong>Type 2 (Network LSA)</strong> describe intra-area topology — links, routers, and the DR/BDR relationship on multi-access segments. These stay within the area.</li>
+<li><strong>Type 3 (Summary LSA)</strong> is generated by ABRs to advertise routes between areas. This is where <strong>route summarization</strong> happens — an ABR can collapse dozens of intra-area subnets into a single summarized Type 3 LSA using a command like <code>area 1 range 10.1.0.0/16</code>. This is not optional at scale; without summarization, every area's internal churn propagates as individual Type 3 updates across the whole domain, and every router recomputes routes for changes that shouldn't concern it.</li>
+<li><strong>Type 4 (ASBR Summary LSA)</strong> tells routers outside an area how to reach an ASBR.</li>
+<li><strong>Type 5 (External LSA)</strong> carries routes redistributed into OSPF from an external source (static, BGP, another IGP) and floods domain-wide by default.</li>
+<li><strong>Type 7 (NSSA External LSA)</strong> is the Type 5 equivalent for <strong>Not-So-Stubby Areas</strong>, translated to Type 5 by the ABR at the NSSA boundary.</li>
+</ul>
+<p>Area types are your other lever for controlling what floods where. A <strong>stub area</strong> blocks Type 5 LSAs and relies on a default route instead — useful for spoke sites with no need to see full external routing detail. A <strong>totally stubby area</strong> (a Cisco-specific term, implemented via <code>area X stub no-summary</code> on the ABR) goes further and blocks Type 3 summaries too, leaving only a default route — the tightest option for a simple branch topology. An <strong>NSSA</strong> exists for the awkward case: an area that needs to stub off external routing from the rest of the domain but still has a local ASBR that needs to inject its own external routes (Type 7, translated at the boundary).</p>
+<p>Get the area boundaries wrong and you'll see it as SPF instability that seems to come from nowhere — a flapping link three hops away in another area shouldn't touch your router's CPU, and if it does, your summarization is missing or your area boundaries are drawn in the wrong place.</p>
+<blockquote>Area 0 is not a special area — it's the only mandatory hallway in a building where every other room's door has to open onto it, whether directly or through a tunnel.</blockquote>
+<h2 id="bgp-path-selection-how-routers-actually-choose-a-route">BGP path selection: how routers actually choose a route</h2>
+<p>BGP doesn't pick "the shortest path." It picks the first route that wins a strict, ordered sequence of tie-breakers, evaluated top to bottom, stopping at the first one that isn't a tie. Every BGP engineer needs this list memorized, because every routing anomaly you'll debug traces back to one of these steps:</p>
+<ol>
+<li><strong>Weight</strong> (Cisco-proprietary, locally significant, not exchanged) — highest wins.</li>
+<li><strong>Local preference</strong> (<code>local-preference</code>) — highest wins. This is exchanged between iBGP peers within the AS and is your primary tool for controlling outbound traffic flow.</li>
+<li><strong>Locally originated routes</strong> — routes the local router originated (via <code>network</code>, <code>aggregate-address</code>, or redistribution) are preferred over received routes.</li>
+<li><strong>AS-path length</strong> — shortest <code>as-path</code> wins. This is the one everyone remembers and over-relies on; it's step 4, not step 1.</li>
+<li><strong>Origin type</strong> — <strong>IGP</strong> beats <strong>EGP</strong> beats <strong>incomplete</strong> (incomplete usually means redistributed from another protocol).</li>
+<li><strong>MED (Multi-Exit Discriminator)</strong> — lowest wins. Only compared between routes from the same neighboring AS by default (unless <code>always-compare-med</code> is configured), which trips people up constantly.</li>
+<li><strong>eBGP over iBGP</strong> — a route learned via eBGP is preferred over one learned via iBGP.</li>
+<li><strong>Lowest IGP metric to the next hop</strong> — this is where OSPF and BGP actually interact directly. Your IGP's cost to reach the BGP next hop breaks the tie.</li>
+<li><strong>Oldest route</strong> (eBGP paths only, and only if <code>bgp bestpath compare-routerid</code> isn't forcing router-ID comparison earlier) — path stability is preferred over a newer, possibly less stable, alternative.</li>
+<li><strong>Lowest router ID</strong> (or originator ID for reflected routes) — a pure tie-breaker among otherwise identical paths.</li>
+<li><strong>Lowest cluster list length</strong>, then <strong>lowest neighbor address</strong> — the final tie-breakers, mostly relevant in route-reflector topologies.</li>
+</ol>
+<p>The practical implication: if you set <code>local-preference</code> on inbound routes to steer egress traffic, that decision overrides AS-path length every time. Engineers who only tune AS-path prepending are working one lever below where the real control is.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Keep your route-maps and prefix-lists explicit and named for intent, not for the neighbor they were written for — <code>PL-CUSTOMER-DEFAULT-OUT</code> ages better than <code>PL-10</code>. Pair this with <strong>BGP communities</strong> for traffic engineering: tag routes at ingress with a community (e.g., <code>65000:100</code> for "prefer this path," <code>65000:666</code> for "blackhole") and let downstream policy act on the tag instead of re-matching prefixes at every hop. Communities travel with the route; ad hoc prefix-list edits at each router don't, and they're the number one source of policy drift in large BGP deployments.</div>
+<h2 id="route-reflectors-and-confederations-at-scale">Route reflectors and confederations at scale</h2>
+<p>iBGP has a hard rule that trips up everyone coming from OSPF: routes learned via iBGP are never re-advertised to another iBGP peer. This split-horizon-style rule prevents loops within the AS, but it means iBGP requires a <strong>full mesh</strong> — every iBGP speaker peered directly with every other one — to guarantee full route visibility. That's <em>n(n-1)/2</em> sessions. At 10 routers that's 45 sessions; it stops being maintainable long before you hit 50 routers.</p>
+<p><strong>Route reflectors (RRs)</strong> break this constraint by relaxing the re-advertisement rule for a designated router. A route reflector can take a route learned from one iBGP client and reflect it to other clients, collapsing the mesh into a hub-and-spoke of RR-to-client sessions. To keep loop prevention intact, reflected routes carry two extra attributes: <code>ORIGINATOR_ID</code> (the router ID of the route's originator, used to prevent a route from being reflected back to its source) and <code>CLUSTER_LIST</code> (a list of cluster IDs the route has passed through, checked the same way AS-path is checked in eBGP loop prevention).</p>
+<p>The split-horizon rule for reflected routes specifically: a route from a <strong>non-client</strong> peer is reflected only to <strong>clients</strong>; a route from a <strong>client</strong> is reflected to both other clients and non-client peers. This is what lets you deploy RRs incrementally without a full topology rebuild — non-client (regular) iBGP peers keep working as before.</p>
+<p><strong>Confederations</strong> solve the same full-mesh problem differently: split the AS into sub-ASes, each running its own iBGP full mesh internally, connected by what looks like eBGP (but preserves some iBGP attributes like <code>local-preference</code>) between sub-ASes. The whole confederation appears as a single AS number to the outside world via <code>BGP_CONFED_SEQUENCE</code> handling in the AS-path. In practice, route reflectors are the far more common choice — they're simpler to operate and don't require renumbering into sub-ASes. Confederations show up mainly in very large service-provider backbones where administrative boundaries between sub-groups of routers are a design goal, not just a scaling workaround.</p>
+<h2 id="where-mpls-and-sd-wan-fit-in">Where MPLS and SD-WAN fit in</h2>
+<p><strong>MPLS</strong> and BGP intersect most directly in <strong>L3VPN</strong> deployments. Each customer (or department) gets a <strong>VRF (Virtual Routing and Forwarding)</strong> instance — an isolated routing table on the PE (Provider Edge) router. Routes from a VRF are tagged with a <strong>Route Distinguisher (RD)</strong> to make them unique in <strong>MP-BGP</strong> (multiprotocol BGP, address family <code>vpnv4</code>), and <strong>Route Targets (RTs)</strong> control which VRFs import which routes — this is what lets you build hub-and-spoke, full-mesh, or extranet topologies between sites purely through RT import/export policy, without touching the underlying MPLS label-switched path. The label switching itself (LDP or RSVP-TE-signaled labels) handles forwarding through the provider core; BGP handles the customer-facing routing intelligence layered on top.</p>
+<p>This is where a lot of "BGP vs OSPF" framing breaks down in practice: inside an MPLS VPN site, you're commonly still running OSPF (or another IGP) for intra-site routing, and BGP for VPN-wide reachability between sites — they're not competitors, they operate at different layers of the same architecture.</p>
+<p><strong>SD-WAN</strong> changes the picture at the WAN edge rather than replacing this model. Traditional MPLS L3VPN gives you a private, provider-guaranteed path with predictable latency but at a real cost per site and per megabit. SD-WAN overlays routing decisions on top of multiple underlying transports — MPLS, broadband, LTE/5G — and picks paths dynamically based on real-time metrics like jitter, loss, and latency rather than static BGP attributes alone. Underneath, most SD-WAN fabrics still use a control-plane protocol that borrows heavily from BGP path-selection concepts (Viptela/Cisco SD-WAN's OMP is a clear example), so the mental model you've built for BGP best-path transfers directly — the difference is that path decisions can now react to live performance data instead of only administrative policy. It doesn't remove the need to understand BGP; it adds a layer of application-aware policy on top of it. Sites still commonly run BGP toward the SD-WAN edge to exchange routes with the fabric, and still run an IGP internally.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider an enterprise with three sites — HQ and two branches — each multihomed to two ISPs, with an MPLS L3VPN connecting sites via the provider core as well. Inside each site, <strong>OSPF</strong> runs between the core and access layers, with the site's edge routers as OSPF <code>area 0</code> and each floor or building as a separate area feeding into it, summarized at the ABRs. This keeps intra-site convergence fast and contained.</p>
+<p>At the WAN edge, each site's edge routers run <strong>eBGP</strong> to both ISPs and to the MPLS PE. Internally, the three edge routers at each site peer via <strong>iBGP</strong> (or, if the network has grown past a handful of sites, via a pair of route reflectors placed centrally) to share externally learned routes across the site without a full mesh.</p>
+<p>Now trace a specific decision: HQ needs to reach a prefix at Branch B. That prefix is reachable both via the MPLS VPN (a BGP <code>vpnv4</code> route with a good IGP-metric next hop) and via the internet through Branch B's ISP (learned as an eBGP route re-advertised through iBGP, arriving with a longer AS-path and no local preference boost). Assuming <code>local-preference</code> hasn't been explicitly set to prefer the internet path, the MPLS path wins — not primarily because of AS-path length, but because it's typically set with a higher local preference at ingress as deliberate policy (private path preferred over public internet), and it would win on AS-path length regardless in this case. If Branch B's MPLS circuit fails, that VPN route withdraws, BGP reconverges to the eBGP-learned internet path within the normal BGP convergence window, and OSPF inside Branch B is completely unaffected because the failure never touched the IGP domain. That isolation — WAN failures don't destabilize IGP domains and vice versa — is the entire point of running BGP at the edge and OSPF internally rather than trying to run one protocol everywhere.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>1. Redistribution loops between OSPF and BGP with no route tagging.</strong> Mutual redistribution (OSPF routes into BGP and BGP routes back into OSPF at a different ASBR) without tagging creates a real risk of routes looping back into the protocol they came from, sometimes with a worse metric that wins locally and causes suboptimal or unstable routing. Fix: tag routes on redistribution (<code>route-map</code> with <code>set tag</code>) and filter on re-redistribution to explicitly block routes carrying your own tag from re-entering the source protocol.</p>
+<p><strong>2. No <code>maximum-prefix</code> limit on eBGP sessions.</strong> A misconfigured or compromised peer that suddenly advertises the full internet table (or a leaked private table) into a session with no limit can exhaust memory and take down a router. Fix: set <code>neighbor X maximum-prefix &lt;limit&gt;</code> on every eBGP session, sized realistically above expected route counts, with alerting before the hard limit tears the session down.</p>
+<p><strong>3. Ignoring asymmetric routing consequences.</strong> Multihomed, multi-path designs routinely produce traffic that egresses one path and returns via another — normal in BGP, but it breaks stateful firewalls and NAT devices that expect to see both directions of a flow on the same interface, and it complicates troubleshooting because a traceroute in one direction tells you nothing about the return path. Fix: design stateful inspection points to either see both directions (e.g., via policy-based routing or by placing firewalls where symmetry is guaranteed) or use stateless/flow-aware devices that tolerate asymmetry, and document expected asymmetric paths so on-call engineers don't chase a phantom problem.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Q: Should I use OSPF or BGP inside my data center fabric?</strong><br>A: For large leaf-spine fabrics, many operators now run <strong>eBGP</strong> even internally (one AS per leaf/rack) because it scales more predictably than OSPF's flooding domain and gives finer per-link policy control. For small-to-mid data centers, single or dual-area OSPF is still simpler to operate and perfectly adequate. There's no universal answer — it's a function of fabric size and how much per-path policy control you need.</p>
+<p><strong>Q: How many prefixes can one OSPF area realistically handle?</strong><br>A: There's no hard protocol limit, but operational guidance generally targets a few hundred routers and a few thousand routes per area before SPF run times and LSA flooding overhead start to matter — the real constraint is router CPU and how frequently the topology changes, not a fixed number.</p>
+<p><strong>Q: Why would I choose route reflectors over confederations?</strong><br>A: Route reflectors are simpler to deploy incrementally on an existing flat AS — no renumbering, no restructuring of AS-path semantics. Confederations require carving your AS into sub-ASes, which is a bigger structural change. Most networks should default to route reflectors and reach for confederations only when there's a genuine administrative or policy reason to partition the AS itself.</p>
+<p>Mastering BGP and OSPF at this level isn't about memorizing more commands — it's about understanding why each mechanism exists: areas and summarization exist to bound SPF's blast radius, the best-path algorithm exists to make policy deterministic across a network you don't fully control, and route reflectors exist because full-mesh iBGP simply doesn't scale. Once those design pressures make sense, MPLS VPNs and SD-WAN stop looking like separate technologies and start looking like what they are — BGP and IGP concepts applied at the WAN edge with a few extra labels and metrics layered on top.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#ospf-at-scale-areas-lsas-and-route-summarization">OSPF at scale: areas, LSAs, and route summarization</a></li><li><a href="#bgp-path-selection-how-routers-actually-choose-a-route">BGP path selection: how routers actually choose a route</a></li><li><a href="#route-reflectors-and-confederations-at-scale">Route reflectors and confederations at scale</a></li><li><a href="#where-mpls-and-sd-wan-fit-in">Where MPLS and SD-WAN fit in</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

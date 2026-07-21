@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A practical guide to threat hunting and digital forensics for SOC analysts moving from reactive alerting to proactive, hypothesis-driven detection.">
+<meta name="keywords" content="threat hunting digital forensics guide for security analysts, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Threat Hunting and Digital Forensics: A Practical Guide for Security Analysts | ITVedas">
+<meta property="og:description" content="A practical guide to threat hunting and digital forensics for SOC analysts moving from reactive alerting to proactive, hypothesis-driven detection.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-21-security-threat-hunting-digital-forensics">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-21-security-threat-hunting-digital-forensics">
+<title>Threat Hunting and Digital Forensics: A Practical Guide for Security Analysts | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Threat Hunting and Digital Forensics: A Practical Guide for Security Analysts", "description": "A practical guide to threat hunting and digital forensics for SOC analysts moving from reactive alerting to proactive, hypothesis-driven detection.", "keywords": "threat hunting digital forensics guide for security analysts", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#10B981;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 11 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Threat Hunting and Digital Forensics: A Practical Guide for Security Analysts</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#threat-hunting-vs-incident-response-different-mindsets">Threat hunting vs incident response: different mindsets</a></li><li><a href="#building-and-testing-a-hunting-hypothesis">Building and testing a hunting hypothesis</a></li><li><a href="#where-hunters-actually-look-logs-endpoints-and-memory">Where hunters actually look: logs, endpoints, and memory</a></li><li><a href="#digital-forensics-fundamentals-preserving-the-evidence">Digital forensics fundamentals: preserving the evidence</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Threat Hunting and Digital Forensics: A Practical Guide for Security Analysts</h1>
+<p>Your SIEM will only ever alert on what someone already taught it to recognize. Every technique that evades detection logic, every dwell-time attacker who lives off the land using legitimate admin tools, every slow-and-quiet credential harvest — none of it trips a rule. That gap is exactly where <strong>threat hunting</strong> lives, and it's why mature SOCs stop waiting for alerts and start actively going looking.</p>
+<p>This guide is written for analysts who already know how to triage an alert and now need to build the muscle for proactive investigation — forming a hypothesis, chasing it through telemetry, and when the hunt turns up something real, handling the evidence well enough that it survives legal and disciplinary scrutiny. We won't re-explain what a SIEM is. We're going straight into the mechanics of hunting and the forensic discipline that has to back it up.</p>
+<h2 id="threat-hunting-vs-incident-response-different-mindsets">Threat hunting vs incident response: different mindsets</h2>
+<p><strong>Incident response</strong> starts with a trigger — an alert, a user report, a third-party notification — and works backward to scope and contain. It's reactive by definition: something already happened, and your job is to answer "what, how bad, and how do we stop it." <strong>Threat hunting</strong> starts with nothing but a question: "if an adversary were already inside, using this technique, what would that look like in my environment — and can I find it?" No alert required. That's the fundamental mindset shift, and it's why hunting is often described as an assume-breach discipline rather than a detection discipline.</p>
+<p>The hunting loop, as formalized by Sqrrl and widely adopted across the industry, runs in five stages: <strong>hypothesis</strong> (form a specific, testable idea about adversary behavior), <strong>investigate</strong> (query data sources using tools like statistical analysis, clustering, or manual pivoting), <strong>uncover new patterns and TTPs</strong> (find the thing you didn't know to look for), <strong>inform and enrich analytics</strong> (turn what you found into a detection rule or IOC so the SIEM catches it automatically next time), and then cycle back to a new hypothesis. A hunt that doesn't feed back into automated detection is a wasted hunt — the whole point is to shrink the set of things that require a human to go looking.</p>
+<blockquote>Incident response puts out the fire you were told about; threat hunting walks the building looking for smoke nobody reported.</blockquote>
+<h2 id="building-and-testing-a-hunting-hypothesis">Building and testing a hunting hypothesis</h2>
+<p>A hunt without a hypothesis is just browsing logs, and browsing doesn't scale. Good hypotheses come from a repeatable process:</p>
+<p>1. <strong>Start with threat intelligence.</strong> Pull from your threat intel feed, ISAC bulletins, or recent incident reports for your sector. If ransomware affiliates are pivoting toward abusing legitimate remote monitoring tools to establish persistence, that's a hypothesis: "has any RMM tool been installed on an endpoint outside of our approved change window?"</p>
+<p>2. <strong>Map the hypothesis to MITRE ATT&CK.</strong> Translate the intel into specific tactics and techniques. RMM abuse for persistence maps to <strong>Remote Access Software</strong>; credential theft from memory maps to <code>T1003.001</code> (<strong>OS Credential Dumping: LSASS Memory</strong>); lateral movement via admin shares maps to <code>T1021.002</code>. The ATT&CK matrix gives you a shared vocabulary and, critically, a checklist of sub-techniques and detection data sources you might otherwise miss.</p>
+<p>3. <strong>Establish a baseline.</strong> You can't spot an anomaly without knowing what normal looks like. Build baselines for process-parent/child relationships, typical logon hours per account class, normal outbound DNS query volume, and expected use of admin tools like <code>PsExec</code>, <code>wmic</code>, or PowerShell remoting per host role.</p>
+<p>4. <strong>Scope the data and query.</strong> Decide which data sources answer the hypothesis, write the query, and run it across a defined time window — usually 30 to 90 days, balanced against retention and query performance.</p>
+<p>5. <strong>Triage and validate results.</strong> Every hit needs to be run down to a verdict: benign, suspicious-needs-more-data, or confirmed malicious. Document all three outcomes, not just the last one.</p>
+<h2 id="where-hunters-actually-look-logs-endpoints-and-memory">Where hunters actually look: logs, endpoints, and memory</h2>
+<p><strong>EDR telemetry</strong> is the primary hunting surface in most modern environments. Beyond alerts, EDR platforms expose raw process execution, network connection, file modification, and registry event streams that you can query directly — this is where you'll spend most of your time. Pay particular attention to <strong>process trees</strong>: an unusual parent-child relationship (<code>winword.exe</code> spawning <code>powershell.exe</code>, or <code>svchost.exe</code> spawning <code>cmd.exe</code> with no corresponding scheduled task) is one of the highest-signal indicators available and maps directly to <strong>living-off-the-land</strong> abuse of <code>T1059</code> (Command and Scripting Interpreter).</p>
+<p><strong>DNS and network logs</strong> catch what EDR sometimes misses, especially command-and-control (<code>T1071</code>, Application Layer Protocol) and data staging before exfiltration. Look for algorithmically generated domains, beaconing intervals with suspiciously low jitter, DNS queries with abnormally large TXT record responses, and long-lived outbound connections to newly registered domains.</p>
+<p><strong>Windows event logs</strong> remain indispensable, and knowing the high-value event IDs by heart saves time under pressure:</p>
+<ul>
+<li><code>EventID 4688</code> — process creation (enable command-line logging via GPO, it's off by default and you will regret not turning it on before you need it)</li>
+<li><code>EventID 4624</code> / <code>4625</code> — successful and failed logon, filter by logon type to distinguish interactive, network, and RDP (type 10) sessions</li>
+<li><code>EventID 4672</code> — special privileges assigned at logon, useful for spotting unexpected privilege escalation</li>
+<li><code>EventID 4648</code> — logon using explicit credentials, a strong indicator of lateral movement via <code>runas</code> or similar</li>
+<li><code>EventID 4769</code> — Kerberos service ticket requests, your primary lead for <strong>Kerberoasting</strong> (<code>T1558.003</code>) when you see unusual ticket requests for service accounts</li>
+<li><code>EventID 7045</code> — new service installed, common in persistence and lateral movement via <code>T1569.002</code></li>
+<li><code>EventID 4698</code> — scheduled task created, relevant to <code>T1053.005</code> persistence</li>
+<li><code>EventID 1102</code> — the security audit log was cleared, almost never legitimate and a strong indicator of <strong>Indicator Removal</strong> (<code>T1070.001</code>)</li>
+</ul>
+<p>When a hunt uncovers something that looks confirmed rather than suspicious — an unexplained credential dump, unauthorized data staging, signs of destructive intent — that's your trigger to escalate from live telemetry review into formal forensic acquisition. The moment you're building a case that might involve HR, legal, or law enforcement, evidentiary discipline takes over.</p>
+<h2 id="digital-forensics-fundamentals-preserving-the-evidence">Digital forensics fundamentals: preserving the evidence</h2>
+<p><strong>Chain of custody</strong> is the documented, unbroken record of who collected a piece of evidence, when, how, and who has had access to it since. If you can't account for a gap, opposing counsel — or your own legal team — can argue the evidence was tampered with, and it becomes worthless in any formal proceeding. Every transfer of evidence, physical or digital, gets logged: date, time, person, purpose, method.</p>
+<p>The <strong>order of volatility</strong> dictates collection sequence: capture the most perishable data first. The standard order runs CPU registers and cache, then RAM, then network state and running processes, then disk, then remote logging and archival data. In practice this means <strong>memory acquisition comes before you ever touch the disk</strong> — a RAM capture holds encryption keys, injected code, malware that never touches disk, and command history that a shutdown erases permanently.</p>
+<p>This is also why <strong>you never work on the original evidence</strong>. Standard practice is to create a forensic image — a bit-for-bit copy including unallocated space and slack space — using a write blocker, then generate a cryptographic hash (typically SHA-256) of both the original and the image to prove they're identical. All analysis happens on a working copy of that image. If your findings are ever challenged, you can re-image from the untouched original and reproduce the result.</p>
+<p><strong>Disk imaging vs. live response</strong> is a real tradeoff, not a formality. Full disk imaging is thorough and defensible but can take hours on modern drives, during which the host stays offline or isolated. Live response — pulling targeted artifacts (memory dump, running process list, network connections, key registry hives, event logs) from a running system — is fast and lets you keep the endpoint operational, but it inherently alters system state just by running collection tools on it. Most SOCs use live response for triage and speed, then escalate to full imaging when the case is serious enough to justify the downtime and the more rigorous evidentiary standard.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Document every hunt, including the ones that find nothing. A hunt that confirms an adversary technique isn't present in your environment is still valuable: it validates your detection coverage, it's evidence for audits and compliance reviews, and six months from now when someone asks "did we ever check for this," you'll have the answer instead of doing the work twice.</div>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Hypothesis: "An attacker with an initial foothold on a workstation is using SMB-based lateral movement (<code>T1021.002</code>) to reach a domain controller or file server, using stolen local admin credentials."</p>
+<p>The hunter starts by querying EDR for <code>4624</code> logon events of type 3 (network) against servers, cross-referenced against source workstations that have no prior history of administrative connections to that server — a deviation from baseline. One workstation stands out: a marketing department laptop shows a network logon to a file server it has never touched in 90 days of history, immediately followed by a <code>4648</code> explicit-credential logon.</p>
+<p>Pivoting to that workstation's process tree in EDR reveals the sequence: a phishing attachment spawned <code>powershell.exe</code> with an encoded command (<code>T1059.001</code>), which reached out to an external IP, then roughly twenty minutes later executed <code>net.exe</code> to enumerate shares and <code>reg.exe</code> to dump saved credentials from a scheduled task — consistent with a lightweight credential-harvesting toolkit rather than a full <code>T1003.001</code> LSASS dump, which the endpoint's EDR would have blocked.</p>
+<p>Correlating the harvested account's SID against the file server's <code>4624</code> event confirms it's the same credential. At this point the hunter has moved from suspicion to confirmation: initial access via phishing, credential theft, and lateral movement, all mapped cleanly to ATT&CK. The response: isolate the workstation, force a credential reset for the compromised account, capture memory from the workstation before isolation drops the connection, and open a formal IR case. The hunt itself converts into two new detection rules — encoded PowerShell spawning from Office processes, and any first-time network logon to a server from a workstation with no prior history — closing the gap for next time.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Hunting without a hypothesis.</strong> Opening a SIEM and scrolling through logs "to see what looks weird" doesn't scale, isn't repeatable, and produces nothing reusable. Every hunt needs a stated, falsifiable premise before the first query runs.</p>
+<p><strong>Contaminating evidence during initial triage.</strong> Running antivirus scans, opening files to "take a quick look," or rebooting a suspect host before imaging alters timestamps, overwrites memory, and can destroy exactly the artifacts you need. Treat any host that might become a forensic case as evidence from the first moment of suspicion, not after you've decided it's serious.</p>
+<p><strong>Ignoring MITRE ATT&CK documentation.</strong> A hunt that ends with "found something bad, fixed it" and no technique mapping is a dead end. Without tagging findings to specific tactics and techniques, you can't measure detection coverage, can't compare findings across hunts, and can't hand the work to another analyst without re-deriving everything from scratch.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>How often should a SOC run structured threat hunts?</strong> Mature programs run hunts on a regular cadence — weekly or biweekly for a dedicated hunt function, or monthly if hunting is a part-time responsibility layered on top of alert triage. Cadence matters less than consistency: a monthly hunt program that actually runs every month beats a weekly one that gets skipped whenever the queue is busy.</p>
+<p><strong>Do I need EDR to start threat hunting, or can I hunt with just SIEM data?</strong> You can start with SIEM and native OS logging — Windows event logs, Sysmon, DNS logs, firewall logs — and many organizations do. EDR dramatically improves hunting fidelity because it gives you process lineage and behavioral telemetry SIEM data often lacks, but the hunting methodology (hypothesis, investigate, enrich) works with whatever data sources you have.</p>
+<p><strong>What's the difference between a forensic image and a simple file backup?</strong> A backup captures active, accessible files as the operating system sees them. A forensic image is a bit-for-bit sector copy that includes deleted files still recoverable in unallocated space, file slack, and metadata like timestamps — none of which a standard backup preserves, and all of which can be central to reconstructing what actually happened.</p>
+<p>Threat hunting and digital forensics aren't separate disciplines bolted together for convenience — they're two ends of the same investigative continuum, one proactive and hypothesis-driven, the other reactive and evidentiary. Building genuine skill in both is what separates an analyst who reacts to what the tools surface from one who actively narrows the gap between compromise and detection, and it's the clearest path from SOC tier-two work into the senior security engineering and DFIR roles that define the advanced end of this career track.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#threat-hunting-vs-incident-response-different-mindsets">Threat hunting vs incident response: different mindsets</a></li><li><a href="#building-and-testing-a-hunting-hypothesis">Building and testing a hunting hypothesis</a></li><li><a href="#where-hunters-actually-look-logs-endpoints-and-memory">Where hunters actually look: logs, endpoints, and memory</a></li><li><a href="#digital-forensics-fundamentals-preserving-the-evidence">Digital forensics fundamentals: preserving the evidence</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

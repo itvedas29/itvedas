@@ -70,7 +70,7 @@ def build_search_index():
     for article_file in (ROOT / "articles").rglob("*.html"):
         try:
             content = article_file.read_text(encoding='utf-8')
-            url = f"/{article_file.relative_to(ROOT)}".replace('.html', '/') if article_file.name != 'index.html' else f"/{article_file.relative_to(ROOT)}"
+            url = f"/{article_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if article_file.name != 'index.html' else f"/{article_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(article_file, content)
             index['categories'].add(metadata['category'])
@@ -94,7 +94,7 @@ def build_search_index():
     for chapter_file in (ROOT / "chapters").rglob("*.html"):
         try:
             content = chapter_file.read_text(encoding='utf-8')
-            url = f"/{chapter_file.relative_to(ROOT)}".replace('.html', '/') if chapter_file.name != 'index.html' else f"/{chapter_file.relative_to(ROOT)}"
+            url = f"/{chapter_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if chapter_file.name != 'index.html' else f"/{chapter_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(chapter_file, content)
             index['categories'].add(metadata['category'])
@@ -128,7 +128,7 @@ def build_search_index():
     for news_file in news_files[:50]:
         try:
             content = news_file.read_text(encoding='utf-8')
-            url = f"/{news_file.relative_to(ROOT)}".replace('.html', '/') if news_file.name != 'index.html' else f"/{news_file.relative_to(ROOT)}"
+            url = f"/{news_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if news_file.name != 'index.html' else f"/{news_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(news_file, content)
 
@@ -151,7 +151,7 @@ def build_search_index():
     for tool_file in (ROOT / "tools").rglob("*.html"):
         try:
             content = tool_file.read_text(encoding='utf-8')
-            url = f"/{tool_file.relative_to(ROOT)}".replace('.html', '/') if tool_file.name != 'index.html' else f"/{tool_file.relative_to(ROOT)}"
+            url = f"/{tool_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if tool_file.name != 'index.html' else f"/{tool_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(tool_file, content)
             if not metadata['category']:
@@ -177,7 +177,7 @@ def build_search_index():
     for ai_file in (ROOT / "ai-tools").rglob("*.html"):
         try:
             content = ai_file.read_text(encoding='utf-8')
-            url = f"/{ai_file.relative_to(ROOT)}".replace('.html', '/') if ai_file.name != 'index.html' else f"/{ai_file.relative_to(ROOT)}"
+            url = f"/{ai_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if ai_file.name != 'index.html' else f"/{ai_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(ai_file, content)
             if not metadata['category']:
@@ -213,7 +213,7 @@ def build_search_index():
         if page_path.exists():
             try:
                 content = page_path.read_text(encoding='utf-8')
-                url = f"/{page_path.relative_to(ROOT)}".replace('.html', '/').replace('/index/', '/')
+                url = f"/{page_path.relative_to(ROOT).as_posix()}".replace('.html', '/').replace('/index/', '/')
 
                 metadata = get_page_metadata(page_path, content)
                 if not metadata['category']:
@@ -239,7 +239,7 @@ def build_search_index():
     for resource_file in (ROOT / "resources").rglob("*.html"):
         try:
             content = resource_file.read_text(encoding='utf-8')
-            url = f"/{resource_file.relative_to(ROOT)}".replace('.html', '/') if resource_file.name != 'index.html' else f"/{resource_file.relative_to(ROOT)}"
+            url = f"/{resource_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if resource_file.name != 'index.html' else f"/{resource_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(resource_file, content)
             if not metadata['category']:
@@ -281,7 +281,7 @@ def build_search_index():
 
         try:
             content = html_file.read_text(encoding='utf-8')
-            url = f"/{html_file.relative_to(ROOT)}".replace('.html', '/') if html_file.name != 'index.html' else f"/{html_file.relative_to(ROOT)}"
+            url = f"/{html_file.relative_to(ROOT).as_posix()}".replace('.html', '/') if html_file.name != 'index.html' else f"/{html_file.relative_to(ROOT).as_posix()}"
 
             metadata = get_page_metadata(html_file, content)
             if not metadata['category']:
@@ -317,7 +317,7 @@ def build_search_index():
     print(f"📊 Search Index Summary:")
     print(f"  Total pages indexed: {index['total_pages']}")
     print(f"  Categories: {len(index['categories'])}")
-    print(f"  Index file: {index_path.relative_to(ROOT)}")
+    print(f"  Index file: {index_path.relative_to(ROOT).as_posix()}")
     print(f"  File size: {index_path.stat().st_size / 1024:.1f} KB")
 
     return index['total_pages']

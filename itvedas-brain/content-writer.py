@@ -387,7 +387,7 @@ def extract_meta(content, keyword, topic):
 # ─────────────────────────────────────────────────────────────────
 #  STEP 5 — build full article page
 # ─────────────────────────────────────────────────────────────────
-def build_page(content, meta, date_str, modified_date=None, filename=None):
+def build_page(content, meta, date_str, modified_date=None, filename=None, level=None):
     topic   = meta["topic"]
     # title/description are Claude's free-form output — escape before
     # embedding in an attribute or text node.
@@ -396,6 +396,10 @@ def build_page(content, meta, date_str, modified_date=None, filename=None):
     keyword = meta["keyword"]
     color   = color_for(topic)
     modified_date = modified_date or date_str
+    level_badge = esc(level) if level else "👶 Beginner friendly"
+    # Strip the emoji off the badge text for the schema.org field, which
+    # expects plain text (e.g. "🎓 Advanced / Expert" -> "Advanced / Expert").
+    edu_level = re.sub(r'^[^\w]+', '', level).strip() if level else "Beginner"
 
     body = re.sub(r'<!-- META.*?-->', '', content, flags=re.DOTALL)
     body = body.replace('[AFFILIATE]', '').strip()
@@ -445,7 +449,7 @@ def build_page(content, meta, date_str, modified_date=None, filename=None):
     "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     "datePublished": date_str, "dateModified": modified_date,
-    "articleSection": topic, "educationalLevel": "Beginner",
+    "articleSection": topic, "educationalLevel": edu_level,
 })}
 </script>
 {ga4_snippet()}
@@ -529,7 +533,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
     <span class="badge-info">📅 {date_str}</span>
     {f'<span class="badge-info">🔄 Updated {modified_date}</span>' if modified_date != date_str else ''}
     <span class="badge-info">⏱ {rt}</span>
-    <span class="badge-info">👶 Beginner friendly</span>
+    <span class="badge-info">{level_badge}</span>
   </div>
   <h1>{title}</h1>
 </div>
