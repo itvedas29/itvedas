@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A technical guide to rate limiting algorithms — fixed window, sliding window, token bucket, leaky bucket — and how to implement them correctly.">
+<meta name="keywords" content="API rate limiting throttling algorithms explained, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="API Rate Limiting and Throttling: Algorithms and Implementation | ITVedas">
+<meta property="og:description" content="A technical guide to rate limiting algorithms — fixed window, sliding window, token bucket, leaky bucket — and how to implement them correctly.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-api-rate-limiting">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-api-rate-limiting">
+<title>API Rate Limiting and Throttling: Algorithms and Implementation | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "API Rate Limiting and Throttling: Algorithms and Implementation", "description": "A technical guide to rate limiting algorithms \u2014 fixed window, sliding window, token bucket, leaky bucket \u2014 and how to implement them correctly.", "keywords": "API rate limiting throttling algorithms explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 13 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>API Rate Limiting and Throttling: Algorithms and Implementation</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#fixed-window-counter-simple-but-bursty-at-the-edges">Fixed window counter: simple, but bursty at the edges</a></li><li><a href="#sliding-window-log-and-sliding-window-counter">Sliding window log and sliding window counter</a></li><li><a href="#token-bucket-and-leaky-bucket">Token bucket and leaky bucket</a></li><li><a href="#where-rate-limiting-actually-lives-in-the-stack">Where rate limiting actually lives in the stack</a></li><li><a href="#communicating-limits-to-clients">Communicating limits to clients</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>API Rate Limiting and Throttling: Algorithms and Implementation</h1>
+<p>Every API that survives contact with the real world eventually needs a way to say no. A single misbehaving client — a retry loop with no backoff, a scraper, a compromised API key — can consume enough capacity to degrade service for everyone else sharing that infrastructure. <strong>Rate limiting</strong> is the mechanism that enforces fairness and protects capacity before that happens, and the algorithm you choose determines whether your limits are precise, gameable, or accidentally hostile to legitimate traffic.</p>
+<p>This isn't just about stopping abuse. Rate limiting protects downstream dependencies (databases, third-party APIs you're paying per-call for, internal services with their own capacity limits) from being overwhelmed by traffic that's technically legitimate but poorly paced. It protects your infrastructure bill from runaway automation. And it protects other tenants on a shared multi-tenant API from noisy-neighbor effects. Getting the algorithm and implementation right is a core piece of API reliability engineering, not a bolt-on afterthought.</p>
+<h2 id="fixed-window-counter-simple-but-bursty-at-the-edges">Fixed window counter: simple, but bursty at the edges</h2>
+<p>The <strong>fixed window counter</strong> is the algorithm most engineers reach for first because it's trivial to implement: pick a window size (say, 60 seconds), maintain a counter keyed by client and window, increment it on every request, and reject once the counter exceeds the limit. When the clock rolls into the next window, the counter resets to zero. With Redis this is a single <code>INCR</code> with a <code>EXPIRE</code> set on first write — a few lines of code and O(1) memory per client.</p>
+<p>The problem is the boundary. Because the window resets in a hard cliff rather than continuously, a client can send its full quota in the last second of one window and its full quota again in the first second of the next. A limit of 100 requests/minute nominally caps throughput at 100/min, but nothing stops 200 requests landing within a two-second span straddling the boundary — double the intended rate, sustained for as long as the client can time its bursts to the window edges. For a limit meant to protect a fragile downstream resource, that's a real gap, not a theoretical one.</p>
+<blockquote>A fixed window doesn't limit your rate — it limits your rate per clock tick, and clients can stand on either side of the tick at once.</blockquote>
+<h2 id="sliding-window-log-and-sliding-window-counter">Sliding window log and sliding window counter</h2>
+<p>The <strong>sliding window log</strong> algorithm fixes the boundary problem by tracking every request's exact timestamp instead of a coarse counter. To evaluate a new request, you drop all timestamps older than <code>now - window_size</code> from the log, then check whether the remaining count is under the limit. Because the window is evaluated relative to the current instant rather than snapping to a fixed boundary, there's no edge to exploit — the rate really is bounded to the limit over any rolling window, not just clock-aligned ones.</p>
+<p>The cost is memory and computation: you're storing a timestamp per request per client (typically as a sorted set in Redis, using <code>ZADD</code> and <code>ZREMRANGEBYSCORE</code> to trim expired entries), and at high request rates for high-traffic clients, that log can grow large and expensive to prune on every single request. It's precise but doesn't scale cheaply.</p>
+<p>The <strong>sliding window counter</strong> is the practical middle ground almost every production system actually uses. It keeps two fixed-window counters — the current window and the previous one — and estimates the rolling count by weighting the previous window's count by how much of it still overlaps the sliding window:</p>
+<p><code>estimated_count = current_window_count + previous_window_count * (overlap_fraction)</code></p>
+<p>For example, 30 seconds into a 60-second window, the overlap fraction is 0.5, so half of the previous window's count is added to the current window's count. This assumes requests were evenly distributed within the previous window, which is an approximation — but it's a very good one in practice, closes the boundary-burst gap almost entirely, and costs the same O(1) memory as the fixed window counter. This is the algorithm behind most gateway-level rate limiters you'll encounter, including nginx's <code>limit_req</code> in its default leaky-bucket-adjacent form and Cloudflare's rate limiting rules.</p>
+<h2 id="token-bucket-and-leaky-bucket">Token bucket and leaky bucket</h2>
+<p>Where the window-based algorithms are fundamentally about counting requests in a time span, <strong>token bucket</strong> and <strong>leaky bucket</strong> model rate limiting as a flow-control problem, and they answer a different question: not just "how many requests," but "how should bursts behave."</p>
+<p>In <strong>token bucket</strong>, each client has a bucket with a fixed capacity, filled with tokens at a steady refill rate (say, 10 tokens/second, capped at a maximum of 100). Every request consumes one token; if the bucket is empty, the request is rejected or queued. Because tokens accumulate during idle periods up to the bucket's capacity, a client that's been quiet can burst up to the full bucket size in a single instant before being throttled back to the steady refill rate. This is usually exactly what you want for APIs: it enforces a long-run average rate while still permitting legitimate bursty behavior — a batch job that fires 50 requests at once after being idle, for instance — without penalizing the client for not having spread that traffic out artificially.</p>
+<p><strong>Leaky bucket</strong> inverts the framing. Requests arrive into a queue (the "bucket") of fixed size and are processed — leaked out — at a constant, fixed rate, regardless of how bursty their arrival was. If the queue is full when a request arrives, it's dropped. The output rate is perfectly smooth by construction; there is no burst allowance at all, because the leak rate is fixed independent of input. This is the right model when the thing you're protecting genuinely cannot tolerate bursts — a downstream service with a hard concurrency ceiling, a metered third-party API billed in a way that punishes spiky call patterns, or a legacy system that falls over under uneven load even if the average rate is fine.</p>
+<p>The practical choice: use <strong>token bucket</strong> when you want to cap an average rate while tolerating legitimate burstiness — this is the default for most public APIs. Use <strong>leaky bucket</strong> when the downstream consumer needs a constant, predictable output rate and bursts themselves are the problem, not just the volume.</p>
+<h2 id="where-rate-limiting-actually-lives-in-the-stack">Where rate limiting actually lives in the stack</h2>
+<p>Algorithm choice matters less than where you enforce it. Rate limiting can live at the <strong>API gateway or reverse proxy layer</strong> (Kong, nginx, Envoy, or a cloud provider's managed API gateway) or inside <strong>application middleware</strong> running in your service code. Gateway-level enforcement is almost always preferable for one structural reason: it rejects excess traffic before it consumes application resources. A request rejected at nginx with a 429 costs a socket accept and a header parse. A request rejected inside your application after middleware has already deserialized the body, opened a database connection pool slot, and run authentication logic has already spent the resources you were trying to protect. If the goal is protecting compute and downstream capacity, doing the check as early in the request path as possible — ideally before it even reaches an application process — is the difference between rate limiting working and rate limiting working too late.</p>
+<p>Application-level rate limiting still has a place: for limits that depend on business logic the gateway can't see (a per-user quota that varies by subscription tier stored in your database, for instance) or for limits scoped to a specific expensive operation rather than the API as a whole. In practice, most mature systems layer both — coarse, cheap protection at the gateway, finer-grained business-aware limits in the application.</p>
+<p>The other key decision is the limiting key. <strong>Per-API-key</strong> limiting is the standard for authenticated APIs and is the most abuse-resistant, since keys are provisioned deliberately and can be revoked individually. <strong>Per-IP</strong> limiting is a necessary fallback for unauthenticated endpoints (like login or signup) but is fragile — NAT and shared corporate egress IPs mean it can throttle many legitimate users as one, and it's trivially evaded with IP rotation. <strong>Per-user</strong> limiting (tied to an authenticated session or account, independent of which key or device they're using) is the right granularity when the abuse vector is account-level rather than key-level, such as preventing one user from spinning up multiple API keys to bypass a per-key limit.</p>
+<h2 id="communicating-limits-to-clients">Communicating limits to clients</h2>
+<p>A rate limiter that rejects requests without explaining itself forces every client to guess — and guessing produces exactly the retry storms you were trying to prevent. The correct HTTP status for a throttled request is <code>429 Too Many Requests</code>, not a generic <code>403</code> or <code>503</code>; client libraries and monitoring systems key off this specifically to distinguish throttling from actual failure.</p>
+<p>Alongside the status code, responses should carry standard headers so well-behaved clients can self-regulate: <code>X-RateLimit-Limit</code> (the ceiling for the current window), <code>X-RateLimit-Remaining</code> (requests left before the client gets throttled), and <code>X-RateLimit-Reset</code> (when the window resets, typically as a Unix timestamp). These aren't formally standardized across all providers — GitHub, Stripe, and Twitter each have slightly different header names and semantics — though the IETF's <code>RateLimit</code> header field draft is pushing toward convergence. Whichever naming you pick, apply it consistently across every endpoint. On a rejected request, always include <code>Retry-After</code>, giving the number of seconds (or an HTTP date) the client should wait before retrying. This single header is what turns a client's retry logic from blind exponential backoff guesswork into an informed wait.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Return rate limit headers on <em>every</em> response, not just the ones that get rejected. A client sitting at 95% of its quota needs to see <code>X-RateLimit-Remaining: 5</code> on a successful 200 response to throttle itself proactively — if headers only appear on the 429, the client only learns it has a problem after it's already caused one.</div>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a public API that issues per-customer API keys and needs to support both steady interactive usage and occasional legitimate batch operations — a common shape for billing, CRM, or data-export APIs. A fixed window counter would either be too strict (rejecting a legitimate 200-request batch job that a customer runs once a day) or too loose at the boundary (letting that same customer double their effective rate by timing requests around the window edge).
+
+<p>A <strong>token bucket per API key</strong> fits this well: each key gets a bucket sized to, say, 100 tokens with a refill rate of 10 tokens/second (a 10 req/s sustained rate). A customer running routine traffic never hits the ceiling. A customer kicking off a nightly batch export can burst up to 100 requests immediately, then gets smoothly throttled back to the sustained rate as the bucket drains — no hard rejection of a legitimate workload, just a graceful cap.</p>
+<p>The implementation detail that matters here is state storage. If the API runs behind multiple gateway instances behind a load balancer — which any API with real traffic does — each instance cannot maintain its own in-process bucket state, because a client's requests will land on different instances between calls, and each instance would think it's seeing a fraction of the client's actual traffic. The standard fix is backing the bucket state in <strong>Redis</strong>, shared across all gateway instances, using an atomic Lua script (via <code>EVAL</code>) to perform the check-and-decrement as a single operation and avoid race conditions between concurrent requests hitting different instances at the same moment. Libraries like <code>redis-cell</code> or hand-rolled Lua scripts implementing the GCRA (generic cell rate algorithm, a mathematically equivalent formulation of token bucket) are the common production pattern here, because they avoid the read-modify-write race that a naive GET-then-SET implementation would have under concurrent load.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p>Three mistakes account for most rate limiting failures in production:</p>
+<p><strong>Rate limiting only at the application layer.</strong> If the limiter lives inside your application process, a flood of requests still consumes connection handling, authentication, and routing resources before being rejected. Under a real flood, the application tier can be saturated and rejecting slowly long before the rate limiter's logic even executes. Push enforcement to the gateway or reverse proxy so excess traffic is dropped before it costs you compute.</p>
+<p><strong>Omitting <code>Retry-After</code>.</strong> Without it, well-behaved clients have no signal for how long to back off and either retry immediately (making the overload worse) or implement their own arbitrary backoff that may be far longer than necessary, hurting their own throughput unnecessarily. This single header is cheap to add and directly determines whether your throttled clients behave cooperatively or adversarially.</p>
+<p><strong>Using in-memory counters on a multi-instance deployment.</strong> An in-process counter (a simple dictionary or local cache) only sees the traffic that lands on that specific instance. Behind a load balancer distributing across, say, five instances, a limit intended to cap a client at 100 requests/minute actually caps them at up to 500/minute in aggregate, since each instance independently allows 100 before throttling. This is one of the most common production incidents in rate limiting — the limit looks correctly configured in code, passes local testing on a single instance, and then silently under-enforces by a factor equal to the fleet size once deployed. Always back shared state in a centralized store like Redis unless you have a specific, deliberate reason for per-instance limits.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Should rate limiting and throttling be treated as the same thing?</strong><br>Not quite — they're closely related but distinct in intent. Rate limiting typically means rejecting requests outright once a threshold is exceeded, returning a <code>429</code>. Throttling more precisely refers to delaying or queuing requests to smooth traffic to an acceptable rate rather than rejecting it — leaky bucket is inherently a throttling mechanism, since excess requests queue rather than fail immediately, whereas a simple fixed window counter is purely a rate limiter. In practice the terms are often used interchangeably, but the distinction matters when you're choosing between rejecting and queuing as your overload response.</p>
+<p><strong>Should rate limits apply to authentication failures the same as successful requests?</strong><br>No — and this is a common oversight. Failed authentication attempts (wrong API key, expired token, invalid credentials) should typically be rate limited more aggressively and separately from normal traffic limits, both to slow credential-stuffing attacks and because a burst of auth failures is a distinct signal from legitimate usage patterns. Many teams implement a tighter, separate limiter specifically on authentication endpoints.</p>
+<p><strong>How should rate limits interact with API versioning or tiered pricing plans?</strong><br>Limits should be looked up dynamically per key rather than hardcoded, typically by attaching a plan or tier identifier to the API key at issuance and having the gateway or middleware fetch the corresponding limit (from a fast cache, not a live database query on every request) before applying it. This lets you offer differentiated limits — free tier at 60 req/min, enterprise at 6000 req/min — without deploying different rate limiter code per tier.</p>
+<p>Rate limiting done well is invisible to the overwhelming majority of legitimate traffic and firm against the traffic that isn't. The algorithm you pick — fixed window for simplicity, sliding window counter for a good precision-to-cost ratio, or token/leaky bucket for explicit burst control — should be driven by what you're actually protecting downstream, and the enforcement point should be as close to the edge of your infrastructure as you can push it. Get the headers and status codes right, store shared state centrally, and rate limiting stops being a source of mysterious production incidents and becomes what it's supposed to be: boring, predictable infrastructure.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#fixed-window-counter-simple-but-bursty-at-the-edges">Fixed window counter: simple, but bursty at the edges</a></li><li><a href="#sliding-window-log-and-sliding-window-counter">Sliding window log and sliding window counter</a></li><li><a href="#token-bucket-and-leaky-bucket">Token bucket and leaky bucket</a></li><li><a href="#where-rate-limiting-actually-lives-in-the-stack">Where rate limiting actually lives in the stack</a></li><li><a href="#communicating-limits-to-clients">Communicating limits to clients</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.">
+  <meta name="description" content="Compare Azure SQL Database, Managed Instance, and SQL Server on VMs to pick the right deployment model for your workload.">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Azure SQL Database vs SQL Server: Choosing the Right Database Solution | IT Vedas">
-  <meta property="og:description" content="Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.">
+  <meta property="og:title" content="Azure SQL Database vs SQL Server on VMs | IT Vedas">
+  <meta property="og:description" content="Compare Azure SQL Database, Managed Instance, and SQL Server on VMs to pick the right deployment model for your workload.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
-    
-  <title>Azure SQL Database vs SQL Server: Choosing the Right Database Solution | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure SQL Database vs SQL Server: Choosing the Right Database Solution", "description": "Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <meta property="og:url" content="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server">
+  <title>Azure SQL Database vs SQL Server on VMs | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure SQL Database vs SQL Server on VMs", "description": "Compare Azure SQL Database, Managed Instance, and SQL Server on VMs to pick the right deployment model for your workload.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Azure","item":"https://www.itvedas.com/articles/azure/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Azure Sql Database Vs Sql Server","item":"https://www.itvedas.com/articles/azure/2026-07-04-azure-sql-database-vs-sql-server"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure SQL Database vs SQL Server: Choosing the Right Database Solution | IT Vedas","description":"Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure SQL Database vs SQL Server: Choosing the Right Database Solution | IT Vedas","description":"Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,21 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/azure/">Azure</a> › Azure SQL Database vs SQL Server: Choosing the Right Database Solution</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/azure/">Azure</a> &rsaquo; Azure SQL Database vs SQL Server on VMs</div>
   <div class="ch-badge">☁️ Azure</div>
-  <h1>Azure SQL Database vs SQL Server: Choosing the Right Database Solution</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/azure/">Azure</a></li>
-<li>/</li>
-<li>2026 07 04 Azure Sql Database Vs Sql Server</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>8 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Compare Azure SQL Database with on-premises SQL Server. Understand differences, benefits, migration path, and when to use each solution.</p>
+  <h1>Azure SQL Database vs SQL Server on VMs</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>9 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Compare Azure SQL Database, Managed Instance, and SQL Server on VMs to pick the right deployment model for your workload.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
-  <div class="reading-time">⏱ 8 min read</div>
+  <div class="reading-time">&#9201; 9 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Basic IT knowledge</li>
-<li>Understanding of fundamentals</li>
+      <li>Working knowledge of SQL Server (T-SQL, SQL Agent, backup/restore concepts)</li>
+<li>Basic familiarity with Azure resource types (VMs, resource groups, VNets)</li>
     </ul>
   </div>
 </div>
@@ -140,118 +119,65 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade azure implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>Azure SQL Database is a fully managed PaaS offering with no OS or SQL Server instance access, scoped to a single database or elastic pool</li>
+<li>Azure SQL Managed Instance provides near-complete SQL Server surface area (SQL Agent, cross-database queries, Service Broker, CLR) as PaaS, at the cost of higher minimum vCore counts and slower provisioning</li>
+<li>SQL Server on an Azure VM is IaaS: you patch the OS, license and configure SQL Server, and manage HA/DR yourself, but retain full feature and version control</li>
+<li>DTU bundles compute, memory, and I/O into one number; vCore lets you size compute and storage independently and is required for Managed Instance and Hybrid Benefit licensing</li>
       </ul>
     </div>
 
-    
-<h2 id="overview-of-both-solutions">Overview of Both Solutions</h2>
-<p>This section covers overview of both solutions. Enterprise organizations rely on proper overview of both solutions implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+    <h2 id="three-deployment-models">The three deployment models, and what each one actually is</h2>
+<p>Azure gives you three distinct ways to run SQL Server workloads, and they sit at different points on the management-responsibility spectrum, not just different price points.</p>
+<p><code>Azure SQL Database</code> is fully managed platform-as-a-service scoped to a single database (or a group of databases sharing resources in an elastic pool). There is no instance-level access: no SQL Agent, no <code>xp_cmdshell</code>, no file system, no RDP or SSH into anything. Microsoft handles patching, backups, and the underlying OS entirely. You connect to a logical server endpoint, but that "server" is a connection and security boundary, not a physical or virtual machine you can inspect. This model was built for application databases that don't need cross-database joins or instance-level features, and it scales down to very small, cheap tiers as easily as it scales up to business-critical workloads with read replicas.</p>
+<p><code>Azure SQL Managed Instance</code> is also PaaS — Microsoft still owns patching, backups, and infrastructure — but it exposes something much closer to a real SQL Server instance. You get a native instance boundary, cross-database queries within the instance, SQL Server Agent, Database Mail, Service Broker, CLR integration, and support for the linked-server catalog. It's designed specifically to make lift-and-shift migrations from on-premises or VM-based SQL Server as close to a connection-string change as possible. The tradeoff is a heavier resource footprint: Managed Instance requires a dedicated subnet inside a virtual network, has a higher compute floor, and provisioning/scaling operations take longer (often tens of minutes) than the near-instant scaling of Azure SQL Database.</p>
+<p>SQL Server on an Azure VM is infrastructure-as-a-service. You pick a VM size and disk configuration, install (or use a pre-built Azure Marketplace image of) SQL Server, and from that point on you are the DBA and the sysadmin. You control the OS patch cadence, the exact SQL Server build and cumulative update, instance-level configuration, third-party agents (backup software, monitoring, security tooling), and every feature SQL Server ships — including ones Azure PaaS doesn't support, like Replication publishers in some topologies, certain FILESTREAM configurations, or specific third-party CLR assemblies. You're also fully responsible for configuring HA/DR (Always On Availability Groups, clustering), backup retention, and disaster recovery testing.</p>
 
+<h2 id="dtu-vs-vcore-purchasing-models">DTU vs vCore purchasing models</h2>
+<p>Azure SQL Database (and historically, only Azure SQL Database) offers a choice between two purchasing models; Managed Instance is vCore-only, and VMs are priced as ordinary compute plus a separate SQL Server license or pay-as-you-go SQL Server meter.</p>
+<p>The <code>DTU</code> (Database Transaction Unit) model bundles CPU, memory, and I/O into a single blended metric, packaged into Basic, Standard, and Premium tiers. It's simple to reason about for small, predictable workloads — you pick a tier and a DTU count and you're done — but it gives you no way to scale compute and storage independently, and no visibility into which resource (CPU, memory, or I/O) is actually the bottleneck when you hit a ceiling.</p>
+<p>The <code>vCore</code> model separates compute and storage into independent, transparent settings: you choose a number of virtual cores, an amount of memory (tied to the compute tier — General Purpose vs Business Critical vs Hyperscale), and storage size and type separately. This maps directly onto familiar SQL Server sizing conversations ("this workload needs 8 cores and 400 GB") and, critically, is the only model that supports <code>Azure Hybrid Benefit</code> — applying existing SQL Server licenses with active Software Assurance to reduce the compute rate by roughly 30-55%. If your organization already owns SQL Server Enterprise or Standard licenses, vCore with Hybrid Benefit is very often cheaper than DTU for equivalent capacity, which is why Microsoft has been steering new deployments toward vCore and gradually de-emphasizing DTU pricing in documentation and defaults. DTU remains supported and is still reasonable for small, single-database workloads where the simplicity outweighs the licensing optimization.</p>
 
-<h2 id="feature-comparison">Feature Comparison</h2>
-<p>This section covers feature comparison. Enterprise organizations rely on proper feature comparison implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="paas-feature-gaps">What you give up moving from IaaS to PaaS</h2>
+<p>The biggest planning risk in this decision isn't compute sizing, it's assuming PaaS gives you everything a VM does. It doesn't, and the gap differs meaningfully between the two PaaS tiers.</p>
+<p>Azure SQL Database has the largest gap. There is no <code>SQL Server Agent</code> (use Elastic Database Jobs or Azure Automation/Logic Apps instead), no native cross-database queries (you must use elastic query, external tables, or application-side joins), no linked servers, no SQL Server Analysis Services, Reporting Services, or Integration Services hosted alongside it, no CLR in most tiers (Hyperscale and some tiers added limited trusted assembly support later, but it's not the full CLR you get on-box), and no direct file system or OS access at all. Applications built assuming any of these are common migration blockers.</p>
+<p>Azure SQL Managed Instance closes most of this list: SQL Agent, cross-database queries and transactions within the same instance, Service Broker, Database Mail, and CLR are all present. What it still doesn't give you is cross-instance distributed transactions using MSDTC in the classic sense, filestream/filetable in the general-purpose tier historically had limitations, some replication topologies are restricted, and you still can't RDP into the box or install arbitrary third-party software that needs OS-level hooks (agent-based backup tools, certain monitoring agents, custom CLR requiring native DLLs outside the sandboxed model). Instance-level features that require true OS control remain a VM-only story.</p>
+<p>SQL Server on a VM gives up nothing feature-wise relative to on-premises SQL Server — same binaries, same support matrix — but you give up the managed-service guarantees: no built-in automatic patching unless you configure Automated Patching, no built-in high availability unless you build an Availability Group or FCI yourself, and you own the operational toil of backup verification, corruption checks, and capacity monitoring that Azure absorbs for you in both PaaS tiers.</p>
 
+<h2 id="availability-and-backup-differences">Availability, backup, and recovery differences</h2>
+<p>Azure SQL Database's higher service tiers (Business Critical) use built-in Always On technology under the hood with automatic failover and up to three synchronous replicas, with zero application configuration required. General Purpose tier uses remote storage-based redundancy with a shorter failover but lower cost. Point-in-time restore is automatic and included, typically covering 7-35 days depending on tier, with no backup jobs to schedule or maintain.</p>
+<p>Managed Instance offers the same automated backup and point-in-time restore model, plus built-in support for Always On-style automatic failover groups for cross-region DR, again without you managing the underlying cluster. It also uniquely supports native <code>RESTORE</code> and <code>BACKUP</code> compatibility with on-premises .bak files for both migration and ongoing hybrid backup scenarios, which Azure SQL Database does not support directly.</p>
+<p>On a VM, high availability is entirely your build: Always On Availability Groups across multiple VMs (with your own listener, quorum, and network configuration), Failover Cluster Instances with shared storage, or log shipping. Azure provides the SQL Server IaaS Agent extension to automate some of this (automated backup, automated patching, and simplified AG deployment through the Azure portal), but the underlying cluster is still yours to design, test, and troubleshoot when it fails at 2 a.m.</p>
 
-<h2 id="performance-and-scalability">Performance and Scalability</h2>
-<p>This section covers performance and scalability. Enterprise organizations rely on proper performance and scalability implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="decision-framework">A practical decision framework</h2>
+<p>For a greenfield, cloud-native application where you control the schema and data access patterns from day one, default to <code>Azure SQL Database</code>. Use a single database for simple apps, or an elastic pool when you have many similarly-sized databases (common in multi-tenant SaaS) that can share a resource budget economically. Only reach for Business Critical or Hyperscale tiers if you have a specific latency or scale requirement — General Purpose is the right starting point for most workloads.</p>
+<p>For migrating an existing SQL Server application where the goal is minimal code and operational change — it uses SQL Agent jobs, cross-database joins, linked servers, or relies on instance-level configuration you don't want to re-architect — <code>Azure SQL Managed Instance</code> is the target. Budget for its higher entry cost (the smallest General Purpose instance starts at 4 vCores) and plan the VNet/subnet requirements early, since retrofitting networking after deployment is disruptive.</p>
+<p>For workloads that need full OS-level control, a SQL Server feature or version not supported in either PaaS tier, third-party software installed alongside the database engine, or very specific compliance/audit requirements that mandate direct control over the host, <code>SQL Server on an Azure VM</code> is the right (and sometimes only) option. This is also the fallback when you're running an older SQL Server version PaaS doesn't support, or when a vendor-supplied application explicitly certifies only against a specific on-box SQL Server configuration.</p>
+<p>A common mistake is picking based on cost alone. Run the sizing exercise for all three options against your real workload, including Hybrid Benefit eligibility, before deciding — a Managed Instance with Hybrid Benefit can land close to VM pricing while eliminating patching and backup overhead, which often changes the calculus more than the sticker price does.</p>
 
-
-<h2 id="pricing-models">Pricing Models</h2>
-<p>This section covers pricing models. Enterprise organizations rely on proper pricing models implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="migration-strategy">Migration Strategy</h2>
-<p>This section covers migration strategy. Enterprise organizations rely on proper migration strategy implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="best-use-cases">Best Use Cases</h2>
-<p>This section covers best use cases. Enterprise organizations rely on proper best use cases implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="disaster-recovery">Disaster Recovery</h2>
-<p>This section covers disaster recovery. Enterprise organizations rely on proper disaster recovery implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
+<h2 id="migration-path-considerations">Migration path considerations</h2>
+<p>Moving from an existing SQL Server environment, the <code>Data Migration Assistant</code> and <code>Azure Migrate</code> can assess compatibility and flag blocking issues (unsupported features, deprecated syntax) before you commit to a target. If the assessment shows no Managed Instance blockers, that path minimizes downstream application changes. If it surfaces hard blockers — certain replication topologies, specific CLR dependencies, or Analysis Services co-located on the same box — a VM keeps the migration a true lift-and-shift, and you can revisit PaaS later once those dependencies are removed or re-architected. Whichever target you choose, test the actual cutover (backup/restore or continuous replication via Azure Database Migration Service) against a non-production copy first; the assessment tools catch most but not all compatibility issues, and connection string, authentication mode, and collation mismatches are the most common last-mile surprises.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master overview of both solutions fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>Choose Azure SQL Database for new, cloud-native applications built against a single-database or multi-tenant elastic pool model</li>
+<li>Choose Azure SQL Managed Instance when migrating an existing SQL Server application that depends on SQL Agent jobs, cross-database queries, linked servers, or CLR with minimal code changes</li>
+<li>Choose SQL Server on a VM when you need OS-level access, unsupported SQL Server features, specific patch/version control, or third-party agents installed alongside SQL Server</li>
+<li>vCore with Azure Hybrid Benefit is usually cheaper than DTU if you already own SQL Server licenses with Software Assurance</li>
+<li>Managed Instance closes most of the PaaS feature gap but still lacks a few things, like cross-instance transactions and certain SSIS/SSRS integrations, that only a VM can provide</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/azure/" style="color:#0066cc;">Azure</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#overview-of-both-solutions">Overview of Both Solutions</a></li>
-<li><a href="#feature-comparison">Feature Comparison</a></li>
-<li><a href="#performance-and-scalability">Performance and Scalability</a></li>
-<li><a href="#pricing-models">Pricing Models</a></li>
-<li><a href="#migration-strategy">Migration Strategy</a></li>
-<li><a href="#best-use-cases">Best Use Cases</a></li>
-<li><a href="#disaster-recovery">Disaster Recovery</a></li>
+      <li><a href="#three-deployment-models">The three deployment models, and what each one actually is</a></li>
+<li><a href="#dtu-vs-vcore-purchasing-models">DTU vs vCore purchasing models</a></li>
+<li><a href="#paas-feature-gaps">What you give up moving from IaaS to PaaS</a></li>
+<li><a href="#availability-and-backup-differences">Availability, backup, and recovery differences</a></li>
+<li><a href="#decision-framework">A practical decision framework</a></li>
+<li><a href="#migration-path-considerations">Migration path considerations</a></li>
     </ol>
   </aside>
 </div>
@@ -266,6 +192,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

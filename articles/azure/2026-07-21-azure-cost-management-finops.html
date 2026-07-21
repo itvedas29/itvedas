@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Advanced guide to Azure cost governance: budgets with action-group alerts, Reservations vs Savings Plans, Hybrid Benefit, and tagging for chargeback.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="Azure Cost Management &amp; FinOps | IT Vedas">
+  <meta property="og:description" content="Advanced guide to Azure cost governance: budgets with action-group alerts, Reservations vs Savings Plans, Hybrid Benefit, and tagging for chargeback.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/azure/2026-07-21-azure-cost-management-finops">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-21-azure-cost-management-finops">
+  <title>Azure Cost Management &amp; FinOps | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure Cost Management &amp; FinOps", "description": "Advanced guide to Azure cost governance: budgets with action-group alerts, Reservations vs Savings Plans, Hybrid Benefit, and tagging for chargeback.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/azure/2026-07-21-azure-cost-management-finops"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/azure/">Azure</a> &rsaquo; Azure Cost Management &amp; FinOps</div>
+  <div class="ch-badge">☁️ Azure</div>
+  <h1>Azure Cost Management &amp; FinOps</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>11 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Advanced guide to Azure cost governance: budgets with action-group alerts, Reservations vs Savings Plans, Hybrid Benefit, and tagging for chargeback.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 11 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Working knowledge of Azure subscriptions, management groups, and RBAC</li>
+<li>Familiarity with VM SKUs, Azure Policy, and Azure Monitor action groups</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>Reservations discount by committing to a specific VM family and region (up to ~72% off pay-as-you-go); Savings Plans commit to an hourly spend amount and apply flexibly across VM families and regions (up to ~65% off)</li>
+<li>Azure applies discounts in this order: Reservations first, then Savings Plans, then remaining usage at pay-as-you-go rates</li>
+<li>Budgets in Cost Management only alert via action groups — they do not stop spend on their own; enforcement requires an Automation runbook or Logic App triggered by the alert</li>
+<li>Azure Hybrid Benefit can cut Windows Server VM compute cost by up to 40% and SQL Server cost by up to 55% when combined with reserved capacity, but requires active Software Assurance or a qualifying subscription</li>
+      </ul>
+    </div>
+
+    <h2 id="finops-is-a-discipline-not-a-dashboard">FinOps Is a Discipline, Not a Dashboard</h2>
+<p>Azure Cost Management + Billing gives you the raw telemetry, but treating cost control as "check the cost analysis blade occasionally" is why most organizations end up with runaway spend and no accountability. The FinOps Foundation's model — <strong>Inform, Optimize, Operate</strong> — is the right mental frame because each phase has a distinct owner, cadence, and tooling requirement, and skipping a phase is exactly how teams end up buying reservations blind or tagging nothing.</p>
+<p><strong>Inform</strong> is about visibility and allocation: can every dollar of spend be attributed to a team, application, or cost center? This is where cost analysis, exports, and tagging live. <strong>Optimize</strong> is rate and usage optimization: Reservations, Savings Plans, Azure Hybrid Benefit, rightsizing, and shutdown scheduling. <strong>Operate</strong> is the continuous loop — governance guardrails, automated enforcement, and a recurring review cadence with engineering and finance in the same room. Most Azure cost guides only cover Optimize. The expensive mistakes happen when Inform is skipped (you optimize spend you can't attribute) or Operate is skipped (you optimize once, then drift back to pay-as-you-go within two quarters as workloads change).</p>
+
+<h2 id="cost-analysis-and-budgets-the-inform-phase">Cost Analysis and Budgets: the Inform Phase</h2>
+<p>The <code>Cost analysis</code> blade defaults to the "Actual cost" view, which is fine for a general trend but misleading for reservation and savings plan ROI — actual cost shows the full upfront reservation purchase in the month it was bought, spiking that month and understating every month after. Switch to the <code>Amortized cost</code> view when evaluating commitment-based discounts; it spreads the reservation cost evenly across the term and breaks out unused reservation cost as a separate line, which is the only way to see if a commitment is actually being consumed.</p>
+<p>Group by <code>ResourceGroupName</code>, <code>ServiceName</code>, or a cost-allocation tag to find concentration. Cost Management's native retention is limited, so for anything beyond trend analysis — year-over-year comparisons, custom BI, chargeback reports — set up a <code>scheduled export</code> to a storage account and build reporting on top of that raw data rather than relying on the portal long-term.</p>
+<p>Budgets are scoped to a subscription, resource group, or management group and support both cost budgets and forecasted-cost budgets. The critical detail engineers routinely miss: <strong>a budget does not stop spend</strong>. It only fires notifications when a threshold — commonly configured at 80%, 100%, and 120% of forecast — is crossed. Wiring an <code>action group</code> to email finance is trivial and mostly theater. The action that matters is wiring the action group to an Azure Automation runbook or Logic App that actually does something: deallocate non-production VMs, scale down an AKS node pool, or disable an Azure Data Factory trigger. If enforcement isn't built, the budget is a dashboard, not a control.</p>
+<p>Layer <code>Cost Management anomaly detection</code> on top of budgets for near-real-time alerting — it uses a statistical model against your historical spend pattern and catches spikes (a forgotten test deployment scaling a Cosmos DB throughput setting, a runaway Databricks cluster) faster than a monthly threshold budget would.</p>
+
+<h2 id="reservations-vs-savings-plans-the-real-tradeoff">Reservations vs Savings Plans: the Real Tradeoff</h2>
+<p>These two mechanisms get conflated constantly, and the difference is not "old vs new" — they optimize for different fleet shapes.</p>
+<p><strong>Reservations</strong> commit to a specific VM family, size (with instance size flexibility within a series), and region for a 1- or 3-year term, billed monthly or upfront. In exchange for that specificity, you get the deepest discount available — up to roughly 72% off pay-as-you-go for compute, and reservations are also the only commitment mechanism available for services like SQL Database, Cosmos DB provisioned throughput, and Azure Cache for Redis. Scope can be set to a single subscription, a shared scope across a billing account, or a management group. Reservations can be exchanged or cancelled, subject to a 12% early-termination fee and an annual refund cap, so a wrong-sized reservation isn't a permanent mistake, just an expensive one.</p>
+<p><strong>Savings Plans</strong> commit to an hourly dollar amount of compute spend (for example, $50/hour) for 1 or 3 years, and that commitment applies flexibly across VM families, sizes, regions, and even between Windows and Linux — it follows the spend, not the SKU. The discount ceiling is lower, around 65% off pay-as-you-go, because Azure is taking on more uncertainty about what you'll actually run. Savings Plans currently cover compute services only (VMs, dedicated hosts, App Service, Azure Functions Premium/Container Apps) — they do not extend to PaaS data services the way reservations do.</p>
+<p>The decision in practice: if a workload is pinned to a known VM family in a known region for its lifetime — a steady-state SQL Server cluster, a fixed-capacity AKS system node pool — buy a <strong>Reservation</strong> for that specific SKU and take the deeper discount. If your fleet is heterogeneous or actively being resized (teams migrating VM generations, autoscaling across instance families, multi-region deployments that shift), a <strong>Savings Plan</strong> captures a baseline discount without the risk of an idle, mismatched reservation. Discount precedence matters when both are in play: Azure applies Reservation discounts first against matching usage, then applies Savings Plan discounts against whatever remains, then bills anything left over at pay-as-you-go. A common, defensible pattern for mature estates is to reserve the known-stable core of the fleet and cover the variable remainder with a Savings Plan sized to the trailing 30-day compute floor, not the average.</p>
+
+<h2 id="azure-hybrid-benefit-turning-existing-licenses-into-discounts">Azure Hybrid Benefit: Turning Existing Licenses into Discounts</h2>
+<p><code>Azure Hybrid Benefit</code> (AHB) lets you apply on-premises Windows Server or SQL Server licenses that carry active Software Assurance (or a qualifying subscription-based license) to Azure resources, so you pay only the base compute rate instead of a rate that bundles in Microsoft's list-price licensing cost. For Windows Server VMs this is worth up to roughly 40% off; for SQL Server, up to 55%, and critically, AHB and Reservations are independent discounts that stack — reserve the compute for the term discount, apply AHB for the licensing discount, and the combined savings on a long-running SQL Server fleet can be substantial.</p>
+<p>AHB isn't limited to plain IaaS VMs: it extends to SQL Managed Instance, SQL Server on Azure VMs, Azure Dedicated Host, and AKS Windows node pools. The core-to-core mapping matters — each on-prem Windows Server core license with SA covers a fixed amount of Azure vCPU, and SQL Server licensing is edition-specific (Standard vs Enterprise core entitlements differ), so an accurate AHB claim requires a real license inventory, not an assumption that "we're a Microsoft shop so we qualify." Visual Studio subscription licenses and OEM/retail licenses without SA do not qualify for production workloads under AHB — that's a frequent audit finding.</p>
+<p>Because AHB is a self-attested benefit toggled per resource (a checkbox at VM/SQL deployment time or a property flip after the fact via CLI or ARM/Bicep), it's easy for it to silently not be applied on newly provisioned resources if it isn't baked into your landing zone templates. Bake the AHB flag into your Bicep/Terraform modules and policy-enforce it for Windows and SQL resource types rather than relying on someone remembering to check a box.</p>
+
+<h2 id="tagging-strategy-for-cost-allocation">Tagging Strategy for Cost Allocation</h2>
+<p>Cost analysis can group by tag, but only if the tag exists on the resource — and critically, cost data attribution in Azure is tied to the tags present at the time of billing, not tags added retroactively after the fact for most resource types. An estate where 40% of resources are untagged makes chargeback mathematically impossible: that spend either gets dumped into a shared "unallocated" bucket that no cost center wants to own, or gets allocated by guesswork, which finance teams rightly distrust.</p>
+<p>A workable minimum tagging schema covers four dimensions: <code>CostCenter</code> (billing code for chargeback), <code>Environment</code> (prod/staging/dev/test, used to drive both cost accountability and automated shutdown policy), <code>Owner</code> (an individual or team alias, not a distribution list that turns over), and <code>Application</code> or <code>WorkloadName</code> (groups resources that span multiple resource groups into one logical cost unit). Larger orgs add <code>BusinessUnit</code> and a <code>DataClassification</code> tag reused by security tooling, but resist the urge to over-model — every additional required tag is another thing that can be entered inconsistently ("Prod" vs "production" vs "PROD" fragments your cost analysis groupings).</p>
+<p>Enforcement can't be a wiki page. Use <code>Azure Policy</code> with <code>deny</code> effect to block resource creation without required tags, or <code>append</code>/<code>modify</code> effects to inherit a tag value from the parent resource group or subscription automatically — this is the practical fix for resource types that don't support tags directly (some child resources) or for retroactively backfilling CostCenter from a resource group's existing tag. Cost Management's <code>tag inheritance</code> setting (subscription and resource group tag inheritance for cost data) is a separate, complementary control worth enabling — it lets cost analysis attribute spend using the resource group's tags even when the resource itself wasn't tagged, which is a reasonable stopgap while Policy-based enforcement catches up on new deployments. Remember the hard limits: 50 tags per resource, a 512-character key and 256-character value ceiling — irrelevant for a four-tag scheme, but worth knowing before someone proposes encoding a JSON blob into a tag value.</p>
+
+<h2 id="operationalizing-finops-governance-and-automation">Operationalizing FinOps: Governance and Automation</h2>
+<p>The Optimize phase is not a one-time purchasing exercise. Azure Advisor's cost recommendations (idle resources, rightsizing candidates, reservation and savings plan purchase recommendations based on trailing usage) should feed a recurring review — monthly for most estates, weekly for fast-growing ones — not an annual audit. Advisor's reservation recommendations are based on the last 7, 30, or 60 days of usage; treat the 30-day view as the default and only trust the 60-day view for genuinely stable workloads, since a 7-day window will recommend over-committing on anything with weekly cyclicality.</p>
+<p>Automate the parts that don't need judgment: scheduled start/stop for non-production VMs (via Azure Automation or Logic Apps triggered on a timer, not budget alerts), auto-scale policies tuned to actual traffic rather than static peak sizing, and policy-enforced resource SKU allow-lists in dev/test subscriptions so an engineer can't accidentally spin up a GPU SKU in a sandbox. None of this replaces human review — it just means the human review time goes to judgment calls (should we reserve this new workload, is this anomaly a real incident) instead of chasing an unshut-down VM from three weeks ago.</p>
+
+<h2 id="putting-it-together-a-practical-rollout-sequence">Putting It Together: a Practical Rollout Sequence</h2>
+<p>For an estate with no existing FinOps practice, sequence matters: optimizing rates before you can allocate cost produces numbers nobody trusts. Start with tagging policy and cost export (Inform), run at least one full billing cycle to validate allocation accuracy, then move to Optimize — rightsizing and shutdown automation first since they carry no commitment risk, followed by Reservations and Savings Plans sized against the now-trustworthy usage data, then Azure Hybrid Benefit applied across qualifying Windows and SQL resources. Close the loop with Operate: budgets with real enforcement actions attached, a recurring cost review cadence, and Advisor recommendations triaged on a schedule rather than ignored until finance escalates. Each phase depends on the one before it producing accurate data — a Reservation purchased against unallocated, untagged usage data is a guess with a 1- or 3-year commitment attached.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Treat cost management as the FinOps inform/optimize/operate loop, not a one-time reservation purchase</li>
+<li>Use the amortized cost view, not actual cost, when evaluating whether reservations and savings plans are actually paying off</li>
+<li>Reservations win for stable, predictable workloads pinned to one VM family and region; Savings Plans win for heterogeneous or shifting fleets</li>
+<li>A budget alert without an attached automation runbook is just a notification — build the remediation action, not just the threshold</li>
+<li>Enforce tagging with Azure Policy at the management group level; retroactive tagging of thousands of untagged resources is a project no one wants to run twice</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#finops-is-a-discipline-not-a-dashboard">FinOps Is a Discipline, Not a Dashboard</a></li>
+<li><a href="#cost-analysis-and-budgets-the-inform-phase">Cost Analysis and Budgets: the Inform Phase</a></li>
+<li><a href="#reservations-vs-savings-plans-the-real-tradeoff">Reservations vs Savings Plans: the Real Tradeoff</a></li>
+<li><a href="#azure-hybrid-benefit-turning-existing-licenses-into-discounts">Azure Hybrid Benefit: Turning Existing Licenses into Discounts</a></li>
+<li><a href="#tagging-strategy-for-cost-allocation">Tagging Strategy for Cost Allocation</a></li>
+<li><a href="#operationalizing-finops-governance-and-automation">Operationalizing FinOps: Governance and Automation</a></li>
+<li><a href="#putting-it-together-a-practical-rollout-sequence">Putting It Together: a Practical Rollout Sequence</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

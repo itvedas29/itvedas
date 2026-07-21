@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="How WinRM, Invoke-Command, PSSessions, and JEA role capabilities let you administer fleets of servers securely without RDP or standing admin rights.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Remoting and JEA (Just Enough Administration) | IT Vedas">
+  <meta property="og:description" content="How WinRM, Invoke-Command, PSSessions, and JEA role capabilities let you administer fleets of servers securely without RDP or standing admin rights.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/powershell/2026-07-21-powershell-remoting-jea">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/powershell/2026-07-21-powershell-remoting-jea">
+  <title>PowerShell Remoting and JEA (Just Enough Administration) | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "PowerShell Remoting and JEA (Just Enough Administration)", "description": "How WinRM, Invoke-Command, PSSessions, and JEA role capabilities let you administer fleets of servers securely without RDP or standing admin rights.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/powershell/2026-07-21-powershell-remoting-jea"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/powershell/">PowerShell</a> &rsaquo; PowerShell Remoting and JEA (Just Enough Administration)</div>
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Remoting and JEA (Just Enough Administration)</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>10 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">How WinRM, Invoke-Command, PSSessions, and JEA role capabilities let you administer fleets of servers securely without RDP or standing admin rights.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 10 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Comfortable writing PowerShell functions, script blocks, and modules</li>
+<li>Working knowledge of Windows authentication (Kerberos/NTLM) and Active Directory groups</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>WinRM listens on TCP 5985 for HTTP and 5986 for HTTPS, not the RDP port 3389</li>
+<li>PS Remoting is enabled by default on Windows Server since 2012 but must be turned on manually with Enable-PSRemoting on client Windows</li>
+<li>Invoke-Command runs a script block on one or many machines and returns results; Enter-PSSession opens an interactive shell on exactly one machine</li>
+<li>JEA endpoints run commands under a temporary virtual account, so the connecting user never needs standing admin rights on the box</li>
+      </ul>
+    </div>
+
+    <h2 id="why-remoting-beats-rdp-at-scale">Why remoting beats RDP at scale</h2>
+<p>RDP-and-click administration has a hard ceiling: it is inherently one-to-one. You open a session, you click through a console, and whatever you did lives only in your memory or a change-ticket comment. It does not repeat cleanly, it does not scale to fifty servers, and it leaves no structured record of what actually happened. PowerShell Remoting inverts that model. Instead of moving yourself to the machine, you send a script block to the machine (or to a hundred machines at once) and get structured objects back. The same script that patches one server patches a datacenter, and because the unit of work is a script block rather than a sequence of mouse clicks, it is trivially auditable, testable, and source-controllable.</p>
+<p>This matters most once an estate crosses roughly a dozen servers. Below that, RDP fatigue is annoying but survivable. Above it, RDP-and-click stops being an administration strategy and becomes a bottleneck: every task takes N times as long as N grows, and every task is only as consistent as the human doing the clicking that day. Remoting is what lets one admin credibly own two hundred servers instead of twenty.</p>
+
+<h2 id="winrm-the-transport-underneath">WinRM: the transport underneath</h2>
+<p>PowerShell Remoting is not its own network protocol — it rides on WinRM, Microsoft's implementation of the WS-Management (WS-Man) standard. WinRM wraps PowerShell commands and their serialized output in SOAP envelopes and moves them over HTTP or HTTPS. This is a deliberate design choice: because the transport is ordinary HTTP(S), it traverses the same firewalls, proxies, and load balancers that any other web traffic does, without needing a dedicated protocol punch-through the way RDP or raw RPC does.</p>
+<p>The defaults matter for firewall rules and for troubleshooting:</p>
+<ul>
+<li><strong>TCP 5985</strong> — HTTP listener (traffic is still encrypted at the Kerberos/NTLM negotiation layer even though the transport is "HTTP", but it is not TLS-wrapped)</li>
+<li><strong>TCP 5986</strong> — HTTPS listener, using a certificate bound to the listener, for full TLS in addition to the authentication-layer encryption</li>
+</ul>
+<p>Note that neither of these is port 3389 (RDP) or port 445 (SMB) — a common early-career confusion. When <code>Enable-PSRemoting</code> runs, it does three things: it starts the WinRM service and sets it to auto-start, it creates an HTTP listener bound to all IP addresses on 5985, and it opens the "Windows Remote Management (HTTP-In)" firewall rule for the active profile. You can inspect the listener configuration directly:</p>
+<pre><code>winrm enumerate winrm/config/listener
+Get-Item WSMan:\localhost\Client\TrustedHosts
+Test-WSMan -ComputerName SQL01</code></pre>
+<p><code>Test-WSMan</code> is the fastest sanity check when remoting fails — it tells you immediately whether the problem is "WinRM isn't listening on the target" versus something deeper in authentication or authorization.</p>
+
+<h2 id="enabling-remoting-client-vs-server-defaults">Client vs. server: why the defaults differ</h2>
+<p>This trips up more admins than almost anything else in the remoting stack: PS Remoting is <strong>on by default on Windows Server</strong> (every version since Server 2012) and <strong>off by default on Windows client editions</strong> (Windows 10, Windows 11). Trying to <code>Invoke-Command</code> against a fresh Windows 11 machine fails until someone runs <code>Enable-PSRemoting -Force</code> on it, while a freshly deployed Windows Server instance already has a listener waiting.</p>
+<p>The reasoning is exposure surface, not an oversight. Servers are provisioned specifically to be administered remotely and typically live behind network segmentation, so an open management listener is expected and desired. Client machines are end-user devices that roam onto coffee-shop Wi-Fi, home networks, and other untrusted segments — leaving a remote-administration listener open by default on every laptop in the world would be a meaningful attack surface increase for very little benefit to the average user. When you deliberately want a client machine reachable for remoting (a build agent, a lab VM, a kiosk you manage centrally), you opt in explicitly:</p>
+<pre><code># On the target client machine, run elevated:
+Enable-PSRemoting -Force
+
+# If the machines aren't domain-joined (workgroup or cross-forest),
+# you also need to tell the *initiating* machine to trust the target:
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value "SQL01,WEB0*" -Force</code></pre>
+<p><code>TrustedHosts</code> only matters outside a domain. Inside Active Directory, Kerberos mutual authentication already establishes trust between domain-joined machines, so <code>TrustedHosts</code> stays empty and remoting works using the caller's domain credentials without extra configuration — another reason server-to-server remoting inside a domain "just works" while workgroup and cross-forest scenarios need manual trust setup.</p>
+
+<h2 id="invoke-command-vs-enter-pssession">Invoke-Command vs. Enter-PSSession</h2>
+<p>These are the two entry points into remoting, and they solve different problems. Confusing them is the single most common remoting mistake among admins moving off RDP.</p>
+<p><code>Enter-PSSession</code> opens an interactive remote shell against exactly one computer. Your prompt changes to show the remote machine name, and every command you type from that point executes there until you run <code>Exit-PSSession</code>. It is the direct analog of SSH-ing into a box — useful for exploratory troubleshooting where you don't yet know what you're looking for.</p>
+<pre><code>Enter-PSSession -ComputerName WEB01
+# Prompt becomes: [WEB01]: PS C:\Users\admin&gt;
+Get-Service -Name W3SVC
+Get-EventLog -LogName System -Newest 20
+Exit-PSSession</code></pre>
+<p><code>Invoke-Command</code> is fire-and-forget: you hand it a script block and a list of one or more target computers, it runs the block on all of them in parallel, and it returns the results to your local session as deserialized objects, tagged with a <code>PSComputerName</code> property so you can tell which result came from which machine. This is the workhorse for anything scripted, scheduled, or run against more than one server.</p>
+<pre><code>$servers = 'WEB01','WEB02','WEB03','SQL01'
+
+Invoke-Command -ComputerName $servers -ScriptBlock {
+    [PSCustomObject]@{
+        Service     = 'W3SVC'
+        Status      = (Get-Service -Name W3SVC -ErrorAction SilentlyContinue).Status
+        DiskFreeGB  = [math]::Round(
+            (Get-PSDrive -Name C).Free / 1GB, 1
+        )
+    }
+} -ErrorAction SilentlyContinue |
+    Select-Object PSComputerName, Service, Status, DiskFreeGB |
+    Format-Table -AutoSize</code></pre>
+<p>Run against four servers, that one call fans out over four simultaneous WinRM connections and comes back with a single table — no loop, no manual RDP into each box. <code>Invoke-Command</code> also accepts <code>-ThrottleLimit</code> to cap how many concurrent connections it opens (default 32), which matters when you point it at a few hundred machines at once and don't want to flood the network or the source machine's connection pool.</p>
+<p>The rule of thumb: default to <code>Invoke-Command</code>. Reach for <code>Enter-PSSession</code> only when you're genuinely exploring interactively on a single box and don't yet know what commands you'll need to run.</p>
+
+<h2 id="pssessions-and-connection-reuse">PSSessions and connection reuse</h2>
+<p>Both cmdlets above, used with <code>-ComputerName</code>, create a connection, run the command, and tear the connection down — every single call. That's fine for one-off queries but wasteful when you're running several related commands against the same machine, because each call re-pays the TCP handshake, WinRM negotiation, and authentication cost. It also means each call starts with a fresh, stateless remote runspace — any variable you set in one call is gone by the next.</p>
+<p><code>New-PSSession</code> solves both problems by creating a persistent connection you hold onto and reuse:</p>
+<pre><code>$session = New-PSSession -ComputerName SQL01
+
+# First call: check current state
+Invoke-Command -Session $session -ScriptBlock {
+    Get-Process -Name sqlservr | Select-Object Id, WorkingSet
+}
+
+# Set a variable that persists in the remote runspace
+Invoke-Command -Session $session -ScriptBlock {
+    $global:svc = Get-Service -Name MSSQLSERVER
+}
+
+# Second call, same connection, same remote state, no reconnect:
+Invoke-Command -Session $session -ScriptBlock {
+    $svc | Restart-Service -Force
+    Start-Sleep -Seconds 5
+    $svc.Refresh()
+    $svc.Status
+}
+
+Remove-PSSession $session</code></pre>
+<p>A single <code>PSSession</code> can also be passed to <code>Enter-PSSession -Session $session</code> if you want to drop into it interactively after running scripted steps against it — the same underlying connection, whether you're driving it interactively or programmatically. You can list what's open with <code>Get-PSSession</code> and should always <code>Remove-PSSession</code> when finished; orphaned sessions consume memory on the target until they time out (the default idle timeout is four hours).</p>
+<p>For genuinely large fan-out work, <code>Invoke-Command -ComputerName $servers -AsJob</code> combines this with background execution, returning a job you poll with <code>Receive-Job</code> instead of blocking your console while every server responds.</p>
+
+<h2 id="just-enough-administration-jea">Just Enough Administration (JEA)</h2>
+<p>Everything above assumes the connecting user is someone you'd trust with full administrative control of the target — because by default, that's exactly what remoting grants. A user who can open a PSSession on a domain admin's behalf can run anything on that box that an interactive admin could.</p>
+<p>JEA changes that equation. It lets you publish a custom remoting endpoint on a machine that constrains a connecting user to a specific, named list of cmdlets, functions, and even specific parameter values — regardless of what rights that user's own account actually has. The canonical example: a helpdesk technician needs to restart the Print Spooler or a specific IIS app pool when it hangs, and nothing else. Without JEA, you either give them full local admin (too much) or make them file a ticket every time (too slow). With JEA, they connect to a JEA endpoint, and the only cmdlet the session exposes is <code>Restart-Service</code>, constrained to that one service name.</p>
+<p>The mechanism that makes this safe, not just cosmetic, is the <strong>virtual account</strong>. When a user connects to a JEA endpoint, PowerShell does not run their commands under their own identity — it spins up a temporary local (or group-managed domain) account that exists only for the lifetime of that session, has exactly the local group memberships you configured, and disappears when the session ends. The connecting user's own account never touches an admin group at all. Combined with mandatory PowerShell transcription (JEA endpoints log every command executed to a transcript file by default), you get both the restriction and a full audit trail of who did what through the constrained endpoint.</p>
+
+<h2 id="building-and-registering-a-jea-endpoint">Building and registering a JEA endpoint</h2>
+<p>A JEA endpoint is defined by two files working together: a <strong>role capability file</strong> (<code>.psrc</code>) that lists what's allowed, and a <strong>session configuration file</strong> (<code>.pssc</code>) that maps security groups to role capabilities and wires the whole thing to a virtual account.</p>
+<p>The role capability file is where the real restriction lives. <code>VisibleCmdlets</code> is not just a name whitelist — each entry can pin down exactly which parameter values are legal, which is what turns "can restart services" into "can restart exactly one service":</p>
+<pre><code># SpoolerHelpdesk.psrc
+@{
+    Author      = 'ITVedas'
+    Description = 'Helpdesk tier 1: restart the print spooler only, nothing else'
+
+    VisibleCmdlets = @(
+        @{
+            Name       = 'Restart-Service'
+            Parameters = @(
+                @{ Name = 'Name'; ValidateSet = 'Spooler' }
+                @{ Name = 'Force' }
+            )
+        },
+        @{
+            Name       = 'Get-Service'
+            Parameters = @(
+                @{ Name = 'Name'; ValidateSet = 'Spooler' }
+            )
+        }
+    )
+
+    VisibleFunctions = @()
+    VisibleAliases   = @()
+}</code></pre>
+<p>Any parameter not listed under a cmdlet is unavailable in the session, and <code>ValidateSet</code> hard-blocks any value outside the allowed list — the technician cannot type <code>Restart-Service -Name MSSQLSERVER</code> and have it silently work; the endpoint will not expose that value as legal input at all. The session configuration file then binds a security group to this role capability and specifies the virtual account's group membership:</p>
+<pre><code># SpoolerHelpdesk.pssc
+@{
+    SchemaVersion         = '2.0.0.0'
+    SessionType           = 'RestrictedRemoteServer'
+    RunAsVirtualAccount   = $true
+    RoleDefinitions       = @{
+        'CONTOSO\HelpdeskTier1' = @{ RoleCapabilities = 'SpoolerHelpdesk' }
+    }
+    TranscriptDirectory   = 'C:\ProgramData\JEAConfig\Transcripts'
+}</code></pre>
+<p>Registering the endpoint makes it available as a named connection target, separate from the default administrative remoting endpoint:</p>
+<pre><code>Register-PSSessionConfiguration `
+    -Name 'SpoolerHelpdesk' `
+    -Path 'C:\ProgramData\JEAConfig\SpoolerHelpdesk.pssc' `
+    -Force
+
+# A helpdesk technician then connects not to the default endpoint,
+# but explicitly to the JEA one:
+Enter-PSSession -ComputerName WEB01 -ConfigurationName SpoolerHelpdesk</code></pre>
+<p>Inside that session, <code>Get-Command</code> shows only <code>Restart-Service</code> and <code>Get-Service</code> — no <code>Get-Process</code>, no file system access, no way to reach anything else on the box, even though the connection succeeded and the WinRM transport is identical to a full administrative session. The restriction is enforced server-side by the constrained runspace, not by client-side politeness, so it holds even against a technician actively trying to escape the sandbox. That combination — narrow capability, ephemeral elevated identity, and mandatory transcription — is what makes JEA the right answer for delegating specific server tasks without widening your admin group.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Use Invoke-Command for fan-out, scripted, unattended work against many machines at once</li>
+<li>Use Enter-PSSession only when you genuinely need an interactive back-and-forth session on a single host</li>
+<li>Reuse a PSSession object across multiple Invoke-Command calls to avoid paying the connection and authentication cost repeatedly</li>
+<li>JEA role capability files whitelist exact cmdlets and even exact parameter values, not just "this user is an admin or not"</li>
+<li>Every JEA session is logged via PowerShell transcription, giving you an audit trail of exactly what a constrained user ran</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#why-remoting-beats-rdp-at-scale">Why remoting beats RDP at scale</a></li>
+<li><a href="#winrm-the-transport-underneath">WinRM: the transport underneath</a></li>
+<li><a href="#enabling-remoting-client-vs-server-defaults">Client vs. server: why the defaults differ</a></li>
+<li><a href="#invoke-command-vs-enter-pssession">Invoke-Command vs. Enter-PSSession</a></li>
+<li><a href="#pssessions-and-connection-reuse">PSSessions and connection reuse</a></li>
+<li><a href="#just-enough-administration-jea">Just Enough Administration (JEA)</a></li>
+<li><a href="#building-and-registering-a-jea-endpoint">Building and registering a JEA endpoint</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

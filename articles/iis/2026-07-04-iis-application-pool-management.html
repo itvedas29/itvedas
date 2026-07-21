@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.">
+  <meta name="description" content="How IIS application pools isolate worker processes, and how to configure identities, recycling, idle timeout, preload, and pipeline mode correctly.">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="IIS Application Pool Management: Performance and Reliability | IT Vedas">
-  <meta property="og:description" content="Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.">
+  <meta property="og:title" content="IIS Application Pool Management | IT Vedas">
+  <meta property="og:description" content="How IIS application pools isolate worker processes, and how to configure identities, recycling, idle timeout, preload, and pipeline mode correctly.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
-    
-  <title>IIS Application Pool Management: Performance and Reliability | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS Application Pool Management: Performance and Reliability", "description": "Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <meta property="og:url" content="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management">
+  <title>IIS Application Pool Management | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS Application Pool Management", "description": "How IIS application pools isolate worker processes, and how to configure identities, recycling, idle timeout, preload, and pipeline mode correctly.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Iis","item":"https://www.itvedas.com/articles/iis/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Iis Application Pool Management","item":"https://www.itvedas.com/articles/iis/2026-07-04-iis-application-pool-management"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"IIS Application Pool Management: Performance and Reliability | IT Vedas","description":"Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"IIS Application Pool Management: Performance and Reliability | IT Vedas","description":"Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,21 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/iis/">IIS</a> › IIS Application Pool Management: Performance and Reliability</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/iis/">IIS</a> &rsaquo; IIS Application Pool Management</div>
   <div class="ch-badge">🌐 IIS</div>
-  <h1>IIS Application Pool Management: Performance and Reliability</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/iis/">Iis</a></li>
-<li>/</li>
-<li>2026 07 04 Iis Application Pool Management</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>9 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Master IIS Application Pool management for optimal application performance and reliability. Learn process models, recycling, and monitoring.</p>
+  <h1>IIS Application Pool Management</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>9 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">How IIS application pools isolate worker processes, and how to configure identities, recycling, idle timeout, preload, and pipeline mode correctly.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
-  <div class="reading-time">⏱ 9 min read</div>
+  <div class="reading-time">&#9201; 9 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Basic IT knowledge</li>
-<li>Understanding of fundamentals</li>
+      <li>IIS installed with at least one site or application configured</li>
+<li>Comfortable with IIS Manager and basic PowerShell</li>
     </ul>
   </div>
 </div>
@@ -140,118 +119,122 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade iis implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>An application pool's worker process (w3wp.exe) is the real isolation boundary — pools share nothing, so one pool crashing does not affect sites running in other pools</li>
+<li>ApplicationPoolIdentity is the default identity in IIS 7.5+ and is more secure than NetworkService because each pool gets its own auto-generated virtual account and SID</li>
+<li>The default periodic restart interval is 1740 minutes (29 hours), deliberately offset from 24 hours so scheduled recycles don't collide at the same time every day</li>
+<li>Rapid-fail protection stops a pool automatically after 5 worker process crashes within a 5-minute window by default, returning 503 instead of crash-looping</li>
       </ul>
     </div>
 
-    
-<h2 id="application-pool-basics">Application Pool Basics</h2>
-<p>This section covers application pool basics. Enterprise organizations rely on proper application pool basics implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
+    <h2 id="what-an-application-pool-isolates">What an Application Pool Isolates</h2>
+<p>An application pool's real substance is a worker process — <code>w3wp.exe</code> — spawned by the Windows Process Activation Service (WAS) when the first request for that pool arrives (or immediately, if the pool is set to start eagerly). Every application assigned to a pool runs inside that one process, sharing its address space, its AppDomain(s) for classic .NET, its threads, and its memory. Applications assigned to a different pool get a completely separate <code>w3wp.exe</code> with its own memory space and its own thread pool.</p>
+<p>This is why pool assignment matters more than most admins treat it: if two sites share a pool and one leaks memory or deadlocks its request-processing threads, both sites degrade together, because they're competing for the same process's resources. Split them into separate pools and a crash, hang, or memory bloat in one is contained — WAS restarts the failed process, the other pool's <code>w3wp.exe</code> never notices. This is also why per-pool CPU and memory limits (configurable under <code>cpu</code> and <code>recycling.periodicRestart</code> in <code>applicationHost.config</code>) only make sense as a per-pool control — they throttle everything sharing that process together, not individual applications within it.</p>
+<p>A single pool can host multiple IIS "applications" (each with its own path and content root), and in that case isolation between those applications is weaker than people assume — they still share the worker process's memory and app domain (in Classic .NET) or the same .NET runtime instance (in .NET Core/5+ out-of-process hosting). If you need genuine fault isolation between two applications, they need separate pools, not just separate paths under the same pool.</p>
+<p>You can inspect the current worker processes and which pools they belong to directly:</p>
+<pre><code>Import-Module WebAdministration
+Get-ChildItem IIS:\AppPools | Select-Object Name, State
+
+# Or via appcmd, showing live worker processes and their pool
+appcmd list wp
+</code></pre>
+
+<h2 id="application-pool-identities">Application Pool Identities</h2>
+<p>The identity a pool runs under determines what the worker process — and therefore every application in it — can touch on disk, over the network, and in the Windows security model. IIS gives you four practical choices.</p>
+<p><strong>ApplicationPoolIdentity</strong> is the default since IIS 7.5 and should be the default choice today. When you create a pool, IIS generates a virtual account named <code>IIS APPPOOL\&lt;PoolName&gt;</code> with its own SID, adds it to the built-in <code>IIS_IUSRS</code> group, and automatically grants that account read (and, for the content root, sometimes write) NTFS permissions on the site's physical path. No password to manage, no account to provision in Active Directory, and — critically — no shared credential between pools. If pool A's identity is compromised, it has no bearing on pool B's ACLs, because they're different SIDs entirely.</p>
+<p><strong>NetworkService</strong> runs the worker process using the computer's domain machine account credentials. It has broader network reach than a virtual account (it authenticates to other machines as the computer account) but every pool configured to use it shares the exact same identity — a compromise or a bad ACL grant on one NetworkService-run pool effectively applies to all of them. It's a legacy option kept for backward compatibility; there's rarely a reason to choose it over ApplicationPoolIdentity on a current IIS version.</p>
+<p><strong>Custom service accounts</strong> (domain accounts like <code>CORP\svc-webapp01</code>) are still necessary when the application needs to authenticate to a remote resource using Windows/Integrated authentication — a SQL Server that only trusts domain accounts, a UNC file share on another server, or a resource protected by Kerberos delegation. ApplicationPoolIdentity's virtual account has no presence in Active Directory, so it can't authenticate off-box under Windows auth without extra plumbing (like granting the machine account access, which conflates back to NetworkService-style sharing). When you do use a custom account, it needs the "Log on as a service" right and explicit NTFS ACLs on the content path — none of that is automatic the way it is for ApplicationPoolIdentity.</p>
+<p><strong>LocalSystem/LocalService</strong> should be avoided outright — LocalSystem in particular has full control of the machine, which is far more privilege than a web application process ever needs.</p>
+<p>Setting a custom identity via PowerShell:</p>
+<pre><code>Import-Module WebAdministration
+
+Set-ItemProperty -Path "IIS:\AppPools\MyAppPool" -Name processModel `
+  -Value @{ userName = "CORP\svc-webapp01"; password = "P@ssw0rd!"; identityType = 3 }
+
+# identityType: 0=LocalSystem, 1=LocalService, 2=NetworkService, 3=SpecificUser, 4=ApplicationPoolIdentity
+</code></pre>
+
+<h2 id="recycling-application-pools">Recycling: Scheduled, Memory-Based, and the Leak It Hides</h2>
+<p>Recycling replaces the worker process with a fresh one without dropping the pool itself — WAS starts a new <code>w3wp.exe</code>, and once it's ready, the old one is torn down. IIS supports several triggers, configured under <code>recycling.periodicRestart</code> on the pool.</p>
+<p><strong>Scheduled/interval recycling</strong> is the default: <code>periodicRestart.time</code> is set to 1740 minutes (29 hours) out of the box, intentionally not 24 hours so the restart time drifts instead of landing at the same clock time — and therefore the same traffic pattern — every single day. You can instead set specific daily times via <code>periodicRestart.schedule</code>, which is usually preferable because you control exactly when the brief disruption happens (e.g., 3 AM instead of whenever the 29-hour timer expires mid-afternoon).</p>
+<p><strong>Memory-based recycling</strong> triggers when the process's private memory (<code>periodicRestart.privateMemory</code>, in KB) or virtual memory (<code>periodicRestart.virtualMemory</code>) crosses a configured threshold. This is the setting people reach for when a process's memory footprint climbs over time.</p>
+<p>Here's the trap: if an application has a genuine memory leak, a nightly scheduled recycle (or a memory-threshold recycle that fires reliably before the leak causes real trouble) will make the symptom disappear from monitoring. The process never gets old enough to visibly balloon, so nobody investigates. The leak is still there — you've just capped its blast radius by periodically discarding the evidence. That's a reasonable stopgap for production stability, but it should never be the terminal fix. If you find yourself tuning <code>privateMemory</code> lower and lower to keep a pool "healthy," that's a strong signal to profile the app (dotnet-trace, dotMemory, or a memory dump analyzed with WinDbg/SOS) rather than tightening the recycle threshold again.</p>
+<p>By default, recycling is <em>overlapped</em> — the outgoing worker process is kept alive just long enough to finish in-flight requests while the new process spins up and starts accepting new ones, avoiding dropped connections. Setting <code>disallowOverlappingRotation</code> to <code>true</code> disables this and stops the old process immediately, which you generally don't want except on memory-constrained boxes where running two worker processes simultaneously, even briefly, is untenable.</p>
+<pre><code># Set a specific recycle time instead of the rolling interval
+$pool = Get-Item IIS:\AppPools\MyAppPool
+$pool.recycling.periodicRestart.time = [TimeSpan]::Zero
+$pool.recycling.periodicRestart.schedule.Add(@{value = "03:00:00"})
+$pool | Set-Item
+
+# Recycle when private memory exceeds 1 GB (value is in KB)
+Set-ItemProperty -Path "IIS:\AppPools\MyAppPool" -Name recycling.periodicRestart.privateMemory -Value 1048576
+</code></pre>
+
+<h2 id="idle-timeout-always-on-and-preload">Idle Timeout, Always On, and Preload</h2>
+<p>By default, a pool's worker process shuts down after <code>processModel.idleTimeout</code> of no requests — 20 minutes out of the box — to free up memory and CPU on the box. The cost shows up on the next request after idle: IIS has to spin up a new worker process, .NET has to JIT the application's assemblies (or, for ASP.NET Core, initialize the host and DI container), and any expensive startup work — warming caches, opening connection pools, compiling Razor views — runs synchronously in front of that unlucky first user. On a low-traffic internal tool that's a fair trade. On anything customer-facing, that cold-start spike is a real, measurable latency problem, and the same cold start happens after every recycle too, not just after idle shutdown.</p>
+<p>Two settings address this, and they need to be used together to actually eliminate cold starts:</p>
 <ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
+<li><code>startMode = AlwaysRunning</code> tells WAS to start the pool's worker process as soon as IIS (or the pool itself) starts, rather than waiting for the first inbound request.</li>
+<li>The <strong>Application Initialization</strong> module (installed separately as an IIS feature) adds <code>preloadEnabled="true"</code> at the application level, which makes IIS issue a synthetic internal request to the app immediately when the worker process starts — running <code>Application_Start</code>, ASP.NET Core startup, and any registered <code>IProcessHostPreloadClient</code> logic before a single real user request arrives.</li>
 </ul>
+<p>Without <code>preloadEnabled</code>, <code>AlwaysRunning</code> only gets you a process that exists — the application inside it is still cold until the first real request touches it. Without <code>AlwaysRunning</code>, the pool still shuts down on idle timeout and preload only helps on the next scheduled start, not on-demand. You generally want both, plus <code>idleTimeout</code> raised or disabled (set to <code>00:00:00</code>) so the pool doesn't keep tearing itself down between bursts of traffic.</p>
+<p>IIS 8+ also offers <code>idleTimeoutAction = Suspend</code> instead of the default <code>Terminate</code>: rather than killing the process on idle, IIS suspends it (paging it out) and resumes it on the next request — faster than a full cold start, though still not instant.</p>
+<pre><code>Set-ItemProperty -Path "IIS:\AppPools\MyAppPool" -Name processModel.idleTimeout -Value "00:00:00"
+Set-ItemProperty -Path "IIS:\AppPools\MyAppPool" -Name startMode -Value "AlwaysRunning"
 
+# Enable preload on the application (requires the Application Initialization feature)
+Set-ItemProperty -Path "IIS:\Sites\MySite\MyApp" -Name preloadEnabled -Value True
+</code></pre>
 
-<h2 id="process-model-configuration">Process Model Configuration</h2>
-<p>This section covers process model configuration. Enterprise organizations rely on proper process model configuration implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="integrated-vs-classic-pipeline-mode">Integrated vs. Classic Pipeline Mode</h2>
+<p>The <code>managedPipelineMode</code> setting decides how a pool routes requests through managed (.NET) code relative to IIS's native request pipeline.</p>
+<p><strong>Integrated mode</strong>, the default since IIS 7 and the only mode that makes sense for anything current, unifies the two pipelines: native IIS modules and managed <code>HttpModule</code>s participate in the same set of pipeline events (<code>BeginRequest</code>, <code>AuthenticateRequest</code>, <code>ExecuteRequestHandler</code>, and so on), for every request regardless of file extension. Managed authentication and authorization modules can inspect and act on requests for static files, other-language handlers, anything — not just requests IIS decides to hand off to ASP.NET.</p>
+<p><strong>Classic mode</strong> reproduces the IIS 6 model: ASP.NET runs as an ISAPI extension sitting behind the native pipeline, and only requests IIS has mapped to that ISAPI extension (historically by file extension, like <code>.aspx</code>) ever reach managed code. It's a second, separate pipeline bolted onto the native one rather than a merged one, which means managed modules don't see requests for content IIS handles natively, and the request lifecycle events don't line up exactly with Integrated mode's.</p>
+<p>Classic mode exists purely for compatibility with applications built against that older model: legacy apps with custom ISAPI filters or extensions, or managed code written against assumptions that only hold under the old wildcard-mapped pipeline. New applications should never be started in Classic mode, and ASP.NET Core apps are irrelevant to this setting in practice — they run out-of-process (or in-process via ANCM) behind Kestrel/HTTP.sys logic, and the pool hosting them should simply stay on the Integrated default.</p>
+<pre><code>Set-ItemProperty -Path "IIS:\AppPools\LegacyAppPool" -Name managedPipelineMode -Value "Classic"
+</code></pre>
 
+<h2 id="rapid-fail-protection-and-everyday-management">Rapid-Fail Protection and Everyday Management</h2>
+<p>Rapid-fail protection guards against crash loops: if a pool's worker process crashes <code>failureInterval</code>'s worth of times — 5 failures in 5 minutes by default — WAS stops the pool entirely and every request against it returns <strong>503 Service Unavailable</strong> instead of continuing to spin up processes that keep dying. That's a deliberate trade: a hard, visible outage instead of a resource-consuming crash loop that could take the rest of the box down with it. Tune <code>failureInterval</code> and <code>maxFailures</code> under <code>failure</code> on the pool if 5-in-5 is too aggressive or too lax for a given app's crash characteristics, and check <code>logEventOnRecycle</code> to make sure recycle reasons are actually landing in the event log for diagnosis.</p>
+<p>Day-to-day, a handful of cmdlets cover most operational needs:</p>
+<pre><code>Import-Module WebAdministration
 
-<h2 id="recycling-strategy">Recycling Strategy</h2>
-<p>This section covers recycling strategy. Enterprise organizations rely on proper recycling strategy implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+# List pools and current state
+Get-ChildItem IIS:\AppPools | Select-Object Name, State
 
+# Start / stop / restart a specific pool
+Start-WebAppPool -Name "MyAppPool"
+Stop-WebAppPool -Name "MyAppPool"
+Restart-WebAppPool -Name "MyAppPool"
 
-<h2 id="identity-and-permissions">Identity and Permissions</h2>
-<p>This section covers identity and permissions. Enterprise organizations rely on proper identity and permissions implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+# Find stopped pools (often a symptom of rapid-fail protection tripping)
+Get-ChildItem IIS:\AppPools | Where-Object { $_.State -eq "Stopped" }
 
-
-<h2 id="performance-monitoring">Performance Monitoring</h2>
-<p>This section covers performance monitoring. Enterprise organizations rely on proper performance monitoring implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="troubleshooting">Troubleshooting</h2>
-<p>This section covers troubleshooting. Enterprise organizations rely on proper troubleshooting implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="best-practices">Best Practices</h2>
-<p>This section covers best practices. Enterprise organizations rely on proper best practices implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
+# Watch a worker process's private memory in real time
+Get-Counter '\Process(w3wp*)\Private Bytes'
+</code></pre>
+<p>A pool sitting in the <code>Stopped</code> state that you didn't stop manually is almost always rapid-fail protection having tripped — check the System and Application event logs for the underlying crash before just restarting it, or you'll be back at the same 503 five crashes later.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master application pool basics fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>Use ApplicationPoolIdentity unless a specific downstream resource requires a named domain service account</li>
+<li>Scheduled and memory-based recycling are safety nets, not fixes — a recycle that "resolves" growing memory usage is hiding a leak, not fixing one</li>
+<li>Pair startMode=AlwaysRunning with Application Initialization preload to eliminate cold-start latency after idle shutdown or recycle</li>
+<li>Leave new applications and all ASP.NET Core apps on Integrated pipeline mode; Classic exists only for legacy ISAPI-era compatibility</li>
+<li>Leave overlapping recycling enabled (the default) so the old worker process keeps serving in-flight requests while the new one spins up</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/iis/" style="color:#0066cc;">Iis</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#application-pool-basics">Application Pool Basics</a></li>
-<li><a href="#process-model-configuration">Process Model Configuration</a></li>
-<li><a href="#recycling-strategy">Recycling Strategy</a></li>
-<li><a href="#identity-and-permissions">Identity and Permissions</a></li>
-<li><a href="#performance-monitoring">Performance Monitoring</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-<li><a href="#best-practices">Best Practices</a></li>
+      <li><a href="#what-an-application-pool-isolates">What an Application Pool Isolates</a></li>
+<li><a href="#application-pool-identities">Application Pool Identities</a></li>
+<li><a href="#recycling-application-pools">Recycling: Scheduled, Memory-Based, and the Leak It Hides</a></li>
+<li><a href="#idle-timeout-always-on-and-preload">Idle Timeout, Always On, and Preload</a></li>
+<li><a href="#integrated-vs-classic-pipeline-mode">Integrated vs. Classic Pipeline Mode</a></li>
+<li><a href="#rapid-fail-protection-and-everyday-management">Rapid-Fail Protection and Everyday Management</a></li>
     </ol>
   </aside>
 </div>
@@ -266,6 +249,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

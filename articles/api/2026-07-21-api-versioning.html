@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="API versioning strategies explained: compare URI, header, and content negotiation approaches, plus deprecation policy for public APIs.">
+<meta name="keywords" content="API versioning strategies explained, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="API Versioning Strategies: URI, Header, and Content Negotiation | ITVedas">
+<meta property="og:description" content="API versioning strategies explained: compare URI, header, and content negotiation approaches, plus deprecation policy for public APIs.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-api-versioning">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-api-versioning">
+<title>API Versioning Strategies: URI, Header, and Content Negotiation | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "API Versioning Strategies: URI, Header, and Content Negotiation", "description": "API versioning strategies explained: compare URI, header, and content negotiation approaches, plus deprecation policy for public APIs.", "keywords": "API versioning strategies explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Intermediate"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🧭 Intermediate</span>
+  </div>
+  <h1>API Versioning Strategies: URI, Header, and Content Negotiation</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#uri-versioning-simple-visible-and-the-most-common">URI versioning: simple, visible, and the most common</a></li><li><a href="#header-versioning-cleaner-uris-less-discoverable">Header versioning: cleaner URIs, less discoverable</a></li><li><a href="#content-negotiation-in-depth">Content negotiation in depth</a></li><li><a href="#semantic-versioning-vs-simple-incrementing-and-deprecation-p">Semantic versioning vs simple incrementing, and deprecation policy</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>API Versioning Strategies: URI, Header, and Content Negotiation</h1>
+<p>Every API eventually needs to change in a way that breaks existing clients. A field gets renamed, a response shape gets restructured, an endpoint gets split into two — and somewhere out there, a consumer's code that you don't control and can't see is calling your API right now, expecting the old contract. Versioning is how you make that change without waking up to a queue of angry support tickets.</p>
+<p>"Just don't break anything" sounds like a strategy until you've maintained a public API for more than a year. Business requirements change, data models evolve, and security or performance fixes sometimes require incompatible changes. Once you have external consumers you don't control — partners, third-party developers, mobile apps you can't force-update — you need an explicit, published mechanism for introducing breaking changes without breaking everyone at once. That's what versioning strategy actually solves: not preventing change, but giving consumers a safe, predictable path through it.</p>
+<h2 id="uri-versioning-simple-visible-and-the-most-common">URI versioning: simple, visible, and the most common</h2>
+<p><strong>URI versioning</strong> puts the version number directly in the path, e.g. <code>https://api.example.com/v1/users</code> or <code>https://api.example.com/v2/users</code>. It's by far the most widely adopted approach among public APIs — Stripe, GitHub, and countless others use some variant of it — because it's the easiest to understand, test, and operate.</p>
+<p>The advantages are practical rather than theoretical. The version is explicit and impossible to miss: a developer reading the URL in a browser, a log line, or a support ticket immediately knows which contract is in play. It's trivially cacheable, since <code>/v1/users</code> and <code>/v2/users</code> are distinct cache keys with no <code>Vary</code> header gymnastics required. And it's easy to route at the infrastructure layer — a gateway or load balancer can send <code>/v1/*</code> traffic to one set of services and <code>/v2/*</code> to another without inspecting request bodies or headers.</p>
+<p>The downside is more philosophical, but it has real consequences. Under REST's resource-oriented view, a URI is supposed to identify a <em>resource</em>, not a version of a representation of that resource — <code>/v1/users/42</code> and <code>/v2/users/42</code> arguably describe the same underlying user, yet they're treated as entirely separate URIs. That purity argument rarely stops teams from shipping URI versioning anyway, but it does have a practical side effect: every version bump duplicates routes, controllers, and often documentation, and consumers have to physically rewrite URLs to migrate rather than just changing a request header.</p>
+<blockquote>URI versioning is putting the model year on the license plate instead of the car — it works, everyone can read it, but now you're maintaining a fleet.</blockquote>
+<h2 id="header-versioning-cleaner-uris-less-discoverable">Header versioning: cleaner URIs, less discoverable</h2>
+<p>The alternative is to keep the URI stable and put the version somewhere in the request headers instead. There are two common flavors. The first is a custom header such as <code>API-Version: 2</code> or <code>X-API-Version: 2</code>, which the server reads to decide how to process the request and shape the response. The second is <strong>Accept header content negotiation</strong>, where the version is embedded in a custom media type, e.g. <code>Accept: application/vnd.company.v2+json</code>.</p>
+<p>Header versioning keeps your URI space clean — one canonical <code>/users</code> endpoint, one resource identity, no route duplication. It also decouples the resource's identity from its representation, which lines up more closely with REST theory than URI versioning does.</p>
+<p>In practice, though, it trades discoverability for elegance. You can't version-switch by editing a URL in a browser address bar; you need a tool like curl, Postman, or actual client code to set headers. It's less obvious to developers skimming your documentation, since the version doesn't jump out of every example request the way <code>/v2/</code> does. And caching gets more complicated — proxies and CDNs need to respect <code>Vary: Accept</code> or <code>Vary: API-Version</code> correctly, which not all of them do out of the box. Custom headers are simpler to implement than full media-type negotiation but are non-standard — there's no HTTP spec defining what <code>API-Version</code> means, so its behavior is whatever you document it to be.</p>
+<h2 id="content-negotiation-in-depth">Content negotiation in depth</h2>
+<p>The <code>Accept</code>-header approach isn't just "header versioning with extra steps" — it's the formal mechanism HTTP already defines for this exact problem. <strong>Content negotiation</strong> lets a client and server agree on which representation of a resource to exchange, using headers like <code>Accept</code>, <code>Accept-Language</code>, and <code>Accept-Encoding</code>. Media-type versioning extends that idea: instead of negotiating between <code>application/json</code> and <code>application/xml</code>, you negotiate between <code>application/vnd.company.v1+json</code> and <code>application/vnd.company.v2+json</code>, both of which happen to be JSON but represent different schemas.</p>
+<p>This is arguably the most "correct" approach per the HTTP specification. A single, stable URI identifies the resource — exactly one <code>/users/42</code> — and the version becomes a property of the requested representation, not the resource itself. That single endpoint can, in principle, serve multiple simultaneous versions of the same underlying data without any URL duplication, and the server can even negotiate a default (usually the latest stable version) for clients that don't specify one.</p>
+<p>The friction is real, though, and it's why most teams don't reach for this by default. Custom media types are unfamiliar to a lot of developers, meaning higher support overhead and more confused first API calls. They're awkward to test from a browser or a quick curl command without remembering the exact vendor MIME type string. Framework and gateway tooling — routing, API documentation generators, mocking tools — often assumes URI- or query-based versioning and needs extra configuration to branch on media type instead. And because the version is buried in a header rather than the URL, it's easy for a new integration to omit it entirely and get a "surprise" default version.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Whichever strategy you pick, expose the resolved version back to the client somewhere in the response — a response header like <code>API-Version: 2</code> works even for pure URI versioning. It gives consumers a reliable way to confirm what they actually got, which is invaluable when debugging a support ticket where the caller insists they're "definitely on v2."</div>
+<h2 id="semantic-versioning-vs-simple-incrementing-and-deprecation-p">Semantic versioning vs simple incrementing, and deprecation policy</h2>
+<p>A separate decision, orthogonal to URI vs. header vs. content negotiation, is how granular your version numbers should be. Most public APIs use <strong>simple whole-number increments</strong> at the API level — v1, v2, v3 — rather than full <strong>semantic versioning</strong> (major.minor.patch). Semver is designed for software packages where clients pin exact dependency versions; for HTTP APIs, where every request is independent and clients can't "pin" a running server, that granularity is rarely useful. What matters to an API consumer isn't whether a change is a minor or patch bump — it's whether their existing request/response handling still works. That's a binary: breaking or not breaking.</p>
+<p>A related question is whether to version the whole API as a unit or version individual resources independently. Whole-API versioning (a single <code>v1</code>/<code>v2</code> covering every endpoint) is simpler to reason about and document, but it forces a full major bump even when only one resource changed, which can feel heavy-handed. Per-resource versioning is more surgical — you might have <code>/v2/orders</code> while <code>/v1/users</code> is untouched — but it multiplies the number of version combinations a client has to track and test against, and it complicates your changelog. Most teams start with whole-API versioning for simplicity and only split resources out if a single subsystem is churning much faster than the rest.</p>
+<p>None of this matters much, though, if you don't pair it with a real <strong>deprecation policy</strong>. The versioning scheme is just the mechanism; the deprecation lifecycle is what actually protects your consumers. A workable policy includes: a <code>Deprecation</code> response header (or documented equivalent) as soon as a version enters end-of-life status, a <code>Sunset</code> header carrying the actual removal date once one is set, advance notice in release notes and, ideally, direct email or dashboard alerts to registered API consumers, and a minimum notice window — six to twelve months is common for public APIs — between announcing deprecation and actually turning a version off.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Picture a company running <code>v1</code> and <code>v2</code> of its API simultaneously behind a single API gateway, using URI-prefix routing: requests to <code>/v1/*</code> are routed to the legacy service, requests to <code>/v2/*</code> go to the current one. When <code>v2</code> ships with a redesigned pagination model and a breaking change to how order totals are represented, the team doesn't shut off <code>v1</code> immediately. Instead, they publish a deprecation notice in the docs and changelog, set a concrete removal date six months out, and start returning <code>Sunset: Sat, 31 Jan 2027 00:00:00 GMT</code> plus <code>Deprecation: true</code> on every <code>v1</code> response.</p>
+<p>Over those six months, they track which API keys are still hitting <code>v1</code> endpoints and reach out to the highest-traffic consumers directly rather than waiting for them to notice a header. A week before the sunset date, <code>v1</code> responses start including a warning banner in the response body's metadata as a last-resort nudge. On the sunset date itself, <code>v1</code> routes return <code>410 Gone</code> with a body pointing to the <code>v2</code> migration guide, rather than simply disappearing or silently changing behavior. The gateway-level routing means none of this required touching application code in the <code>v2</code> service — it was purely a matter of keeping the old service alive, instrumented, and clearly labeled until the deadline passed.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p>The first and most damaging mistake is shipping a breaking change without bumping the version at all — silently altering a field type, removing a field, or changing error codes on an existing version. This is worse than a badly chosen versioning scheme, because it violates the one promise versioning exists to make: that a given version's contract is stable. If it happens even once, consumers stop trusting your version numbers and start defensively coding against every possible response shape.</p>
+<p>The second is versioning too aggressively for changes that aren't actually breaking. Adding a new optional field to a response, adding a new endpoint, or accepting an additional optional request parameter are all additive changes that well-behaved clients should tolerate without modification. Bumping the major version for these trains consumers to expect version churn constantly, and it multiplies your maintenance burden for no real safety benefit. Reserve version bumps for genuinely breaking changes: removed or renamed fields, changed types, altered semantics, or removed endpoints.</p>
+<p>The third is removing an old version abruptly instead of running a real deprecation window. Even a technically well-designed versioning scheme fails its purpose if "sunset" means "we turned it off with two weeks' notice buried in a changelog nobody reads." The deprecation communication — headers, docs, direct outreach, a genuinely usable lead time — is what consumers actually experience; the URI-vs-header decision is comparatively invisible to them.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Do I need to version my API from day one, even before I have external consumers?</strong><br>It's cheap insurance to add a version indicator (even just <code>/v1/</code>) before your first public release, because retrofitting versioning onto live URLs that clients already depend on is far more disruptive than starting with it. You don't need a second version yet — you just need the seam to exist.</p>
+<p><strong>Can I mix strategies, like URI versioning for major breaking changes and headers for smaller variations?</strong><br>Yes, and it's fairly common. A typical pattern is URI versioning for the small number of major, breaking contract changes (<code>v1</code>, <code>v2</code>), combined with a custom header or query parameter for opt-in features or beta behavior within a version. Just document the interaction clearly, since layering two mechanisms without explanation confuses consumers fast.</p>
+<p><strong>How many versions should I support at once?</strong><br>Most teams cap it at two: the current version and the immediately prior one during its deprecation window. Supporting three or more simultaneously usually means your deprecation timelines are too loose or aren't being enforced, and it multiplies testing and operational surface area for every change you ship going forward.</p>
+<p>There's no universally "correct" versioning strategy — URI versioning wins on simplicity and visibility, header versioning keeps URIs clean at the cost of discoverability, and content negotiation is the most spec-correct but the least ergonomic for most teams. What separates APIs that age well from ones that accumulate consumer resentment isn't which mechanism they picked; it's whether they paired it with a disciplined deprecation policy, restrained their version bumps to genuinely breaking changes, and gave consumers enough notice and enough signal to migrate on their own schedule.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#uri-versioning-simple-visible-and-the-most-common">URI versioning: simple, visible, and the most common</a></li><li><a href="#header-versioning-cleaner-uris-less-discoverable">Header versioning: cleaner URIs, less discoverable</a></li><li><a href="#content-negotiation-in-depth">Content negotiation in depth</a></li><li><a href="#semantic-versioning-vs-simple-incrementing-and-deprecation-p">Semantic versioning vs simple incrementing, and deprecation policy</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

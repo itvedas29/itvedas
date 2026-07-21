@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Diagnose slow SQL Server queries with execution plans, design clustered/nonclustered/covering indexes, and use Query Store to catch regressions.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="SQL Server Performance Tuning &amp; Indexing | IT Vedas">
+  <meta property="og:description" content="Diagnose slow SQL Server queries with execution plans, design clustered/nonclustered/covering indexes, and use Query Store to catch regressions.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-performance-tuning-indexing">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-performance-tuning-indexing">
+  <title>SQL Server Performance Tuning &amp; Indexing | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SQL Server Performance Tuning &amp; Indexing", "description": "Diagnose slow SQL Server queries with execution plans, design clustered/nonclustered/covering indexes, and use Query Store to catch regressions.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-performance-tuning-indexing"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/sql-server/">SQL Server</a> &rsaquo; SQL Server Performance Tuning &amp; Indexing</div>
+  <div class="ch-badge">🗄️ SQL Server</div>
+  <h1>SQL Server Performance Tuning &amp; Indexing</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>12 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Diagnose slow SQL Server queries with execution plans, design clustered/nonclustered/covering indexes, and use Query Store to catch regressions.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 12 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Comfortable writing and reading T-SQL joins, aggregates, and subqueries</li>
+<li>Basic familiarity with B-tree structures and how SQL Server stores data in pages</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>A table has exactly one clustered index (or is a heap) because the clustered index's leaf level *is* the data</li>
+<li>A Key Lookup executes once per matching row, so a nonclustered index that seems selective can still be slower than a scan at scale</li>
+<li>sys.dm_db_missing_index_details resets on every service restart and failover, and never suggests merging overlapping indexes</li>
+<li>Query Store persists compiled plans and runtime stats to disk, unlike the plan cache, so it survives restarts and lets you compare performance before and after a deployment</li>
+      </ul>
+    </div>
+
+    <h2 id="reading-execution-plans-estimated-vs-actual">Reading execution plans: estimated vs actual</h2>
+<p>SQL Server gives you two flavors of execution plan, and conflating them is the most common mistake in query tuning. The estimated plan (<code>SET SHOWPLAN_XML ON</code>, or Ctrl+L in SSMS) is produced by the optimizer without running the query. It relies entirely on statistics — histograms and density information on the columns involved — to guess how many rows will flow through each operator. The actual plan (Ctrl+M, then execute) runs the query for real and annotates every operator with the actual row count alongside the estimate.</p>
+<p>The single most useful habit in plan analysis is comparing estimated rows to actual rows at each operator. When they're close, the optimizer had good information and chose a reasonable plan. When they diverge by an order of magnitude or more, the optimizer built a plan around a wrong assumption — usually stale statistics, an out-of-date histogram after a large data load, or parameter sniffing where a cached plan compiled for one parameter value is being reused for a very differently-shaped parameter. A nested loops join that made sense for an estimated 12 rows becomes catastrophic when the actual row count is 1.2 million, because nested loops pays its cost once per outer row.</p>
+<p>Pair the plan with <code>SET STATISTICS IO, TIME ON</code>. IO gives you logical reads per table, which is often a better tuning signal than the plan's cost percentages — those percentages are relative estimates within a single plan, not absolute measures of work, and they can be misleading when comparing two different plans for the same query. Read plans right-to-left and top-to-bottom: data flows from the rightmost leaf operators (scans and seeks) up through joins and aggregates toward the SELECT at the top left. Arrow thickness is proportional to row count, so a fat arrow feeding a thin one downstream is a visual cue that a lot of data is being filtered late — often a sign that a predicate could be pushed down with a better index.</p>
+
+<h2 id="spotting-expensive-operators">Spotting expensive operators</h2>
+<p>A handful of operators account for most real-world performance problems:</p>
+<p><strong>Table Scan / Clustered Index Scan.</strong> The engine reads every row (or every row of the clustered index) because no usable index exists for the predicate, or the optimizer decided a scan was cheaper than seeking a large fraction of the table. A scan on a 500-row lookup table is irrelevant; a scan on a 200-million-row fact table driven by a WHERE clause on an unindexed column is usually the root cause of a slow report.</p>
+<p><strong>Key Lookup (or RID Lookup on a heap).</strong> This appears when a nonclustered index seek finds the right rows but the index doesn't contain every column the query needs, forcing a second read into the clustered index (or heap) per matching row to fetch the rest. A Key Lookup next to a seek that matches thousands of rows is a strong signal you need a covering index — the lookup cost scales linearly with rows returned, and at high row counts it can dominate the entire plan's cost even though the seek itself looks cheap.</p>
+<p><strong>Sort.</strong> Expensive when the input is large and there's no index to deliver rows in the required order already. A Sort feeding a Top or an ORDER BY is often eliminable by building an index whose key order matches the ORDER BY, letting the engine read rows already sorted instead of buffering and sorting them in memory (or spilling to tempdb if memory grants are insufficient — check for a Sort or Hash warning icon in the plan, which indicates exactly that spill).</p>
+<p><strong>Hash Match vs Nested Loops.</strong> Hash Match is the optimizer's choice for joining two large, unsorted inputs — it builds an in-memory hash table from the smaller input and probes it with the larger one. Nested Loops is efficient when the outer input is small and the inner side can be seeked cheaply per outer row, but it degrades badly if the outer row estimate is wrong and the actual outer set is large, since every outer row triggers a separate seek (or scan) on the inner side.</p>
+
+<h2 id="clustered-vs-nonclustered-indexes">Clustered vs nonclustered indexes: the mechanics</h2>
+<p>A clustered index determines the physical storage order of the table's data rows. The leaf level of a clustered index *is* the table — there's no separate structure holding the row data elsewhere. Because of this, a table can have at most one clustered index; if you never create one, the table is a heap, and rows are located by a physical Row ID (RID) instead of a key. Clustering key choice matters enormously: a narrow, unique, ever-increasing key (a surrogate <code>IDENTITY</code> or sequential <code>bigint</code>) keeps new rows appended at the end of the physical order, avoiding page splits. A wide or non-sequential clustering key (a GUID generated with <code>NEWID()</code>, for instance) causes random insert positions, fragmenting the table and bloating every nonclustered index, since every nonclustered index stores that clustering key as its row locator.</p>
+<p>A nonclustered index is a separate B-tree with its own leaf level, holding a copy of the indexed column(s) plus a pointer back to the actual data row — the clustering key if the table has a clustered index, or a physical RID if it's a heap. A table can have many nonclustered indexes (up to 999), each providing a different sort order and seek path, but each is a fully separate structure that must be maintained on every INSERT, UPDATE, and DELETE that touches its key columns. This is the crux of the write-overhead tradeoff: every additional nonclustered index speeds up some read pattern but slows down every write that modifies its columns, because the engine has to update that index's B-tree in addition to the clustered index.</p>
+<p>When a nonclustered index's key columns satisfy the WHERE/JOIN predicate but the SELECT list needs other columns, the engine performs a Key Lookup back into the clustered index per row — which is exactly the expensive operator described above. This is the problem covering indexes solve.</p>
+
+<h2 id="covering-indexes-and-include-columns">Covering indexes with INCLUDE columns</h2>
+<p>A covering index contains every column the query needs — in the key, in an <code>INCLUDE</code> list, or both — so the engine can satisfy the entire query from the nonclustered index's leaf level without ever touching the clustered index. <code>INCLUDE</code> columns are stored only at the leaf level of the index, not in the upper B-tree levels used for seeking, which keeps the index narrower and faster to traverse than making those columns part of the key. INCLUDE columns also aren't subject to the same restrictions as key columns — they can be large types that couldn't participate in a key at all, and they don't count against the 900-byte key size limit.</p>
+<pre><code>-- Query being tuned:
+-- SELECT OrderId, OrderDate, TotalDue
+-- FROM Sales.SalesOrderHeader
+-- WHERE CustomerId = @CustomerId AND Status = 'Shipped';
+
+CREATE NONCLUSTERED INDEX IX_SalesOrderHeader_CustomerId_Status
+ON Sales.SalesOrderHeader (CustomerId, Status)
+INCLUDE (OrderDate, TotalDue);
+</code></pre>
+<p>Here <code>CustomerId</code> and <code>Status</code> are key columns because they're used for seeking and equality filtering; <code>OrderDate</code> and <code>TotalDue</code> are INCLUDE columns because they're only ever selected, never filtered or sorted on. After creating this index, the plan for the query above should show an Index Seek with no accompanying Key Lookup. Column order in the key matters too: put the equality predicate columns first (in whatever order matches how the query filters), then range predicate or sort columns last, since the index is only seekable on a left-to-right prefix of its key columns.</p>
+
+<h2 id="missing-index-dmvs-and-their-limits">Missing-index DMVs and their limits</h2>
+<p>SQL Server tracks, per database, index shapes the optimizer wished it had while compiling plans, exposed through <code>sys.dm_db_missing_index_details</code>, <code>sys.dm_db_missing_index_groups</code>, and <code>sys.dm_db_missing_index_group_stats</code>. A standard query joins all three, ranked by an estimated improvement measure:</p>
+<pre><code>SELECT
+    d.statement AS table_name,
+    d.equality_columns,
+    d.inequality_columns,
+    d.included_columns,
+    gs.user_seeks,
+    gs.avg_total_user_cost,
+    gs.avg_user_impact,
+    gs.user_seeks * gs.avg_total_user_cost * (gs.avg_user_impact / 100.0)
+        AS estimated_improvement
+FROM sys.dm_db_missing_index_details d
+JOIN sys.dm_db_missing_index_groups g
+    ON d.index_handle = g.index_handle
+JOIN sys.dm_db_missing_index_group_stats gs
+    ON g.index_group_handle = gs.group_handle
+ORDER BY estimated_improvement DESC;
+</code></pre>
+<p>This is a genuinely useful starting point, but the output needs human judgment before anything gets deployed. First, each row describes a single missing index in isolation — the DMV has no awareness of the other indexes already on that table, so it will happily suggest an index that's a near-duplicate of one that exists, or several missing-index rows from different queries that could be merged into one broader index instead of created separately. Second, it only ever suggests <code>equality_columns</code>, then <code>inequality_columns</code>, then <code>included_columns</code> in that fixed order — it doesn't experiment with column ordering, so its suggested key order isn't necessarily optimal. Third, and most important, it has no concept of write cost: it's purely a read-side heuristic based on plans the optimizer compiled, and it will suggest an index on a heavily-written OLTP table just as readily as on a read-mostly reporting table, with no discount for the INSERT/UPDATE/DELETE overhead that index would add. Fourth, this data is entirely in-memory and resets on every service restart, failover, or database detach, so user_seeks and avg_user_impact only reflect activity since the last restart — treat it as a hint to investigate, never as a list to apply verbatim with a script.</p>
+
+<h2 id="using-query-store-to-find-regressions">Using Query Store to find regressions</h2>
+<p>Query Store, enabled per-database with <code>ALTER DATABASE ... SET QUERY_STORE = ON</code>, persists query text, the distinct execution plans compiled for each query over time, and runtime statistics (duration, CPU, logical reads, memory grant) bucketed into configurable time intervals — all written to disk, so it survives restarts, unlike the plan cache which is wiped on every restart or memory pressure eviction. This makes it the right tool for answering "did this deployment or statistics update make things worse?" because you can directly compare a query's runtime stats before and after a known point in time.</p>
+<p>The built-in SSMS reports under Query Store — Top Resource Consuming Queries, and specifically Regressed Queries — let you pick a baseline interval and a recent interval and see which queries got slower between them, along with every plan SQL Server has compiled for that query in the window. It's common to find a query with two or three distinct <code>plan_id</code> values, where the regression lines up exactly with a plan change — often triggered by an automatic statistics update after enough rows changed, or by a new plan compiled after an index was dropped or altered during deployment. You can query this directly:</p>
+<pre><code>SELECT
+    q.query_id,
+    qt.query_sql_text,
+    p.plan_id,
+    rs.avg_duration,
+    rs.avg_logical_io_reads,
+    rs.last_execution_time
+FROM sys.query_store_query q
+JOIN sys.query_store_query_text qt ON q.query_text_id = qt.query_text_id
+JOIN sys.query_store_plan p ON q.query_id = p.query_id
+JOIN sys.query_store_runtime_stats rs ON p.plan_id = rs.plan_id
+WHERE q.query_id = @QueryId
+ORDER BY rs.last_execution_time DESC;
+</code></pre>
+<p>Seeing multiple <code>plan_id</code> rows for one <code>query_id</code>, with runtime jumping between them, is the clearest possible evidence that the regression is a plan choice problem rather than a data volume problem.</p>
+
+<h2 id="forcing-a-plan-as-a-stopgap">Forcing a plan as a stopgap</h2>
+<p>Once you've identified that an earlier plan performed better than the one currently being chosen, <code>sys.sp_query_store_force_plan</code> lets you pin the query to that known-good <code>plan_id</code> immediately, buying time to investigate the real cause without leaving production degraded:</p>
+<pre><code>EXEC sys.sp_query_store_force_plan
+    @query_id = 4821,
+    @plan_id  = 6103;
+</code></pre>
+<p>This is deliberately framed as a stopgap, not a fix. Forcing a plan tells the optimizer to skip its normal compilation and reuse that specific plan shape for future executions of that query, which sidesteps whatever made it choose the worse plan — but it doesn't address the underlying cause, whether that's stale statistics, a parameter-sniffing-sensitive predicate, or a missing index that would make the whole question moot. A forced plan can also become invalid over time as data distribution shifts, or fail to force at all if the referenced objects change (an index used by that plan gets dropped, for instance), so it needs to be revisited, not left in place indefinitely. Remove it with <code>sys.sp_query_store_unforce_plan</code> once the root cause is fixed — typically by updating statistics, rewriting the query to avoid the sniffing-sensitive pattern, or adding the covering index that made the better plan possible in the first place.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Always compare estimated vs actual row counts per operator before trusting a plan — large gaps point to stale statistics or parameter sniffing, not query logic</li>
+<li>Table scans aren't inherently bad and index seeks aren't inherently good — judge by estimated vs actual cost relative to row count</li>
+<li>A covering index with INCLUDE columns eliminates Key Lookups entirely by satisfying the query from the nonclustered leaf level alone</li>
+<li>Never apply a missing-index DMV suggestion without checking for overlap with existing indexes and weighing the write cost on that table</li>
+<li>Query Store's Regressed Queries report and plan forcing give you a fast stopgap after a bad deployment, but the underlying cause — usually a plan change or stale stats — still needs a real fix</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#reading-execution-plans-estimated-vs-actual">Reading execution plans: estimated vs actual</a></li>
+<li><a href="#spotting-expensive-operators">Spotting expensive operators</a></li>
+<li><a href="#clustered-vs-nonclustered-indexes">Clustered vs nonclustered indexes: the mechanics</a></li>
+<li><a href="#covering-indexes-and-include-columns">Covering indexes with INCLUDE columns</a></li>
+<li><a href="#missing-index-dmvs-and-their-limits">Missing-index DMVs and their limits</a></li>
+<li><a href="#using-query-store-to-find-regressions">Using Query Store to find regressions</a></li>
+<li><a href="#forcing-a-plan-as-a-stopgap">Forcing a plan as a stopgap</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

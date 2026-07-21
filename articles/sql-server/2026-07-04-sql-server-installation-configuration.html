@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.">
+  <meta name="description" content="A guide to planning and hardening a SQL Server install: instance naming, service accounts, collation, max server memory, and tempdb.">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="SQL Server Installation and Configuration Best Practices | IT Vedas">
-  <meta property="og:description" content="Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.">
+  <meta property="og:title" content="SQL Server Installation &amp; Configuration | IT Vedas">
+  <meta property="og:description" content="A guide to planning and hardening a SQL Server install: instance naming, service accounts, collation, max server memory, and tempdb.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
-    
-  <title>SQL Server Installation and Configuration Best Practices | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SQL Server Installation and Configuration Best Practices", "description": "Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <meta property="og:url" content="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration">
+  <title>SQL Server Installation &amp; Configuration | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SQL Server Installation &amp; Configuration", "description": "A guide to planning and hardening a SQL Server install: instance naming, service accounts, collation, max server memory, and tempdb.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Sql Server","item":"https://www.itvedas.com/articles/sql-server/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Sql Server Installation Configuration","item":"https://www.itvedas.com/articles/sql-server/2026-07-04-sql-server-installation-configuration"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Server Installation and Configuration Best Practices | IT Vedas","description":"Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Server Installation and Configuration Best Practices | IT Vedas","description":"Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,21 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/sql-server/">SQL Server</a> › SQL Server Installation and Configuration Best Practices</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/sql-server/">SQL Server</a> &rsaquo; SQL Server Installation &amp; Configuration</div>
   <div class="ch-badge">🗄️ SQL Server</div>
-  <h1>SQL Server Installation and Configuration Best Practices</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/sql-server/">Sql Server</a></li>
-<li>/</li>
-<li>2026 07 04 Sql Server Installation Configuration</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>10 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Install and configure SQL Server properly. Learn pre-requisites, installation options, post-installation configuration, and optimization.</p>
+  <h1>SQL Server Installation &amp; Configuration</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>9 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">A guide to planning and hardening a SQL Server install: instance naming, service accounts, collation, max server memory, and tempdb.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
-  <div class="reading-time">⏱ 10 min read</div>
+  <div class="reading-time">&#9201; 9 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Basic IT knowledge</li>
-<li>Understanding of fundamentals</li>
+      <li>Windows Server administration fundamentals</li>
+<li>Basic familiarity with T-SQL and SQL Server Management Studio</li>
     </ul>
   </div>
 </div>
@@ -140,118 +119,77 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade sql server implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>Server-level collation can only be changed after install by rebuilding system databases or reinstalling entirely — decide it before any data is written</li>
+<li>Max server memory defaults to effectively unlimited (2,147,483,647 MB), so an unconfigured instance will compete with the OS for RAM</li>
+<li>A common tempdb starting point is one data file per logical core up to 8, all files created at equal size to keep the proportional-fill algorithm effective</li>
+<li>Named instances let multiple independent SQL Server installations — different versions, patch cadences, service accounts — coexist on a single host</li>
       </ul>
     </div>
 
-    
-<h2 id="pre-installation-planning">Pre-Installation Planning</h2>
-<p>This section covers pre-installation planning. Enterprise organizations rely on proper pre-installation planning implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+    <h2 id="pre-install-planning-instance-naming">Pre-Install Planning: Instance Naming</h2>
+<p>Before you launch setup.exe, decide whether this will be a default instance or a named instance. A default instance is addressable by the server's network name alone and is limited to one per host — <code>MSSQLSERVER</code> is its internal name. A named instance is addressable as <code>SERVERNAME\InstanceName</code>, and a single host can run many of them side by side, each with its own version, service pack level, collation, service account, and port.</p>
+<p>The practical reason to default to named instances, even when you're only installing one SQL Server today: you cannot retroactively turn a default instance into a named one, and you cannot add a second default instance later if a new application or team needs an isolated engine on the same box. Consolidation requests — "can we just put this small reporting database on the existing SQL box" — are common, and if the existing installation is a default instance, the only way to isolate the new workload is a named instance anyway, which means you're now running a mixed setup with inconsistent naming conventions across your estate. Standardizing on named instances from the start (for example, <code>SERVERNAME\PROD01</code>) keeps every instance addressed the same way and leaves room for <code>SERVERNAME\PROD02</code> without any migration.</p>
+<p>Named instances rely on the SQL Server Browser service to resolve the dynamic TCP port a client should connect to, since only default instances get the well-known port 1433 by convention. If you go the named-instance route, either leave Browser running and open UDP 1434 on the firewall, or assign the instance a static TCP port and turn Browser off — the latter is generally preferred in production because it removes a service and a port from the attack surface and gives you a predictable port for firewall rules and connection strings.</p>
 
+<h2 id="service-accounts-and-least-privilege">Service Accounts and Least Privilege</h2>
+<p>Every SQL Server service — the Database Engine, SQL Server Agent, and any others you enable — runs under a Windows identity, and that identity's rights determine what the service can touch on the host and on the network. Setup defaults to virtual accounts or built-in identities like <code>NT AUTHORITY\NetworkService</code>, which are convenient but wrong for a production-adjacent server for two reasons. First, a built-in account is shared conceptually across whatever else on the box might use it, so you lose the ability to audit "what did the SQL Server service specifically do" versus "what did something else running as NetworkService do." Second, built-in accounts carry broad implicit network privileges (NetworkService authenticates to the network as the machine account), which is more access than the Database Engine actually needs.</p>
+<p>The production pattern is a dedicated domain account per service — one for the Database Engine, a separate one for SQL Server Agent — each granted only what that service requires and nothing else. Better still, use a Group Managed Service Account (gMSA) where your Active Directory environment supports it: a gMSA has its password managed and rotated automatically by AD, so you get the isolation of a dedicated identity without the operational burden of manual password rotation (and the outage risk of a service account password expiring unnoticed).</p>
+<p>Whichever account type you use, set it through <strong>SQL Server Configuration Manager</strong>, not the Windows Services control panel applet. Configuration Manager knows how to grant the account the specific local rights the Database Engine needs (log on as a service, and — if you want instant file initialization — <code>SE_MANAGE_VOLUME_NAME</code> via the "Perform Volume Maintenance Tasks" privilege), and it correctly registers the Service Principal Names (SPNs) required for Kerberos authentication. Changing the account through the Services applet instead leaves SPN registration and some ACLs untouched, which surfaces later as NTLM fallback or "double-hop" authentication failures that are painful to diagnose after the fact.</p>
+<p>Do not use the same account across multiple SQL Server services or multiple instances unless you have a specific reason to. Separate accounts mean a compromise of the Agent account, for example, doesn't automatically hand over Database Engine rights, and it keeps audit logs attributable to a single service.</p>
 
-<h2 id="system-requirements">System Requirements</h2>
-<p>This section covers system requirements. Enterprise organizations rely on proper system requirements implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="choosing-the-right-collation">Choosing the Right Collation Before You Install</h2>
+<p>Collation determines sort order, case sensitivity, and accent sensitivity for character data, and it's set at the server level during setup, then inherited by <code>tempdb</code> and every new user database unless explicitly overridden. This is the setting installers most often accept the default on without thinking, and it's also one of the two or three settings on this list that is genuinely difficult to change afterward — treat it as a decision, not a default.</p>
+<p>The problem with changing it later is scope. The server collation governs the system databases and any database created without an explicit <code>COLLATE</code> clause. Changing it after the fact means either rebuilding the system databases with <code>Setup.exe /ACTION=REBUILDDATABASE</code> and a new <code>/SQLCOLLATION</code> value — which resets <code>master</code>, <code>model</code>, <code>msdb</code>, and <code>tempdb</code>, wiping out logins, jobs, linked servers, and any server-level configuration you'd already applied — or standing up a new instance with the correct collation and migrating every database into it. Individual user databases can carry their own collation independent of the server default, but mismatched collations across databases cause comparison and join errors ("Cannot resolve the collation conflict") whenever a cross-database query compares string columns with different collations, so a server-wide inconsistency becomes a recurring application bug rather than a one-time fix.</p>
+<p>Pick collation based on what the application actually requires, not the SQL Server default. <code>SQL_Latin1_General_CP1_CI_AS</code> (case-insensitive, accent-sensitive) is the common default for US English deployments and is what many older or third-party applications expect, since it matches historical Windows codepage behavior. If the application needs case-sensitive comparisons — common for systems migrated from Oracle or Linux-hosted databases — you need a <code>_CS</code> collation from the start; retrofitting case sensitivity onto an existing case-insensitive database means every string comparison in the application layer that assumed case-insensitivity is now a potential bug. If the application or its data will handle characters outside the Basic Multilingual Plane (certain emoji, some CJK extension characters), you need a collation with supplementary character support, such as one of the <code>_100_...SC</code> collations, because the older Windows collations will silently mishandle those code points. Check the vendor's installation documentation for a required collation before you run setup — most enterprise applications (SharePoint, many ERP products) state one explicitly, and installing with the wrong one is a day-one mistake you'll be living with for years.</p>
 
+<h2 id="configuring-max-server-memory">Configuring Max Server Memory</h2>
+<p>This is the single most consequential post-install setting and the one most frequently skipped. Out of the box, <code>max server memory</code> is set to 2147483647 MB — effectively unlimited. SQL Server's buffer pool will grow to consume nearly all physical memory on the host as workload demands it, and by default it does not release that memory back to the OS under pressure. On a dedicated database server this eventually starves the operating system itself, along with SQL Server's own non-buffer-pool memory needs (thread stacks, the plan cache, extended events, linked server providers), producing symptoms like OS-level paging, monitoring agents timing out, or the box becoming unresponsive to RDP under load — well before you'd expect any actual capacity problem.</p>
+<p>Set it explicitly right after install, via <code>sp_configure</code>:</p>
+<pre><code>EXEC sp_configure 'show advanced options', 1;
+RECONFIGURE;
+EXEC sp_configure 'max server memory', 24576; -- value in MB
+RECONFIGURE;
+</code></pre>
+<p>The value to choose depends on total host RAM and what else runs on the box. A widely used starting formula for a dedicated SQL Server host: reserve 4 GB or 10% of total RAM for the OS, whichever is larger, then reserve additional headroom for non-buffer-pool SQL Server memory (thread stacks scale with <code>max worker threads</code>, and each thread stack is roughly 2 MB on 64-bit; linked servers, CLR, and extended events sessions all add overhead outside the buffer pool). On a 64 GB dedicated database server, a reasonable starting point is leaving 8-10 GB for the OS and non-buffer-pool SQL memory, setting <code>max server memory</code> to roughly 54-56 GB, then watching <code>Memory: Available MBytes</code> and the <code>Memory Manager: Total Server Memory</code> vs. <code>Target Server Memory</code> counters over the first weeks of real load and adjusting. If the box also runs SSIS, SSRS, SSAS, or is a virtualization host sharing RAM with other guests, reserve considerably more — those workloads compete for the same physical memory and don't show up in SQL Server's own memory accounting.</p>
+<p><code>min server memory</code> (also set via <code>sp_configure</code>) is worth setting too, though it solves a different problem: it prevents the buffer pool from being trimmed below a floor under external memory pressure, which matters most on hosts running multiple SQL instances or other memory-hungry services that might otherwise cause SQL Server to shrink its buffer pool repeatedly.</p>
 
-<h2 id="installation-steps">Installation Steps</h2>
-<p>This section covers installation steps. Enterprise organizations rely on proper installation steps implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="tempdb-file-configuration">TempDB File Configuration</h2>
+<p>By default, a fresh install of SQL Server creates <code>tempdb</code> with a single data file. Every session that spills to tempdb — sorts, hash joins, version store for read committed snapshot isolation, temp tables, index rebuilds with <code>SORT_IN_TEMPDB</code> — competes for allocation pages (PFS/GAM/SGAM) within that one file, and under concurrent load that shows up as <code>PAGELATCH</code> contention on those allocation pages, a well-documented and easily avoidable bottleneck.</p>
+<p>The fix is multiple tempdb data files, which the SQL Server Setup UI has let you configure directly on the tempdb page since SQL Server 2016 — use it. The commonly cited starting guideline is one data file per logical core, up to 8 files; beyond 8 logical cores, start at 8 and only add more (in increments, monitoring contention) if you still observe allocation-page waits, since more files past a certain point add file-management overhead without proportional benefit. This isn't a hard rule for every workload, but it's a sound default for a general-purpose OLTP instance and far better than the single-file default.</p>
+<p>Two details matter more than the file count itself. All tempdb data files must be created at the same initial size and with the same autogrowth increment — tempdb uses a proportional-fill algorithm that distributes writes across files based on free space, and unequal file sizes defeat it, funneling activity back into whichever file has the most free space. And autogrowth should be set as a fixed MB value, not a percentage, so growth events stay predictable in size as the files get larger:</p>
+<pre><code>ALTER DATABASE tempdb MODIFY FILE (NAME = tempdev,  SIZE = 8192MB, FILEGROWTH = 512MB);
+ALTER DATABASE tempdb MODIFY FILE (NAME = temp2,    SIZE = 8192MB, FILEGROWTH = 512MB);
+ALTER DATABASE tempdb MODIFY FILE (NAME = temp3,    SIZE = 8192MB, FILEGROWTH = 512MB);
+ALTER DATABASE tempdb MODIFY FILE (NAME = temp4,    SIZE = 8192MB, FILEGROWTH = 512MB);
+</code></pre>
+<p>Size the files generously up front — sized correctly at creation, in equal increments — rather than relying on autogrowth events during production load, since each growth event is a brief stall while the file extends (mitigated substantially if the service account has Perform Volume Maintenance Tasks for instant file initialization, which applies to data files but not the log file). Put tempdb on its own fast storage separate from user database files where possible, since it's write-heavy and shared by every concurrent session on the instance.</p>
 
-
-<h2 id="post-installation-configuration">Post-Installation Configuration</h2>
-<p>This section covers post-installation configuration. Enterprise organizations rely on proper post-installation configuration implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="service-accounts">Service Accounts</h2>
-<p>This section covers service accounts. Enterprise organizations rely on proper service accounts implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="security-configuration">Security Configuration</h2>
-<p>This section covers security configuration. Enterprise organizations rely on proper security configuration implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="initial-database-setup">Initial Database Setup</h2>
-<p>This section covers initial database setup. Enterprise organizations rely on proper initial database setup implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
+<h2 id="basic-hardening-protocols-and-firewall">Basic Hardening: Protocols and Firewall Rules</h2>
+<p>SQL Server Configuration Manager exposes which network protocols are enabled under SQL Server Network Configuration. A default install typically enables Shared Memory and TCP/IP, with Named Pipes and VIA available but often disabled already; confirm this rather than assuming it. For a server accessed only over the network, disable any protocol you don't use — Named Pipes in particular has historically been a vector worth closing off if nothing in your environment depends on it, and VIA is obsolete and should be off. Shared Memory only serves local connections from the same machine and is low-risk to leave enabled for local administrative access.</p>
+<p>Set a static TCP port for the instance rather than relying on dynamic ports, especially for named instances — this makes firewall rules and client connection strings predictable and lets you disable SQL Server Browser (UDP 1434) entirely if only one instance is on the host, removing a service that otherwise exists solely to answer "which port is this named instance listening on" to anyone who asks.</p>
+<p>On the Windows Firewall side, add an explicit inbound rule scoped to the TCP port SQL Server listens on (1433 for a default instance or your chosen static port for a named one), restricted to the specific source subnets or hosts that legitimately need to connect — application servers, jump hosts, monitoring systems — rather than opening the port to the entire network. If SQL Server Browser stays enabled, add the corresponding UDP 1434 rule with the same source restrictions. Leave the port closed to anything outside those explicit sources, and don't rely on the firewall as your only control — pair it with SQL Server authentication mode (prefer Windows/AD authentication over mixed mode where the application allows it) and, if mixed mode is required, a strong, rotated password on the <code>sa</code> login or a disabled/renamed <code>sa</code> account entirely.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master pre-installation planning fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>Choose named instances by default so you're never boxed in when a second workload needs to share the host</li>
+<li>Run SQL Server services under a dedicated domain account or gMSA, never a built-in account like NetworkService, and make the change through Configuration Manager so permissions and SPNs are set correctly</li>
+<li>Pick collation deliberately at install time by matching what the application vendor requires — reversing it later is a rebuild-and-reload event, not a setting change</li>
+<li>Set max server memory immediately after install; leaving it at the default is one of the most common causes of OS memory pressure and stalled servers</li>
+<li>Configure multiple equally-sized tempdb data files at install time rather than living with the single-file default and its allocation contention</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/sql-server/" style="color:#0066cc;">Sql Server</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#pre-installation-planning">Pre-Installation Planning</a></li>
-<li><a href="#system-requirements">System Requirements</a></li>
-<li><a href="#installation-steps">Installation Steps</a></li>
-<li><a href="#post-installation-configuration">Post-Installation Configuration</a></li>
-<li><a href="#service-accounts">Service Accounts</a></li>
-<li><a href="#security-configuration">Security Configuration</a></li>
-<li><a href="#initial-database-setup">Initial Database Setup</a></li>
+      <li><a href="#pre-install-planning-instance-naming">Pre-Install Planning: Instance Naming</a></li>
+<li><a href="#service-accounts-and-least-privilege">Service Accounts and Least Privilege</a></li>
+<li><a href="#choosing-the-right-collation">Choosing the Right Collation Before You Install</a></li>
+<li><a href="#configuring-max-server-memory">Configuring Max Server Memory</a></li>
+<li><a href="#tempdb-file-configuration">TempDB File Configuration</a></li>
+<li><a href="#basic-hardening-protocols-and-firewall">Basic Hardening: Protocols and Firewall Rules</a></li>
     </ol>
   </aside>
 </div>
@@ -266,6 +204,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

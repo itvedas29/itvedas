@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Diagnose production IIS issues: W3C log fields that matter, Failed Request Tracing, key perf counters, and root causes for 500.19, 502.3, and 503 errors.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="IIS Logging, Performance &amp; Troubleshooting Common Errors | IT Vedas">
+  <meta property="og:description" content="Diagnose production IIS issues: W3C log fields that matter, Failed Request Tracing, key perf counters, and root causes for 500.19, 502.3, and 503 errors.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/iis/2026-07-21-iis-logging-performance-troubleshooting">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-21-iis-logging-performance-troubleshooting">
+  <title>IIS Logging, Performance &amp; Troubleshooting Common Errors | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS Logging, Performance &amp; Troubleshooting Common Errors", "description": "Diagnose production IIS issues: W3C log fields that matter, Failed Request Tracing, key perf counters, and root causes for 500.19, 502.3, and 503 errors.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/iis/2026-07-21-iis-logging-performance-troubleshooting"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/iis/">IIS</a> &rsaquo; IIS Logging, Performance &amp; Troubleshooting Common Errors</div>
+  <div class="ch-badge">🌐 IIS</div>
+  <h1>IIS Logging, Performance &amp; Troubleshooting Common Errors</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>11 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Diagnose production IIS issues: W3C log fields that matter, Failed Request Tracing, key perf counters, and root causes for 500.19, 502.3, and 503 errors.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 11 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Working knowledge of IIS Manager, sites, and application pools</li>
+<li>Familiarity with the IIS request-processing pipeline and worker processes</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>sc-status paired with sc-substatus and sc-win32-status pinpoints the exact failure category, not just the HTTP code</li>
+<li>Failed Request Tracing only writes an XML trace when a request actually matches a configured failure-definition rule, so it produces no overhead on requests that don't match</li>
+<li>HTTP 502.3 originates from Application Request Routing or another reverse proxy, not from the IIS worker process itself</li>
+<li>HTTP 503 with a Service Unavailable page almost always means the application pool is stopped, not that the site is misconfigured</li>
+      </ul>
+    </div>
+
+    <h2 id="why-logging-and-performance-diagnostics-matter">Why Logging and Performance Diagnostics Matter</h2>
+<p>Most IIS problems that reach an administrator's desk are reported vaguely: "the site is slow," "we got an error page," "it works sometimes." None of that is actionable on its own. IIS ships with three independent diagnostic systems that, used together, turn a vague complaint into a root cause: W3C logs for historical request-level data, Failed Request Tracing for deep per-request traces on demand, and Performance Monitor counters for real-time resource pressure. Each answers a different question. Logs tell you what happened and when. FREB tells you why a specific request failed, step by step through the pipeline. Counters tell you whether the server is currently under stress. Reaching for the wrong one wastes time — pulling FREB traces to answer a capacity question, or staring at Task Manager to explain a single failed request, are both dead ends. The rest of this article treats them as a toolkit, then applies that toolkit to the three status codes IIS administrators see most often in production: <code>500.19</code>, <code>502.3</code>, and <code>503</code>.</p>
+
+<h2 id="w3c-logging-format-and-fields-worth-watching">W3C Logging Format and the Fields Worth Watching</h2>
+<p>IIS supports several log formats, but W3C Extended Log File Format is the one worth standardizing on: it's a plain-text, space-delimited format with a self-describing header and a customizable field list, and it's what every log analysis tool expects. Logs live under <code>%SystemDrive%\inetpub\logs\LogFiles</code> by default, one subfolder per site, with a new file created daily unless you change the rollover policy.</p>
+<p>The default field set is thin. In IIS Manager, under a site's <strong>Logging</strong> feature, click <strong>Select Fields</strong> and add these if they aren't already present:</p>
+<ul>
+<li><code>sc-status</code> and <code>sc-substatus</code> — the HTTP status and IIS's more specific sub-status. <code>sc-status</code> alone hides the real story; a <code>500</code> with substatus <code>19</code> is a config problem, while a <code>500</code> with substatus <code>0</code> is an unhandled application exception. Always read them as a pair.</li>
+<li><code>sc-win32-status</code> — the underlying Win32 error code. This is what separates "access denied" (5) from "file not found" (2) from "the specified network name is no longer available" (64), all of which can otherwise surface as the same generic HTTP status.</li>
+<li><code>time-taken</code> — request duration in milliseconds. This is your primary slow-request signal; sort or filter on it to find the requests dragging down perceived performance, rather than relying on user reports of "slow."</li>
+<li><code>cs-uri-stem</code> and <code>cs-uri-query</code> — the path and query string. Together with <code>time-taken</code>, these tell you which endpoints are actually expensive, as opposed to which ones are merely called often.</li>
+<li><code>cs-username</code> and <code>c-ip</code> — useful for correlating failures to a specific user or client when troubleshooting reports that only affect one account or one network segment.</li>
+</ul>
+<p>A practical habit: filter a day's log for <code>sc-status</code> values of <code>4xx</code> and <code>5xx</code>, then sort by <code>time-taken</code> descending within that filtered set. Slow errors and fast errors usually have different causes — a slow <code>500</code> often points to a downstream dependency timing out before the app fails, while a fast <code>500</code> usually points to something failing immediately, like a null reference or a missing config section.</p>
+
+<h2 id="failed-request-tracing-freb-for-hard-to-reproduce-issues">Failed Request Tracing (FREB) for Hard-to-Reproduce Issues</h2>
+<p>W3C logs tell you a request failed; they don't tell you where in the pipeline it failed or what each module did along the way. Failed Request Tracing (branded FREB, for Failed Request Event Buffering) closes that gap by capturing a detailed, step-by-step XML trace of individual requests as they move through IIS — module by module, with timings and outcomes for each stage.</p>
+<p>FREB requires the <strong>Tracing</strong> role service (Web Server &gt; Health and Diagnostics &gt; Tracing) to be installed, and it must be enabled per site under <strong>Configure Failed Request Tracing</strong>, where you set a log directory and a maximum trace file count. The critical piece is the <strong>failure definition</strong>: a rule specifying which requests get traced, based on status code ranges, time-taken thresholds, or specific event severities. This is what makes FREB practical for production — you don't trace every request, only ones matching the rule, so there's no meaningful performance cost on the requests you don't care about.</p>
+<p>This targeting is exactly what makes FREB the right tool for issues you can't reproduce on demand: an error that shows up once a day under real traffic, or a request that occasionally takes 30 seconds instead of 300ms. Set a rule to catch <code>status-codes(500-599)</code> or <code>time-taken(30000)</code>, let it run, and the next occurrence produces a full trace automatically — no need to be watching when it happens. Each trace is written as an <code>.xml</code> file readable directly in a browser (with the accompanying <code>freb.xsl</code> stylesheet in the same folder) or in IIS Manager's trace log viewer. The trace shows every module invoked, in order, with the elapsed time each one took and the exact point of failure — which is precisely the detail a W3C log entry with a single <code>time-taken</code> value cannot provide.</p>
+
+<h2 id="key-performance-counters-to-watch">Key Performance Counters to Watch</h2>
+<p>Logs and traces are retrospective — they explain what already happened. Performance counters, monitored through Performance Monitor (<code>perfmon</code>) or collected into a monitoring system, tell you what's happening right now and give early warning before users notice.</p>
+<ul>
+<li><strong>Web Service &gt; Current Connections</strong> and <strong>ASP.NET &gt; Requests Current</strong> — the number of requests actively being processed or queued. A steady climb with no corresponding drop indicates the server is falling behind, not just busy.</li>
+<li><strong>ASP.NET &gt; Requests Queued</strong> — requests waiting for a free thread. This should sit near zero under normal load. A nonzero and growing value means the app is not processing requests as fast as they arrive — this is frequently the precursor to a <code>503</code> once the queue limit is hit and IIS starts rejecting new requests outright.</li>
+<li><strong>ASP.NET Applications &gt; Request Execution Time</strong> — average time per request for the specific application, distinct from the site-wide <code>time-taken</code> in logs. Rising execution time with flat traffic points to a code-level or dependency slowdown, not a capacity problem.</li>
+<li><strong>Process &gt; % Processor Time</strong> and <strong>Process &gt; Private Bytes</strong>, scoped to the relevant <code>w3wp.exe</code> instance — distinguishes CPU-bound slowness from memory pressure that's about to trigger a recycle.</li>
+<li><strong>Web Service &gt; Total Method Requests/sec</strong> — a throughput baseline. Without knowing normal throughput, a queue depth or execution time number has no context; always compare against a known-good baseline, not an absolute threshold.</li>
+</ul>
+<p>The practical workflow is to baseline these counters during normal operation, then alert on deviation rather than on fixed thresholds — "requests queued sustained above baseline for five minutes" is a far more reliable signal than an arbitrary fixed number, since normal queue depth varies enormously by application and hardware.</p>
+
+<h2 id="troubleshooting-500-19-configuration-error">Troubleshooting 500.19 — Configuration Error</h2>
+<p><code>500.19</code> means IIS could not process the request because of an invalid or inaccessible configuration, and it happens before any application code runs. The <code>sc-win32-status</code> field and the detailed error page both surface a <strong>Config Error</strong> and a <strong>Config File</strong> path — always start there rather than guessing.</p>
+<p>The most common causes, in order of frequency:</p>
+<ul>
+<li><strong>A locked configuration section.</strong> Some sections (e.g., <code>system.webServer/handlers</code> or <code>system.webServer/modules</code>) are locked at the server or site level and cannot be overridden in a lower-level <code>web.config</code>. The error message explicitly names the locked section — the fix is either to unlock it via <code>appcmd unlock config</code> / <code>applicationHost.config</code>, or to remove the offending override from the site's <code>web.config</code>.</li>
+<li><strong>A referenced module or feature that isn't installed.</strong> A <code>web.config</code> deployed from a different server (or written for a different IIS feature set) can reference a handler or module — URL Rewrite, for instance — that simply isn't present on this box. Installing the missing role service or feature resolves it; this is common right after moving an app to a new server.</li>
+<li><strong>Malformed XML.</strong> A stray tag, mismatched quote, or bad character in <code>web.config</code> — the error page usually gives a line and column number pointing directly at it.</li>
+<li><strong>Incorrect application pool identity permissions</strong> on the config file itself, producing an access-denied variant of the same status.</li>
+</ul>
+<p>Because this fails before the application layer, application-side logging (including most APM tools) never sees the request — W3C logs and the IIS error page are the only sources of truth here.</p>
+
+<h2 id="troubleshooting-502-3-bad-gateway">Troubleshooting 502.3 — Bad Gateway</h2>
+<p><code>502.3</code> is specific to servers running as a reverse proxy — typically via Application Request Routing (ARR) or URL Rewrite configured with a reverse-proxy rule — and it means the request reached IIS successfully but the upstream server IIS was proxying to did not respond correctly, or at all. This is fundamentally different from <code>500.19</code>: the local IIS configuration is fine, the problem is downstream.</p>
+<p>Sub-status variants clarify the specific failure: a common one is <strong>502.3 Bad Gateway (ARR)</strong> shown with a Win32 error like <code>connection refused</code> or <code>timeout</code>. Work through these causes:</p>
+<ul>
+<li><strong>The backend service or app pool is down.</strong> If IIS is proxying to another IIS site, another app pool, or an external service (a Node process, a container, an internal API), verify that target is actually running and listening on the expected port.</li>
+<li><strong>The backend is slow enough to exceed ARR's proxy timeout.</strong> Check the <strong>Server Farm &gt; Proxy Settings</strong> in ARR for the configured <code>Time-out</code> value; a backend that eventually responds but too slowly produces the same error as one that never responds. Compare against the backend's own <code>time-taken</code> if it's also an IIS instance with its own logs.</li>
+<li><strong>Network path or firewall blocking the proxy-to-backend hop</strong> — especially after backend servers are moved, re-IP'd, or placed behind a new segment. Test connectivity directly from the proxy server to the backend host and port, independent of IIS.</li>
+<li><strong>The server farm's health test is marking the backend unhealthy</strong> and ARR is refusing to route to it even though the backend itself is fine — check the farm's health test configuration and current member status in IIS Manager.</li>
+</ul>
+<p>Because the failure is on the network hop between proxy and backend, the proxy server's own W3C log will show the <code>502</code> with essentially no useful detail beyond the sub-status — the real diagnostic data lives on or near the backend.</p>
+
+<h2 id="troubleshooting-503-service-unavailable">Troubleshooting 503 — Service Unavailable</h2>
+<p><code>503</code> means IIS itself is up and listening, but the application pool serving the request is not — most commonly because it has stopped. Unlike <code>500.19</code> and <code>502.3</code>, this is rarely a configuration content problem; it's a process-state problem, and the investigation starts in the Application pools view in IIS Manager and the event logs, not in <code>web.config</code>.</p>
+<p>Work the causes in this order:</p>
+<ul>
+<li><strong>Check the app pool state directly.</strong> If it shows <strong>Stopped</strong>, that's the immediate cause; restarting it restores service, but restarting without finding out why it stopped just delays the recurrence.</li>
+<li><strong>Check rapid-fail protection.</strong> IIS stops an app pool automatically if it crashes a configured number of times within a configured interval (default: 5 failures in 5 minutes) — this is a deliberate circuit breaker, not a bug. The setting lives under the app pool's <strong>Advanced Settings &gt; Rapid-Fail Protection</strong>. Repeated worker-process crashes triggering this are the single most common real-world cause of unexplained <code>503</code>s in production.</li>
+<li><strong>Read the Application and System event logs</strong> on the IIS server for the time window before the pool stopped. Look for <code>WAS</code> (Windows Process Activation Service) events reporting the worker process failed to start or terminated unexpectedly, and any application-level exceptions (unhandled exceptions, <code>OutOfMemoryException</code>, a missing dependency at startup) that would explain the crash loop feeding rapid-fail protection.</li>
+<li><strong>Check identity and permissions</strong> if the pool fails to start at all rather than crashing after starting — an application pool identity that's locked out, had its password expire, or lacks permission to a resource it needs at startup will prevent the pool from coming up, producing a persistent <code>503</code> until corrected.</li>
+</ul>
+<p>Once the pool is confirmed running again, correlate its start time against the W3C logs and, if the crash was intermittent, retroactively enable a FREB rule on <code>time-taken</code> or status code so the next crash produces a full request trace instead of just an event log entry.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Enable W3C logging with the full field set before an incident happens — you cannot retroactively log a request that already occurred</li>
+<li>Use FREB, not the browser or Fiddler, when an error is intermittent or only happens under load</li>
+<li>Watch Requests Queued and Current Connections as leading indicators of saturation before users start reporting timeouts</li>
+<li>Distinguish 500.19 (bad config, XML-level) from 502.3 (bad upstream, proxy-level) from 503 (dead app pool, process-level) — the fix lives in a different layer for each</li>
+<li>Check the rapid-fail protection settings and the Application/System event logs before touching any config file when a pool won't stay running</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#why-logging-and-performance-diagnostics-matter">Why Logging and Performance Diagnostics Matter</a></li>
+<li><a href="#w3c-logging-format-and-fields-worth-watching">W3C Logging Format and the Fields Worth Watching</a></li>
+<li><a href="#failed-request-tracing-freb-for-hard-to-reproduce-issues">Failed Request Tracing (FREB) for Hard-to-Reproduce Issues</a></li>
+<li><a href="#key-performance-counters-to-watch">Key Performance Counters to Watch</a></li>
+<li><a href="#troubleshooting-500-19-configuration-error">Troubleshooting 500.19 — Configuration Error</a></li>
+<li><a href="#troubleshooting-502-3-bad-gateway">Troubleshooting 502.3 — Bad Gateway</a></li>
+<li><a href="#troubleshooting-503-service-unavailable">Troubleshooting 503 — Service Unavailable</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

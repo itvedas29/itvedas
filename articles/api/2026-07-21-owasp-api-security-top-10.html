@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A practical walkthrough of the OWASP API Security Top 10, with real-world BOLA examples and fixes engineers can apply today.">
+<meta name="keywords" content="OWASP API security top 10 explained, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="OWASP API Security Top 10 Explained | ITVedas">
+<meta property="og:description" content="A practical walkthrough of the OWASP API Security Top 10, with real-world BOLA examples and fixes engineers can apply today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-owasp-api-security-top-10">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-owasp-api-security-top-10">
+<title>OWASP API Security Top 10 Explained | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "OWASP API Security Top 10 Explained", "description": "A practical walkthrough of the OWASP API Security Top 10, with real-world BOLA examples and fixes engineers can apply today.", "keywords": "OWASP API security top 10 explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>OWASP API Security Top 10 Explained</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#broken-object-level-authorization-bola-the-most-common-api-v">Broken Object Level Authorization (BOLA) — the most common API vulnerability</a></li><li><a href="#broken-authentication">Broken Authentication</a></li><li><a href="#broken-object-property-level-authorization-excessive-data-ex">Broken Object Property Level Authorization (excessive data exposure &amp; mass assignment)</a></li><li><a href="#unrestricted-resource-consumption-and-lack-of-rate-limiting">Unrestricted Resource Consumption and Lack of Rate Limiting</a></li><li><a href="#security-misconfiguration-and-improper-inventory-management">Security Misconfiguration and Improper Inventory Management</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>OWASP API Security Top 10 Explained</h1>
+<p>Every API you ship is a documented invitation. Publish an OpenAPI spec, and you've handed attackers a map of every endpoint, parameter, and object type your backend exposes — no need to reverse-engineer a UI or guess at hidden form fields. That convenience for developers is exactly what makes APIs a distinct and increasingly favored attack surface, and it's why the <strong>OWASP API Security Top 10</strong> exists as a separate list from the general OWASP Top 10.</p>
+<p>Traditional web app security assumes a browser sits between the user and the server, rendering forms and hiding logic behind client-side flows. APIs strip that away. There's no UI to obscure a parameter, no client-side validation an attacker has to route around — just a URL, a method, and a payload, all callable directly with <code>curl</code>. That shift changes which vulnerabilities matter most: injection and cross-site scripting still exist, but the risks that dominate real-world API breaches are authorization failures, data exposure at the object and property level, and infrastructure that nobody remembered was still running. This article walks through the categories that matter most in practice, in the order they tend to bite production systems.</p>
+<h2 id="broken-object-level-authorization-bola-the-most-common-api-v">Broken Object Level Authorization (BOLA) — the most common API vulnerability</h2>
+<p>BOLA sits at the top of the OWASP API Security Top 10 for a reason: it's the single most frequently exploited API flaw in the wild, and it's dangerously easy to introduce without noticing. The bug pattern is simple. An endpoint like <code>GET /api/orders/12345</code> checks that the request carries a valid session or token — that is, it confirms <strong>authentication</strong> — but never checks whether the authenticated user actually owns order <code>12345</code>. That second check, <strong>authorization</strong> at the level of the specific object being requested, is the part that goes missing.</p>
+<p>The result is an <strong>Insecure Direct Object Reference (IDOR)</strong>-style flaw wearing an API costume. Swap the ID in the URL, and if the backend's only gate is "is this token valid," you're now looking at someone else's order, invoice, medical record, or direct message. This is especially dangerous with sequential or predictable identifiers, but it's just as exploitable with UUIDs if an attacker can harvest them from another response (a list endpoint, a webhook payload, a leaked support ticket).</p>
+<p>The fix has to happen on every single object-returning endpoint, not just the obvious ones: after you've established who the caller is, explicitly verify that the requested resource belongs to them, or that their role grants access to it, before you touch the database record or return it. Ownership checks belong in the data access layer, ideally enforced consistently rather than re-implemented ad hoc per route, because a single missed endpoint reintroduces the whole class of bug.</p>
+<blockquote>Being logged in tells the server who you are. It says nothing about whether you're allowed to open this particular door.</blockquote>
+<h2 id="broken-authentication">Broken Authentication</h2>
+<p>Authentication flaws in APIs tend to cluster around three failure modes. First, <strong>missing or weak rate limiting</strong> on authentication endpoints — <code>/api/login</code>, <code>/api/password-reset</code>, <code>/api/token/refresh</code> — leaves the door open to credential stuffing, where attackers replay breached username/password pairs from other services at scale, betting on password reuse. Without per-account and per-IP throttling, an API can process thousands of login attempts a minute with no friction at all.</p>
+<p>Second, <strong>weak JWT validation</strong> is a recurring and severe mistake. Some JWT libraries historically accepted the <code>"alg": "none"</code> header, meaning a token with an empty signature would be treated as valid if the server didn't explicitly reject it. Others fail to verify the signature at all, or trust the algorithm specified in the token header rather than pinning it server-side — which opens the door to algorithm-confusion attacks where an RS256-signed token is swapped for one forged with the public key used as an HMAC secret. Every JWT-based API needs to hardcode the expected algorithm, verify the signature on every request, and validate standard claims like <code>exp</code> and <code>aud</code> rather than trusting the payload's face value.</p>
+<p>Third, credential exposure through overly permissive CORS, tokens with no expiry, or refresh tokens that never get revoked all extend the blast radius once an attacker has a foothold. Short-lived access tokens paired with revocable refresh tokens limit how long a single leaked credential stays useful.</p>
+<h2 id="broken-object-property-level-authorization-excessive-data-ex">Broken Object Property Level Authorization (excessive data exposure &amp; mass assignment)</h2>
+<p>This category covers two related but distinct mistakes, both stemming from binding API responses and requests directly to internal data models instead of explicit, filtered schemas.</p>
+<p><strong>Excessive data exposure</strong> happens on the response side: an endpoint returns the entire internal user object — including fields like <code>passwordHash</code>, <code>internalNotes</code>, or <code>ssn</code> — and relies on the client application to only display the fields it needs. That's a dangerous assumption, because anyone calling the API directly sees everything, filtered or not. The fix is to define explicit response schemas per endpoint and serialize only the fields that are meant to be public, rather than trusting the frontend to hide what the backend already sent.</p>
+<p><strong>Mass assignment</strong> is the mirror image on the request side. If an endpoint takes the client's JSON body and binds it directly onto an internal model — a common convenience in many frameworks — an attacker can add fields the UI never exposes. A profile update endpoint that expects <code>{"name": "...", "email": "..."}</code> might, if the backend blindly deserializes the whole payload, also accept <code>{"isAdmin": true}</code> or <code>{"accountBalance": 999999}</code> if those fields exist on the underlying model and nothing explicitly blocks them. The defense is an <strong>allowlist</strong>: only bind the specific fields a given operation is supposed to accept, never the full object graph.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Treat "what fields does this endpoint return" and "what fields does this endpoint accept" as two separate, explicit contracts — never let either one default to "whatever the internal model happens to contain." Data transfer objects (DTOs) that map deliberately to and from your internal models close both holes at once.</div>
+<h2 id="unrestricted-resource-consumption-and-lack-of-rate-limiting">Unrestricted Resource Consumption and Lack of Rate Limiting</h2>
+<p>APIs that impose no limits on payload size, response size, query complexity, or request frequency are an availability risk even without a motivated attacker. A GraphQL endpoint with no query depth or complexity limits lets a single request fan out into thousands of nested database calls. A REST endpoint accepting unbounded <code>limit</code> or <code>page_size</code> parameters can be asked to return millions of rows in one call. File upload endpoints with no size cap can be used to exhaust disk or memory.</p>
+<p>This isn't purely a denial-of-service concern, either — it's a cost-control concern. Auto-scaling infrastructure billed by compute and bandwidth turns unrestricted resource consumption into a direct line to a very large cloud bill, sometimes from legitimate but poorly-behaved client code rather than malice. Effective controls include rate limiting per API key or user (not just per IP, which is easy to distribute around), maximum payload sizes, pagination caps, query complexity analysis for GraphQL, and timeouts on any endpoint that triggers expensive downstream work.</p>
+<h2 id="security-misconfiguration-and-improper-inventory-management">Security Misconfiguration and Improper Inventory Management</h2>
+<p>This is where API sprawl becomes a security problem in its own right. Three patterns show up repeatedly in breach postmortems. <strong>Deprecated API versions</strong> often stay reachable long after the "current" version replaces them — <code>/api/v1/users</code> might have none of the authorization fixes applied to <code>/api/v2/users</code>, but if it's never decommissioned, it's still a live path into the same backend. <strong>Verbose error handling</strong> is the second pattern: stack traces, database error messages, or internal file paths returned in a 500 response hand attackers a debugging session for free, revealing framework versions, table names, and query structure.</p>
+<p>The third and increasingly common pattern is <strong>shadow APIs</strong> — endpoints that exist in production but were never documented, added to an inventory, or included in a security review. These accumulate from abandoned features, internal debugging routes left in by developers, staging endpoints promoted to production, and third-party integrations nobody tracked centrally. An endpoint nobody knows about is an endpoint nobody is monitoring, patching, or rate-limiting, which makes API discovery and inventory management a prerequisite for every other control on this list — you cannot secure what you don't know exists.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>A common pattern reported across bug bounty programs looks like this: a security researcher testing an e-commerce API notices that after placing an order, the confirmation page calls <code>GET /api/orders/48213</code> to display the receipt. The researcher, authenticated as a legitimate low-privilege customer, decrements the ID to <code>48212</code> and requests it again. The response returns a complete stranger's order — their shipping address, the last four digits of their payment card, and their full name and phone number.</p>
+<p>The root cause is textbook BOLA: the endpoint's authorization logic checked only that the request carried a valid session token, never whether the session's user ID matched the <code>userId</code> field on the order record being fetched. Because order IDs were sequential integers, the researcher could enumerate the entire order history of every customer on the platform simply by iterating the ID, no automation required beyond a basic loop. The fix, once identified, was a single added clause to the query — filtering by the authenticated user's ID alongside the order ID — but the exposure window before discovery had already let the flaw sit in production, unmonitored, for months. This is precisely why BOLA leads the OWASP API Security Top 10: the vulnerability is trivial to introduce, trivial to exploit, and produces a direct, high-value data leak with no need to bypass encryption, exploit memory corruption, or chain multiple bugs together.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Treating a valid token as sufficient authorization.</strong> Authentication answers "who are you"; it says nothing about "should you see this specific record." Every object-returning or object-modifying endpoint needs its own explicit ownership or permission check — assuming the auth middleware already handled it is how BOLA gets shipped.</p>
+<p><strong>Trusting client-supplied fields for anything security-sensitive.</strong> Role flags, price fields, ownership IDs, and permission levels should never be taken from the request body at face value. If the client can set it, assume an attacker will try setting it to something you didn't intend, and re-derive or re-validate anything that affects authorization or business logic server-side.</p>
+<p><strong>Having no real inventory of what's actually live.</strong> Teams routinely underestimate how many API versions, environments, and forgotten endpoints are reachable from the public internet. Without a maintained inventory — ideally generated from actual traffic and gateway logs, not just what's in the current OpenAPI spec — old and shadow endpoints stay exposed indefinitely, invisible to every other security control you've invested in.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is the OWASP API Security Top 10 the same as the regular OWASP Top 10?</strong><br>No. They're separate projects covering different risk profiles. The general OWASP Top 10 focuses on web application vulnerabilities like injection and cross-site scripting. The API Security Top 10 is built specifically around how APIs are attacked — object- and property-level authorization failures, resource consumption abuse, and inventory blind spots — because APIs lack the UI layer that shapes traditional web app threats.</p>
+<p><strong>Why is BOLA ranked as the top API risk instead of injection?</strong><br>Injection flaws are still dangerous, but BOLA requires no special tooling, no payload crafting, and no bypassing of input validation — just a valid account and a predictable or guessable identifier. That low barrier to exploitation, combined with how frequently it's found in real APIs, is why it consistently tops incident reports and bug bounty payouts.</p>
+<p><strong>Can API gateways or WAFs fully solve these problems?</strong><br>They help with some categories — rate limiting, schema validation, and blocking known-bad patterns are gateway-level wins — but object-level and property-level authorization logic depends on business context the gateway doesn't have. Only application code that knows "this order belongs to this user" can enforce that check correctly, so gateways are a layer of defense, not a substitute for authorization logic in the API itself.</p>
+<p>The throughline across all of these categories is that APIs fail quietly. A broken object-level check doesn't throw an error or crash a page — it just returns data it shouldn't, to someone who technically had a valid token. Closing that gap means treating authorization as a per-object, per-field decision made on every request, keeping a real inventory of what's actually running, and never trusting the client to enforce anything security-relevant on your behalf.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#broken-object-level-authorization-bola-the-most-common-api-v">Broken Object Level Authorization (BOLA) — the most common API vulnerability</a></li><li><a href="#broken-authentication">Broken Authentication</a></li><li><a href="#broken-object-property-level-authorization-excessive-data-ex">Broken Object Property Level Authorization (excessive data exposure &amp; mass assignment)</a></li><li><a href="#unrestricted-resource-consumption-and-lack-of-rate-limiting">Unrestricted Resource Consumption and Lack of Rate Limiting</a></li><li><a href="#security-misconfiguration-and-improper-inventory-management">Security Misconfiguration and Improper Inventory Management</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

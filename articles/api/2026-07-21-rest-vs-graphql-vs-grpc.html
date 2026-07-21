@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Compare REST, GraphQL, and gRPC across performance, caching, and tooling to choose the right API architecture for your next service.">
+<meta name="keywords" content="REST vs GraphQL vs gRPC comparison, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="REST vs GraphQL vs gRPC: Choosing the Right API Architecture | ITVedas">
+<meta property="og:description" content="Compare REST, GraphQL, and gRPC across performance, caching, and tooling to choose the right API architecture for your next service.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-rest-vs-graphql-vs-grpc">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-rest-vs-graphql-vs-grpc">
+<title>REST vs GraphQL vs gRPC: Choosing the Right API Architecture | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "REST vs GraphQL vs gRPC: Choosing the Right API Architecture", "description": "Compare REST, GraphQL, and gRPC across performance, caching, and tooling to choose the right API architecture for your next service.", "keywords": "REST vs GraphQL vs gRPC comparison", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Intermediate"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🧭 Intermediate</span>
+  </div>
+  <h1>REST vs GraphQL vs gRPC: Choosing the Right API Architecture</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#rest-resource-oriented-and-everywhere">REST: resource-oriented and everywhere</a></li><li><a href="#graphql-one-endpoint-client-specified-shape">GraphQL: one endpoint, client-specified shape</a></li><li><a href="#grpc-binary-contract-first-built-for-service-to-service">gRPC: binary, contract-first, built for service-to-service</a></li><li><a href="#how-to-actually-choose">How to actually choose</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>REST vs GraphQL vs gRPC: Choosing the Right API Architecture</h1>
+
+<p>You've built a REST API. It has resources, status codes, maybe some pagination and versioning headaches you've made peace with. Now you're starting a new service, and someone on the team asks, "should this be GraphQL?" or "why not gRPC, it's supposed to be faster?" Suddenly a decision that felt settled is open again.</p>
+
+<p>The "REST vs everything else" framing is the wrong lens. These three aren't competing for the same job. <code>REST</code>, <code>GraphQL</code>, and <code>gRPC</code> solve different problems well and the same problems poorly, and most engineering orgs of any size end up running more than one. The real skill isn't picking a winner — it's matching the architecture to the caller, the data shape, and the performance envelope of the specific interface you're building.</p>
+
+<h2 id="rest-resource-oriented-and-everywhere">REST: resource-oriented and everywhere</h2>
+
+<p>A truly RESTful API models your domain as <strong>resources</strong> addressed by URLs, manipulated through a small, uniform set of HTTP verbs (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>), and represented in a portable format — almost always JSON now. The constraint that matters most in practice is <strong>statelessness</strong>: each request carries everything the server needs, which is what makes REST so easy to scale horizontally, cache, and reason about. A <code>GET /orders/482</code> means the same thing to any client, any proxy, any CDN, without either side holding session state.
+
+<p>REST won the last two decades not because it's technically superior to the alternatives — it isn't, in any single dimension — but because it's simple, cacheable, and universally supported. Every language has an HTTP client. Every proxy, load balancer, and browser dev tool understands it natively. You can debug a REST API with <code>curl</code> and your eyes. That low floor is a real, durable advantage, especially for public APIs where you don't control the client.</p>
+
+<p>The weaknesses show up as your data gets more relational. A mobile client that needs an order, its line items, the customer, and the customer's shipping addresses either makes four round trips to four endpoints (<strong>chatty</strong>, slow on high-latency networks) or you build a bespoke <code>/orders/482/full</code> endpoint that returns everything, most of which some callers don't need (<strong>over-fetching</strong>). Do this enough times across enough client types and you end up maintaining a combinatorial explosion of purpose-built endpoints, or a single bloated one that nobody's happy with. This tension between <strong>over-fetching</strong> and <strong>under-fetching</strong> is REST's structural weak point, and it's the exact gap GraphQL was designed to close.</p>
+
+<blockquote>REST hands you a warehouse full of labeled boxes and lets you carry out as many as you want, one trip at a time; it never asks what you actually needed inside them.</blockquote>
+
+<h2 id="graphql-one-endpoint-client-specified-shape">GraphQL: one endpoint, client-specified shape</h2>
+
+<p>GraphQL flips the model. Instead of many URLs each returning a fixed shape, you get a single endpoint (typically <code>POST /graphql</code>) backed by a strongly typed schema, and the <strong>client</strong> specifies exactly which fields it wants, across however many related objects, in one request. That mobile order screen becomes one query that asks for the order, its items, the customer name, and the first shipping address — nothing more, nothing less, in one round trip.</p>
+
+<p>This directly solves REST's over/under-fetching problem, which is why GraphQL gets pulled in most often for front ends serving varied, evolving UI needs: multiple client platforms, product teams iterating on views independently of backend releases, or a data graph with genuinely complex relationships. Because the schema is strongly typed and introspectable, tooling (autocomplete, generated types, query validation) tends to be excellent.</p>
+
+<p>The costs are real and often underestimated. A flexible query language means clients can construct expensive queries — deeply nested, wide, or both — and without safeguards like query depth limits, complexity scoring, or timeouts, that flexibility becomes a self-inflicted denial-of-service vector. The classic operational headache is the <strong>N+1 problem</strong>: a naive resolver for a list of orders that each independently fetches its customer will issue one query for the list and N more for each customer, hammering your database unless you add batching (<code>DataLoader</code>-style) at the resolver layer. And because every request hits the same URL with a POST body, you lose REST's free ride on HTTP/CDN caching — GraphQL caching has to happen at the application or client-cache layer (Apollo Client, Relay) instead of the network layer, which is more code you own and maintain.</p>
+
+<h2 id="grpc-binary-contract-first-built-for-service-to-service">gRPC: binary, contract-first, built for service-to-service</h2>
+
+<p><code>gRPC</code> starts from a different premise entirely: define the contract first. You write a <code>.proto</code> file specifying services, methods, and message types using <strong>Protocol Buffers</strong> (<code>protobuf</code>), then generate strongly typed client and server code in whatever languages your services use. The wire format is binary, not text, and it runs over <code>HTTP/2</code>, which gives you request/response multiplexing over a single connection plus native support for streaming — client streaming, server streaming, or full bidirectional streams — without the workarounds REST and GraphQL need to fake that over plain HTTP.
+
+<p>The result is fast and predictable: smaller payloads than JSON, less serialization overhead, connection reuse instead of per-request setup, and compile-time type safety across service boundaries so a field rename breaks the build instead of failing silently in production. That's exactly what you want for high-volume internal traffic — a fraud-scoring service calling a features service a thousand times a second doesn't care about human readability, it cares about latency and correctness.</p>
+
+<p>Which is precisely why gRPC is rarely the right choice for a public or browser-facing API. Browsers can't speak raw <code>HTTP/2</code> trailers the way gRPC needs; you need <code>gRPC-Web</code> plus a proxy translation layer to make it work from client-side JavaScript at all, and even then you lose some streaming capabilities. The binary payloads that make it fast also make it opaque — you can't just eyeball a request in the network tab or hand a third-party developer a <code>curl</code> command and a browser tab and expect them to figure it out. Debugging requires the <code>.proto</code> definitions and tooling like <code>grpcurl</code>. For an audience of external developers you don't control, that friction usually outweighs the performance win.</p>
+
+<h2 id="how-to-actually-choose">How to actually choose</h2>
+
+<p>Strip away the hype and the decision usually comes down to who's calling the API and what they need from it:</p>
+
+<p><strong>Public API for third-party developers</strong> → REST. Ubiquity wins. Every partner's stack can call it, every API gateway and monitoring tool understands it out of the box, and the debugging story is trivial. Unless you have a specific, well-understood reason to deviate, REST is still the safe default for anything crossing an organizational boundary.</p>
+
+<p><strong>A front end (web or mobile) with varied, evolving query needs against a complex data graph</strong> → GraphQL. If you have multiple client surfaces pulling overlapping-but-different slices of related data, and product iteration speed matters more than shaving milliseconds off the wire, GraphQL's client-driven shape pays for its added complexity.</p>
+
+<p><strong>Internal microservice-to-microservice calls where performance and type safety matter</strong> → gRPC. When both ends of the connection are services you control, deployed together, calling each other at high volume, the binary protocol and generated clients are a clear win and the debuggability tradeoff barely matters because you're not exposing this to outsiders.</p>
+
+<p>The honest answer for most systems past a certain size is: all three, in different layers, at the same time. Treat this as a per-interface decision, not a company-wide architecture mandate.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Don't pick an architecture for the whole company — pick it per interface. The question is never "REST or GraphQL or gRPC," it's "who is calling this specific endpoint, and what do they need from it." A single backend commonly exposes REST externally, GraphQL to its own front end, and gRPC internally, without contradiction.</p>
+</div>
+
+<h2 id="a-real-world-example">A real-world example</h2>
+
+<p>Picture a mid-size logistics company with a public developer platform, a consumer mobile app, and a backend built from a dozen internal services (pricing, routing, inventory, notifications, and so on).</p>
+
+<p>Their <strong>public API</strong>, used by partners who integrate shipment tracking into their own sites, is REST. Partners range from large enterprises with dedicated integration engineers to solo developers testing with Postman; REST's ubiquity and the ability to read API docs and hit endpoints with <code>curl</code> matter more here than raw throughput. It's versioned, well-documented with OpenAPI, and cacheable at the CDN for read-heavy endpoints like tracking status.</p>
+
+<p>Their <strong>mobile app</strong> talks to an internal GraphQL layer sitting in front of those same domain services. The app's home screen needs a blend of active shipments, account notifications, and saved addresses in one view; the shipment detail screen needs a different, deeper slice of the same underlying data. Rather than versioning a dozen REST endpoints to match each screen redesign, the mobile team iterates on GraphQL queries independently of backend deploys, and a thin resolver layer maps those queries onto the internal services.</p>
+
+<p>Those internal services — pricing, routing, inventory — talk to each other over <strong>gRPC</strong>. When the routing service needs a price quote for a candidate route, it's making that call synchronously, at volume, latency-sensitive, entirely within infrastructure the company controls. Protobuf contracts keep the teams honest about breaking changes, and HTTP/2 multiplexing keeps connection overhead low under load. None of this is visible to partners or the mobile app — it's purely an internal performance and reliability choice.</p>
+
+<p>Three architectures, three different callers, one coherent system. Nobody at this company debates "REST vs GraphQL vs gRPC" as a single question — they ask it separately for each boundary.</p>
+
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+
+<p>Adopting GraphQL to solve a problem better solved by caching. If your real issue is that a REST endpoint is slow because it's hit constantly and recomputed every time, the fix is usually an <code>ETag</code>, a CDN cache rule, or a Redis layer — not a schema rewrite. GraphQL solves over/under-fetching, not backend latency, and teams that migrate expecting a performance boost are often disappointed and now also own resolver-level N+1 bugs they didn't have before.</p>
+
+<p>Using gRPC for a public-facing API and then fighting the browser the whole way. If you pick gRPC because it's "the fast one" for an API that external web or mobile clients will call directly, you'll spend real engineering time on <code>gRPC-Web</code> proxies, losing streaming features, and explaining to partner developers why they can't just <code>curl</code> your API. That cost is often invisible until someone's already committed to the contract.</p>
+
+<p>Calling an API "REST" when it's really just JSON over HTTP. An API with a single <code>/api/doStuff</code> POST endpoint that takes an action name in the body isn't RESTful just because it uses JSON and runs over HTTP — it's RPC wearing REST's clothes. That's not automatically wrong, but if you're not modeling resources, using HTTP verbs meaningfully, and being cacheable/stateless, you don't get REST's actual benefits (caching, uniform tooling, predictable semantics), so don't assume you do.</p>
+
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+
+<p><strong>Can I use GraphQL and gRPC together?</strong><br>
+Yes, and it's a common pattern: a GraphQL gateway serves front-end clients while its resolvers call internal services over gRPC. The client never sees gRPC directly; it's an implementation detail behind the GraphQL layer, which is exactly the kind of layered approach described above.</p>
+
+<p><strong>Is gRPC always faster than REST?</strong><br>
+For internal, high-volume, latency-sensitive traffic, generally yes — binary serialization and HTTP/2 multiplexing add up. But for a single low-frequency public API call, the difference is often negligible next to network latency, and REST's caching can make it faster in aggregate for read-heavy public traffic where gRPC responses would go uncached.</p>
+
+<p><strong>Do I need to rewrite my REST API to add GraphQL?</strong><br>
+No. The common path is adding a GraphQL layer in front of existing REST or internal services, translating GraphQL queries into calls against what already exists, rather than replacing it outright. This lets you get GraphQL's client-facing benefits without a risky backend migration.</p>
+
+<p>None of these three architectures is obsolete or a fad, and none is a drop-in replacement for the others — they optimize for different callers under different constraints. The most durable skill isn't memorizing which one is "best," it's getting comfortable asking, for every new interface, who's on the other end of this call and what do they actually need — then letting that answer, not trend or preference, pick the architecture.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#rest-resource-oriented-and-everywhere">REST: resource-oriented and everywhere</a></li><li><a href="#graphql-one-endpoint-client-specified-shape">GraphQL: one endpoint, client-specified shape</a></li><li><a href="#grpc-binary-contract-first-built-for-service-to-service">gRPC: binary, contract-first, built for service-to-service</a></li><li><a href="#how-to-actually-choose">How to actually choose</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

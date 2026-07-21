@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="How API authentication actually works — API keys, OAuth 2.0, and JWT explained, with what each proves and when to use them.">
+<meta name="keywords" content="API authentication API keys OAuth JWT explained, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="API Authentication Explained: API Keys, OAuth 2.0, and JWT | ITVedas">
+<meta property="og:description" content="How API authentication actually works — API keys, OAuth 2.0, and JWT explained, with what each proves and when to use them.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-api-authentication">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-api-authentication">
+<title>API Authentication Explained: API Keys, OAuth 2.0, and JWT | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "API Authentication Explained: API Keys, OAuth 2.0, and JWT", "description": "How API authentication actually works \u2014 API keys, OAuth 2.0, and JWT explained, with what each proves and when to use them.", "keywords": "API authentication API keys OAuth JWT explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Intermediate"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🧭 Intermediate</span>
+  </div>
+  <h1>API Authentication Explained: API Keys, OAuth 2.0, and JWT</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#api-keys-simple-but-limited">API keys: simple, but limited</a></li><li><a href="#oauth-2-0-delegated-authorization-not-authentication">OAuth 2.0: delegated authorization, not authentication</a></li><li><a href="#jwt-a-token-format-not-a-protocol">JWT: a token format, not a protocol</a></li><li><a href="#how-these-fit-together-in-a-real-system">How these fit together in a real system</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>API Authentication Explained: API Keys, OAuth 2.0, and JWT</h1>
+
+<p>You've built the endpoint. Now someone needs to prove they're allowed to call it — and "just add an API key" is the answer that gets typed into a lot of production code that later gets rewritten under pressure. API keys, OAuth 2.0, and JWTs solve overlapping but distinct problems, and picking the wrong one doesn't usually fail in testing. It fails six months later, when you need per-user permissions, or a way to revoke one compromised credential without breaking every other integration.</p>
+
+<p>This isn't a "what is an API" primer. You're already calling and building APIs — this is about which authentication mechanism actually fits the problem in front of you, and why treating <strong>API keys</strong>, <strong>OAuth 2.0</strong>, and <strong>JWT</strong> as interchangeable is how systems end up with security holes shaped like convenience shortcuts.</p>
+
+<h2 id="api-keys-simple-but-limited">API keys: simple, but limited</h2>
+
+<p>An API key proves exactly one thing: the caller possesses a string that your system recognizes. That's it. It doesn't prove who the caller is, what they're allowed to do beyond whatever that single key was configured for, or that the request wasn't replayed from a leaked log file. It's a shared secret, not an identity.</p>
+
+<p>Keys are typically sent as an HTTP header, most commonly a custom header like <code>X-API-Key</code>, or sometimes tucked into an <code>Authorization</code> header as a bearer-style value. They can also be passed as a query string parameter (<code>?api_key=abc123</code>), but that's the weaker option — query strings end up in server access logs, browser history, proxy logs, and Referer headers of any outbound links on the page. A header at least keeps the secret out of the URL, which is where most accidental leaks happen.</p>
+
+<p>The real limits show up at scale. A single API key usually maps to an application or an account, not an individual end user — so if you need to know <em>which user</em> triggered a request, the key alone won't tell you. Fine-grained permissions are also awkward: you either issue one key with broad access, or you build and maintain a separate key per scope, which turns key management into its own subsystem. And revocation is blunt — if a key is shared across every server in a cluster and it leaks, rotating it means updating every place that uses it, simultaneously, with zero downtime for legitimate traffic. There's no built-in concept of "revoke this one session but leave the rest."</p>
+
+<blockquote>An API key proves you have a key. It doesn't prove you're who you say you are.</blockquote>
+
+<p>None of this makes API keys a bad choice — they're the right tool for a lot of server-to-server traffic where the caller is a known system, not a human sitting behind a login screen. The mistake is reaching for a key when the actual requirement is per-user identity or scoped permissions.</p>
+
+<h2 id="oauth-2-0-delegated-authorization-not-authentication">OAuth 2.0: delegated authorization, not authentication</h2>
+
+<p>The single most useful thing to internalize about OAuth 2.0 is that it's fundamentally about <strong>authorization</strong>, not authentication. OAuth exists to let one application act on a user's behalf against another service — read their calendar, post to their account, pull their files — without that user ever handing over their password to the requesting app. It answers "what is this app allowed to do," not "who is this person." (OpenID Connect, built on top of OAuth 2.0, is the layer that actually answers the identity question — that distinction trips up a lot of engineers who assume OAuth alone handles login.)</p>
+
+<p>The most common pattern for this is the <strong>authorization code flow</strong>. At a high level: the client app redirects the user to the authorization server (say, a "Sign in with X" screen), the user authenticates there and approves the requested access, and the authorization server redirects back to the client with a short-lived authorization code. The client then exchanges that code — server-side, using its own client credentials — for an access token (and often a refresh token). The user's password never touches the requesting application at any point in that sequence.</p>
+
+<p>Older guidance allowed an "implicit flow" for browser-based apps that couldn't safely hold a client secret, where the access token was returned directly in the redirect URL instead of via a code-exchange step. That's now discouraged, even for public clients like single-page apps and mobile apps, because tokens in a URL fragment are exposed to browser history, referrer leakage, and injection attacks. The current recommendation is <strong>authorization code flow with PKCE</strong> (Proof Key for Code Exchange) — the client generates a one-time secret, sends a hashed version upfront, and proves possession of the original when exchanging the code for a token. That closes the interception gap without requiring a stored client secret, which is why PKCE is now recommended for confidential clients too, not just public ones.</p>
+
+<h2 id="jwt-a-token-format-not-a-protocol">JWT: a token format, not a protocol</h2>
+
+<p>A <strong>JWT</strong> (JSON Web Token) is not an authentication method or a protocol — it's a data format, and it's frequently the format used to represent the tokens that OAuth 2.0 flows issue. Structurally, a JWT is three base64url-encoded segments separated by dots: <code>header.payload.signature</code>. The header describes the token type and signing algorithm, the payload holds claims (user ID, expiry, scopes, whatever the issuer decided to include), and the signature is what ties the first two segments to the issuer's key.
+
+</p>
+
+<p>Here's the fact that catches people out: by default, a JWT is <strong>signed, not encrypted</strong>. Base64url encoding is not encryption — it's a reversible encoding scheme, and anyone can paste a JWT into a decoder and read the payload in plain text. The signature guarantees the token hasn't been tampered with since it was issued; it does nothing to hide the contents. That means you never put secrets, passwords, or sensitive personal data directly in a JWT payload — assume anything in there is as readable as an unencrypted cookie. (Encrypted JWTs — JWE — exist as a separate spec, but they're far less commonly used than signed JWTs, or JWS, in typical API auth setups.)</p>
+
+<p>What actually makes a JWT trustworthy is <strong>signature verification</strong> on the receiving end. The API validates the signature against the issuer's public key (for asymmetric algorithms like RS256) or a shared secret (for HMAC-based algorithms like HS256). If the signature doesn't check out, or the algorithm in the header doesn't match what the server expects, the token is rejected outright, no matter what the payload claims. Skipping or misconfiguring that verification step is one of the more common ways JWT-based systems get broken.</p>
+
+<p>Because JWTs are typically self-contained and stateless, they usually carry a short expiry (<code>exp</code> claim) — often minutes, not days — so a leaked token has a limited blast radius. Longer-lived sessions are handled with a separate <strong>refresh token</strong>, which is stored more carefully (often server-side or in an httpOnly cookie) and used only to request a new short-lived access token when the old one expires. That way the token doing the actual work on every request is disposable, and the long-lived credential is one that's much less frequently exposed.</p>
+
+<h2 id="how-these-fit-together-in-a-real-system">How these fit together in a real system</h2>
+
+<p>These three aren't competing options you pick one of — in a lot of real systems, they layer. OAuth 2.0 is the <em>flow</em> that governs how a token gets issued and what it authorizes. JWT is a common <em>format</em> for the access token that flow produces. API keys are a separate, simpler mechanism that usually sits outside that whole exchange, most often for server-to-server calls where there's no human user redirecting through a login screen to begin with.
+
+</p>
+
+<p>Put differently: it's entirely normal for a single platform to use OAuth 2.0 + JWT for its own logged-in users, and API keys for third-party developers integrating at the machine level. They're not redundant — they're solving for different callers.</p>
+
+<div class="callout"><div class="callout-title">Pro Tip</div>Before adding a new auth mechanism, write down who the caller actually is — a logged-in human, a third-party server, or your own internal service. That answer usually decides between OAuth+JWT and a plain API key faster than any feature comparison will.</div>
+
+<h2 id="a-real-world-example">A real-world example</h2>
+
+<p>Consider a SaaS analytics product with two distinct integration surfaces. For its own web app, a user logs in through a standard OAuth 2.0 authorization code flow with PKCE: they authenticate, the frontend receives a short-lived JWT access token plus a refresh token, and every subsequent API call attaches that JWT via <code>Authorization: Bearer &lt;token&gt;</code>. The backend verifies the signature and expiry on each request, checks the claims for the user's scopes, and never needs to hit the database to look up a session — the token carries what it needs. When the access token expires, the frontend silently uses the refresh token to get a new one, and the user never notices.</p>
+
+<p>For its public API — the one third-party developers use to pull analytics data into their own tools — the same platform issues a plain API key per registered application. There's no user redirect, no consent screen, no browser involved; it's a backend service calling another backend service on a schedule. The key gets sent as <code>X-API-Key</code> on each request, scoped to that application's account, and it can be individually revoked from a dashboard if it's ever compromised, without touching any other integration or any logged-in user's session. Same platform, two different callers, two different mechanisms — chosen for what each caller actually is, not out of habit.</p>
+
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+
+<p><strong>Storing JWTs in <code>localStorage</code>.</strong> It's convenient and it's also directly readable by any JavaScript running on the page — including injected scripts from an XSS vulnerability. An httpOnly cookie can't be read by client-side JavaScript at all, which removes that entire attack surface for token theft. If you must keep a token accessible to JavaScript (for a mobile app or a non-cookie client), pair it with short expiry and tight scope so a theft is low-value.</p>
+
+<p><strong>Treating API keys as set-and-forget.</strong> A key that's never rotated and never expires is a permanent liability — every place it's ever been logged, committed, or pasted into a support ticket stays a valid credential indefinitely. Build rotation and expiry into the key lifecycle from day one, and make revoking a single key a fast, low-friction operation, not an incident.</p>
+
+<p><strong>Conflating authentication with authorization.</strong> Authentication answers "who are you" — verifying identity, whether via a password, an OAuth flow, or a signed token. Authorization answers "what are you allowed to do" — a separate check that has to run after identity is established. A system that verifies a valid JWT and stops there, without checking whether that specific user's claims actually permit the requested action, has authentication without authorization — and it will happily let a legitimately logged-in user do things they were never supposed to be able to do.</p>
+
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+
+<p><strong>Can I just encrypt the JWT payload instead of relying on signing?</strong><br>
+You can, using JWE instead of the more common JWS, but it adds complexity most APIs don't need. The more practical default is to keep sensitive data out of the payload entirely and rely on <code>HTTPS</code> in transit plus short expiry, reserving actual payload encryption for cases where the token itself has to be stored somewhere less trusted.</p>
+
+<p><strong>Is OAuth 2.0 overkill for a simple internal API?</strong><br>
+Often, yes. If the caller is a trusted internal service or a small set of known partners with no end-user delegation involved, a well-managed API key (or mutual TLS) is usually simpler to build, operate, and reason about than standing up an OAuth authorization server.</p>
+
+<p><strong>Should access tokens and refresh tokens both be JWTs?</strong><br>
+Not necessarily. Access tokens are commonly JWTs because they're verified frequently and benefit from being self-contained. Refresh tokens are used far less often and typically need to be revocable server-side, so many systems store them as opaque, random strings in a database rather than as JWTs — that makes instant revocation possible, which a purely self-contained JWT doesn't easily support.</p>
+
+<p>None of these three mechanisms is universally "better" — they answer different questions for different callers, and the systems that hold up under real traffic are the ones that pick deliberately rather than defaulting to whichever one shipped first. Get the authentication-versus-authorization distinction right, keep signing and encryption straight in your head, and match the mechanism to who's actually calling, and the rest of the implementation details tend to fall into place.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#api-keys-simple-but-limited">API keys: simple, but limited</a></li><li><a href="#oauth-2-0-delegated-authorization-not-authentication">OAuth 2.0: delegated authorization, not authentication</a></li><li><a href="#jwt-a-token-format-not-a-protocol">JWT: a token format, not a protocol</a></li><li><a href="#how-these-fit-together-in-a-real-system">How these fit together in a real system</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

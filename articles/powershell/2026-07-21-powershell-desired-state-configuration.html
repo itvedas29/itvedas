@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Learn PowerShell DSC&#x27;s declarative model — configurations, resources, MOF compilation, push vs pull mode, and the Local Configuration Manager.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PowerShell Desired State Configuration (DSC) | IT Vedas">
+  <meta property="og:description" content="Learn PowerShell DSC&#x27;s declarative model — configurations, resources, MOF compilation, push vs pull mode, and the Local Configuration Manager.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/powershell/2026-07-21-powershell-desired-state-configuration">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/powershell/2026-07-21-powershell-desired-state-configuration">
+  <title>PowerShell Desired State Configuration (DSC) | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "PowerShell Desired State Configuration (DSC)", "description": "Learn PowerShell DSC&#x27;s declarative model — configurations, resources, MOF compilation, push vs pull mode, and the Local Configuration Manager.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/powershell/2026-07-21-powershell-desired-state-configuration"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/powershell/">PowerShell</a> &rsaquo; PowerShell Desired State Configuration (DSC)</div>
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Desired State Configuration (DSC)</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>10 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Learn PowerShell DSC&#x27;s declarative model — configurations, resources, MOF compilation, push vs pull mode, and the Local Configuration Manager.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 10 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Solid working knowledge of PowerShell functions, modules, and remoting (WinRM/PSSessions)</li>
+<li>Administrative access to Windows systems for compiling and applying test configurations</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>A DSC Configuration block does not apply anything itself — running it compiles a .mof file, and the MOF is what actually gets applied</li>
+<li>Every DSC resource implements Get, Test, and Set logic, which is what makes configurations idempotent instead of just re-runnable</li>
+<li>The Local Configuration Manager (LCM) is the engine on each node that applies a MOF and, depending on its ConfigurationMode, can detect and auto-correct drift</li>
+<li>Windows PowerShell 5.1 has DSC built in; PowerShell 7 requires the separate PSDesiredStateConfiguration module and handles the engine differently</li>
+      </ul>
+    </div>
+
+    <h2 id="declarative-vs-imperative-configuration">Declarative vs. Imperative Configuration</h2>
+<p>Every PowerShell script you've written so far is imperative: it lists a sequence of steps and runs them in order, regardless of whether the target already satisfies the outcome you want. <code>Install-WindowsFeature</code> runs whether or not the feature is already installed; <code>New-Item</code> throws if the file is already there unless you add a check. The script describes a process.</p>
+<p>Desired State Configuration inverts that. A DSC configuration describes an end state — "this Windows feature is present," "this file exists with this content," "this service is running" — and leaves the mechanics of getting there to the DSC engine. You don't write the conditional logic that checks whether the feature is already installed; the resource that manages Windows features already knows how to check, and only acts when the current state doesn't match the desired one.</p>
+<p>This makes DSC configurations idempotent by design. Applying the same configuration once, ten times, or on a schedule every fifteen minutes produces the same result: a node either already matches the desired state and nothing happens, or it doesn't and the necessary corrective action is taken. That property is what makes DSC suitable for continuous enforcement rather than one-time provisioning — you can point it at a fleet of servers repeatedly and trust that it will never re-run destructive or redundant steps.</p>
+<p>The practical shift for an admin moving from scripting to DSC is letting go of sequencing as the unit of thought. Instead of "first do this, then do that," you enumerate the properties a node should have. Ordering still matters in places — DSC supports dependencies between resources via <code>DependsOn</code> — but the default mental model is a set of independent assertions about the end state, not a procedure.</p>
+
+<h2 id="configurations-and-resources">Configurations and Resources</h2>
+<p>A DSC <em>configuration</em> is a specially parsed PowerShell block introduced by the <code>Configuration</code> keyword rather than <code>function</code>. Inside it, you declare one or more <em>nodes</em> (the machines the configuration targets) and, within each node block, one or more <em>resource</em> blocks. A resource block names a DSC resource, gives it a unique label, and sets its properties.</p>
+<p>A DSC resource is the unit of idempotent logic underneath a configuration — conceptually similar to a cmdlet, but built around three operations: <strong>Get</strong> (report current state), <strong>Test</strong> (compare current state to desired state and return a boolean), and <strong>Set</strong> (make the change if Test returns false). The LCM calls Test before Set on every application, which is exactly what produces idempotency — Set only ever runs when something is actually out of compliance.</p>
+<p>Windows PowerShell ships a baseline set of resources in the <code>PSDesiredStateConfiguration</code> module: <code>File</code> (manage files and directories), <code>Service</code> (service state and startup type), <code>WindowsFeature</code> (roles and features via Server Manager), <code>Registry</code>, <code>Environment</code>, <code>Group</code>, <code>User</code>, <code>Script</code> (an escape hatch for arbitrary Get/Test/Set logic), and a handful of others. These cover a large share of routine server configuration without installing anything extra.</p>
+<p>Beyond the built-ins, a <em>resource module</em> is just a PowerShell module that packages one or more additional DSC resources — for example <code>ComputerManagementDsc</code> for computer name and time zone, <code>NetworkingDsc</code> for IP configuration and firewall rules, or <code>SqlServerDsc</code> for SQL Server instances. These are published to the PowerShell Gallery like any other module and installed with <code>Install-Module</code>. A configuration references a resource module with an <code>Import-DscResource</code> statement inside the configuration block, which is how the compiler knows where to find the resource's implementation.</p>
+
+<h2 id="writing-a-dsc-configuration">Writing a DSC Configuration</h2>
+<p>The syntax below combines two built-in resources — <code>WindowsFeature</code> and <code>File</code> — to express a simple end state: IIS installed, with a specific default document in place.</p>
+<pre><code>Configuration WebServerBaseline
+{
+    param(
+        [string[]]$NodeName = 'localhost'
+    )
+
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+
+    Node $NodeName
+    {
+        WindowsFeature IIS
+        {
+            Name   = 'Web-Server'
+            Ensure = 'Present'
+        }
+
+        WindowsFeature IISManagementConsole
+        {
+            Name      = 'Web-Mgmt-Console'
+            Ensure    = 'Present'
+            DependsOn = '[WindowsFeature]IIS'
+        }
+
+        File DefaultPage
+        {
+            DestinationPath = 'C:\inetpub\wwwroot\index.html'
+            Contents        = '&lt;html&gt;&lt;body&gt;Managed by DSC&lt;/body&gt;&lt;/html&gt;'
+            Type            = 'File'
+            Ensure          = 'Present'
+            DependsOn       = '[WindowsFeature]IIS'
+        }
+    }
+}
+
+WebServerBaseline -NodeName 'WEB01' -OutputPath 'C:\DscOutput'
+</code></pre>
+<p>Each resource block has a label (<code>IIS</code>, <code>IISManagementConsole</code>, <code>DefaultPage</code>) that must be unique within the node, and a type (<code>WindowsFeature</code>, <code>File</code>) that must match an imported resource. <code>DependsOn</code> references another resource by <code>[Type]Label</code> syntax and forces ordering — here, the file and the management console both wait until the base IIS feature is confirmed present.</p>
+<p>Notice that calling <code>WebServerBaseline -NodeName 'WEB01' -OutputPath 'C:\DscOutput'</code> at the bottom does not touch WEB01 at all. It runs the configuration as a function, which produces output on disk — covered next.</p>
+
+<h2 id="mof-compilation">The MOF Compilation Step</h2>
+<p>Running a <code>Configuration</code> block is a compile step, not an apply step. PowerShell parses the block and generates one <code>.mof</code> file per node listed, named after the node (for example <code>WEB01.mof</code>), inside the <code>-OutputPath</code> directory. MOF stands for Managed Object Format — a CIM (Common Information Model) standard for describing configuration data, unrelated to native PowerShell syntax despite being produced from a PowerShell block.</p>
+<p>This matters because the MOF, not your <code>.ps1</code> file, is the artifact that actually gets applied to a node. <code>Start-DscConfiguration</code> and any pull mechanism both consume MOF files. The PowerShell configuration syntax is purely an authoring convenience — a domain-specific language that compiles down to a vendor-neutral, CIM-based description the LCM's WMI provider can consume regardless of how it was generated. In principle, MOF describing a desired state could be produced by tools other than PowerShell; DSC's engine doesn't know or care that yours came from a <code>Configuration</code> block.</p>
+<p>There's a second, separate category of MOF worth knowing about: the <em>meta-configuration</em> MOF, which configures the LCM itself (its refresh mode, refresh interval, and so on) rather than describing resources on the node. Meta-configuration is authored with a special <code>[DscLocalConfigurationManager()]</code> attribute on a configuration block and applied with <code>Set-DscLocalConfigurationManager</code>, distinct from the regular resource MOF applied with <code>Start-DscConfiguration</code>. Confusing the two is a common early mistake — one configures what the node should look like, the other configures how the node checks and enforces that.</p>
+
+<h2 id="the-local-configuration-manager">The Local Configuration Manager (LCM)</h2>
+<p>The Local Configuration Manager is the engine present on every DSC-capable node that actually does the work: it reads a MOF, invokes each resource's Test method, invokes Set where needed, and — depending on configuration — repeats that cycle on a schedule to catch drift that happens after the initial apply. Every Windows PowerShell 5.1 installation includes the LCM as a WMI component; there is nothing extra to install to get basic DSC functionality on a Windows Server or Windows 10/11 box running Windows PowerShell.</p>
+<p>The LCM's own behavior is governed by a handful of settings you inspect with <code>Get-DscLocalConfigurationManager</code>:</p>
+<ul>
+<li><code>ConfigurationMode</code> — <code>ApplyOnly</code> (apply once, never revisit), <code>ApplyAndMonitor</code> (reapply detection only, logs drift but doesn't fix it), or <code>ApplyAndAutoCorrect</code> (detect drift and reapply Set automatically).</li>
+<li><code>ConfigurationModeFrequencyMins</code> — how often the LCM re-evaluates the current MOF against actual state.</li>
+<li><code>RefreshMode</code> — <code>Push</code> or <code>Pull</code>, covered next.</li>
+<li><code>RefreshFrequencyMins</code> — in pull mode, how often the node checks the pull source for a new or changed configuration.</li>
+</ul>
+<p>Setting <code>ConfigurationMode</code> to <code>ApplyAndAutoCorrect</code> is what turns DSC from a one-time provisioning tool into continuous enforcement: a manually-tweaked registry value or a stopped service that should be running gets reverted on the next LCM cycle without anyone re-running a script. That self-healing behavior is DSC's core value proposition over ad hoc scripting, and it's entirely a function of LCM settings, not the configuration content itself.</p>
+
+<h2 id="push-mode-vs-pull-mode">Push Mode vs. Pull Mode</h2>
+<p>Push mode is the direct route: you have a compiled MOF, and you run <code>Start-DscConfiguration -Path C:\DscOutput -Wait -Verbose</code> against one or more target nodes over WinRM. The configuration is sent immediately, applied immediately, and the LCM does not go looking for further instructions unless you've also set <code>ConfigurationModeFrequencyMins</code> for periodic re-evaluation of that same MOF. Push is well suited to ad hoc changes, initial builds, and testing — it's the mode you reach for while iterating on a configuration, since there's no server infrastructure to keep in sync.</p>
+<p>Pull mode flips the direction of initiative. Each node's LCM is configured (via meta-configuration) with the address of a pull source and a configuration ID or name, and the node itself polls that source on its <code>RefreshFrequencyMins</code> interval, downloads its assigned MOF if it has changed, and applies it. Because the node is asking rather than being told, pull mode scales to large fleets without an admin having to push to every machine individually, and it naturally re-establishes the correct configuration on a node that was rebuilt or reimaged, as long as it's re-registered with the pull source.</p>
+<p>The traditional on-premises version of pull mode used a dedicated DSC pull server — an IIS site running the pull server DSC resources, serving MOFs and resource modules over HTTP(S) with nodes authenticating by GUID. That pattern still works, but it's now considered legacy: it requires you to build, patch, and secure another piece of server infrastructure whose only job is distributing configuration, which is a lot of overhead for what it delivers.</p>
+<p>The managed alternative that displaced it was <strong>Azure Automation State Configuration</strong> (the evolution of what used to be called Azure Automation DSC), which hosted the pull server role as an Azure service so nodes could register against it without you running your own IIS-based pull server. Microsoft has since retired that service, which means it's no longer the recommendation for new work even though existing references to it are still common. The current recommended path for ongoing, centrally managed compliance is <strong>Azure Policy Guest Configuration</strong>: it uses a DSC-like resource model to audit and, optionally, remediate configuration drift on Azure VMs and on-premises or multi-cloud machines connected through Azure Arc, all evaluated and reported through Azure Policy rather than a custom pull endpoint you maintain yourself. If you're designing a new pull-based rollout today, Guest Configuration is the starting point rather than a self-hosted pull server.</p>
+
+<h2 id="dsc-across-powershell-versions">DSC Across PowerShell Versions</h2>
+<p>Everything above describes DSC as it exists in Windows PowerShell 5.1, where the engine, the LCM, and the WMI-based CIM provider are all built into the operating system. This is still the most complete and most commonly deployed version of DSC, and it's Windows-only.</p>
+<p>PowerShell 7 does not include DSC out of the box. Because PowerShell 7 is cross-platform and the classic LCM is a Windows component tied to WMI, the engine couldn't simply be carried over unchanged. To author or run DSC configurations in PowerShell 7, you install the <code>PSDesiredStateConfiguration</code> module separately from the PowerShell Gallery (version 2.x), which restores the <code>Configuration</code> keyword and related cmdlets. Its behavior isn't a perfect drop-in for the 5.1 experience, though — some cmdlets behave differently, and applying compiled configurations against the classic Windows LCM from a PowerShell 7 session has edge cases worth testing before you rely on it in production. If your environment is a mix of PowerShell 5.1 and 7 hosts, the safest approach is to compile and apply DSC configurations from Windows PowerShell 5.1 sessions specifically, and treat PowerShell 7 support as something to verify against your actual resource modules rather than assume.</p>
+<p>Because of that gap, teams standardizing on DSC today generally keep authoring and applying configurations in Windows PowerShell 5.1 even if the rest of their scripting has moved to PowerShell 7, and they lean on Azure Policy Guest Configuration rather than custom pull infrastructure when they need centralized, ongoing enforcement across many nodes.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Think in end states, not steps — a DSC configuration says what a node should look like, and the LCM figures out what to change</li>
+<li>Built-in resources (File, Service, WindowsFeature, Registry, Script, and others) cover common cases; resource modules from the PowerShell Gallery extend coverage to IIS, networking, SQL, and more</li>
+<li>Compiling a configuration produces one MOF per node in an output folder — that folder is what you hand to Start-DscConfiguration or a pull source</li>
+<li>Push mode is fine for ad hoc changes and testing; pull mode (or a managed equivalent) is what gives you continuous drift correction at scale</li>
+<li>On-premises DSC pull servers are largely legacy now — Azure Automation State Configuration has been retired, and Azure Policy Guest Configuration is the current managed path for ongoing compliance</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#declarative-vs-imperative-configuration">Declarative vs. Imperative Configuration</a></li>
+<li><a href="#configurations-and-resources">Configurations and Resources</a></li>
+<li><a href="#writing-a-dsc-configuration">Writing a DSC Configuration</a></li>
+<li><a href="#mof-compilation">The MOF Compilation Step</a></li>
+<li><a href="#the-local-configuration-manager">The Local Configuration Manager (LCM)</a></li>
+<li><a href="#push-mode-vs-pull-mode">Push Mode vs. Pull Mode</a></li>
+<li><a href="#dsc-across-powershell-versions">DSC Across PowerShell Versions</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

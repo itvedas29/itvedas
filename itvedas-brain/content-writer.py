@@ -127,6 +127,7 @@ TOPIC_TO_SLUG = {
     "DevOps":"devops","Databases":"databases","Linux":"linux",
     "Hardware":"hardware","Compliance":"compliance",
     "CyberSecurity":"security","BestPractice":"devops","AI":"cloud",
+    "APIs":"api",
 }
 
 def color_for(topic):

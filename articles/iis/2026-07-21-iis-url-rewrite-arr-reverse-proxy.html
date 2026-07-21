@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="Configure IIS as a reverse proxy with URL Rewrite and ARR: server farms, load-balancing algorithms, session affinity, and header handling.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="IIS URL Rewrite and ARR: Reverse Proxy Setup | IT Vedas">
+  <meta property="og:description" content="Configure IIS as a reverse proxy with URL Rewrite and ARR: server farms, load-balancing algorithms, session affinity, and header handling.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/iis/2026-07-21-iis-url-rewrite-arr-reverse-proxy">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-21-iis-url-rewrite-arr-reverse-proxy">
+  <title>IIS URL Rewrite and ARR: Reverse Proxy Setup | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS URL Rewrite and ARR: Reverse Proxy Setup", "description": "Configure IIS as a reverse proxy with URL Rewrite and ARR: server farms, load-balancing algorithms, session affinity, and header handling.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/iis/2026-07-21-iis-url-rewrite-arr-reverse-proxy"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/iis/">IIS</a> &rsaquo; IIS URL Rewrite and ARR: Reverse Proxy Setup</div>
+  <div class="ch-badge">🌐 IIS</div>
+  <h1>IIS URL Rewrite and ARR: Reverse Proxy Setup</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>10 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Configure IIS as a reverse proxy with URL Rewrite and ARR: server farms, load-balancing algorithms, session affinity, and header handling.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 10 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Working IIS installation with administrative access</li>
+<li>Familiarity with web.config and IIS Manager</li>
+<li>Basic understanding of HTTP headers and load balancing concepts</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>URL Rewrite and ARR are separate downloads from the Web Platform Installer or IIS.net, not built into IIS by default</li>
+<li>ARR's proxy function is disabled by default and must be turned on explicitly under "Proxy Settings" at the server level</li>
+<li>ARR supports round robin, weighted round robin, least current requests, least response time, and request hash load-balancing algorithms</li>
+<li>Session affinity in ARR uses an encrypted cookie (ARRAffinity) rather than source-IP hashing by default</li>
+      </ul>
+    </div>
+
+    <h2 id="url-rewrite-vs-arr-what-each-module-does">URL Rewrite vs ARR: What Each Module Does</h2>
+<p>IIS ships with neither <code>URL Rewrite</code> nor <code>Application Request Routing (ARR)</code> installed by default. Both are separate downloads distributed through the Web Platform Installer or as standalone MSI packages from iis.net, and they solve different problems that only overlap once you combine them.</p>
+<p><code>URL Rewrite</code> is a pattern-matching and rewriting engine. It inspects incoming requests against a set of rules built from conditions (URL path, query string, HTTP headers, server variables) and, when a rule matches, either rewrites the URL internally, issues an HTTP redirect, or — critically for this article — rewrites the request to point at a different URL entirely, including one on a remote host. Used alone, URL Rewrite is commonly seen doing things like stripping <code>.aspx</code> extensions, forcing HTTPS, or normalizing trailing slashes. None of that requires ARR.</p>
+<p><code>ARR</code> is what turns IIS into an actual reverse proxy and load balancer. It adds three things URL Rewrite cannot do on its own: a proxy module capable of forwarding a request to an upstream server and relaying the response back to the client, the concept of a <code>server farm</code> (a named pool of backend servers), and load-balancing logic to decide which farm member handles each request. ARR also integrates with URL Rewrite by exposing farms as valid rewrite targets and by auto-generating a default rewrite rule when you create a farm.</p>
+<p>In practice the two modules are used together: URL Rewrite decides <em>whether and where</em> to route a request, ARR decides <em>which backend server</em> receives it and manages the connection. You can install URL Rewrite without ARR for pure rewriting/redirecting work, but you cannot do reverse proxying with ARR alone — ARR depends on URL Rewrite rules to trigger routing to a farm.</p>
+
+<h2 id="installing-url-rewrite-and-arr">Installing URL Rewrite and ARR</h2>
+<p>Both modules must be installed at the server level (not per-site) before they appear in IIS Manager. Download <code>URL Rewrite 2.1</code> and <code>Application Request Routing 3.0</code> from the official Microsoft/IIS download pages and run the installers, or use the Web Platform Installer command line if it's still available in your environment. A reboot is not typically required, but an IIS restart (<code>iisreset</code>) is recommended after installation so the modules register cleanly in the IIS pipeline.</p>
+<p>After installation, confirm both modules are present by opening IIS Manager and selecting the server node (not a site). You should see a <code>URL Rewrite</code> icon and an <code>Application Request Routing Cache</code> icon in the server-level feature list. If you only see them at the site level or not at all, the install did not register correctly — reinstall rather than trying to work around it, since ARR specifically needs to hook into the server-level request pipeline to proxy connections.</p>
+<p>Verify module versions match your IIS and OS architecture (x86 vs x64) — a mismatched ARR install is a common cause of the proxy silently failing to route while URL Rewrite rules appear to match correctly in the trace logs.</p>
+
+<h2 id="enabling-the-arr-proxy-function">Enabling the ARR Proxy Function</h2>
+<p>This is the step most new IIS-as-proxy setups miss. Installing ARR does not enable proxying — the proxy function ships turned off. At the server node in IIS Manager, open <code>Application Request Routing Cache</code>, then click <code>Server Proxy Settings</code> in the Actions pane. Check <code>Enable proxy</code> and apply.</p>
+<p>Until that checkbox is set, any URL Rewrite rule that rewrites to an <code>http://</code> or <code>https://</code> URL will fail with a 404 or a rewrite loop, because IIS has no proxy handler registered to actually forward the request off-box — URL Rewrite will happily rewrite the internal URL, but nothing picks it up and sends it anywhere. This setting is global to the server (it lives in <code>applicationHost.config</code> under <code>system.webServer/proxy</code>), so on a shared or multi-site IIS box, enabling it affects every site unless you scope proxy behavior per rule.</p>
+<p>The same Server Proxy Settings screen also exposes timeout, response buffer size, and — importantly for this setup — the <code>Reverse rewrite host in response headers</code> option, which rewrites <code>Location</code>, <code>Content-Location</code>, and <code>Set-Cookie</code> headers coming back from the backend so redirects and cookies reference the proxy's public hostname instead of the internal backend name.</p>
+
+<h2 id="configuring-a-basic-reverse-proxy-rule">Configuring a Basic Reverse Proxy Rule</h2>
+<p>With both modules installed and proxying enabled, the simplest reverse proxy is a single inbound rule that matches everything and rewrites to a backend server. Add this to the <code>web.config</code> of the site acting as the proxy front end:</p>
+<pre><code>&lt;configuration&gt;
+  &lt;system.webServer&gt;
+    &lt;rewrite&gt;
+      &lt;rules&gt;
+        &lt;rule name="ReverseProxyToBackend" stopProcessing="true"&gt;
+          &lt;match url="(.*)" /&gt;
+          &lt;conditions&gt;
+            &lt;add input="{HTTP_HOST}" pattern="^app\.example\.com$" /&gt;
+          &lt;/conditions&gt;
+          &lt;action type="Rewrite"
+                  url="http://backend-farm/{R:1}"
+                  logRewrittenUrl="true" /&gt;
+        &lt;/rule&gt;
+      &lt;/rules&gt;
+    &lt;/rewrite&gt;
+  &lt;/system.webServer&gt;
+&lt;/configuration&gt;</code></pre>
+<p>Here <code>backend-farm</code> is not a hostname resolved via DNS — it's the name of an ARR server farm defined on the same server, and ARR intercepts the rewrite to that name and applies load balancing across the farm's members. If you point the rewrite at a single backend hostname instead of a farm name, IIS proxies to that one server directly with no load balancing, which is valid for a simple pass-through proxy but defeats the purpose of pairing URL Rewrite with ARR.</p>
+<p>When you create a farm through IIS Manager's <code>Server Farms</code> node, ARR offers to auto-generate this rule for you at the server level (in <code>applicationHost.config</code>), targeting <code>http://farmname/{R:1}</code>. That generated rule is a reasonable starting point but is scoped globally — for anything beyond a single-site proxy, move or copy the logic into the specific site's <code>web.config</code> and add host or path conditions so unrelated sites on the same server aren't affected.</p>
+
+<h2 id="server-farm-configuration-and-load-balancing-algorithms">Server Farm Configuration and Load-Balancing Algorithms</h2>
+<p>A server farm is created under the server node's <code>Server Farms</code> item, where you give it a name and add one or more backend servers by address (and optionally a non-default port). Each farm member can be individually weighted, taken offline for maintenance without deleting it, or assigned to a backup pool that only receives traffic when primary servers are unavailable.</p>
+<p>ARR exposes several load-balancing algorithms per farm, configured under the farm's <code>Load Balance</code> settings:</p>
+<ul>
+<li><strong>Round Robin</strong> — requests are distributed sequentially across all healthy servers regardless of current load. Simple and predictable, but can overload a slower server if backend capacity is uneven.</li>
+<li><strong>Weighted Round Robin</strong> — same sequential distribution, but servers with a higher configured weight receive proportionally more requests. Useful when farm members have different hardware specs.</li>
+<li><strong>Least Current Requests</strong> — ARR tracks in-flight request counts per server and routes new requests to whichever member currently has the fewest outstanding requests. This is generally the best default for farms with variable request duration, since it adapts to actual load rather than assuming uniform request cost.</li>
+<li><strong>Least Response Time</strong> — factors in both current request count and recent measured response time, favoring servers that are both lightly loaded and fast.</li>
+<li><strong>Request Hash</strong> — computes a hash from a chosen part of the request (by default the URL) so the same input consistently maps to the same backend, useful for cache locality even without cookie-based affinity.</li>
+</ul>
+<p>For most reverse-proxy-in-front-of-a-web-app scenarios, <code>Least Current Requests</code> is the pragmatic default; reach for weighted round robin only when farm members are genuinely unequal in capacity.</p>
+
+<h2 id="health-checks-and-session-affinity">Health Checks and Session Affinity</h2>
+<p>A farm's <code>Health Test</code> settings (under the farm node) let ARR periodically send a test request to each backend — a specific URL, expected response match, and interval/timeout — and automatically remove a server from rotation if it stops responding correctly. Configure this against a lightweight endpoint (a dedicated health-check route that checks dependencies like the database, not just a static file) so ARR reacts to real application failures, not just process liveness. Without a configured health test, ARR relies only on failed proxy connections to detect a dead server, which reacts more slowly and can route a burst of requests to a server that's already down.</p>
+<p>For applications that store session state in-process (classic ASP.NET session state, in-memory caching per instance, anything not externalized to a shared store like Redis or SQL Server), a single client needs to keep hitting the same backend server for the life of its session. ARR provides this via <code>Session Affinity</code>, also configured per farm. When enabled, ARR issues an encrypted cookie named <code>ARRAffinity</code> (and, over HTTPS, an additional <code>ARRAffinitySameSite</code> cookie depending on version) on the first response, encoding which backend server handled that client. Subsequent requests carrying the cookie are routed back to the same server as long as it remains healthy.</p>
+<p>Affinity is a workaround, not a substitute for stateless backend design — if the affinitized server goes down, ARR falls back to load-balancing the client to a different server and that client's in-memory session is lost. For anything beyond small internal tools, externalizing session state is the more robust fix; affinity buys time for legacy applications that can't be refactored immediately.</p>
+
+<h2 id="preserving-client-ip-and-host-headers">Preserving Client IP and Host Headers</h2>
+<p>Once IIS is proxying, every request the backend sees originates from the proxy server's IP address unless you explicitly forward the original client's information. Backend applications that log client IPs, apply IP-based rate limiting, or make authorization decisions based on source address will silently break — everything appears to come from one internal IP — unless this is addressed.</p>
+<p>ARR automatically adds an <code>X-Forwarded-For</code> header containing the original client IP when proxying, appending to the header if one already exists from an upstream hop (such as a load balancer or CDN in front of IIS). This behavior is controlled by the <code>X-Forwarded-For</code> proxy setting at the server level and is on by default in current ARR versions, but it's worth verifying under <code>Server Proxy Settings</code> rather than assuming — backend code must be written to read this header explicitly, since the underlying TCP connection IP will still be the proxy's.</p>
+<p>The <code>Host</code> header is a separate concern: by default, URL Rewrite/ARR preserves the original <code>Host</code> header sent by the client rather than substituting the backend server's hostname, which matters when the backend application generates absolute URLs, validates the request against expected host bindings, or serves multiple sites and dispatches based on <code>Host</code>. If the backend needs to see the original host explicitly regardless of any changes upstream, add a <code>serverVariables</code> section to the rule that sets <code>HTTP_X_FORWARDED_HOST</code>, and ensure that server variable is allowed by adding it to the <code>allowedServerVariables</code> collection under the rewrite module's configuration — attempting to set an unlisted server variable fails silently at request time rather than throwing a configuration error.</p>
+
+<h2 id="common-gotchas-and-troubleshooting">Common Gotchas and Troubleshooting</h2>
+<p>The single most common failure is forgetting to check <code>Enable proxy</code> in ARR's server-level proxy settings after installing the modules — rewrite rules match correctly, the rewritten URL looks right in <code>Failed Request Tracing</code>, but nothing is actually forwarded and the client gets a 404. Check this first whenever a proxy rule appears to do nothing.</p>
+<p>A second frequent issue is a rewrite rule that targets a farm name but the farm has no healthy members, or the health test URL is wrong and marks every member as down — this produces a 502 rather than a 404, which is a useful distinguishing signal during troubleshooting.</p>
+<p>Rewrite loops occur when a rule's match pattern is broad enough to also match the rewritten URL on a subsequent internal pass; scope match conditions tightly (by host header or path prefix) and set <code>stopProcessing="true"</code> on proxy rules so later rules in the chain don't re-evaluate an already-rewritten request.</p>
+<p>Finally, <code>Failed Request Tracing (FREB)</code> is the most reliable diagnostic tool for this setup — enable it for status codes 400-599 on the proxy site, reproduce the failing request, and inspect the trace for the exact rewrite rule matched, the resulting URL, and whether ARR's proxy module engaged at all. This distinguishes a rewrite-rule authoring problem from a farm health/connectivity problem far faster than guessing from the client-facing error alone.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>URL Rewrite handles the rule matching and rewriting logic; ARR supplies the server farm, load balancing, and proxying engine that URL Rewrite hands requests off to</li>
+<li>A rewrite rule alone will not proxy traffic anywhere until "Enable proxy" is checked in ARR's server-level proxy settings</li>
+<li>Server farms abstract a pool of backend servers behind a single farm name that URL Rewrite rules target as a rewrite URL</li>
+<li>Health checks and affinity cookies keep a farm resilient and, when needed, keep a given client pinned to one backend for session state</li>
+<li>Without forwarding X-Forwarded-For and preserving the Host header, backend applications lose the real client IP and see every request as coming from the proxy</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#url-rewrite-vs-arr-what-each-module-does">URL Rewrite vs ARR: What Each Module Does</a></li>
+<li><a href="#installing-url-rewrite-and-arr">Installing URL Rewrite and ARR</a></li>
+<li><a href="#enabling-the-arr-proxy-function">Enabling the ARR Proxy Function</a></li>
+<li><a href="#configuring-a-basic-reverse-proxy-rule">Configuring a Basic Reverse Proxy Rule</a></li>
+<li><a href="#server-farm-configuration-and-load-balancing-algorithms">Server Farm Configuration and Load-Balancing Algorithms</a></li>
+<li><a href="#health-checks-and-session-affinity">Health Checks and Session Affinity</a></li>
+<li><a href="#preserving-client-ip-and-host-headers">Preserving Client IP and Host Headers</a></li>
+<li><a href="#common-gotchas-and-troubleshooting">Common Gotchas and Troubleshooting</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

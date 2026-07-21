@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="API gateway patterns explained for microservices: routing vs aggregation, the BFF pattern, and where the gateway becomes a bottleneck.">
+<meta name="keywords" content="API gateway patterns explained microservices, APIs guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="API Gateway Patterns: Routing, Aggregation, and Backend for Frontend | ITVedas">
+<meta property="og:description" content="API gateway patterns explained for microservices: routing vs aggregation, the BFF pattern, and where the gateway becomes a bottleneck.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/api/2026-07-21-api-gateway-patterns">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/api/2026-07-21-api-gateway-patterns">
+<title>API Gateway Patterns: Routing, Aggregation, and Backend for Frontend | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "API Gateway Patterns: Routing, Aggregation, and Backend for Frontend", "description": "API gateway patterns explained for microservices: routing vs aggregation, the BFF pattern, and where the gateway becomes a bottleneck.", "keywords": "API gateway patterns explained microservices", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-21", "dateModified": "2026-07-21", "articleSection": "APIs", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#FF6B351f;border:1px solid #FF6B3544;color:#FF6B35;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#FF6B3510,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#FF6B3514,#8B5CF610);border:1px solid #FF6B3533;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/api/" class="nav-back">← APIs</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/api/">APIs</a> › Article</div>
+  <div class="badges">
+    <span class="badge">APIs</span>
+    <span class="badge-info">📅 2026-07-21</span>
+    
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>API Gateway Patterns: Routing, Aggregation, and Backend for Frontend</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-an-api-gateway-actually-centralizes">What an API gateway actually centralizes</a></li><li><a href="#simple-routing-vs-request-aggregation">Simple routing vs request aggregation</a></li><li><a href="#the-backend-for-frontend-bff-pattern">The Backend-for-Frontend (BFF) pattern</a></li><li><a href="#where-the-gateway-becomes-a-bottleneck-or-single-point-of-fa">Where the gateway becomes a bottleneck or single point of failure</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>API Gateway Patterns: Routing, Aggregation, and Backend for Frontend</h1>
+
+<p>Once a system is decomposed into a dozen or more independently deployable services, the question of how clients actually reach those services stops being an implementation detail and becomes an architectural decision in its own right. Get it wrong and every client — mobile app, web app, partner integration — ends up encoding knowledge about your internal topology that should never have left the backend.</p>
+
+<p>Letting clients call microservices directly doesn't scale past a handful of services. Every client now needs to know where each service lives, handle a different auth flow per service if policies drift, absorb N round trips (often over a slow mobile network) to render a single screen, and break whenever a service is split, merged, or renamed. An <strong>API gateway</strong> exists to absorb that complexity at the edge so the internal service topology can evolve without every client redeploying in lockstep.</p>
+
+<h2 id="what-an-api-gateway-actually-centralizes">What an API gateway actually centralizes</h2>
+
+<p>At its core, a gateway is a single entry point that terminates external traffic and forwards it to the right internal service. But the routing itself is rarely the interesting part — the value is in the cross-cutting concerns it pulls out of every individual service:</p>
+
+<ul>
+<li><strong>Routing</strong> — mapping an external path, host, or header to the correct backend service, including versioned or canary routes.</li>
+<li><strong>Authentication and authorization enforcement</strong> — validating JWTs, checking mTLS client certs, or calling out to an identity provider once, at the edge, instead of every service reimplementing token validation.</li>
+<li><strong>Rate limiting and throttling</strong> — enforcing per-client or per-API-key quotas before a burst of traffic ever reaches a backend service.</li>
+<li><strong>TLS termination</strong> — handling the public-facing certificate so internal service-to-service traffic can run on a simpler, often mutual-TLS-secured, internal network.</li>
+<li><strong>Request and response logging</strong> — capturing a consistent access log and injecting correlation/trace IDs so a single request can be followed across every downstream hop.</li>
+</ul>
+
+<p>The unifying idea is that none of this is domain logic. It's infrastructure concern that, left unmanaged, gets copy-pasted into every service's codebase with subtle inconsistencies — one service validates tokens slightly differently, another forgets to rate-limit, a third logs in a different format. Centralizing it at the edge means service teams write business logic and trust that everything reaching them has already been authenticated, rate-limited, and logged consistently.</p>
+
+<blockquote>A gateway is one front door with a receptionist who checks ID — the alternative is a building where every tenant runs their own security desk, and no two of them agree on what counts as valid identification.</blockquote>
+
+<h2 id="simple-routing-vs-request-aggregation">Simple routing vs request aggregation</h2>
+
+<p>The simplest gateway pattern is pure reverse-proxy routing: request comes in for <code>/orders/*</code>, it goes to the orders service; <code>/catalog/*</code> goes to the catalog service. The gateway's routing table is essentially declarative — path or host in, upstream out, maybe with header injection or path rewriting. No business logic, easy to reason about, easy to test.</p>
+
+<p><strong>Aggregation</strong> is a different animal. Instead of forwarding a single request to a single service, the gateway fans out to multiple backend services in parallel or in sequence and composes a single response — for example, a "product detail" endpoint that pulls pricing, inventory, reviews, and recommendations from four separate services and returns one JSON payload. This pattern (sometimes called <strong>API composition</strong>) exists to save clients from making four round trips themselves.</p>
+
+<p>The real cost shows up gradually. Aggregation code has to decide which calls to make, in what order, how to handle a partial failure (do you return a degraded response if the recommendations service times out, or fail the whole request?), and how to merge fields that don't map cleanly onto each other. Every one of those decisions is a business rule, and business rules accumulating in the gateway is exactly what a gateway shouldn't be doing — it's supposed to be plumbing, not a service in disguise. Once an aggregation endpoint starts encoding "if the user is a premium tier, also fetch X," it has quietly become an orchestration layer that no team distinctly owns, is hard to unit test in isolation from live services, and sits outside the normal service release cadence.</p>
+
+<div class="callout"><div class="callout-title">Pro Tip</div>Keep aggregation logic to "fetch and shape," not "decide." If an aggregated endpoint needs conditional business rules beyond simple null-coalescing or field renaming, that's a signal the logic belongs in a dedicated composition service behind the gateway — not in gateway configuration or middleware that the platform team owns but can't fully explain.</div>
+
+<h2 id="the-backend-for-frontend-bff-pattern">The Backend-for-Frontend (BFF) pattern</h2>
+
+<p>A single generic gateway trying to serve both a mobile app and a web app runs into a structural tension: mobile clients want minimal payloads and as few round trips as possible, because every extra request costs latency and battery on a cellular connection. Web clients, running on faster connections with more compute and screen real estate, can tolerate chattier calls and often want more data per request, not less.</p>
+
+<p>Serve both from one contract and you end up compromising in both directions — either the mobile client receives a bloated payload full of fields it discards, or the web client is starved of data and has to make follow-up calls to fill in what the shared response left out. Every schema change becomes a negotiation between two client teams with opposite needs.</p>
+
+<p>The <strong>Backend for Frontend (BFF)</strong> pattern resolves this by giving each frontend type its own dedicated gateway/backend layer, shaped exactly for that client's needs and often owned by the team that owns the client. A mobile BFF might aggregate a screen's worth of data into one tightly-scoped response; a web BFF might expose a richer, more general-purpose API because the client can afford it. The trade-off is duplication — similar aggregation and mapping logic gets written twice (or more, for a third-party BFF), and now there are more deployable services to operate, version, and keep secure. That duplication is usually worth it: coupling two client teams to one compromise-shaped contract tends to cost more in coordination overhead than the duplicated code costs in maintenance.</p>
+
+<h2 id="where-the-gateway-becomes-a-bottleneck-or-single-point-of-fa">Where the gateway becomes a bottleneck or single point of failure</h2>
+
+<p>The operational risks of a gateway are easy to underweight because the pattern reads as "just infrastructure" on a diagram. In practice:</p>
+
+<p><strong>It becomes an unversioned monolith.</strong> Routes, auth rules, and aggregation logic accumulate over years, often maintained by a platform team disconnected from the service teams whose behavior they're routing around. Nobody wants to touch the gateway config because nobody fully understands what depends on it — the exact failure mode microservices were supposed to eliminate has reappeared at the edge.</p>
+
+<p><strong>It adds latency to every single request.</strong> An extra network hop is unavoidable, and for aggregation endpoints the effective latency is bounded by the slowest of the fanned-out calls — sometimes worse, if calls are sequential rather than parallel. Without per-call timeouts and circuit breakers, one degraded downstream service can drag down every aggregated endpoint that touches it, and now the gateway is amplifying a single service's bad day into a system-wide outage.</p>
+
+<p><strong>It has to be more available than anything behind it.</strong> Because every request passes through the gateway, its uptime puts a ceiling on the uptime of the entire system — a gateway with 99.9% availability caps every service behind it at 99.9%, no matter how reliable those services are individually. That means the gateway layer needs to be horizontally scaled, stateless enough to add capacity on demand, and typically run active-active across zones or regions. It also needs deliberate capacity planning: connection pools to each backend service, thread or event-loop limits, and load testing that accounts for the fan-out multiplier of aggregation endpoints, not just raw request count.</p>
+
+<h2 id="a-real-world-example">A real-world example</h2>
+
+<p>Consider a company running around a dozen backend microservices — catalog, pricing, inventory, cart, recommendations, reviews, user profile, and so on — all originally exposed through one general-purpose gateway shared by the mobile app, the web app, and a handful of third-party integrators.</p>
+
+<p>The mobile team notices their product detail screen makes eight to ten sequential calls through the gateway to render, each one adding latency on cellular networks and draining battery on background retries. They introduce a <strong>mobile BFF</strong>: one endpoint that fans out to catalog, pricing, inventory, and reviews in parallel and returns a single, mobile-shaped payload with only the fields the screen renders. Round trips for that screen drop from ten to one, and the mobile team owns the aggregation logic directly, so they can iterate on it without waiting on a shared platform team's release cycle.</p>
+
+<p>The general-purpose gateway doesn't disappear — it keeps serving third-party API consumers who need a broad, stable, well-documented REST surface with predictable versioning and per-partner rate limiting, none of which a narrow mobile-shaped BFF would satisfy. As the web app's feature set grows more distinct from mobile's, it eventually gets its own BFF too. Cross-cutting concerns — token validation, global rate limiting, TLS termination — stay centralized in a shared edge layer in front of all three: gateway proper, mobile BFF, and web BFF. This "gateway of gateways" layering is common once BFFs multiply: a thin outer edge for policy enforcement, and purpose-built BFFs behind it for shaping data.</p>
+
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+
+<p><strong>Letting business logic creep into aggregation code.</strong> Conditional rules based on user tier, feature flags, or domain-specific decisions belong in a service that's owned, tested, and versioned like any other — not in gateway middleware that's hard to unit test against live dependencies and effectively owned by no one.</p>
+
+<p><strong>Treating the gateway as infinitely scalable.</strong> Fan-out multiplies load on backend services and connection pools in ways a simple request-count dashboard won't show. Capacity planning needs to account for the amplification factor of aggregation endpoints, not just raw throughput at the edge.</p>
+
+<p><strong>Using one shared gateway configuration for wildly different client needs.</strong> Cramming mobile-optimized and web-optimized (and partner-optimized) requirements into a single route set produces exactly the compromise-shaped contracts and deploy coupling the BFF pattern exists to avoid. If two client types keep pulling the shared config in opposite directions, that's the signal to split.</p>
+
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+
+<p><strong>Does a BFF per frontend just reintroduce duplication we removed by centralizing on a gateway?</strong><br>
+Some duplication is real and expected — similar mapping and aggregation logic often appears in more than one BFF. It's usually the cheaper trade-off compared to coupling multiple client teams to one contract that satisfies none of them well. Shared libraries for auth handling, tracing, and common client SDKs can absorb some of the duplication without re-merging the contracts themselves.</p>
+
+<p><strong>Should the gateway own authentication, or just enforce it?</strong><br>
+Enforce, not own. The gateway is typically the place that validates tokens and applies authorization decisions — checking a JWT signature, calling out to an identity provider, or evaluating a policy engine like OPA — but the identity store and token issuance should live in a dedicated auth service. The gateway becomes a policy enforcement point, not a source of truth for who a user is.</p>
+
+<p><strong>When is a single generic gateway still the right call over BFFs?</strong><br>
+Early-stage systems with one or two client types whose needs aren't meaningfully diverging yet, or systems where the operational overhead of running additional BFF services isn't justified by the payload mismatch. BFFs solve a real coordination problem, but they're not free — introduce them when a specific client's needs are being visibly compromised by a shared contract, not preemptively.</p>
+
+<p>None of these patterns are mutually exclusive, and most systems past a certain size end up running a layered combination: a thin, highly available edge for policy enforcement, purpose-built BFFs for client-specific shaping, and aggregation kept disciplined enough that it never quietly becomes the business logic layer no one meant to build. The pattern that matters isn't which one you pick — it's recognizing, as your client base diversifies, when the gateway you already have has stopped fitting the job it's doing.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-an-api-gateway-actually-centralizes">What an API gateway actually centralizes</a></li><li><a href="#simple-routing-vs-request-aggregation">Simple routing vs request aggregation</a></li><li><a href="#the-backend-for-frontend-bff-pattern">The Backend-for-Frontend (BFF) pattern</a></li><li><a href="#where-the-gateway-becomes-a-bottleneck-or-single-point-of-fa">Where the gateway becomes a bottleneck or single point of failure</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

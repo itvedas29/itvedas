@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="How management groups, Azure Policy, and landing zones combine to govern multi-subscription Azure estates at enterprise scale.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="Azure Governance &amp; Landing Zones | IT Vedas">
+  <meta property="og:description" content="How management groups, Azure Policy, and landing zones combine to govern multi-subscription Azure estates at enterprise scale.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/azure/2026-07-21-azure-governance-landing-zones">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-21-azure-governance-landing-zones">
+  <title>Azure Governance &amp; Landing Zones | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure Governance &amp; Landing Zones", "description": "How management groups, Azure Policy, and landing zones combine to govern multi-subscription Azure estates at enterprise scale.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/azure/2026-07-21-azure-governance-landing-zones"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/azure/">Azure</a> &rsaquo; Azure Governance &amp; Landing Zones</div>
+  <div class="ch-badge">☁️ Azure</div>
+  <h1>Azure Governance &amp; Landing Zones</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>11 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">How management groups, Azure Policy, and landing zones combine to govern multi-subscription Azure estates at enterprise scale.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 11 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Azure subscriptions, resource groups, and RBAC fundamentals</li>
+<li>Infrastructure-as-code experience with ARM/Bicep or Terraform</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>A tenant supports up to six levels of management groups beneath the root, and up to 10,000 management groups per directory</li>
+<li>Policy assignments and RBAC role assignments both inherit down the management group hierarchy by default and cannot be blocked, only overridden with exclusions</li>
+<li>Azure Blueprints is deprecated, with Microsoft's retirement notice setting 11 July 2026 as the end-of-support date for blueprint artifacts</li>
+<li>The Deny effect blocks a non-compliant resource at write time, while DeployIfNotExists and Modify actively remediate resources after evaluation using a managed identity</li>
+      </ul>
+    </div>
+
+    <h2 id="why-subscriptions-are-not-enough">Why subscriptions are not enough</h2>
+<p>A subscription is a billing and scale boundary, not a governance boundary. RBAC role assignments and resource locks scoped to individual subscriptions work fine when an estate has a handful of them, but enterprises running landing zones for dozens or hundreds of workload teams end up with the same policy, the same custom RBAC roles, and the same network baseline copy-pasted into every subscription. Configuration drifts the moment someone forgets a step, and there is no single place to prove, for an auditor, that every subscription in the tenant enforces the same controls.</p>
+<p><code>Microsoft.Management/managementGroups</code> resources sit above subscriptions in the hierarchy and solve exactly this problem: they are containers you can nest, up to six levels deep beneath the implicit root management group, with a tenant-wide limit of 10,000 management groups. Every subscription must ultimately roll up to the root. Anything you assign at a management group — an Azure Policy assignment, an RBAC role assignment, a cost budget — is inherited by every management group, subscription, and resource beneath it. Inheritance is not optional and cannot be blocked lower in the hierarchy; you can only add policy exclusions or additional role assignments further down, you cannot revoke what was assigned above.</p>
+<p>The practical design pattern is to mirror the hierarchy to how the organization actually wants to govern, not to its org chart. A typical enterprise hierarchy has a root, then a <code>Platform</code> branch (with <code>Identity</code>, <code>Management</code>, and <code>Connectivity</code> management groups) and a <code>Landing Zones</code> branch (typically split into <code>Corp</code> and <code>Online</code> to reflect different network connectivity patterns), plus a <code>Sandbox</code> branch for unrestricted experimentation and a <code>Decommissioned</code> branch for subscriptions awaiting deletion. Policy gets progressively stricter as you move from Sandbox toward Corp.</p>
+
+<h2 id="azure-policy-definitions-and-initiatives">Azure Policy: definitions and initiatives</h2>
+<p>A policy definition is a JSON document with a <code>policyRule</code>: an <code>if</code> condition evaluated against resource properties, and a <code>then</code> block specifying an effect. A minimal built-in example is the policy that requires a tag on resource groups — the condition checks whether a specified tag key is absent, and the effect denies the request if so. Definitions are stored as <code>Microsoft.Authorization/policyDefinitions</code> and can be scoped to a management group or subscription, or left in the free built-in catalog Microsoft maintains (well over a thousand built-ins covering naming, encryption, allowed SKUs, and regulatory baselines like NIST 800-53 or PCI DSS).</p>
+<p>In practice you rarely assign single definitions. An initiative — the API resource is still called <code>policySetDefinition</code> even though the portal renamed it years ago — bundles related definitions into one assignable unit. Microsoft's own <code>Microsoft cloud security benchmark</code> initiative bundles hundreds of definitions; a landing zone team typically builds a smaller custom initiative per management group tier, e.g. one initiative for "Corp connectivity requirements" and another for "mandatory tagging and cost controls." Grouping into initiatives matters operationally: compliance reporting, exemptions, and versioning all happen at the initiative level, so a single assignment gives you one compliance percentage instead of forcing you to reconcile dozens of individual policy states.</p>
+<p>Parameters are what make a definition reusable instead of hard-coded. A definition like "allowed locations" takes a <code>listOfAllowedLocations</code> array parameter; the same definition gets assigned to the Corp management group with <code>["eastus","westeurope"]</code> and to a regional subsidiary's management group with a different list, without duplicating the rule itself.</p>
+
+<h2 id="policy-effects-and-remediation">Effects, scope, and remediation</h2>
+<p>The effect is the part of a policy that actually does something, and picking the wrong one is the most common landing zone governance mistake. <code>Deny</code> blocks the ARM/Bicep write request outright — the resource is never created, and the caller sees a policy violation error at deployment time. <code>Audit</code> lets the resource deploy but marks it non-compliant in the policy compliance dashboard, which is the right default for a new policy you haven't validated against real workload traffic yet. <code>Append</code> and <code>Modify</code> alter the request before or after evaluation — <code>Modify</code> can add or replace a tag, or attach a resource to a specific NSG, and unlike <code>Append</code> it can also remove a field. <code>DeployIfNotExists</code> (DINE) and <code>AuditIfNotExists</code> evaluate a related resource rather than the one being created — the canonical example is a policy that checks whether a VM has the Microsoft Defender for Endpoint extension installed and, if not, deploys it.</p>
+<p>DINE and Modify effects both require a managed identity attached to the policy assignment, with RBAC roles granted on that identity scoped to whatever it needs to create or change. This identity is a common audit failure point: teams assign a DINE policy, it shows as non-compliant forever, and the root cause is that the assignment's system-assigned identity was never granted the <code>Contributor</code> or resource-specific role it needs to remediate. Existing non-compliant resources are not retroactively fixed when a DINE policy is assigned — you have to trigger a remediation task (<code>Microsoft.PolicyInsights/remediations</code>) explicitly, which walks existing resources and applies the deployment.</p>
+<p>Scope determines where an assignment applies and where it can be excluded. Assignments made at a management group cascade to every child scope, but each assignment can carry an <code>excludedScopes</code> list — used sparingly, typically for a subscription under active migration that can't yet meet a new baseline. Broad exclusions are a governance smell; if half the subscriptions under a management group are excluded from its policy, the policy is assigned at the wrong level. For genuine one-off exceptions with an expiry date, use a policy exemption (<code>Microsoft.PolicyInsights/policyExemptions</code>) instead of an exclusion — exemptions are time-bound and show up in compliance reporting as "exempt" rather than silently disappearing from evaluation.</p>
+
+<h2 id="blueprints-deprecation-template-specs-iac">Why Azure Blueprints is not the answer anymore</h2>
+<p>Azure Blueprints packaged a set of artifacts — ARM templates, RBAC assignments, policy assignments, resource groups — into a single versioned, assignable object, with the promise of tracking which subscriptions had which blueprint version applied. It looked like the natural tool for landing zone deployment, and a lot of early landing zone guidance was written around it. Microsoft has since deprecated the service: the retirement notice sets 11 July 2026 as the date blueprint artifacts stop being supported, and the documented migration path is explicit — Blueprints does not get a direct successor, it gets replaced by a combination of separate tools that each do one job.</p>
+<p>The replacement pattern splits Blueprints' responsibilities back into their natural layers. Repeatable resource deployment moves to <code>Microsoft.Resources/templateSpecs</code> (a versioned, RBAC-controlled container for an ARM or Bicep template, callable from a pipeline or the portal) or to deployment stacks (<code>Microsoft.Resources/deploymentStacks</code>), which add lifecycle management — a stack can deny deletion of the resources it manages, and cleans up resources removed from the template on the next apply, something plain ARM/Bicep deployments never did. Guardrails move entirely to Azure Policy, assigned at management group scope as described above. And the versioning, approval, and rollout process that Blueprints tried to own internally moves to a normal CI/CD pipeline against a git repository, using whatever gating your organization already uses for other infrastructure code.</p>
+<p>The practical implication for new work: don't build a landing zone pipeline around <code>Microsoft.Blueprint/blueprintAssignments</code>. If you inherited an existing estate that used Blueprints, plan a migration — export the underlying artifacts, convert the ARM template into a template spec or Bicep module, recreate the policy and RBAC assignments as native management-group-scoped assignments, and retire the blueprint assignment once the replacement is validated. Existing blueprint assignments continue to function until the retirement date but will not receive new features.</p>
+
+<h2 id="landing-zone-reference-architecture">What a landing zone actually is</h2>
+<p>"Landing zone" gets used loosely to mean "a subscription with some stuff pre-configured," but in the Cloud Adoption Framework it has a specific meaning: a landing zone is the set of subscriptions, network topology, identity configuration, and policy that a workload lands into, scaled and governed consistently, before any workload-specific resource is deployed into it. The CAF's Azure landing zone conceptual architecture is a reference design, not a product — it's published as a set of principles plus reference implementations (Bicep modules in the <code>Azure/ALZ-Bicep</code> repo, and Terraform modules in the <code>Azure/terraform-azurerm-alz</code> provider) that map directly onto the management group hierarchy described earlier.</p>
+<p>The design separates two concerns that were conflated in earlier "enterprise scaffold" guidance: platform-level capabilities that are shared and centrally owned, and workload-level resources that are owned by individual application teams. That separation is what "platform landing zone" versus "application landing zone" refers to, and it's the single most important structural idea in the whole framework — get it right and governance scales linearly with the number of application teams instead of the number of subscriptions.</p>
+
+<h2 id="platform-vs-application-landing-zones">Platform landing zones vs. application landing zones</h2>
+<p>A platform landing zone is not one subscription — it's usually three, each with a distinct purpose and distinct ownership by the central platform team. The <code>Identity</code> subscription hosts domain controllers or Microsoft Entra Domain Services if needed. The <code>Management</code> subscription hosts the Log Analytics workspace, Azure Monitor and Sentinel configuration, and Automation account that every other subscription in the tenant sends telemetry to. The <code>Connectivity</code> subscription hosts the hub in a hub-and-spoke topology (or the Virtual WAN hub in a Virtual WAN topology) — ExpressRoute or VPN gateways, Azure Firewall, DNS resolution, and the private DNS zones that spokes link into. These three exist once, are deployed first, and change infrequently once stable.</p>
+<p>An application landing zone is a subscription (or small group of subscriptions) provisioned per workload team, spoke-peered into the connectivity hub, pre-populated with the policy and RBAC inherited from its management group, and handed to the workload team to deploy their actual application resources into. The CAF distinguishes <code>Corp</code> application landing zones, which require private connectivity back through the hub (no direct internet ingress), from <code>Online</code> application landing zones, which are internet-facing by design and don't route through the same hub-based egress. A team building an internal line-of-business API lands in Corp; a team building a public marketing site lands in Online — and the management group each subscription sits under is what makes that distinction enforceable rather than just documented.</p>
+<p>The point of the split is ownership and blast radius. Platform teams change firewall rules and DNS zones without needing sign-off from every application team, because those changes live in subscriptions application teams don't have write access to. Application teams deploy and redeploy their own resources constantly without needing platform-team approval for every change, because the guardrails constraining what they can do are enforced by policy inherited from above, not by a human review gate on every deployment.</p>
+
+<h2 id="subscription-vending">Subscription vending as a self-service pattern</h2>
+<p>The operational bottleneck in a landing zone model that stops here is subscription creation itself: if provisioning a new application landing zone requires the platform team to manually create a subscription, move it under the right management group, peer its VNet to the hub, and assign the right RBAC, that team becomes a queue, and the whole benefit of "self-service governed by policy" is undercut by a manual step at the front.</p>
+<p>Subscription vending addresses this by turning landing zone creation into a parameterized, pipeline-driven request instead of a manual task. A workload team submits a small set of inputs — an intended management group (which encodes Corp vs. Online), an address space request for the spoke VNet, a cost center for billing, an environment tag — through a form, a pull request against a config repository, or an internal developer portal. A pipeline consumes that request and runs an infrastructure-as-code module (typically Terraform against the <code>Microsoft.Subscription</code> resource provider, or an equivalent Bicep/ARM deployment using <code>Microsoft.Subscription/aliases</code>) that creates the subscription, places it under the correct management group so policy inheritance takes effect immediately, provisions the spoke VNet and peers it to the hub, and applies budget alerts. No platform engineer touches a single request; the platform team's effort goes into building and maintaining the vending module once, not into repeating the same manual steps for every new team.</p>
+<p>What makes this pattern distinctly a governance mechanism rather than just automation convenience is the ordering guarantee it gives you: because management group placement happens as part of subscription creation, a vended subscription is compliant with baseline policy from the moment it exists, before any workload resource has been deployed into it. There is no window where a new subscription sits ungoverned waiting for someone to remember to assign policy to it — which is precisely the failure mode management groups and initiatives were introduced to close in the first place.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Management groups exist to apply policy and RBAC once, above the subscription boundary, instead of re-applying controls to every subscription individually</li>
+<li>Azure Policy definitions describe a single rule; initiatives (policySetDefinitions) group related definitions so they can be assigned, versioned, and reported on as one unit</li>
+<li>Choosing a policy effect is an architectural decision — Deny prevents drift but blocks legitimate deployments if scoped wrong, DeployIfNotExists corrects drift but needs remediation tasks and a permissioned identity</li>
+<li>Azure Blueprints should not be adopted for new work; the supported pattern is Template Specs or Deployment Stacks for repeatable IaC plus Azure Policy for guardrails, versioned in a normal CI/CD pipeline</li>
+<li>A landing zone is not a single deployment but an operating model — a platform landing zone run by a central platform team, and application landing zones provisioned repeatably underneath it, ideally through a self-service subscription vending process</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#why-subscriptions-are-not-enough">Why subscriptions are not enough</a></li>
+<li><a href="#azure-policy-definitions-and-initiatives">Azure Policy: definitions and initiatives</a></li>
+<li><a href="#policy-effects-and-remediation">Effects, scope, and remediation</a></li>
+<li><a href="#blueprints-deprecation-template-specs-iac">Why Azure Blueprints is not the answer anymore</a></li>
+<li><a href="#landing-zone-reference-architecture">What a landing zone actually is</a></li>
+<li><a href="#platform-vs-application-landing-zones">Platform landing zones vs. application landing zones</a></li>
+<li><a href="#subscription-vending">Subscription vending as a self-service pattern</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

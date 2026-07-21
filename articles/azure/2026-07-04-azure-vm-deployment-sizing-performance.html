@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and...">
+  <meta name="description" content="A practical guide to Azure VM series selection, availability sets vs zones, managed disk tiers, and data-driven right-sizing.">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Azure Virtual Machines: Deployment, Sizing, and Performance Optimization | IT Vedas">
-  <meta property="og:description" content="Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and networking considerations.">
+  <meta property="og:title" content="Azure VM Deployment, Sizing &amp; Performance | IT Vedas">
+  <meta property="og:description" content="A practical guide to Azure VM series selection, availability sets vs zones, managed disk tiers, and data-driven right-sizing.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
-    
-  <title>Azure Virtual Machines: Deployment, Sizing, and Performance Optimization | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure Virtual Machines: Deployment, Sizing, and Performance Optimization", "description": "Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and networking considerations.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <meta property="og:url" content="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance">
+  <title>Azure VM Deployment, Sizing &amp; Performance | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure VM Deployment, Sizing &amp; Performance", "description": "A practical guide to Azure VM series selection, availability sets vs zones, managed disk tiers, and data-driven right-sizing.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Azure","item":"https://www.itvedas.com/articles/azure/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Azure Vm Deployment Sizing Performance","item":"https://www.itvedas.com/articles/azure/2026-07-04-azure-vm-deployment-sizing-performance"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure Virtual Machines: Deployment, Sizing, and Performance Optimization | IT Vedas","description":"Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure Virtual Machines: Deployment, Sizing, and Performance Optimization | IT Vedas","description":"Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,21 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/azure/">Azure</a> › Azure Virtual Machines: Deployment, Sizing, and Performance Optimization</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/azure/">Azure</a> &rsaquo; Azure VM Deployment, Sizing &amp; Performance</div>
   <div class="ch-badge">☁️ Azure</div>
-  <h1>Azure Virtual Machines: Deployment, Sizing, and Performance Optimization</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/azure/">Azure</a></li>
-<li>/</li>
-<li>2026 07 04 Azure Vm Deployment Sizing Performance</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>10 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Master Azure VM deployment, instance sizing strategies, performance optimization, and cost management. Learn about availability sets, scale sets, and networking considerations.</p>
+  <h1>Azure VM Deployment, Sizing &amp; Performance</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>9 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">A practical guide to Azure VM series selection, availability sets vs zones, managed disk tiers, and data-driven right-sizing.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
-  <div class="reading-time">⏱ 10 min read</div>
+  <div class="reading-time">&#9201; 9 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Basic IT knowledge</li>
-<li>Understanding of fundamentals</li>
+      <li>Familiarity with core Azure resources (resource groups, VNets, NSGs)</li>
+<li>Working knowledge of the Azure CLI or PowerShell</li>
     </ul>
   </div>
 </div>
@@ -140,157 +119,116 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade azure implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>Availability sets protect against rack-level failure within one datacenter using fault and update domains; availability zones protect against datacenter-level failure by spanning physically separate facilities</li>
+<li>Ultra Disk and Premium SSD v2 let you tune IOPS and throughput independently of provisioned capacity, without resizing the disk</li>
+<li>B-series VMs accrue and spend CPU credits, so sustained high-CPU workloads will exhaust the credit balance and get throttled to baseline performance</li>
+<li>A VM cannot be a member of both an availability set and an availability zone — the placement model is chosen at creation time and is not mutually convertible</li>
       </ul>
     </div>
 
-    
-<h2 id="azure-vm-basics">Azure VM Basics</h2>
-<p>This section covers azure vm basics. Enterprise organizations rely on proper azure vm basics implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+    <h2 id="choosing-a-vm-series">Choosing a VM series</h2>
+<p>Azure VM sizes are grouped into series that trade off vCPU count, memory ratio, and burst behavior. Picking the right series first narrows the sizing decision to a handful of SKUs instead of the entire catalog.</p>
+<p><code>B-series</code> (burstable) VMs — for example <code>Standard_B2s</code> or <code>Standard_B4ms</code> — run at a lower baseline CPU performance and accrue CPU credits while idle. Those credits are spent when the VM bursts above baseline. This makes B-series a good fit for dev/test boxes, low-traffic web front ends, and small management VMs with spiky but not sustained CPU demand. It is a poor fit for anything with continuous high CPU utilization — once credits are exhausted, performance drops to the baseline vCPU percentage and stays there until credits rebuild, which shows up as a hard, confusing performance ceiling in production.</p>
+<p><code>D-series</code> (general purpose), such as <code>Standard_D4s_v5</code>, targets a balanced vCPU-to-memory ratio (roughly 4 GiB RAM per vCPU on the current Dsv5 generation) and is the default starting point for application servers, mid-size databases, and most stateless services. The <code>v5</code> suffix denotes the hardware generation and the <code>s</code> denotes Premium Storage support — always prefer the <code>s</code>-enabled variant unless you have a specific reason not to, since it's a prerequisite for Premium SSD and Ultra Disk attachment.</p>
+<p><code>E-series</code> (memory-optimized), such as <code>Standard_E8s_v5</code>, roughly doubles the memory ratio to around 8 GiB per vCPU. Use it for in-memory caches, SQL Server or SAP workloads with large buffer pools, and any process where you're memory-bound before you're CPU-bound. Don't reach for E-series just because "more RAM is safer" — the extra memory is billed whether or not the workload uses it.</p>
+<p><code>F-series</code> (compute-optimized), such as <code>Standard_F8s_v2</code>, inverts the ratio to roughly 2 GiB per vCPU and gives you a higher clock-for-clock CPU allocation per dollar than D-series. It suits batch processing, web servers under heavy request-processing load, gaming servers, and analytics workers where memory is not the constraint.</p>
+<p>All four series exist because vCPU and memory don't scale in a fixed ratio for every workload — sizing by "how many cores did the old server have" instead of by the actual CPU:memory:IO profile is the single most common cause of both overspend and under-provisioning.</p>
 
+<h2 id="deploying-vms-with-the-azure-cli">Deploying VMs with the Azure CLI</h2>
+<p>A minimal production-leaning deployment specifies the image, size, authentication, and disk SKU explicitly rather than relying on defaults:</p>
+<pre><code>az vm create \
+  --resource-group rg-app-prod \
+  --name vm-app01 \
+  --image Ubuntu2404 \
+  --size Standard_D4s_v5 \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --os-disk-sku Premium_LRS \
+  --zone 1 \
+  --vnet-name vnet-app-prod \
+  --subnet snet-app</code></pre>
+<p>Two things worth calling out: <code>--os-disk-sku</code> defaults to whatever the image publisher set, which is often Standard SSD — for production workloads set it explicitly. And <code>--zone</code> pins the VM to a specific availability zone at creation time; it cannot be added retroactively without redeploying.</p>
+<p>Resizing an existing VM is a separate operation and isn't always free of disruption:</p>
+<pre><code>az vm resize \
+  --resource-group rg-app-prod \
+  --name vm-app01 \
+  --size Standard_D8s_v5</code></pre>
+<p>If the target size is available on the same hardware cluster the current VM is running on, the resize can happen without deallocation in some cases. If it isn't — which is common when jumping between series, not just up a tier — the VM must be stopped and deallocated first, the resize applied, then the VM restarted. Plan resizes as a maintenance action, not a live operation, unless you've confirmed otherwise for that specific size pair.</p>
 
-<h2 id="choosing-the-right-instance-size">Choosing the Right Instance Size</h2>
-<p>This section covers choosing the right instance size. Enterprise organizations rely on proper choosing the right instance size implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="availability-sets-vs-availability-zones">Availability sets vs availability zones</h2>
+<p>These two constructs solve different failure scenarios and are often confused because both are described as "high availability."</p>
+<p>An <strong>availability set</strong> is a logical grouping within a single Azure datacenter that spreads VMs across fault domains and update domains. A fault domain groups VMs sharing a common power source and network switch — typically 2 or 3 per set — so a rack-level hardware or power failure doesn't take out every instance. An update domain governs the order in which VMs are rebooted during planned host maintenance — typically up to 20 — so Azure doesn't patch every replica simultaneously. Availability sets carry a 99.95% SLA when you run two or more VMs in the set. They protect against hardware failure and planned maintenance, but not against the datacenter itself going offline.</p>
+<pre><code>az vm availability-set create \
+  --resource-group rg-app-prod \
+  --name avset-app \
+  --platform-fault-domain-count 3 \
+  --platform-update-domain-count 5</code></pre>
+<p>An <strong>availability zone</strong> is a physically separate facility within the same Azure region, with its own independent power, cooling, and networking. Regions that support zones typically expose three of them. Deploying VMs across zones protects against a full datacenter outage — the failure domain is the building, not the rack. VMs spread across two or more zones carry a 99.99% SLA. The tradeoff is slightly higher and more variable network latency between zones compared to same-datacenter, same-fault-domain traffic, which matters for latency-sensitive tiers like synchronous database replication.</p>
+<p>A VM is provisioned into either an availability set or a specific availability zone at creation time — the two models are mutually exclusive for a given instance, and you cannot convert one into the other without redeploying. A common production pattern is zone-redundant front-end tiers behind a zone-redundant load balancer, with availability sets reserved for regions or resource types that don't yet support zones.</p>
 
+<h2 id="managed-disk-tiers-and-performance-tradeoffs">Managed disk tiers and performance tradeoffs</h2>
+<p>Managed disks come in four performance tiers, and the right one is determined by IOPS and throughput requirements, not just capacity.</p>
+<p><strong>Standard HDD</strong> is magnetic-backed storage with the lowest cost and the highest latency variability. It's appropriate for backup targets, infrequently accessed data, and dev/test disks where performance consistency doesn't matter.</p>
+<p><strong>Standard SSD</strong> offers meaningfully more consistent latency than Standard HDD at a modest cost increase, without the full IOPS ceiling of Premium SSD. It's a reasonable default for lightly used web servers, domain controllers, and application tiers that aren't disk-bound.</p>
+<p><strong>Premium SSD</strong> is the standard choice for production workloads with real IO demand — databases, transaction logs, and anything sensitive to disk latency. It requires an <code>s</code>-suffixed VM size (Premium Storage-capable) to attach. IOPS and throughput scale with the provisioned disk size tier, so undersizing a Premium SSD for capacity reasons can silently cap performance below what the workload needs — check the performance ceiling for the specific disk size, not just its capacity, before assuming it will keep up.</p>
+<p><strong>Ultra Disk</strong> sits above Premium SSD and is the only tier (alongside the newer Premium SSD v2) that lets you tune provisioned IOPS and throughput independently of the disk's capacity, and adjust them on the fly without downtime. It targets the lowest and most consistent latency Azure offers, for workloads like SAP HANA or top-tier SQL/Oracle instances where both throughput and latency SLAs matter simultaneously. Ultra Disk is a zonal resource — the disk and the VM must be deployed in the same availability zone, which needs to be factored into the availability-zone decision above, not treated as an afterthought.</p>
+<pre><code>az disk create \
+  --resource-group rg-app-prod \
+  --name disk-app01-data \
+  --size-gb 512 \
+  --sku Premium_LRS \
+  --zone 1
 
-<h2 id="deployment-patterns">Deployment Patterns</h2>
-<p>This section covers deployment patterns. Enterprise organizations rely on proper deployment patterns implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+az vm disk attach \
+  --resource-group rg-app-prod \
+  --vm-name vm-app01 \
+  --name disk-app01-data</code></pre>
+<p>A frequent mistake is provisioning a large Standard HDD or Standard SSD purely for capacity and then being surprised by IO wait times under load — capacity and performance are separate axes on every tier below Ultra Disk, and only Ultra Disk and Premium SSD v2 decouple them fully.</p>
 
+<h2 id="monitoring-and-diagnosing-vm-performance">Monitoring and diagnosing VM performance</h2>
+<p>Two distinct diagnostic tools cover two distinct failure modes, and it's worth being clear on which one to reach for.</p>
+<p><strong>Boot diagnostics</strong> captures serial console output and periodic screenshots of the VM's display during startup, persisted to a storage account. It answers "why won't this VM come up" — kernel panics, missing boot drivers after a migration, a stuck disk check, or a guest OS that never reaches the point of accepting network connections. Enable it at creation or after the fact:</p>
+<pre><code>az vm boot-diagnostics enable \
+  --resource-group rg-app-prod \
+  --name vm-app01</code></pre>
+<p>It is not a performance monitoring tool — it tells you nothing about a VM that boots fine but runs slowly.</p>
+<p><strong>Azure Monitor VM insights</strong> answers the performance question. It installs the Azure Monitor Agent on the guest and collects performance counters — CPU utilization, available memory, disk IOPS and latency per disk, and network throughput — into a Log Analytics workspace, along with process and dependency maps. This is the source of truth for whether a VM is actually CPU-bound, memory-bound, or IO-bound, as opposed to guessing from application-layer symptoms. Host-level platform metrics (visible without any agent) cover CPU and disk at the hypervisor level but do not include in-guest memory pressure, so VM insights or the guest-level agent is required if memory is a suspect.</p>
+<p>When diagnosing a specific slowdown, check disk queue depth and IO latency per disk alongside CPU — a VM that looks CPU-constrained in host metrics is sometimes actually blocked waiting on a Standard SSD that can't keep up with write volume, which host-level CPU graphs alone won't reveal.</p>
 
-<h2 id="performance-optimization">Performance Optimization</h2>
-<p>This section covers performance optimization. Enterprise organizations rely on proper performance optimization implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="networking-and-storage">Networking and Storage</h2>
-<p>This section covers networking and storage. Enterprise organizations rely on proper networking and storage implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="high-availability">High Availability</h2>
-<p>This section covers high availability. Enterprise organizations rely on proper high availability implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="cost-optimization">Cost Optimization</h2>
-<p>This section covers cost optimization. Enterprise organizations rely on proper cost optimization implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="monitoring-and-management">Monitoring and Management</h2>
-<p>This section covers monitoring and management. Enterprise organizations rely on proper monitoring and management implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="real-world-example">Real-World Example</h2>
-<p>E-commerce application scaling during peak traffic</p>
-<p>This example demonstrates how organizations apply these concepts in production environments, accounting for scalability, reliability, and operational complexity.</p>
-
-
-<h2 id="best-practices">Best Practices</h2>
-<p>When implementing these solutions, follow these proven best practices:</p>
-<ul>
-  <li>Right-sizing</li>
-  <li>Document all configurations and changes</li>
-  <li>Test changes in non-production environments first</li>
-  <li>Maintain regular backups and disaster recovery procedures</li>
-  <li>Monitor performance and security indicators continuously</li>
-</ul>
-
-
-<h2 id="security">Security Considerations</h2>
-<p>NSG rules, encryption, identity management</p>
-<ul>
-  <li>Implement principle of least privilege for access control</li>
-  <li>Enable encryption for data in transit and at rest</li>
-  <li>Regular security audits and compliance checks</li>
-  <li>Maintain detailed audit logs for forensic analysis</li>
-  <li>Keep systems patched with latest security updates</li>
-</ul>
-
+<h2 id="right-sizing-based-on-actual-utilization">Right-sizing based on actual utilization</h2>
+<p>Sizing decisions made from a single utilization snapshot or from "what we always provision" are the most common source of both wasted spend and recurring performance incidents. Use Azure Monitor metrics over a representative window — a minimum of 30 days to capture weekly and month-end cycles — and look at percentiles rather than averages: average CPU can look comfortably low while p95 CPU during the daily peak is pegged near 100%, which an average would hide entirely.</p>
+<p>Azure Advisor generates right-sizing recommendations automatically from this same utilization history and will flag both over-provisioned VMs (candidates for a smaller size or a cheaper series) and VMs showing sustained pressure that a larger size or different series would relieve. Treat these as a starting point to investigate, not an instruction to execute blind — Advisor doesn't know about planned traffic growth, upcoming batch jobs, or seasonal load.</p>
+<p>Before resizing, confirm which resource is actually constrained: a VM pegged on memory gains nothing from more vCPUs, and a VM blocked on disk IO gains nothing from a bigger size unless the new size also raises the disk-throughput cap it's attached to (larger sizes generally support higher uncached and cached disk throughput limits, independent of the disks themselves). Cross-check the target size's published disk and network throughput limits against the current bottleneck, not just its vCPU and memory numbers, before committing to a resize.</p>
+<pre><code>az monitor metrics list \
+  --resource /subscriptions/&lt;sub-id&gt;/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-app01 \
+  --metric "Percentage CPU" \
+  --interval PT1H \
+  --start-time 2026-06-21T00:00:00Z \
+  --end-time 2026-07-21T00:00:00Z \
+  --aggregation Average Maximum</code></pre>
+<p>Re-run this evaluation periodically rather than treating a sizing decision as permanent — workload profiles drift, and a size that was correct at launch is a common source of both silent overspend and slow performance degradation eighteen months later.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master azure vm basics fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>Match VM series to workload shape (vCPU:memory ratio and burst tolerance) before matching it to a benchmark number</li>
+<li>Availability sets and availability zones solve different failure domains and are frequently used together with a load balancer, not as substitutes for each other</li>
+<li>Disk tier selection should be driven by IOPS/throughput/latency requirements per workload, not just capacity in GB</li>
+<li>Boot diagnostics and VM insights answer different questions — one tells you why a VM won't come up, the other tells you why a running VM is slow</li>
+<li>Right-size from 30+ days of Azure Monitor percentile data, not from a single CPU spike or a guess based on the application's reputation</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/azure/" style="color:#0066cc;">Azure</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#azure-vm-basics">Azure VM Basics</a></li>
-<li><a href="#choosing-the-right-instance-size">Choosing the Right Instance Size</a></li>
-<li><a href="#deployment-patterns">Deployment Patterns</a></li>
-<li><a href="#performance-optimization">Performance Optimization</a></li>
-<li><a href="#networking-and-storage">Networking and Storage</a></li>
-<li><a href="#high-availability">High Availability</a></li>
-<li><a href="#cost-optimization">Cost Optimization</a></li>
-<li><a href="#monitoring-and-management">Monitoring and Management</a></li>
+      <li><a href="#choosing-a-vm-series">Choosing a VM series</a></li>
+<li><a href="#deploying-vms-with-the-azure-cli">Deploying VMs with the Azure CLI</a></li>
+<li><a href="#availability-sets-vs-availability-zones">Availability sets vs availability zones</a></li>
+<li><a href="#managed-disk-tiers-and-performance-tradeoffs">Managed disk tiers and performance tradeoffs</a></li>
+<li><a href="#monitoring-and-diagnosing-vm-performance">Monitoring and diagnosing VM performance</a></li>
+<li><a href="#right-sizing-based-on-actual-utilization">Right-sizing based on actual utilization</a></li>
     </ol>
   </aside>
 </div>
@@ -305,6 +243,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <meta name="description" content="How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="SQL Server Backup &amp; Restore Strategies | IT Vedas">
+  <meta property="og:description" content="How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-backup-restore-strategies">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-backup-restore-strategies">
+  <title>SQL Server Backup &amp; Restore Strategies | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SQL Server Backup &amp; Restore Strategies", "description": "How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-backup-restore-strategies"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+    #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .nav-links{display:flex;gap:1.5rem;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
+    .nav-links a:hover{color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--accent);}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
+    .pub-date{color:var(--sub);font-weight:500;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
+    .art{min-width:0;}
+    .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
+    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc ol{padding-left:1.1rem;}
+    .toc li{margin-bottom:.4rem;}
+    .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
+    .toc a:hover{color:var(--accent);}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .art a{color:var(--accent);text-decoration:none;}
+    .art a:hover{text-decoration:underline;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#FF6B35;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways ul{margin:0;padding-left:1.25rem;}
+    .takeaways li{color:var(--sub);font-size:.9rem;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl span{color:#FF6B35;}
+    .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
+    .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
+    .flinks a:hover{color:#FF6B35;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-beginner{background:rgba(96,165,250,0.2);color:#60A5FA;border:1px solid rgba(96,165,250,0.4);}
+    .difficulty-intermediate{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.4);}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    .reading-time{color:#6EE7B7;font-weight:600;}
+    .prerequisites{color:var(--muted);font-size:0.9rem;}
+    .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
+  </style>
+  <link rel="stylesheet" href="/css/documentation-standards.css">
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/news.html">News</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/sql-server/">SQL Server</a> &rsaquo; SQL Server Backup &amp; Restore Strategies</div>
+  <div class="ch-badge">🗄️ SQL Server</div>
+  <h1>SQL Server Backup &amp; Restore Strategies</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>11 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.</p>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div class="reading-time">&#9201; 11 min read</div>
+  <div class="prerequisites">
+    <strong>Prerequisites:</strong>
+    <ul>
+      <li>Comfortable with T-SQL and basic SQL Server administration</li>
+<li>Understanding of the transaction log and checkpoints</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>Simple recovery model truncates the log on checkpoint, so point-in-time restore is impossible regardless of how often you back up</li>
+<li>A differential backup always captures changes since the last FULL backup, never since the last differential</li>
+<li>Transaction log backups are only meaningful under Full or Bulk-Logged recovery, and are what actually truncates the log</li>
+<li>A restore sequence uses WITH NORECOVERY on every file except the last, which uses WITH RECOVERY to bring the database online</li>
+      </ul>
+    </div>
+
+    <h2 id="why-a-maintenance-plan-is-not-a-strategy">Why a Maintenance Plan Is Not a Strategy</h2>
+<p>A default SQL Server maintenance plan that runs a nightly full backup satisfies exactly one requirement: you can restore to last night. For most production databases, losing up to 24 hours of data is not an acceptable outcome, and "restore to last night" is not a strategy — it is the absence of one. A real backup strategy starts from two numbers the business gives you, not from what the Maintenance Plan Wizard defaults to.</p>
+<p>Recovery Point Objective (RPO) is how much data you are allowed to lose, measured in time. Recovery Time Objective (RTO) is how long you are allowed to be down while recovering. Every decision in this article — recovery model, backup types, frequency, retention, storage location — is a mechanism for hitting an RPO/RTO pair, not a best practice to apply uniformly. A reporting database that reloads from a warehouse nightly might genuinely be fine with Simple recovery and a daily full backup. An OLTP order system with an RPO of five minutes cannot use that same configuration no matter how well it's tuned.</p>
+
+<h2 id="recovery-models-and-the-rpo-ceiling">Recovery Models and the RPO Ceiling</h2>
+<p>The recovery model is not a performance setting — it is a hard ceiling on your best possible RPO, decided before you write a single backup job.</p>
+<p><strong>Simple recovery</strong> truncates the transaction log automatically at each checkpoint, reclaiming log space as soon as SQL Server no longer needs the records for crash recovery. This means log records for committed transactions are gone shortly after they commit. You cannot take a transaction log backup under Simple recovery — there is nothing durable to back up between checkpoints — so your only recovery points are your full and differential backups. If a full backup runs at 2 AM and the server fails at 4 PM, you lose everything since 2 AM. There is no point-in-time restore available under Simple recovery, full stop.</p>
+<p><strong>Full recovery</strong> keeps every log record since the last log backup, and only truncates the log when a log backup runs (or, more precisely, marks that portion of the log reusable). This is what makes point-in-time restore possible: as long as your log backup chain is unbroken, you can replay the log up to any point in time, including seconds before a failure, using a tail-log backup. Full recovery is the model for any database where RPO is measured in minutes rather than hours.</p>
+<p><strong>Bulk-logged recovery</strong> is a special case of Full recovery that minimally logs certain bulk operations (<code>SELECT INTO</code>, <code>BULK INSERT</code>, index rebuilds, and similar) to reduce log volume during large loads. You still take log backups exactly as under Full recovery, and the log is still truncated by them. The catch: if a log backup contains a minimally-logged operation, you can only restore that backup in its entirety — you lose the ability to stop at an arbitrary point in time within it. You can only recover to the end of that specific log backup, or to a point in a different (fully-logged) backup in the chain. Most teams run Full recovery all the time and only switch to Bulk-Logged temporarily around a known bulk load window, then switch back.</p>
+<p>The practical rule: if the business needs point-in-time restore, the database must be in Full recovery, and you must be taking log backups. Nothing else in this article matters if that foundation is wrong.</p>
+
+<h2 id="full-differential-and-log-backups">Full, Differential, and Log Backups</h2>
+<p>Each backup type answers a different question about what's changed.</p>
+<p>A <strong>full backup</strong> copies every data page (and enough of the log to make the backup transactionally consistent) as of the moment the backup completes. It is self-contained and is the base every differential and log backup chain is built on.</p>
+<pre><code>BACKUP DATABASE [OrdersDB]
+TO DISK = 'D:\Backups\OrdersDB_Full.bak'
+WITH COMPRESSION, CHECKSUM, INIT;</code></pre>
+<p>A <strong>differential backup</strong> copies only the data extents that have changed since the last full backup, tracked internally via a Differential Changed Map (DCM). It is faster to take and faster to restore than replaying a long log chain, because restoring a differential collapses "everything since the full" into one file instead of dozens of log backups.</p>
+<pre><code>BACKUP DATABASE [OrdersDB]
+TO DISK = 'D:\Backups\OrdersDB_Diff.bak'
+WITH DIFFERENTIAL, COMPRESSION, CHECKSUM;</code></pre>
+<p>A <strong>transaction log backup</strong> copies the active portion of the log since the last log backup (or since the database entered Full/Bulk-Logged recovery, for the first one) and then truncates it, freeing that space for reuse. Log backups are cumulative in sequence, not in content — each one picks up exactly where the previous one left off, and you need all of them in order to replay forward.</p>
+<pre><code>BACKUP LOG [OrdersDB]
+TO DISK = 'D:\Backups\OrdersDB_Log.trn'
+WITH COMPRESSION, CHECKSUM;</code></pre>
+<p>A typical schedule combines all three: weekly full, nightly differential, and log backups every 5-15 minutes depending on RPO. This keeps the restore chain short (one full, one differential, a handful of log files) while still allowing granular point-in-time recovery.</p>
+
+<h2 id="the-differential-vs-log-backup-confusion">The Differential vs. Log Backup Confusion</h2>
+<p>This is the single most common misunderstanding in SQL Server backup design, and it has real consequences for both restore correctness and storage planning.</p>
+<p><strong>A differential backup always captures changes since the last full backup — never since the last differential.</strong> The DCM bitmap that tracks changed extents is only reset by a full backup. If you take a full backup on Sunday and a differential every night, Monday's differential contains Monday's changes, but Tuesday's differential contains both Monday's and Tuesday's changes, Wednesday's contains Monday through Wednesday, and so on, growing larger each day until the next full backup resets it. This means you only ever need the <em>most recent</em> differential plus the full to restore — you never chain multiple differentials together. If you find yourself trying to restore Sunday's full, then Monday's differential, then Tuesday's differential in sequence, that is wrong; you'd restore Sunday's full and only Tuesday's differential.</p>
+<p><strong>A transaction log backup, by contrast, only captures records since the previous log backup</strong>, and every log backup in the chain since the last full or differential is required, in order, with none missing. Skip one log backup file during a restore and the chain breaks — you cannot restore log backup #7 without having successfully restored #6 first, because log records apply sequentially against the LSN (Log Sequence Number) baseline left by the prior restore.</p>
+<p>The operational consequence: deleting "old" differential backups is usually safe once a newer one exists (you only need the latest), but deleting an "old" log backup in the middle of an unbroken chain destroys your ability to restore past that point, even if newer log backups exist after it. Retention jobs that indiscriminately purge files older than N days are a common way teams accidentally break their own recovery chain.</p>
+
+<h2 id="point-in-time-restore-mechanics">Point-in-Time Restore Mechanics</h2>
+<p>Restoring to a point in time is a sequence, not a single command. Every restore statement except the last is issued <code>WITH NORECOVERY</code>, which leaves the database in a restoring state so more backups can be applied on top of it. The final statement uses <code>WITH RECOVERY</code>, which rolls back any uncommitted transactions and brings the database online — after that point, no further backups can be applied without starting over from the full backup.</p>
+<p>The general order is: full backup, then the most recent differential taken after that full (if any), then every log backup taken after that differential, in sequence, up to and including the one that covers your target time.</p>
+<pre><code>-- 1. Restore the full backup, database stays offline for more restores
+RESTORE DATABASE [OrdersDB]
+FROM DISK = 'D:\Backups\OrdersDB_Full.bak'
+WITH NORECOVERY, REPLACE;
+
+-- 2. Restore the latest differential taken after that full
+RESTORE DATABASE [OrdersDB]
+FROM DISK = 'D:\Backups\OrdersDB_Diff.bak'
+WITH NORECOVERY;
+
+-- 3. Restore each log backup taken after that differential, in order
+RESTORE LOG [OrdersDB]
+FROM DISK = 'D:\Backups\OrdersDB_Log1.trn'
+WITH NORECOVERY;
+
+RESTORE LOG [OrdersDB]
+FROM DISK = 'D:\Backups\OrdersDB_Log2.trn'
+WITH NORECOVERY;
+
+-- 4. Restore the final log backup, stopping at the exact point needed,
+--    and bring the database online
+RESTORE LOG [OrdersDB]
+FROM DISK = 'D:\Backups\OrdersDB_Log3.trn'
+WITH STOPAT = '2026-07-21T14:32:00', RECOVERY;</code></pre>
+<p>If the failure happens mid-day and the log file on the failed server is still readable, take a tail-log backup first, before restoring anything, so you don't lose the gap between the last scheduled log backup and the moment of failure:</p>
+<pre><code>BACKUP LOG [OrdersDB]
+TO DISK = 'D:\Backups\OrdersDB_TailLog.trn'
+WITH NORECOVERY;</code></pre>
+<p>This backup itself puts the source database into a restoring state (that's what <code>WITH NORECOVERY</code> on a <code>BACKUP</code> statement does), and its contents become the final file in the restore sequence above, letting you recover to the actual moment of failure rather than to the last scheduled log backup. Skipping the tail-log backup is one of the most common reasons a "5-minute RPO" strategy actually loses more than 5 minutes of data during a real incident — the log backup job that was supposed to run at 14:35 never got the chance to fire before the server went down.</p>
+
+<h2 id="designing-around-rpo-and-rto">Designing Around RPO and RTO</h2>
+<p>Once the recovery model is fixed, three variables are tuned to hit the target numbers: backup frequency, retention, and restore chain length.</p>
+<p><strong>Frequency is driven by RPO.</strong> An RPO of 15 minutes means log backups every 15 minutes or less — not "every 15 minutes on average," but a hard interval, because the gap between two log backups is exactly how much data you can lose if failure lands right before the next one fires. Full and differential frequency matter less for RPO (log backups cover that gap) and more for RTO and storage efficiency.</p>
+<p><strong>Restore chain length drives RTO.</strong> Restoring one full backup plus one differential plus twelve 15-minute log backups covering a 3-hour gap is fast. Restoring one full backup plus 288 log backups covering two days because there's no differential in between is slow, and each additional file in the chain is another opportunity for a missing or corrupt file to stall the whole recovery. This is the actual argument for differential backups: they don't improve RPO at all, they exist purely to bound RTO by keeping the number of files you must apply small.</p>
+<p><strong>Retention is driven by compliance and by how far back you need to be able to restore</strong>, not by disk space convenience. A common pattern is 2-4 weeks of full backups retained locally for fast operational restores, with monthly or quarterly fulls retained for 1-7 years offsite for compliance, and log backups retained only as long as needed to bridge between full/differential retention points. Retention policy has to be checked against the differential/log chain rule from the previous section — purging a log backup that's still inside an active chain, even if it's "old," breaks recovery for every point in time after it until the next full backup.</p>
+<p>Every strategy should be validated against both numbers explicitly: run the actual restore sequence in a lower environment and time it against the RTO target, and confirm the gap between backups never exceeds the RPO target even during backup job failures (which means alerting on missed or failed backup jobs is itself part of the strategy, not an afterthought).</p>
+
+<h2 id="storage-retention-and-real-disaster-recovery">Storage, Retention, and Real Disaster Recovery</h2>
+<p>A backup that lives on the same disk, volume, or SAN as the database it protects is not a disaster recovery plan — it's a copy that happens to be convenient to restore from when the problem is a bad deployment or an accidental <code>DELETE</code>. It does nothing when the disk fails, the SAN controller corrupts a LUN, ransomware encrypts every writable volume the service account can reach, or the data center itself goes offline. Any of those scenarios takes the database and its "backup" down together.</p>
+<p>A real strategy follows something like the 3-2-1 principle: at least three copies of the data, on two different types of storage, with at least one copy offsite (geographically separate storage account, different region, or physically separate facility). In practice this usually means backing up to local disk for fast operational restores, then shipping or writing directly to blob storage or a separate backup target in another region, with immutability or write-once retention where ransomware is a concern so an attacker with database credentials can't also delete the recovery path.</p>
+<p>Encrypt backups in transit and at rest — a stolen backup file is a stolen copy of the database, recovery model and RPO notwithstanding. Use <code>WITH CHECKSUM</code> on every backup so page-level corruption is caught at backup time rather than discovered during a restore under pressure, and periodically run <code>RESTORE VERIFYONLY</code> to confirm files are structurally readable. That said, <code>RESTORE VERIFYONLY</code> only proves the backup file is intact — it does not prove the restore sequence works, that permissions and logins come back correctly, or that the application reconnects cleanly. The only real test of a backup strategy is periodically executing the full restore sequence, including the tail-log step, against a non-production instance and measuring how long it actually takes against the RTO you promised.</p>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Choose the recovery model based on your RPO requirement first, then build the backup schedule around it — not the other way around</li>
+<li>Differential backups shrink restore time but do not replace the log backup chain needed for point-in-time recovery</li>
+<li>A tail-log backup at the moment of failure is what lets you restore right up to the point of disaster instead of losing everything since the last scheduled log backup</li>
+<li>Backups stored on the same disk, volume, or SAN as the database are a copy, not a disaster recovery plan</li>
+<li>Untested restores are not backups — RESTORE VERIFYONLY checks the file is readable, not that your recovery process actually works</li>
+      </ul>
+    </div>
+  </article>
+
+  <aside class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#why-a-maintenance-plan-is-not-a-strategy">Why a Maintenance Plan Is Not a Strategy</a></li>
+<li><a href="#recovery-models-and-the-rpo-ceiling">Recovery Models and the RPO Ceiling</a></li>
+<li><a href="#full-differential-and-log-backups">Full, Differential, and Log Backups</a></li>
+<li><a href="#the-differential-vs-log-backup-confusion">The Differential vs. Log Backup Confusion</a></li>
+<li><a href="#point-in-time-restore-mechanics">Point-in-Time Restore Mechanics</a></li>
+<li><a href="#designing-around-rpo-and-rto">Designing Around RPO and RTO</a></li>
+<li><a href="#storage-retention-and-real-disaster-recovery">Storage, Retention, and Real Disaster Recovery</a></li>
+    </ol>
+  </aside>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <div class="flinks">
+    <a href="/">Home</a>
+    <a href="/#chapters">All Chapters</a>
+    <a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+</footer>
+
+<script src="/js/documentation-ui.js"></script>
+</body>
+</html>

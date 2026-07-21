@@ -46,7 +46,7 @@ def get_category_pages(category_path):
 
                     pages.append({
                         'path': page_file,
-                        'url': f"/{category_path.relative_to(ROOT)}/{page_file.name}",
+                        'url': f"/{category_path.relative_to(ROOT).as_posix()}/{page_file.name}",
                         'title': title
                     })
                 except Exception:

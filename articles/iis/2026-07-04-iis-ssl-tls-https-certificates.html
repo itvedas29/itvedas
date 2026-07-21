@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.">
+  <meta name="description" content="How to bind certificates in IIS, enable SNI, configure HSTS safely, automate renewal with win-acme, and disable weak TLS versions.">
   <meta name="robots" content="index,follow">
   <meta property="og:title" content="IIS SSL/TLS Configuration: HTTPS and Certificate Management | IT Vedas">
-  <meta property="og:description" content="Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.">
+  <meta property="og:description" content="How to bind certificates in IIS, enable SNI, configure HSTS safely, automate renewal with win-acme, and disable weak TLS versions.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
-    
+  <meta property="og:url" content="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates">
   <title>IIS SSL/TLS Configuration: HTTPS and Certificate Management | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS SSL/TLS Configuration: HTTPS and Certificate Management", "description": "Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "IIS SSL/TLS Configuration: HTTPS and Certificate Management", "description": "How to bind certificates in IIS, enable SNI, configure HSTS safely, automate renewal with win-acme, and disable weak TLS versions.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Iis","item":"https://www.itvedas.com/articles/iis/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Iis Ssl Tls Https Certificates","item":"https://www.itvedas.com/articles/iis/2026-07-04-iis-ssl-tls-https-certificates"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"IIS SSL/TLS Configuration: HTTPS and Certificate Management | IT Vedas","description":"Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"IIS SSL/TLS Configuration: HTTPS and Certificate Management | IT Vedas","description":"Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,21 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/iis/">IIS</a> › IIS SSL/TLS Configuration: HTTPS and Certificate Management</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/iis/">IIS</a> &rsaquo; IIS SSL/TLS Configuration: HTTPS and Certificate Management</div>
   <div class="ch-badge">🌐 IIS</div>
-  <h1>IIS SSL/TLS Configuration: HTTPS and Certificate Management</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/iis/">Iis</a></li>
-<li>/</li>
-<li>2026 07 04 Iis Ssl Tls Https Certificates</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>8 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Configure SSL/TLS on IIS for HTTPS. Learn certificate installation, binding, and renewal procedures.</p>
+  <h1>IIS SSL/TLS Configuration: HTTPS and Certificate Management</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>9 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">How to bind certificates in IIS, enable SNI, configure HSTS safely, automate renewal with win-acme, and disable weak TLS versions.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-intermediate">INTERMEDIATE</div>
-  <div class="reading-time">⏱ 8 min read</div>
+  <div class="reading-time">&#9201; 9 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Basic IT knowledge</li>
-<li>Understanding of fundamentals</li>
+      <li>Working knowledge of IIS site and binding configuration</li>
+<li>Comfort with PowerShell and the Windows certificate store (certlm.msc)</li>
     </ul>
   </div>
 </div>
@@ -140,118 +119,81 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade iis implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>SNI (defined in RFC 6066) lets one IP:port combination host multiple HTTPS sites with different certificates by sending the requested hostname unencrypted in the TLS ClientHello</li>
+<li>HTTPS certificate bindings in IIS are actually stored by http.sys at the OS level — `netsh http show sslcert` shows them independently of IIS Manager</li>
+<li>Let's Encrypt certificates are valid for only 90 days, which makes renewal automation effectively mandatory rather than optional</li>
+<li>Once a browser caches an HSTS policy for a host, it will refuse plain HTTP connections to that host for the full max-age with no click-through override</li>
       </ul>
     </div>
 
-    
-<h2 id="ssl-tls-fundamentals">SSL/TLS Fundamentals</h2>
-<p>This section covers ssl/tls fundamentals. Enterprise organizations rely on proper ssl/tls fundamentals implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+    <h2 id="how-iis-certificate-bindings-work">How IIS Certificate Bindings Actually Work</h2>
+<p>IIS doesn't terminate TLS itself — that job belongs to <code>http.sys</code>, the kernel-mode HTTP listener that ships with Windows. When you "bind a certificate to a site" in IIS Manager, you're really creating an entry in http.sys that maps an IP address (or hostname), port, and optionally a Server Name Indication (SNI) value to a certificate thumbprint sitting in the Windows certificate store. IIS Manager is a friendly front end over this mechanism; the actual state lives outside IIS's own configuration files.</p>
+<p>This matters operationally because bindings can go stale independently of the IIS config. If a certificate is renewed and reissued with a new thumbprint but the http.sys binding isn't updated to point at it, the site keeps serving the old (possibly expired) certificate even though the correct one is sitting in the store. You can inspect the raw state at any time with:</p>
+<pre><code>netsh http show sslcert</code></pre>
+<p>This lists every IP:port and hostname:port binding, the certificate hash (thumbprint) it points to, and the store it's read from. When troubleshooting "wrong certificate served" issues, this command is more trustworthy than the IIS Manager bindings dialog, because it shows exactly what http.sys will present at the TLS handshake.</p>
 
+<h2 id="binding-a-certificate-in-iis-manager-and-powershell">Binding a Certificate: IIS Manager, PowerShell, and netsh</h2>
+<p>In IIS Manager, binding a certificate is done from the site's <strong>Bindings</strong> dialog: select the site, choose <strong>Edit Bindings</strong>, click <strong>Add</strong>, set Type to <code>https</code>, choose the IP address and port, and select the certificate from the SSL certificate dropdown. That dropdown only lists certificates that are installed into the <strong>Local Computer\Personal</strong> store with an exportable or accessible private key — a certificate without a private key, or one sitting only in the user's personal store, will not appear.</p>
+<p>The same operation in PowerShell, useful for scripting deployments across multiple servers:</p>
+<pre><code>$cert = Get-ChildItem -Path Cert:\LocalMachine\My |
+    Where-Object { $_.Subject -like "*example.com*" }
 
-<h2 id="certificate-types">Certificate Types</h2>
-<p>This section covers certificate types. Enterprise organizations rely on proper certificate types implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+New-WebBinding -Name "Default Web Site" -Protocol https `
+    -Port 443 -HostHeader "www.example.com" -SslFlags 1
 
+$binding = Get-WebBinding -Name "Default Web Site" -Protocol https `
+    -HostHeader "www.example.com"
+$binding.AddSslCertificate($cert.Thumbprint, "My")</code></pre>
+<p>The <code>-SslFlags 1</code> value is what tells IIS to register the binding as SNI-based (hostname-based) rather than the legacy IP-based model — more on this below. Under the hood, both the IIS Manager click-path and the PowerShell <code>WebAdministration</code> cmdlets ultimately drive the same http.sys API that the <code>netsh</code> tool exposes directly:</p>
+<pre><code>netsh http add sslcert hostnameport=www.example.com:443 ^
+    certhash=THUMBPRINT_HERE ^
+    certstorename=MY ^
+    appid={00000000-0000-0000-0000-000000000000}</code></pre>
+<p>The <code>appid</code> is an arbitrary GUID IIS uses to track which application owns the binding; it doesn't need to correspond to anything meaningful, but it must be present. For the older IP-based (non-SNI) binding style, you'd use <code>ipport=</code> instead of <code>hostnameport=</code>. Knowing this equivalence is useful when a binding gets corrupted and IIS Manager refuses to let you re-add it cleanly — deleting the stale entry with <code>netsh http delete sslcert</code> and re-adding it directly often resolves what the GUI cannot.</p>
 
-<h2 id="certificate-installation">Certificate Installation</h2>
-<p>This section covers certificate installation. Enterprise organizations rely on proper certificate installation implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="sni-hosting-multiple-https-sites-on-one-ip">SNI: Hosting Multiple HTTPS Sites on One IP</h2>
+<p>Before SNI, TLS had a structural limitation: the server had to select and present a certificate during the handshake before it could see which hostname the client was actually requesting, because that information (the HTTP <code>Host</code> header) only arrives after encryption is established. With only one certificate available per IP:port pair, hosting multiple HTTPS sites with different certificates required one IP address per site.</p>
+<p>Server Name Indication (SNI), defined in RFC 6066, fixes this by having the client include the target hostname — in plaintext — as an extension in the initial TLS ClientHello message, before the handshake completes. This lets the server look at the requested hostname and select the matching certificate from among several bound to the same IP:port, exactly the way the HTTP <code>Host</code> header lets a single IP serve multiple unencrypted sites. This is precisely what the <code>-SslFlags 1</code> / <code>hostnameport=</code> binding style enables in IIS: it registers the certificate against a hostname rather than an IP address alone.</p>
+<p>SNI support is effectively universal in modern browsers, mobile OSes, and HTTP client libraries. The practical exceptions are old platforms: Internet Explorer on Windows XP, Android below 2.3, and certain outdated embedded or API clients that pin to ancient TLS stacks. For virtually all public-facing sites in 2026, this is a non-issue, but it's worth checking client logs before consolidating certificate-per-IP hosting onto SNI if you serve legacy corporate or IoT clients — those may fail the handshake entirely rather than degrade gracefully. IIS 8 and later fully support SNI bindings; there is no reason to keep dedicated IPs per HTTPS site on a current IIS version unless a specific legacy client requires it.</p>
 
+<h2 id="enabling-hsts-and-why-to-do-it-carefully">HSTS: What It Does and Why to Roll It Out Carefully</h2>
+<p>HTTP Strict Transport Security (HSTS) is a response header — <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code> — that instructs the browser to treat a domain as HTTPS-only for the duration specified in <code>max-age</code> (in seconds). Once a browser has seen and cached this header for a domain, it will automatically rewrite any subsequent <code>http://</code> request to that domain to <code>https://</code> before it ever hits the network, and it will hard-fail (no "proceed anyway" option) on any certificate error, rather than showing the usual click-through warning.</p>
+<p>IIS 10 on Windows Server 2019 and later has native HSTS configuration under a site's <strong>HSTS</strong> feature in IIS Manager, exposing <code>max-age</code>, <code>includeSubDomains</code>, <code>preload</code>, and a redirect-HTTP-to-HTTPS toggle directly. On older IIS versions, the header has to be added manually via the URL Rewrite module or a custom response header rule.</p>
+<p>The part administrators most often get wrong is treating HSTS as a reversible setting. It isn't, practically speaking, once a browser has cached it: the browser will refuse plain HTTP for that host for the entire cached <code>max-age</code>, even if you later need to serve a subdomain over HTTP, roll back to an HTTP-only maintenance page, or fix a broken certificate that HSTS is now actively preventing users from bypassing. The <code>includeSubDomains</code> flag makes this worse by applying the policy to every subdomain, including ones you may add later without HTTPS ready. The <code>preload</code> flag is the most irreversible of all — it submits your domain to a hardcoded list baked into browser source code, and removal from that list, once accepted, can take months to propagate through browser release cycles.</p>
+<p>The safe rollout sequence is: verify HTTPS works correctly across the entire domain and every subdomain you intend to cover, set a short <code>max-age</code> (a few minutes to an hour) without <code>includeSubDomains</code> or <code>preload</code>, monitor for any HTTP-dependent breakage, then progressively raise <code>max-age</code> toward the standard one-year value over subsequent deployments. Add <code>includeSubDomains</code> only once every subdomain is confirmed HTTPS-capable, and treat <code>preload</code> submission as a final, deliberate step rather than a default checkbox.</p>
 
-<h2 id="ssl-binding">SSL Binding</h2>
-<p>This section covers ssl binding. Enterprise organizations rely on proper ssl binding implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="certificate-renewal-and-automating-it-with-win-acme">Certificate Renewal and Automating It with win-acme</h2>
+<p>Traditional commercial certificates typically run one to two years, giving administrators a wide manual renewal window: generate a new CSR (or renew against the existing key), submit it to the CA, retrieve the reissued certificate, import it into the Local Computer\Personal store, and update the site's binding to reference the new thumbprint — remembering that the http.sys binding, as covered earlier, does not automatically follow a reissued certificate with a different thumbprint.</p>
+<p>Let's Encrypt certificates are free but valid for only 90 days, which makes manual renewal impractical at any scale and effectively requires automation. <strong>win-acme</strong> (the <code>wacs.exe</code> executable) is the standard ACME client for Windows/IIS environments. Run interactively, it can scan existing IIS site bindings, let you pick a site, perform HTTP-01 domain validation by temporarily serving a challenge file through the site itself, request the certificate from Let's Encrypt, install it into the certificate store, and update the IIS binding automatically — all without hand-editing anything:</p>
+<pre><code>wacs.exe --target iis --siteid 1 --installation iis</code></pre>
+<p>The more important part happens after the first run: win-acme registers a Windows Scheduled Task (visible in Task Scheduler, typically named something like "win-acme renew (\wacs.exe)") that runs daily and checks each managed certificate's expiry. By default it renews once a certificate is within roughly 30 days of expiry (the exact threshold is configurable), reruns the ACME validation, reinstalls the new certificate, and rebinds it — all unattended. This scheduled task is the piece worth verifying explicitly after setup; if it's disabled, deleted, or fails silently (commonly due to the site's HTTP-01 challenge path being blocked by a rewrite rule or authentication requirement), certificates will expire without warning. Checking <code>wacs.exe --list</code> periodically, or reviewing the scheduled task's run history, is a reasonable operational habit.</p>
 
-
-<h2 id="multiple-bindings">Multiple Bindings</h2>
-<p>This section covers multiple bindings. Enterprise organizations rely on proper multiple bindings implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="certificate-renewal">Certificate Renewal</h2>
-<p>This section covers certificate renewal. Enterprise organizations rely on proper certificate renewal implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="security-best-practices">Security Best Practices</h2>
-<p>This section covers security best practices. Enterprise organizations rely on proper security best practices implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
+<h2 id="disabling-weak-protocols-and-ciphers">Disabling Weak Protocols and Ciphers</h2>
+<p>TLS protocol and cipher selection in Windows is governed by Schannel, the OS-level security provider IIS relies on — it is not something configured inside IIS itself. Legacy protocols (SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1) and weak ciphers (RC4, DES, 3DES, export-grade suites) and weak hash algorithms (MD5) remain enabled by default on many Windows Server installations for backward compatibility, and most compliance frameworks — PCI DSS among them — require TLS 1.0 and 1.1 to be disabled outright.</p>
+<p>These settings live in the registry under <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols</code>, with a subkey per protocol version and a <code>Server</code> and <code>Client</code> key beneath each. Disabling TLS 1.0 server-side, for example, means setting <code>Enabled</code> to <code>0</code> (DWORD) and <code>DisabledByDefault</code> to <code>1</code> under <code>...\Protocols\TLS 1.0\Server</code>. Cipher suite ordering and individual cipher enable/disable state live under a separate <code>...\SCHANNEL\Ciphers</code> key, and cipher suite priority order is set via a Group Policy value or the <code>Get-TlsCipherSuite</code>/<code>Enable-TlsCipherSuite</code> PowerShell cmdlets.</p>
+<p>Editing these directly is error-prone — a mistyped key name silently does nothing, and getting the client/server distinction wrong can break outbound connections the server itself makes (e.g., to a database or API over TLS). <strong>IIS Crypto</strong> from Nartac Software is the standard tool for this: it presents every protocol, cipher, hash, and key exchange algorithm as a checklist, includes a one-click "Best Practices" template that disables SSL 2.0/3.0 and TLS 1.0/1.1 while reordering ciphers to prefer forward-secrecy suites, and writes the correct registry keys for you. A reboot is required for Schannel changes to take effect, since the provider reads its configuration at boot rather than dynamically. After applying changes, verifying with an external scanner (or a tool like <code>testssl.sh</code> run against the site) confirms which protocols and ciphers are actually being negotiated, rather than trusting the registry state alone.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master ssl/tls fundamentals fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>A certificate binding is really an http.sys registration (IP/hostname + port mapped to a certificate thumbprint), which is why netsh and PowerShell can manage it independent of the IIS Manager UI</li>
+<li>SNI is what makes name-based HTTPS hosting possible; without it every distinct certificate needs a dedicated IP address</li>
+<li>HSTS max-age should start small (minutes to hours) during rollout and only be raised once you're certain every subdomain and path serves valid HTTPS</li>
+<li>win-acme automates the entire Let's Encrypt lifecycle — validation, installation, IIS binding updates, and scheduled renewal — removing the 90-day manual renewal burden</li>
+<li>Disabling TLS 1.0/1.1 and weak cipher suites is a compliance requirement in most standards (PCI DSS included), and IIS Crypto removes the need to hand-edit Schannel registry keys</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/iis/" style="color:#0066cc;">Iis</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#ssl-tls-fundamentals">SSL/TLS Fundamentals</a></li>
-<li><a href="#certificate-types">Certificate Types</a></li>
-<li><a href="#certificate-installation">Certificate Installation</a></li>
-<li><a href="#ssl-binding">SSL Binding</a></li>
-<li><a href="#multiple-bindings">Multiple Bindings</a></li>
-<li><a href="#certificate-renewal">Certificate Renewal</a></li>
-<li><a href="#security-best-practices">Security Best Practices</a></li>
+      <li><a href="#how-iis-certificate-bindings-work">How IIS Certificate Bindings Actually Work</a></li>
+<li><a href="#binding-a-certificate-in-iis-manager-and-powershell">Binding a Certificate: IIS Manager, PowerShell, and netsh</a></li>
+<li><a href="#sni-hosting-multiple-https-sites-on-one-ip">SNI: Hosting Multiple HTTPS Sites on One IP</a></li>
+<li><a href="#enabling-hsts-and-why-to-do-it-carefully">HSTS: What It Does and Why to Roll It Out Carefully</a></li>
+<li><a href="#certificate-renewal-and-automating-it-with-win-acme">Certificate Renewal and Automating It with win-acme</a></li>
+<li><a href="#disabling-weak-protocols-and-ciphers">Disabling Weak Protocols and Ciphers</a></li>
     </ol>
   </aside>
 </div>
@@ -266,6 +208,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>

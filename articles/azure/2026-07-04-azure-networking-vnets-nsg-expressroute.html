@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-  <meta name="description" content="Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.">
+  <meta name="description" content="A precise mapping from on-prem networking to Azure: VNet address planning, NSG rule evaluation order, peering transitivity, and ExpressRoute vs VPN tradeoffs.">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Azure Networking: Virtual Networks, NSGs, and ExpressRoute | IT Vedas">
-  <meta property="og:description" content="Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.">
+  <meta property="og:title" content="Azure Networking: VNets, NSG &amp; ExpressRoute | IT Vedas">
+  <meta property="og:description" content="A precise mapping from on-prem networking to Azure: VNet address planning, NSG rule evaluation order, peering transitivity, and ExpressRoute vs VPN tradeoffs.">
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
-    <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en-AU" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en-CA" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
-    
-  <title>Azure Networking: Virtual Networks, NSGs, and ExpressRoute | IT Vedas</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure Networking: Virtual Networks, NSGs, and ExpressRoute", "description": "Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
+  <meta property="og:url" content="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute">
+  <title>Azure Networking: VNets, NSG &amp; ExpressRoute | IT Vedas</title>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Azure Networking: VNets, NSG &amp; ExpressRoute", "description": "A precise mapping from on-prem networking to Azure: VNet address planning, NSG rule evaluation order, peering transitivity, and ExpressRoute vs VPN tradeoffs.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -85,14 +79,11 @@
     .reading-time{color:#6EE7B7;font-weight:600;}
     .prerequisites{color:var(--muted);font-size:0.9rem;}
     .prerequisites ul{margin:0.5rem 0 0 1.5rem;padding:0;list-style:none;}
-    .prerequisites li::before{content:"✓ ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
+    .prerequisites li::before{content:"\2713 ";color:#6EE7B7;font-weight:bold;margin-right:0.5rem;}
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.wrap{grid-template-columns:1fr;padding-left:1.25rem;padding-right:1.25rem;}.toc{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Azure","item":"https://www.itvedas.com/articles/azure/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Azure Networking Vnets Nsg Expressroute","item":"https://www.itvedas.com/articles/azure/2026-07-04-azure-networking-vnets-nsg-expressroute"}]}</script>
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure Networking: Virtual Networks, NSGs, and ExpressRoute | IT Vedas","description":"Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Azure Networking: Virtual Networks, NSGs, and ExpressRoute | IT Vedas","description":"Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+</head>
 <body>
 <div id="prog"></div>
 <nav>
@@ -104,33 +95,22 @@
   </div>
 </nav>
 <div class="hero">
-  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/azure/">Azure</a> › Azure Networking: Virtual Networks, NSGs, and ExpressRoute</div>
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/azure/">Azure</a> &rsaquo; Azure Networking: VNets, NSG &amp; ExpressRoute</div>
   <div class="ch-badge">☁️ Azure</div>
-  <h1>Azure Networking: Virtual Networks, NSGs, and ExpressRoute</h1><!-- Breadcrumb Navigation -->
-<nav aria-label="Breadcrumb" style="margin-bottom:2rem;font-size:0.9rem;">
-<ol style="list-style:none;padding:0;display:flex;gap:0.5rem;">
-<li><a href="/">Home</a></li>
-<li>/</li>
-<li><a href="/articles/">Articles</a></li>
-<li>/</li>
-<li><a href="/articles/azure/">Azure</a></li>
-<li>/</li>
-<li>2026 07 04 Azure Networking Vnets Nsg Expressroute</li>
-</ol>
-</nav>
-
-  <div class="hero-meta"><span class="pub-date">📅 July 04, 2026</span><span>12 min read</span><span>ITVedas</span></div>
-  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Design secure, scalable Azure networks. Learn VNet design, NSG rules, service endpoints, and hybrid connectivity with ExpressRoute.</p>
+  <h1>Azure Networking: VNets, NSG &amp; ExpressRoute</h1>
+  <div class="hero-meta"><span class="pub-date">&#128197; July 21, 2026</span><span>11 min read</span><span>ITVedas</span></div>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">A precise mapping from on-prem networking to Azure: VNet address planning, NSG rule evaluation order, peering transitivity, and ExpressRoute vs VPN tradeoffs.</p>
 </div>
 
 <div class="doc-metadata">
   <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
-  <div class="reading-time">⏱ 12 min read</div>
+  <div class="reading-time">&#9201; 11 min read</div>
   <div class="prerequisites">
     <strong>Prerequisites:</strong>
     <ul>
-      <li>Intermediate technical knowledge</li>
-<li>Enterprise infrastructure experience</li>
+      <li>Working knowledge of IP subnetting and CIDR math</li>
+<li>Familiarity with IPsec VPNs and BGP-based routing</li>
+<li>Comfort with on-prem firewall rule ordering (ACLs, stateful inspection)</li>
     </ul>
   </div>
 </div>
@@ -140,118 +120,108 @@
     <div class="fact-box">
       <strong>Key Facts</strong>
       <ul>
-        <li>Enterprise-grade azure implementation requires careful planning</li>
-<li>Best practices ensure reliability, security, and optimal performance</li>
-<li>Proper configuration reduces operational overhead by 20-30%</li>
-<li>Regular monitoring and maintenance prevent 80% of common issues</li>
+        <li>NSG rules are evaluated in priority order (lowest number first) and processing stops at the first match — there is no "most specific wins" logic like some on-prem ACLs</li>
+<li>VNet peering and global peering are NOT transitive: if A is peered to B and B is peered to C, A cannot reach C through B without a separate mechanism</li>
+<li>Azure reserves 5 IP addresses in every subnet (network address, default gateway, two for Azure DNS mapping, and the broadcast address), so a /24 yields 251 usable addresses, not 254</li>
+<li>ExpressRoute traffic never touches the public internet — it rides a private connection through a connectivity provider into Microsoft's edge routers, while Site-to-Site VPN Gateway tunnels IPsec over the public internet</li>
       </ul>
     </div>
 
-    
-<h2 id="azure-networking-fundamentals">Azure Networking Fundamentals</h2>
-<p>This section covers azure networking fundamentals. Enterprise organizations rely on proper azure networking fundamentals implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
+    <h2 id="vnets-and-subnets-rethinking-physical-topology">VNets and subnets: rethinking physical topology</h2>
+<p>A Virtual Network (<code>VNet</code>) is not a VLAN with a routing appliance bolted on — it's a software-defined boundary with no physical topology underneath it at all. There's no spanning tree, no trunk ports, no physical uplink to reason about, and no need to worry about broadcast domains in the Ethernet sense. Azure's software-defined network fabric handles packet delivery between subnets within a VNet automatically: every VNet has an implicit, non-removable system route table that routes traffic between all subnets in that VNet with next hop type <code>VnetLocal</code>. You don't configure inter-subnet routing — it exists the moment the subnets exist.</p>
+<p>What you do control is address space. A VNet is assigned one or more CIDR blocks (RFC 1918 space is typical, though Azure will let you use non-RFC1918 ranges — avoid this unless you have a documented reason) and subnets are carved out of that space. The planning discipline that matters here is different from on-prem: because VNets frequently get peered together, and because peered address spaces must not overlap, you need to allocate ranges centrally across your subscriptions and regions before anyone spins up a VNet, not after. A common failure mode is teams provisioning VNets independently, each grabbing <code>10.0.0.0/16</code>, and then discovering six months later that two business units can't be peered without a full re-IP.</p>
+<p>Every subnet loses 5 addresses to Azure regardless of size: the network address, the default gateway (first usable address), two addresses reserved for Azure's internal DNS mapping, and the broadcast address. A /24 gives you 251 usable host addresses, not 254 — undersizing subnets on the assumption of on-prem math is a recurring source of "why did my address pool run out" tickets.</p>
+<p>Subnet delegation is Azure-specific and has no real on-prem analog. Delegating a subnet (<code>az network vnet subnet update --delegations Microsoft.Web/serverFarms</code>) hands control of that subnet to a specific PaaS service — App Service (regional VNet integration), Azure NetApp Files, SQL Managed Instance, Container Instances — so the service can inject its own resources into the subnet. A subnet can carry exactly one delegation, and a delegated subnet generally can't also host arbitrary VMs. Three subnet names are also reserved by convention and required by specific Azure services: <code>GatewaySubnet</code> (minimum /27 recommended for VPN/ExpressRoute gateways, though /29 technically works for smaller gateway SKUs), <code>AzureFirewallSubnet</code> (minimum /26), and <code>AzureBastionSubnet</code> (minimum /26). Get these sizes wrong at creation time and you'll be rebuilding the VNet, since gateway subnets can't easily be resized once a gateway is deployed into them.</p>
+
+<h2 id="network-security-groups-rule-evaluation-and-priority">Network Security Groups: rule evaluation and priority</h2>
+<p>NSGs are the Azure-native stateful packet filter, and the single most commonly misunderstood mechanic is rule evaluation order. Every NSG rule has a <code>priority</code> value between 100 and 4096. Azure evaluates rules in ascending priority order — lowest number first — and processing stops at the first rule that matches the traffic. There is no "most specific rule wins" behavior the way some on-prem ACL implementations work; a broad allow rule at priority 100 will shadow a narrow deny rule at priority 200 even if the deny is more specific. Rule ordering is a design decision, not an afterthought.</p>
+<p>Every NSG ships with default rules you cannot delete, only override with higher-priority (lower-number) custom rules:</p>
+<pre><code>Inbound:
+  65000  AllowVnetInBound        Allow  (VirtualNetwork -> VirtualNetwork)
+  65001  AllowAzureLoadBalancerInBound  Allow  (AzureLoadBalancer -> Any)
+  65500  DenyAllInBound          Deny   (Any -> Any)
+
+Outbound:
+  65000  AllowVnetOutBound       Allow  (VirtualNetwork -> VirtualNetwork)
+  65001  AllowInternetOutBound   Allow  (Any -> Internet)
+  65500  DenyAllOutBound         Deny   (Any -> Any)</code></pre>
+<p>This means, out of the box, all traffic within a VNet (including across peered VNets, since the <code>VirtualNetwork</code> service tag spans peering) is allowed, and all outbound internet traffic is allowed, but nothing unsolicited from the internet gets in. NSGs are stateful: if outbound traffic is permitted, the corresponding inbound return traffic is automatically allowed regardless of inbound rules, and vice versa — you don't write mirrored rule pairs like you would on a stateless ACL.</p>
+<p>NSGs can be associated at two levels: the subnet, and the individual NIC. Both can be populated simultaneously, and the evaluation order depends on direction. For inbound traffic, Azure evaluates the subnet-associated NSG first, then the NIC-associated NSG — traffic must clear both to reach the VM. For outbound traffic, it's reversed: the NIC NSG is evaluated first, then the subnet NSG. A packet only reaches its destination if both NSGs, in the appropriate order for that direction, allow it. A common design pattern is a subnet NSG that enforces broad security-team-owned baseline rules (deny by default, allow only expected zones) and a NIC NSG that allows app-specific ports — but if either layer denies the traffic, it's dropped, so debugging "why can't this VM talk to that VM" requires checking both, on both ends of the conversation.</p>
+<pre><code>az network nsg rule create \
+  --resource-group rg-network \
+  --nsg-name nsg-app-subnet \
+  --name Allow-Https-From-Hub \
+  --priority 200 \
+  --direction Inbound \
+  --access Allow \
+  --protocol Tcp \
+  --source-address-prefixes 10.10.0.0/24 \
+  --destination-port-ranges 443</code></pre>
+
+<h2 id="vnet-peering-global-regional-and-the-transitivity-trap">VNet peering: global, regional, and the transitivity trap</h2>
+<p>VNet peering connects two VNets at the Azure fabric level — traffic between peered VNets stays on Microsoft's backbone, never traverses the public internet, and gets full bandwidth of the VM SKU rather than being capped like a gateway connection. There are two flavors: regional peering (VNets in the same region) and global peering (VNets in different regions). Functionally they behave the same way — both establish direct routes between the address spaces — but global peering has historically carried per-GB data transfer charges that regional peering within the same region doesn't, and both require non-overlapping address spaces, which is the most common reason a peering request fails outright.</p>
+<p>The fact that trips up nearly everyone coming from on-prem routing: <strong>VNet peering is not transitive.</strong> If VNet A is peered to VNet B, and VNet B is peered to VNet C, resources in A cannot reach resources in C through B — even though B can reach both. Each peering relationship is a distinct, non-inherited route; Azure does not propagate reachability across a peering chain the way BGP would propagate a route across an AS chain if you let it. This is a deliberate design choice for blast-radius containment, not a bug or a missing route you can just add.</p>
+<p>There are three standard ways to work around non-transitivity:</p>
 <ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
+<li><strong>Full mesh peering</strong> — peer every VNet directly to every other VNet that needs to talk. Fine for a handful of VNets, unworkable past a dozen or so (peering count grows quadratically).</li>
+<li><strong>Hub-and-spoke with an NVA or Azure Firewall</strong> — spokes peer only to the hub, each spoke's route table has a User Defined Route sending non-local traffic to the hub's firewall/NVA private IP as next hop, and the NVA is what actually routes between spokes. Peering doesn't need to be transitive here because the NVA — a single VM sitting in the hub, reachable from every spoke — is doing the forwarding, not the peering relationship itself.</li>
+<li><strong>Gateway transit</strong> — a hub VNet's VPN or ExpressRoute gateway can be shared with peered spokes (<code>--allow-gateway-transit</code> / <code>--use-remote-gateways</code>), letting spokes reach on-prem networks without each spoke needing its own gateway. This solves hub-to-on-prem-through-spoke, not spoke-to-spoke.</li>
 </ul>
+<p>For anything beyond a modest hub-and-spoke, Azure Virtual WAN is the managed alternative — it operates as a Microsoft-managed transitive hub, so spoke-to-spoke and spoke-to-branch routing is automatic without you owning route tables or NVAs.</p>
+<pre><code>az network vnet peering create \
+  --name hub-to-spoke1 \
+  --resource-group rg-network \
+  --vnet-name vnet-hub \
+  --remote-vnet vnet-spoke1 \
+  --allow-vnet-access true \
+  --allow-gateway-transit true</code></pre>
 
+<h2 id="expressroute-vs-site-to-site-vpn-gateway">ExpressRoute vs Site-to-Site VPN Gateway</h2>
+<p>Both connect on-prem networks to Azure VNets, and both terminate on a gateway subnet, but the transport underneath is fundamentally different, and that difference drives the cost, latency, and SLA tradeoffs.</p>
+<p>A <strong>Site-to-Site VPN Gateway</strong> builds an IPsec/IKE tunnel over the public internet — the same mechanism you'd use between two on-prem firewalls. It's provisioned in hours, billed per gateway-hour on the SKU (Basic through VpnGw5) plus egress, and throughput scales with SKU from roughly 100 Mbps (Basic, deprecated for new deployments) up to several Gbps on the higher AZ SKUs. SLA is 99.9-99.95% depending on active-active/zone-redundant configuration. Latency and jitter are whatever the internet path between your edge and Azure's happens to be that day — not something you can contract for.</p>
+<p><strong>ExpressRoute</strong> is a private, dedicated Layer 3 connection established through a connectivity provider (a carrier hotel / peering location) or via ExpressRoute Direct if you're bringing your own fiber into Microsoft's edge. Traffic never enters the public internet. Circuit bandwidths run from 50 Mbps up to 10 Gbps for standard circuits, or up to 100 Gbps aggregate with ExpressRoute Direct. SLA is 99.95% for a single circuit and higher with dual circuits in an active-active design. Provisioning takes weeks, not hours — you're waiting on a connectivity provider to physically cross-connect you, and pricing includes both the circuit (metered or unlimited data plans) and often the provider's local loop.</p>
+<p>The practical decision: ExpressRoute is the right call when you have sustained, latency-sensitive, or high-volume hybrid traffic — a data center lift-and-shift, real-time replication, or a compliance requirement that traffic never touch the public internet. A VPN Gateway is the right default for smaller workloads, dev/test hybrid connectivity, sites that don't justify a dedicated circuit, or as a resilient failover path for an ExpressRoute circuit — a well-known pattern is running both, with the VPN as backup, since ExpressRoute circuits do fail (fiber cuts, provider outages) and a coexisting VPN gateway can fail traffic over automatically when configured with matching BGP preferences.</p>
+<p>One nuance worth flagging: ExpressRoute has two peering types that matter here — Private Peering reaches your VNets directly, while Microsoft Peering reaches Microsoft 365 and public PaaS endpoints over the private circuit instead of the internet. Neither peering type, by itself, gets you into a specific PaaS resource's private IP — that's what Private Link is for.</p>
 
-<h2 id="virtual-network-design">Virtual Network Design</h2>
-<p>This section covers virtual network design. Enterprise organizations rely on proper virtual network design implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
+<h2 id="private-endpoints-and-private-link">Private endpoints and Private Link: reaching PaaS services privately</h2>
+<p>Before Private Link, the option for keeping PaaS traffic off the public internet was VNet Service Endpoints — extending your VNet's identity to a service (e.g., <code>Microsoft.Storage</code>) so that traffic from that subnet was recognized and allowed by the service's firewall, and routed over the Azure backbone instead of the internet. The catch: the PaaS resource still had a public IP and public DNS name. Service Endpoints authorize a source, they don't relocate the destination.</p>
+<p>A Private Endpoint does something structurally different: it provisions a NIC with a real private IP address, from your VNet's own address space, that maps directly to a specific PaaS resource instance (a specific storage account, a specific SQL server, a specific Key Vault) via Azure Private Link. From the VNet's perspective, the PaaS service now looks like just another host on the network. Because it's a genuine private IP in your address space, it's reachable from anywhere your VNet is reachable from — including on-premises over ExpressRoute Private Peering or a Site-to-Site VPN — without any traffic ever touching the public internet or needing NAT.</p>
+<p>The operational requirement that catches people out is DNS. Private Endpoints don't change the PaaS resource's FQDN; they rely on DNS resolution being overridden so that the existing public FQDN (<code>mystorageacct.blob.core.windows.net</code>) resolves to the private IP instead of the public one when queried from inside (or federated into) your network. This is handled with a Private DNS Zone (e.g., <code>privatelink.blob.core.windows.net</code>) linked to the VNet, populated automatically when you create the endpoint with DNS integration enabled. Skip this step and clients will resolve the public IP and either fail (if public access is locked down) or silently bypass the private path entirely — a configuration mistake that doesn't throw an error, it just quietly doesn't do what you assumed.</p>
+<pre><code>az network private-endpoint create \
+  --name pe-storage-blob \
+  --resource-group rg-network \
+  --vnet-name vnet-spoke1 \
+  --subnet snet-data \
+  --private-connection-resource-id $STORAGE_ID \
+  --group-id blob \
+  --connection-name conn-storage-blob</code></pre>
+<p>For hub-and-spoke topologies, the standard pattern is a centralized Private DNS Zone linked to the hub VNet and shared to spokes via virtual network links, so every spoke resolves private endpoints consistently without each spoke owning its own DNS zone.</p>
 
-
-<h2 id="subnetting-strategy">Subnetting Strategy</h2>
-<p>This section covers subnetting strategy. Enterprise organizations rely on proper subnetting strategy implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="network-security-groups">Network Security Groups</h2>
-<p>This section covers network security groups. Enterprise organizations rely on proper network security groups implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="service-endpoints-and-private-link">Service Endpoints and Private Link</h2>
-<p>This section covers service endpoints and private link. Enterprise organizations rely on proper service endpoints and private link implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="expressroute-for-hybrid-connectivity">ExpressRoute for Hybrid Connectivity</h2>
-<p>This section covers expressroute for hybrid connectivity. Enterprise organizations rely on proper expressroute for hybrid connectivity implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
-
-<h2 id="network-monitoring">Network Monitoring</h2>
-<p>This section covers network monitoring. Enterprise organizations rely on proper network monitoring implementation for reliability, security, and performance. Key considerations include best practices, configuration options, and real-world implementation patterns.</p>
-<ul>
-  <li>Understanding core concepts and architecture</li>
-  <li>Configuration best practices and optimization</li>
-  <li>Common challenges and solutions</li>
-  <li>Integration with existing infrastructure</li>
-  <li>Monitoring and maintenance procedures</li>
-</ul>
-
+<h2 id="putting-it-together-hybrid-routing-patterns">Putting it together: hybrid routing patterns</h2>
+<p>The pieces above compose into a small number of recurring topologies. A hub VNet holds the ExpressRoute or VPN gateway, a firewall/NVA, and shared Private DNS Zones. Spokes peer to the hub only, with <code>use-remote-gateways</code> enabled so they inherit on-prem reachability without their own gateway, and a UDR sending <code>0.0.0.0/0</code> (or specific ranges) to the hub firewall's private IP as next hop for anything that isn't VNet-local. On-prem routes to Azure over ExpressRoute (or VPN), the gateway advertises the hub and, via gateway transit, the spoke ranges too — but reaching a specific spoke's PaaS Private Endpoint from on-prem still depends on the on-prem DNS resolver being configured to forward queries for the relevant private-link zones to Azure DNS (via a DNS forwarder VM or Azure DNS Private Resolver in the hub), otherwise on-prem clients resolve the public IP instead.</p>
+<p>Route propagation from ExpressRoute/VPN gateways into VNet route tables is automatic unless you explicitly disable BGP route propagation on a subnet's route table — a setting worth knowing about because a firewall or NVA subnet often disables it deliberately, forcing all egress through the appliance rather than letting the gateway's advertised routes create a shortcut around it. Getting this topology right is what actually decides whether your NSGs, peering, and gateway choices behave the way the design intended, rather than each layer quietly overriding the others.</p>
 
     <div class="takeaways">
       <h2>Key Takeaways</h2>
       <ul>
-        <li>Master azure networking fundamentals fundamentals for enterprise implementation</li>
-<li>Follow industry best practices for reliability and security</li>
-<li>Design for scalability and high availability from the start</li>
-<li>Monitor and maintain systems continuously for optimal performance</li>
-<li>Implement comprehensive disaster recovery and business continuity plans</li>
+        <li>Plan VNet address space for the peering mesh you'll eventually need, not just the VNet you're building today — overlapping ranges block peering entirely and are painful to renumber later</li>
+<li>NSGs are stateful and evaluate the union of subnet-level and NIC-level rules — for inbound traffic the subnet NSG is checked first, for outbound the NIC NSG is checked first</li>
+<li>Never rely on transitive routing through peered VNets; use a hub with gateway transit, UDRs pointing at an NVA/Azure Firewall, or Virtual WAN if you need many-to-many connectivity</li>
+<li>ExpressRoute buys you SLA-backed bandwidth and predictable latency at a real cost and multi-week lead time; a VPN Gateway is provisioned in hours and is the right default until you have sustained hybrid traffic or compliance requirements that rule out the internet path</li>
+<li>Private Endpoints give PaaS resources a NIC with a real private IP in your VNet — reachable from on-prem over ExpressRoute or VPN — which Service Endpoints never did</li>
       </ul>
     </div>
-  <!-- Category Context -->
-<div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
-<strong>Category:</strong> <a href="/articles/azure/" style="color:#0066cc;">Azure</a>
-<br/><small>Browse more articles and resources in this category</small>
-</div>
-</article>
+  </article>
 
   <aside class="toc">
     <h3>Contents</h3>
     <ol>
-      <li><a href="#azure-networking-fundamentals">Azure Networking Fundamentals</a></li>
-<li><a href="#virtual-network-design">Virtual Network Design</a></li>
-<li><a href="#subnetting-strategy">Subnetting Strategy</a></li>
-<li><a href="#network-security-groups">Network Security Groups</a></li>
-<li><a href="#service-endpoints-and-private-link">Service Endpoints and Private Link</a></li>
-<li><a href="#expressroute-for-hybrid-connectivity">ExpressRoute for Hybrid Connectivity</a></li>
-<li><a href="#network-monitoring">Network Monitoring</a></li>
+      <li><a href="#vnets-and-subnets-rethinking-physical-topology">VNets and subnets: rethinking physical topology</a></li>
+<li><a href="#network-security-groups-rule-evaluation-and-priority">Network Security Groups: rule evaluation and priority</a></li>
+<li><a href="#vnet-peering-global-regional-and-the-transitivity-trap">VNet peering: global, regional, and the transitivity trap</a></li>
+<li><a href="#expressroute-vs-site-to-site-vpn-gateway">ExpressRoute vs Site-to-Site VPN Gateway</a></li>
+<li><a href="#private-endpoints-and-private-link">Private endpoints and Private Link: reaching PaaS services privately</a></li>
+<li><a href="#putting-it-together-hybrid-routing-patterns">Putting it together: hybrid routing patterns</a></li>
     </ol>
   </aside>
 </div>
@@ -266,6 +236,5 @@
 </footer>
 
 <script src="/js/documentation-ui.js"></script>
-<script src="/js/nav-search.js" defer></script>
 </body>
 </html>
