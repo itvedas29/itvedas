@@ -30,7 +30,7 @@
 ═══════════════════════════════════════════════════════════════════
 """
 
-import os, re, json, time, pathlib, datetime, smtplib, sys, urllib.request, html
+import os, re, json, time, pathlib, datetime, smtplib, subprocess, sys, urllib.request, html
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -72,7 +72,7 @@ SMTP_PASS  = os.environ.get("SMTP_PASS", "").strip()
 
 MODEL        = "claude-haiku-4-5-20251001"
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
-SITE_URL   = "https://itvedas.com"
+SITE_URL   = "https://www.itvedas.com"
 SITE_NAME  = "ITVedas"
 CONTACT    = "info@itvedas.com"
 
@@ -414,7 +414,11 @@ def build_page(content, meta, date_str, modified_date=None, filename=None):
                       f'<h2\\1 id="{anc}">{h}</h2>', body, count=1)
 
     rt = reading_time(body)
-    url = f"{SITE_URL}/articles/{filename or f'{date_str}-{topic.lower()}.html'}"
+    # Cloudflare Pages serves clean URLs (strips .html) regardless of what's
+    # on disk, so the advertised URL (canonical/og:url/schema) must omit it
+    # even though the file itself is still saved as {article_fname}.html.
+    article_fname = filename or f'{date_str}-{topic.lower()}.html'
+    url = f"{SITE_URL}/articles/{article_fname[:-5] if article_fname.endswith('.html') else article_fname}"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -760,26 +764,19 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 #  STEP 8 — sitemap
 # ─────────────────────────────────────────────────────────────────
 def build_sitemap(state):
-    today = datetime.date.today().isoformat()
-    urls = [f'  <url><loc>{SITE_URL}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>',
-            f'  <url><loc>{SITE_URL}/news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-            f'  <url><loc>{SITE_URL}/security-news.html</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>',
-            f'  <url><loc>{SITE_URL}/career-paths.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>',
-            f'  <url><loc>{SITE_URL}/faq.html</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>']
-    for slug in CHAPTERS:
-        urls.append(f'  <url><loc>{SITE_URL}/articles/{slug}/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>')
-    for a in state.get("published", []):
-        lastmod = a.get("updated") or a.get("date", today)
-        urls.append(f'  <url><loc>{SITE_URL}/articles/{a["file"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>')
+    """Delegate to the comprehensive generator (scripts/generate-sitemap.py)
+    instead of hand-rolling a partial URL list here. The old inline version
+    only ever covered ~24 URLs (main pages + chapter hubs + published
+    articles) and clobbered the full sitemap.xml — built by the standalone
+    script and covering news/, chapters/, ai-tools/, etc. too — every time
+    an article was published, three times a week."""
     try:
-        (ROOT / "sitemap.xml").write_text(
-            '<?xml version="1.0" encoding="UTF-8"?>\n'
-            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-            + "\n".join(urls) + "\n</urlset>")
+        subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "generate-sitemap.py")],
+            cwd=ROOT, check=True,
+        )
     except Exception as e:
-        log(f"Sitemap write error: {e}")
-        return
-    log(f"Sitemap rebuilt ({len(urls)} URLs)")
+        log(f"Sitemap regeneration error: {e}")
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 9 — email notification

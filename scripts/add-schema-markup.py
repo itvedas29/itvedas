@@ -10,9 +10,23 @@ from pathlib import Path
 from datetime import datetime
 
 
+def page_url(file_path, root):
+    """Build the advertised URL for a page. Cloudflare Pages serves clean
+    URLs (strips .html / collapses index.html to the directory) regardless
+    of what's on disk, so this must match that, not the literal file path."""
+    rel = file_path.relative_to(root).as_posix()
+    if rel.endswith('/index.html'):
+        rel = rel[:-len('index.html')]
+    elif rel == 'index.html':
+        rel = ''
+    elif rel.endswith('.html'):
+        rel = rel[:-len('.html')]
+    return f"https://www.itvedas.com/{rel}"
+
+
 def add_article_schema(html_content, file_path, title, description):
     """Add ArticleSchema markup to HTML"""
-    url = f"https://www.itvedas.com{file_path.relative_to('/home/user/itvedas').as_posix()}"
+    url = page_url(file_path, '/home/user/itvedas')
 
     article_schema = {
         "@context": "https://schema.org",
@@ -73,7 +87,7 @@ def add_breadcrumb_schema(html_content, breadcrumbs):
 
 def add_news_article_schema(html_content, file_path, title, description, news_date=None):
     """Add NewsArticleSchema for news items"""
-    url = f"https://www.itvedas.com{file_path.relative_to('/home/user/itvedas').as_posix()}"
+    url = page_url(file_path, '/home/user/itvedas')
 
     news_schema = {
         "@context": "https://schema.org",
@@ -160,7 +174,7 @@ def process_articles():
         content = add_breadcrumb_schema(content, [
             ("Home", "https://www.itvedas.com"),
             ("Articles", "https://www.itvedas.com/articles"),
-            (title, f"https://www.itvedas.com/articles/{article_file.name}")
+            (title, page_url(article_file, "/home/user/itvedas"))
         ])
 
         article_file.write_text(content)
@@ -192,11 +206,10 @@ def process_chapters():
         # Add article schema
         content = add_article_schema(content, chapter_file, title, description)
         # Add breadcrumb
-        relative_path = chapter_file.relative_to(chapters_dir)
         content = add_breadcrumb_schema(content, [
             ("Home", "https://www.itvedas.com"),
             ("Chapters", "https://www.itvedas.com/chapters"),
-            (title, f"https://www.itvedas.com/chapters/{relative_path}")
+            (title, page_url(chapter_file, "/home/user/itvedas"))
         ])
 
         chapter_file.write_text(content)
@@ -230,7 +243,7 @@ def process_news():
         content = add_breadcrumb_schema(content, [
             ("Home", "https://www.itvedas.com"),
             ("News", "https://www.itvedas.com/news"),
-            (title, f"https://www.itvedas.com/news/{news_file.name}")
+            (title, page_url(news_file, "/home/user/itvedas"))
         ])
 
         news_file.write_text(content)

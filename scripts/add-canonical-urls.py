@@ -6,7 +6,7 @@ Add canonical URLs to all HTML pages to prevent duplicate content issues
 from pathlib import Path
 import re
 
-DOMAIN = "https://itvedas.com"
+DOMAIN = "https://www.itvedas.com"
 ROOT = Path("/home/user/itvedas")
 
 
@@ -44,13 +44,13 @@ def get_url_for_file(file_path):
     rel_path = file_path.relative_to(ROOT)
     url_path = '/' + str(rel_path).replace('\\', '/')
 
-    # Remove index.html from URL
+    # Remove index.html from URL (directory pages keep their trailing slash)
     if url_path.endswith('/index.html'):
-        url_path = url_path[:-11]
-
-    # Add trailing slash for directories
-    if not url_path.endswith('.html') and not url_path.endswith('/'):
-        url_path += '/'
+        url_path = url_path[:-11] or '/'
+    elif url_path.endswith('.html'):
+        # Cloudflare Pages serves clean URLs (strips .html) regardless of
+        # what's on disk, so the advertised canonical must omit it too.
+        url_path = url_path[:-5]
 
     return url_path
 

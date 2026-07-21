@@ -116,7 +116,9 @@ def render_page(items, page_num, total_pages):
     if page_num < total_pages:
         pager_links.append(f'<a href="page-{page_num + 1}.html">Older &rarr;</a>')
 
-    canonical = f"{SITE}/news/archive/" + ("" if page_num == 1 else f"page-{page_num}.html")
+    # Pages are saved on disk as page-N.html, but Cloudflare Pages serves
+    # clean URLs (strips .html), so the canonical must omit it too.
+    canonical = f"{SITE}/news/archive/" + ("" if page_num == 1 else f"page-{page_num}")
 
     return f'''<!DOCTYPE html>
 <html lang="en">

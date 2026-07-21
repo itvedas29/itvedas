@@ -19,7 +19,7 @@ from core.indexnow import submit as _indexnow_submit
 
 ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
-SITE    = "https://itvedas.com"
+SITE    = "https://www.itvedas.com"
 
 COMPONENT = "news-agent"
 
@@ -254,7 +254,7 @@ def build_article_page(meta, body, item, date_str, slug, time_str=""):
 <meta property="og:title" content="{headline} | ITVedas News">
 <meta property="og:description" content="{summary}">
 <meta property="og:type" content="article">
-<link rel="canonical" href="{SITE}/news/{slug}.html">
+<link rel="canonical" href="{SITE}/news/{slug}">
 <title>{headline} | ITVedas News</title>
 <script type="application/ld+json">
 {json_ld({
@@ -382,7 +382,7 @@ def build_news_index(articles, update_time):
 <meta name="description" content="Original IT and cybersecurity news explained in plain English — written by ITVedas, updated throughout the day.">
 <meta name="keywords" content="IT news, cybersecurity news, tech news today, cloud news, DevOps news">
 <meta name="robots" content="index,follow">
-<link rel="canonical" href="{SITE}/news.html">
+<link rel="canonical" href="{SITE}/news">
 <title>IT News Today — {today} | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -531,7 +531,7 @@ def build_security_news_page(articles, update_time):
 <meta name="description" content="Cybersecurity news, attacks, breaches and CVEs — original reporting, explained in plain English by ITVedas, every story on its own page.">
 <meta name="keywords" content="cybersecurity news, CVE tracker, cyber attacks, data breaches, vulnerability news, security advisories">
 <meta name="robots" content="index,follow">
-<link rel="canonical" href="{SITE}/security-news.html">
+<link rel="canonical" href="{SITE}/security-news">
 <title>Cybersecurity News, Attacks & CVEs | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">

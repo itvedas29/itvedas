@@ -23,9 +23,12 @@ def get_html_files():
         "chapter_hubs": [],  # Chapter hub landing pages (chapters/<hub>/index.html)
     }
 
-    # Root HTML files (home, about, faq, etc.)
+    # Root HTML files (home, about, faq, etc.). index.html is excluded here
+    # because the homepage already gets its own explicit "/" entry below —
+    # without this it'd also appear as .../index.html (pre-clean-URL-fix)
+    # or as a near-duplicate trailing-slash "/" entry (post-fix).
     for f in ROOT.glob("*.html"):
-        if f.name not in ["cve-database.html", "cve-database-complete.html"]:
+        if f.name not in ["cve-database.html", "cve-database-complete.html", "index.html"]:
             files["main"].append(f)
 
     # Article category index pages (articles/networking/, articles/cloud/, etc.)
@@ -60,9 +63,17 @@ def get_html_files():
     return files
 
 def file_to_url(file_path):
-    """Convert file path to URL."""
-    rel_path = file_path.relative_to(ROOT)
-    return f"{SITE_URL}/{rel_path.as_posix()}"
+    """Convert file path to URL. Cloudflare Pages serves clean URLs (strips
+    .html, collapses index.html to the directory) regardless of what's on
+    disk, so the sitemap must advertise that, not the literal file path."""
+    rel_path = file_path.relative_to(ROOT).as_posix()
+    if rel_path == "index.html":
+        rel_path = ""
+    elif rel_path.endswith("/index.html"):
+        rel_path = rel_path[:-len("index.html")]
+    elif rel_path.endswith(".html"):
+        rel_path = rel_path[:-len(".html")]
+    return f"{SITE_URL}/{rel_path}"
 
 def get_file_modified_date(file_path):
     """Get file modification date in ISO format."""
