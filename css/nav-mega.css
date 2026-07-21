@@ -1,0 +1,46 @@
+/* ITVedas — shared grouped/mega-menu header navigation.
+   Injected on primary site pages (home, hubs, resources) so the header
+   nav can grow (new topics, new tools) without becoming a flat list.
+   Uses the site's near-universal dark-theme tokens with hardcoded
+   fallbacks, since --accent varies per-page/per-topic and this nav must
+   look identical everywhere it appears. */
+.nav-links{display:flex;gap:1.35rem;align-items:center;}
+.nav-links>a{color:var(--muted,#8888A8);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color .2s;white-space:nowrap;}
+.nav-links>a:hover,.nav-links>a.active{color:var(--text,#F0F0F8);}
+.nav-cta{background:#FF6B35;color:#fff!important;padding:0.5rem 1.1rem;border-radius:8px;font-weight:600!important;}
+.nav-cta:hover{background:#E55A25;color:#fff!important;}
+
+.nav-drop{position:relative;}
+.nav-drop-btn{background:none;border:none;font:inherit;color:var(--muted,#8888A8);font-size:0.875rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0;transition:color .2s;}
+.nav-drop-btn:hover,.nav-drop-btn[aria-expanded="true"]{color:var(--text,#F0F0F8);}
+.nav-drop-caret{font-size:0.65rem;transition:transform .2s;}
+.nav-drop-btn[aria-expanded="true"] .nav-drop-caret{transform:rotate(180deg);}
+
+.nav-drop-panel{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:var(--bg2,#13131C);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.45);padding:1.1rem;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s,transform .15s;z-index:300;}
+.nav-drop[data-open="true"] .nav-drop-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.nav-drop-panel::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:12px;height:12px;background:var(--bg2,#13131C);border-left:1px solid var(--border,rgba(255,255,255,0.08));border-top:1px solid var(--border,rgba(255,255,255,0.08));}
+
+/* simple dropdown (Tools / Resources): one column list */
+.nav-drop-panel.simple{width:230px;display:flex;flex-direction:column;gap:0.15rem;}
+.nav-drop-panel.simple a{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.7rem;border-radius:8px;color:var(--sub,#D0D0E8);text-decoration:none;font-size:0.85rem;transition:background .15s,color .15s;}
+.nav-drop-panel.simple a:hover{background:rgba(255,255,255,0.06);color:var(--text,#F0F0F8);}
+.nav-drop-panel.simple .nav-drop-desc{display:block;font-size:0.72rem;color:var(--muted,#8888A8);margin-top:0.1rem;}
+
+/* mega menu (Learn): multi-column topic grid */
+.nav-drop-panel.mega{width:min(700px,90vw);}
+.nav-mega-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0 1.5rem;}
+.nav-mega-col-title{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FF6B35;margin:0 0 0.6rem;padding-top:0.2rem;}
+.nav-mega-col a{display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.4rem;border-radius:7px;color:var(--sub,#D0D0E8);text-decoration:none;font-size:0.83rem;transition:background .15s,color .15s;}
+.nav-mega-col a:hover{background:rgba(255,255,255,0.06);color:var(--text,#F0F0F8);}
+.nav-mega-footer{margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--border,rgba(255,255,255,0.08));display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+.nav-mega-footer a{color:#FF6B35;text-decoration:none;font-size:0.83rem;font-weight:600;}
+.nav-mega-footer a:hover{text-decoration:underline;}
+.nav-mega-footer span{color:var(--muted,#8888A8);font-size:0.78rem;}
+
+@media(max-width:900px){
+  .nav-drop-panel.mega{width:92vw;left:50%;}
+  .nav-mega-grid{grid-template-columns:repeat(2,1fr);gap:0.5rem 1rem;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+}

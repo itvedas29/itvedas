@@ -33,9 +33,79 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .breakdown,.path{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:2rem;margin-bottom:1.5rem;}.path{background:linear-gradient(135deg,#1A1320,#16161F);border-color:rgba(255,107,53,0.25);}.breakdown h3,.path h3{font-family:var(--fd);font-size:1.1rem;margin-bottom:1.5rem;color:#F0F0F8;}.topic-row{margin-bottom:1.25rem;}.topic-row-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;font-size:0.9rem;}.topic-row-name{font-weight:500;color:var(--sub);}.topic-bar{height:8px;background:var(--bg3);border-radius:100px;overflow:hidden;}.topic-bar-fill{height:100%;border-radius:100px;transition:width .8s ease;}.path-intro{font-size:0.9rem;color:var(--muted);margin-bottom:1.5rem;}.path-item{display:flex;align-items:center;gap:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.75rem;text-decoration:none;color:inherit;transition:transform .2s,border-color .2s;}.path-item:hover{transform:translateX(4px);border-color:rgba(255,255,255,0.2);}.path-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}.path-info{flex:1;}.path-info h4{font-family:var(--fd);font-size:0.98rem;font-weight:600;margin-bottom:0.15rem;color:#F0F0F8;}.path-info p{font-size:0.82rem;color:var(--muted);margin:0;}.result-actions{display:flex;gap:1rem;flex-wrap:wrap;}.result-actions button,.result-actions a{flex:1;min-width:140px;text-align:center;padding:0.9rem;border-radius:12px;font-family:var(--fd);font-weight:600;font-size:0.92rem;cursor:pointer;text-decoration:none;transition:transform .15s;border:none;}.btn-explore{background:var(--bg2);border:1px solid var(--border)!important;color:var(--text);}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}.fl{font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}.fl span{color:var(--net);}.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}.flinks a{color:var(--muted);text-decoration:none;}.flinks a:hover{color:var(--net);}@media(max-width:640px){nav{padding:0 1.25rem;}.nav-links a:not(.active){display:none;}.wrap{padding-top:6rem;}.levels{grid-template-columns:1fr;}.question{font-size:1.2rem;}.qhead{flex-wrap:wrap;}.certificate{padding:2rem 1.5rem;}.cert-name{font-size:1.4rem;}.cert-score-big{font-size:1.8rem;}}
 </style>
+  <link rel="stylesheet" href="/css/nav-mega.css">
 </head>
 <body>
-<nav><a href="/" class="logo">IT<span>Vedas</span></a><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/news.html">📰 News</a></li><li><a href="/security-news.html" style="color:#10B981">🛡️ Security</a></li><li><a href="/#chapters">Chapters</a></li><li><a href="/career-paths.html">Career Paths</a></li><li><a href="/quiz.html" class="active">Quiz</a></li><li><a href="/about.html">About</a></li><li><a href="/services.html">Services</a></li></ul></nav>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel mega">
+        <div class="nav-mega-grid">
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Core IT</div>
+            <a href="/articles/networking/">🌐 Networking</a>
+            <a href="/articles/cloud/">☁️ Cloud</a>
+            <a href="/articles/linux/">🐧 Linux</a>
+            <a href="/articles/hardware/">🖥️ Hardware</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Security &amp; Compliance</div>
+            <a href="/articles/security/">🔐 Security</a>
+            <a href="/articles/compliance/">📋 Compliance</a>
+            <a href="/articles/cve/">🎯 CVE Analysis</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
+            <a href="/articles/api/">🔌 APIs</a>
+            <a href="/articles/devops/">🚀 DevOps</a>
+            <a href="/articles/databases/">🗄️ Databases</a>
+            <a href="/articles/ai-models/">🤖 AI Models</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Microsoft Stack</div>
+            <a href="/articles/azure/">☁️ Azure</a>
+            <a href="/articles/powershell/">🔷 PowerShell</a>
+            <a href="/articles/iis/">🖧 IIS</a>
+            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          </div>
+        </div>
+        <div class="nav-mega-footer">
+          <span>15 topic areas &middot; 100+ guides</span>
+          <a href="/chapters.html">Browse all chapters &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/quiz.html">🧠 Skill Quiz</a>
+        <a href="/career-navigator.html">🧭 Career Navigator</a>
+        <a href="/career-paths.html">🛤️ Career Paths</a>
+        <a href="/cve-listing.html">🎯 CVE Database</a>
+        <a href="/tools/">🛠️ Developer Tools</a>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/news.html">📰 News</a>
+        <a href="/security-news.html">🛡️ Security News</a>
+        <a href="/news/archive/">🗂️ News Archive</a>
+        <a href="/problems-solutions.html">🔧 Problems &amp; Solutions</a>
+        <a href="/faq.html">❓ FAQ</a>
+      </div>
+    </div>
+
+    <a href="/about.html">About</a>
+    <a href="/services.html">Services</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/chapters.html" class="nav-cta">Start Learning</a>
+  </div>
+</nav>
 <div class="wrap">
   <div class="screen active" id="userinfo"><div class="eyebrow">Get Your IT Certificate</div><h1 class="intro-title">Test Your <span>IT Knowledge</span></h1><p class="lead">Answer 10 questions across networking, cloud, security, DevOps and more. Get your personalized certificate, instant score, and learning path.</p><div class="form-group"><label class="form-label">Full Name</label><input type="text" id="userName" class="form-input" placeholder="e.g., John Doe" required></div><div class="form-group"><label class="form-label">Email Address</label><input type="email" id="userEmail" class="form-input" placeholder="e.g., john@example.com" required></div><button class="btn-continue" id="continueBtn" onclick="continueToIntro()">Continue to Quiz →</button><p class="intro-note">Your certificate will include your name and score</p></div>
 
@@ -88,5 +158,6 @@ fetch('/quiz-data.json').then(r=>r.json()).then(data=>{
 </script>
 <script src="/js/nav-search.js" defer></script>
 <script src="/js/nav-mobile.js" defer></script>
+<script src="/js/nav-mega.js" defer></script>
 </body>
 </html>

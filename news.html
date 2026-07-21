@@ -54,11 +54,78 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks a:hover{color:var(--accent);}
 @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.main{padding-left:1.25rem;padding-right:1.25rem;}.grid{grid-template-columns:1fr;}}
 </style>
+  <link rel="stylesheet" href="/css/nav-mega.css">
 </head>
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/news/archive/">Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links">
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel mega">
+        <div class="nav-mega-grid">
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Core IT</div>
+            <a href="/articles/networking/">🌐 Networking</a>
+            <a href="/articles/cloud/">☁️ Cloud</a>
+            <a href="/articles/linux/">🐧 Linux</a>
+            <a href="/articles/hardware/">🖥️ Hardware</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Security &amp; Compliance</div>
+            <a href="/articles/security/">🔐 Security</a>
+            <a href="/articles/compliance/">📋 Compliance</a>
+            <a href="/articles/cve/">🎯 CVE Analysis</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
+            <a href="/articles/api/">🔌 APIs</a>
+            <a href="/articles/devops/">🚀 DevOps</a>
+            <a href="/articles/databases/">🗄️ Databases</a>
+            <a href="/articles/ai-models/">🤖 AI Models</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Microsoft Stack</div>
+            <a href="/articles/azure/">☁️ Azure</a>
+            <a href="/articles/powershell/">🔷 PowerShell</a>
+            <a href="/articles/iis/">🖧 IIS</a>
+            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          </div>
+        </div>
+        <div class="nav-mega-footer">
+          <span>15 topic areas &middot; 100+ guides</span>
+          <a href="/chapters.html">Browse all chapters &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/quiz.html">🧠 Skill Quiz</a>
+        <a href="/career-navigator.html">🧭 Career Navigator</a>
+        <a href="/career-paths.html">🛤️ Career Paths</a>
+        <a href="/cve-listing.html">🎯 CVE Database</a>
+        <a href="/tools/">🛠️ Developer Tools</a>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/news.html">📰 News</a>
+        <a href="/security-news.html">🛡️ Security News</a>
+        <a href="/news/archive/">🗂️ News Archive</a>
+        <a href="/problems-solutions.html">🔧 Problems &amp; Solutions</a>
+        <a href="/faq.html">❓ FAQ</a>
+      </div>
+    </div>
+
+    <a href="/about.html">About</a>
+    <a href="/services.html">Services</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/chapters.html" class="nav-cta">Start Learning</a>
+  </div>
 </nav>
 <div class="hero">
   <div class="hero-in">
@@ -413,5 +480,6 @@ document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.d
 </script>
 <script src="/js/nav-search.js" defer></script>
 <script src="/js/nav-mobile.js" defer></script>
+<script src="/js/nav-mega.js" defer></script>
 </body>
 </html>
