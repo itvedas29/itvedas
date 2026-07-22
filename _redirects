@@ -17,16 +17,20 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 /deals.html       /                  301
 /deals            /                  301
 
-# Duplicate articles consolidated 2026-07-20 - old URLs redirect to the surviving version
-/articles/2026-06-16-cloud.html /articles/2026-07-07-cloud.html 301
-/articles/cloud/2026-07-02-what-is-cloud-computing-beginners-guide.html /articles/2026-07-07-cloud.html 301
-/articles/2026-06-19-databases.html /articles/2026-07-13-databases.html 301
-/articles/2026-06-17-devops.html /articles/2026-07-10-devops.html 301
-/articles/2026-06-30-linux.html /articles/2026-07-15-linux.html 301
-/articles/2026-06-16-networking.html /articles/2026-07-05-networking.html 301
-/articles/2026-07-01-what-is-dns.html /articles/2026-07-05-networking.html 301
-/articles/2026-07-02-what-is-dns-and-how-does-it-work.html /articles/2026-07-05-networking.html 301
-/articles/2026-06-16-networking-1.html /articles/2026-07-06-networking.html 301
-/articles/2026-06-27-vpn-wifi.html /articles/2026-07-06-networking.html 301
-/articles/2026-06-17-security.html /articles/2026-07-08-security.html 301
-/articles/2026-07-01-security.html /articles/2026-07-17-security.html 301
+# Duplicate articles consolidated 2026-07-20 - old URLs redirect to the surviving version.
+# Targets omit .html - Cloudflare Pages' clean-URL rule 308-redirects a .html
+# target to its extensionless form, so a .html target here was creating an
+# unnecessary second redirect hop (old.html -> new.html -> new) instead of
+# landing on the final URL in one hop.
+/articles/2026-06-16-cloud.html /articles/2026-07-07-cloud 301
+/articles/cloud/2026-07-02-what-is-cloud-computing-beginners-guide.html /articles/2026-07-07-cloud 301
+/articles/2026-06-19-databases.html /articles/2026-07-13-databases 301
+/articles/2026-06-17-devops.html /articles/2026-07-10-devops 301
+/articles/2026-06-30-linux.html /articles/2026-07-15-linux 301
+/articles/2026-06-16-networking.html /articles/2026-07-05-networking 301
+/articles/2026-07-01-what-is-dns.html /articles/2026-07-05-networking 301
+/articles/2026-07-02-what-is-dns-and-how-does-it-work.html /articles/2026-07-05-networking 301
+/articles/2026-06-16-networking-1.html /articles/2026-07-06-networking 301
+/articles/2026-06-27-vpn-wifi.html /articles/2026-07-06-networking 301
+/articles/2026-06-17-security.html /articles/2026-07-08-security 301
+/articles/2026-07-01-security.html /articles/2026-07-17-security 301
