@@ -1,7 +1,10 @@
 /* ITVedas — dropdown/mega-menu header nav behavior.
-   Click or hover to open, Escape or outside-click to close, one open
-   at a time. Mirrors the toggle pattern already used for the homepage's
-   Resources dropdown so behavior stays consistent site-wide. */
+   Hover opens/closes on desktop; click always opens (never toggles
+   closed) so a mouse user hovering then clicking doesn't immediately
+   close what their own hover just opened - mouseenter sets data-open
+   before the click handler runs, so a click that reads and flips that
+   same flag closes the panel it was meant to keep open. Closing is via
+   mouseleave, an outside click, or Escape - never the open button itself. */
 (function () {
   function closeAll(except) {
     document.querySelectorAll('.nav-drop[data-open="true"]').forEach(function (d) {
@@ -21,10 +24,9 @@
 
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
-        var isOpen = drop.getAttribute('data-open') === 'true';
-        closeAll(isOpen ? null : drop);
-        drop.setAttribute('data-open', isOpen ? 'false' : 'true');
-        btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        closeAll(drop);
+        drop.setAttribute('data-open', 'true');
+        btn.setAttribute('aria-expanded', 'true');
       });
 
       drop.addEventListener('mouseenter', function () {
