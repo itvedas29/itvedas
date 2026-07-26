@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online regex tester. Test regular expressions with real-time match highlighting, capture groups, and flag support.">
+<meta property="og:title" content="Regex Tester | IT Vedas">
+<meta property="og:description" content="Test regular expressions with real-time match highlighting, capture groups, and flag support.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/regex-tester">
+  <link rel="canonical" href="https://www.itvedas.com/tools/regex-tester">
+  <title>Regex Tester | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #8888A8; margin-bottom: 2rem; font-size: 0.95rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #8888A8; }
+    .pattern-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .pattern-input {
+      flex: 1;
+      min-width: 260px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+    }
+    .flags-input {
+      width: 120px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #10B981; }
+    textarea {
+      width: 100%;
+      height: 220px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #F0F0F8;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+    }
+    .editor {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .status {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .status.success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6EE7B7; display: block; }
+    .status.error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #F87171; display: block; }
+    .highlight { background: rgba(16,185,129,0.35); border-radius: 3px; }
+    #result {
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 120px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+    .matches-list { margin-top: 1.5rem; }
+    .match-item {
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+    .match-item .grp { color: #8888A8; }
+    .cheat { color: #8888A8; font-size: 0.85rem; margin-top: 2rem; line-height: 1.8; }
+    .cheat code { color: #10B981; background: #13131C; padding: 0.1rem 0.4rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🔤 Regex Tester</h1>
+    <p class="description">Test regular expressions against sample text with real-time match highlighting and capture-group breakdown. Everything runs in your browser — nothing is sent to a server.</p>
+
+    <div class="editor">
+      <label for="pattern">Regular Expression</label>
+      <div class="pattern-row">
+        <input type="text" id="pattern" class="pattern-input" placeholder="e.g. (\w+)@(\w+)\.com" spellcheck="false">
+        <input type="text" id="flags" class="flags-input" placeholder="flags: gim" value="g" spellcheck="false">
+      </div>
+      <div class="status" id="status"></div>
+
+      <label for="testText">Test String</label>
+      <textarea id="testText" placeholder="Paste the text you want to test against..." spellcheck="false">Contact us at info@itvedas.com or support@example.com for help.</textarea>
+
+      <label>Matches (highlighted)</label>
+      <div id="result"></div>
+
+      <div class="matches-list" id="matchesList"></div>
+    </div>
+
+    <div class="cheat">
+      <strong style="color:#F0F0F8;">Quick reference:</strong>
+      <code>\d</code> digit &nbsp; <code>\w</code> word char &nbsp; <code>\s</code> whitespace &nbsp;
+      <code>.</code> any char &nbsp; <code>*</code> 0+ &nbsp; <code>+</code> 1+ &nbsp; <code>?</code> optional &nbsp;
+      <code>^</code> start &nbsp; <code>$</code> end &nbsp; <code>[abc]</code> set &nbsp; <code>(...)</code> group<br>
+      <strong style="color:#F0F0F8;">Flags:</strong> <code>g</code> global &nbsp; <code>i</code> case-insensitive &nbsp; <code>m</code> multiline &nbsp; <code>s</code> dotall &nbsp; <code>u</code> unicode
+    </div>
+  </div>
+
+  <script>
+    function escapeHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function runRegex() {
+      const pattern = document.getElementById('pattern').value;
+      const flagsRaw = document.getElementById('flags').value.trim();
+      const text = document.getElementById('testText').value;
+      const status = document.getElementById('status');
+      const result = document.getElementById('result');
+      const matchesList = document.getElementById('matchesList');
+
+      matchesList.innerHTML = '';
+
+      if (!pattern) {
+        status.className = 'status';
+        result.innerHTML = escapeHtml(text);
+        return;
+      }
+
+      let flags = flagsRaw;
+      if (!flags.includes('g')) flags += 'g'; // need global to iterate all matches
+
+      let re;
+      try {
+        re = new RegExp(pattern, flags);
+      } catch (e) {
+        status.textContent = '✗ Invalid regex: ' + e.message;
+        status.className = 'status error';
+        result.innerHTML = escapeHtml(text);
+        return;
+      }
+
+      const matches = [...text.matchAll(re)];
+
+      if (matches.length === 0) {
+        status.textContent = '0 matches found';
+        status.className = 'status error';
+        result.innerHTML = escapeHtml(text);
+        return;
+      }
+
+      status.textContent = '✓ ' + matches.length + ' match' + (matches.length === 1 ? '' : 'es') + ' found';
+      status.className = 'status success';
+
+      // Build highlighted output
+      let html = '';
+      let lastIndex = 0;
+      for (const m of matches) {
+        html += escapeHtml(text.slice(lastIndex, m.index));
+        html += '<span class="highlight">' + escapeHtml(m[0]) + '</span>';
+        lastIndex = m.index + m[0].length;
+        if (m[0].length === 0) lastIndex++; // avoid infinite loop on zero-width
+      }
+      html += escapeHtml(text.slice(lastIndex));
+      result.innerHTML = html;
+
+      // Build match list with capture groups
+      matches.forEach((m, i) => {
+        const item = document.createElement('div');
+        item.className = 'match-item';
+        let inner = '<strong>#' + (i + 1) + '</strong> "' + escapeHtml(m[0]) + '" <span class="grp">@ index ' + m.index + '</span>';
+        for (let g = 1; g < m.length; g++) {
+          inner += '<br><span class="grp">&nbsp;&nbsp;group ' + g + ':</span> ' + (m[g] === undefined ? '<em class="grp">(no match)</em>' : '"' + escapeHtml(m[g]) + '"');
+        }
+        item.innerHTML = inner;
+        matchesList.appendChild(item);
+      });
+    }
+
+    document.getElementById('pattern').addEventListener('input', runRegex);
+    document.getElementById('flags').addEventListener('input', runRegex);
+    document.getElementById('testText').addEventListener('input', runRegex);
+    runRegex();
+  </script>
+
+</body>
+</html>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Regex Tester | IT Vedas",
+  "description": "Test regular expressions with real-time match highlighting, capture groups, and flag support.",
+  "url": "https://www.itvedas.com/tools/regex-tester/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</html>
