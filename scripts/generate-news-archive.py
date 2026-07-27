@@ -57,6 +57,78 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks a:hover{color:var(--accent);}
 """
 
+# Shared grouped/mega-menu header nav (see css/nav-mega.css + js/nav-mega.js),
+# matching what itvedas-brain/news-agent.py uses for news.html and
+# security-news.html - kept in sync by hand across the two generators since
+# they don't share an import path.
+NAV_MEGA_HTML = """<div class="nav-links">
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel mega">
+        <div class="nav-mega-grid">
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Core IT</div>
+            <a href="/articles/networking/">🌐 Networking</a>
+            <a href="/articles/cloud/">☁️ Cloud</a>
+            <a href="/articles/linux/">🐧 Linux</a>
+            <a href="/articles/hardware/">🖥️ Hardware</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Security &amp; Compliance</div>
+            <a href="/articles/security/">🔐 Security</a>
+            <a href="/articles/compliance/">📋 Compliance</a>
+            <a href="/articles/cve/">🎯 CVE Analysis</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
+            <a href="/articles/api/">🔌 APIs</a>
+            <a href="/articles/devops/">🚀 DevOps</a>
+            <a href="/articles/databases/">🗄️ Databases</a>
+            <a href="/articles/ai-models/">🤖 AI Models</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Microsoft Stack</div>
+            <a href="/articles/azure/">☁️ Azure</a>
+            <a href="/articles/powershell/">🔷 PowerShell</a>
+            <a href="/articles/iis/">🖧 IIS</a>
+            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          </div>
+        </div>
+        <div class="nav-mega-footer">
+          <span>15 topic areas &middot; 100+ guides</span>
+          <a href="/chapters">Browse all chapters &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/quiz">🧠 Skill Quiz</a>
+        <a href="/career-navigator">🧭 Career Navigator</a>
+        <a href="/career-paths">🛤️ Career Paths</a>
+        <a href="/cve-listing">🎯 CVE Database</a>
+        <a href="/tools/">🛠️ Developer Tools</a>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/news">📰 News</a>
+        <a href="/security-news">🛡️ Security News</a>
+        <a href="/news/archive/" class="active">🗂️ News Archive</a>
+        <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
+        <a href="/faq">❓ FAQ</a>
+      </div>
+    </div>
+
+    <a href="/about">About</a>
+    <a href="/services">Services</a>
+    <a href="/contact">Contact</a>
+    <a href="/chapters" class="nav-cta">Start Learning</a>
+  </div>"""
+
 
 def extract_meta(path):
     content = path.read_text(encoding="utf-8", errors="ignore")
@@ -87,7 +159,7 @@ def extract_meta(path):
 
     return {
         "slug": path.stem,
-        "url": f"/news/{path.stem}.html",
+        "url": f"/news/{path.stem}",
         "headline": headline or path.stem,
         "description": description or "",
         "date": date_published,
@@ -105,16 +177,16 @@ def render_page(items, page_num, total_pages):
 
     pager_links = []
     if page_num > 1:
-        prev_href = "index.html" if page_num == 2 else f"page-{page_num - 1}.html"
+        prev_href = "./" if page_num == 2 else f"page-{page_num - 1}"
         pager_links.append(f'<a href="{prev_href}">&larr; Newer</a>')
     for p in range(1, total_pages + 1):
         if p == page_num:
             pager_links.append(f'<span class="current">{p}</span>')
         else:
-            href = "index.html" if p == 1 else f"page-{p}.html"
+            href = "./" if p == 1 else f"page-{p}"
             pager_links.append(f'<a href="{href}">{p}</a>')
     if page_num < total_pages:
-        pager_links.append(f'<a href="page-{page_num + 1}.html">Older &rarr;</a>')
+        pager_links.append(f'<a href="page-{page_num + 1}">Older &rarr;</a>')
 
     # Pages are saved on disk as page-N.html, but Cloudflare Pages serves
     # clean URLs (strips .html), so the canonical must omit it too.
@@ -131,11 +203,12 @@ def render_page(items, page_num, total_pages):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>{CARD_CSS}</style>
+<link rel="stylesheet" href="/css/nav-mega.css">
 </head>
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">News</a><a href="/security-news.html">Security News</a><a href="/news/archive/" class="active">Archive</a></div>
+  {NAV_MEGA_HTML}
 </nav>
 <div class="main">
   <h1>News Archive</h1>
@@ -146,9 +219,10 @@ def render_page(items, page_num, total_pages):
   <div class="pager">{''.join(pager_links)}</div>
 </div>
 <footer>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">Latest News</a><a href="/security-news.html">Security News</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news">Latest News</a><a href="/security-news">Security News</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">&copy; 2026 ITVedas &middot; Original reporting</p>
 </footer>
+<script src="/js/nav-mega.js" defer></script>
 </body>
 </html>
 '''

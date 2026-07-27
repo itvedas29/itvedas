@@ -54,23 +54,90 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .flinks a:hover{color:var(--accent);}
 @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero,.main{padding-left:1.25rem;padding-right:1.25rem;}.grid{grid-template-columns:1fr;}}
 </style>
+<link rel="stylesheet" href="/css/nav-mega.css">
 </head>
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html" class="active">News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/news/archive/">Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <div class="nav-links">
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel mega">
+        <div class="nav-mega-grid">
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Core IT</div>
+            <a href="/articles/networking/">🌐 Networking</a>
+            <a href="/articles/cloud/">☁️ Cloud</a>
+            <a href="/articles/linux/">🐧 Linux</a>
+            <a href="/articles/hardware/">🖥️ Hardware</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Security &amp; Compliance</div>
+            <a href="/articles/security/">🔐 Security</a>
+            <a href="/articles/compliance/">📋 Compliance</a>
+            <a href="/articles/cve/">🎯 CVE Analysis</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
+            <a href="/articles/api/">🔌 APIs</a>
+            <a href="/articles/devops/">🚀 DevOps</a>
+            <a href="/articles/databases/">🗄️ Databases</a>
+            <a href="/articles/ai-models/">🤖 AI Models</a>
+          </div>
+          <div class="nav-mega-col">
+            <div class="nav-mega-col-title">Microsoft Stack</div>
+            <a href="/articles/azure/">☁️ Azure</a>
+            <a href="/articles/powershell/">🔷 PowerShell</a>
+            <a href="/articles/iis/">🖧 IIS</a>
+            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          </div>
+        </div>
+        <div class="nav-mega-footer">
+          <span>15 topic areas &middot; 100+ guides</span>
+          <a href="/chapters">Browse all chapters &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/quiz">🧠 Skill Quiz</a>
+        <a href="/career-navigator">🧭 Career Navigator</a>
+        <a href="/career-paths">🛤️ Career Paths</a>
+        <a href="/cve-listing">🎯 CVE Database</a>
+        <a href="/tools/">🛠️ Developer Tools</a>
+      </div>
+    </div>
+
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/news">📰 News</a>
+        <a href="/security-news">🛡️ Security News</a>
+        <a href="/news/archive/">🗂️ News Archive</a>
+        <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
+        <a href="/faq">❓ FAQ</a>
+      </div>
+    </div>
+
+    <a href="/about">About</a>
+    <a href="/services">Services</a>
+    <a href="/contact">Contact</a>
+    <a href="/chapters" class="nav-cta">Start Learning</a>
+  </div>
 </nav>
 <div class="hero">
   <div class="hero-in">
     <div class="live"><span class="dot"></span>Live updates</div>
     <h1>IT & Cybersecurity <span>News Today</span></h1>
     <p>Original reporting on the latest tech, security and cloud news — written by ITVedas in plain English. Updated throughout the day.</p>
-    <p class="upd">Last updated: 11:37 AM IST · July 27, 2026</p>
+    <p class="upd">Last updated: 06:09 PM IST · July 27, 2026</p>
   </div>
 </div>
 <div class="main">
   <div class="filters"><button class="fb active" data-t="all">All</button><button class="fb" data-t="Security" style="--tc:#10B981">Security</button><button class="fb" data-t="AI" style="--tc:#F97316">AI</button><button class="fb" data-t="General" style="--tc:#64748B">General</button><button class="fb" data-t="DevOps" style="--tc:#8B5CF6">DevOps</button><button class="fb" data-t="Cloud" style="--tc:#3B82F6">Cloud</button></div>
-  <div class="grid" id="grid"><a href="/news/2026-07-27-cybercriminals-weaponize-airport-and-hotel-wi-fi-to-steal-wo.html" class="nc" data-t="Security">
+  <div class="grid" id="grid"><a href="/news/2026-07-27-cybercriminals-weaponize-airport-and-hotel-wi-fi-to-steal-wo" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -78,7 +145,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Attackers have compromised public internet networks to intercept employee login credentials targeting cloud services like Microsoft 365.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-enterprise-mobile-apps-under-the-microscope-new-tool-exposes.html" class="nc" data-t="AI">
+        </a><a href="/news/2026-07-27-enterprise-mobile-apps-under-the-microscope-new-tool-exposes" class="nc" data-t="AI">
           <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -86,7 +153,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Lookout launches scanning technology to reveal dangerous flaws buried inside business smartphone applications.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-cybersecurity-startup-secures-millions-to-fight-digital-crim.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-27-cybersecurity-startup-secures-millions-to-fight-digital-crim" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -94,7 +161,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">A security firm focused on catching hackers has landed $3.4M in funding to expand operations globally.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-coca-cola-s-fairlife-unit-hit-by-ransomware-criminal-gang-de.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-27-coca-cola-s-fairlife-unit-hit-by-ransomware-criminal-gang-de" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -102,7 +169,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Major beverage company confirms cyberattack targeting subsidiary, raising fresh concerns about corporate data security threats.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-github-s-new-safety-pause-how-a-3-day-wait-could-stop-malwar.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-27-github-s-new-safety-pause-how-a-3-day-wait-could-stop-malwar" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -110,7 +177,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">GitHub implements waiting period for package updates to catch dangerous code before developers download it.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-malware-campaign-weaponizes-telegram-to-control-hacking-oper.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-27-malware-campaign-weaponizes-telegram-to-control-hacking-oper" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-27 · 11:37 AM IST</span></div>
@@ -118,7 +185,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Cybercriminals using encrypted messaging app as command center for attacks on government systems across the region.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-27-healthcare-management-firm-hit-by-major-ransomware-attack-ov.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-27-healthcare-management-firm-hit-by-major-ransomware-attack-ov" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-27 · 07:49 AM IST</span></div>
@@ -126,7 +193,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Medical software company&#x27;s security breach exposes sensitive data for 1.2 million people to criminal hackers.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-26-major-code-repositories-deploy-waiting-periods-to-block-mali.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-26-major-code-repositories-deploy-waiting-periods-to-block-mali" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-26 · 07:34 PM IST</span></div>
@@ -134,7 +201,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">GitHub and PyPI introduce delay-based security measures to stop attackers from quickly distributing compromised code packages.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-26-major-code-repositories-deploy-new-time-window-security-shie.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-26-major-code-repositories-deploy-new-time-window-security-shie" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-26 · 03:20 PM IST</span></div>
@@ -142,7 +209,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">GitHub and PyPI launch temporal security measures to block attackers from poisoning software supply chains.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-popular-gaming-forum-targeted-by-malware-campaign-using-clic.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-25-popular-gaming-forum-targeted-by-malware-campaign-using-clic" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-25 · 11:11 PM IST</span></div>
@@ -150,7 +217,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Gamers visiting Steam forums face infection with coin-mining malware hidden in fake update alerts.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-etcd-releases-major-update-with-performance-and-reliability-.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-etcd-releases-major-update-with-performance-and-reliability-" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 09:08 PM IST</span></div>
@@ -158,7 +225,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">The distributed database tool used by Kubernetes reaches version 3.7.0 with significant enhancements for enterprise environments.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-attackers-weaponize-ads-to-deliver-malware-in-fragments-asse.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-25-attackers-weaponize-ads-to-deliver-malware-in-fragments-asse" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-25 · 09:08 PM IST</span></div>
@@ -166,7 +233,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Cybercriminals use fragmented malware delivery through online advertisements to evade detection and build complete threats directly in users&#x27; browsers.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-making-the-switch-from-kubernetes-dashboard-to-headlamp-what.html" class="nc" data-t="DevOps">
+        </a><a href="/news/2026-07-25-making-the-switch-from-kubernetes-dashboard-to-headlamp-what" class="nc" data-t="DevOps">
           <div class="nc-vis" style="background:linear-gradient(135deg,#8B5CF622,#8B5CF608);"><span style="font-size:2.5rem;">⚙️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#8B5CF61f;color:#8B5CF6;">DevOps</span><span class="nc-time">2026-07-25 · 07:33 PM IST</span></div>
@@ -174,7 +241,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">DevOps teams are exploring alternatives to Kubernetes Dashboard, with Headlamp emerging as a modern replacement option.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-new-tool-makes-it-easier-for-data-teams-to-run-ai-projects-i.html" class="nc" data-t="DevOps">
+        </a><a href="/news/2026-07-25-new-tool-makes-it-easier-for-data-teams-to-run-ai-projects-i" class="nc" data-t="DevOps">
           <div class="nc-vis" style="background:linear-gradient(135deg,#8B5CF622,#8B5CF608);"><span style="font-size:2.5rem;">⚙️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#8B5CF61f;color:#8B5CF6;">DevOps</span><span class="nc-time">2026-07-25 · 07:33 PM IST</span></div>
@@ -182,7 +249,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">A fresh plugin simplifies how organizations manage machine learning workloads on container platforms.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-beyond-cpu-and-memory-why-kubernetes-needs-custom-performanc.html" class="nc" data-t="DevOps">
+        </a><a href="/news/2026-07-25-beyond-cpu-and-memory-why-kubernetes-needs-custom-performanc" class="nc" data-t="DevOps">
           <div class="nc-vis" style="background:linear-gradient(135deg,#8B5CF622,#8B5CF608);"><span style="font-size:2.5rem;">⚙️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#8B5CF61f;color:#8B5CF6;">DevOps</span><span class="nc-time">2026-07-25 · 06:07 PM IST</span></div>
@@ -190,7 +257,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Kubernetes operators are learning to monitor real business metrics beyond basic system resources for smarter application scaling.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-kubernetes-community-shares-latest-updates-on-container-mana.html" class="nc" data-t="DevOps">
+        </a><a href="/news/2026-07-25-kubernetes-community-shares-latest-updates-on-container-mana" class="nc" data-t="DevOps">
           <div class="nc-vis" style="background:linear-gradient(135deg,#8B5CF622,#8B5CF608);"><span style="font-size:2.5rem;">⚙️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#8B5CF61f;color:#8B5CF6;">DevOps</span><span class="nc-time">2026-07-25 · 06:07 PM IST</span></div>
@@ -198,7 +265,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">The Kubernetes project announces new developments affecting how teams deploy and manage containerized applications at scale.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-amazon-eks-now-lets-teams-roll-back-kubernetes-updates-witho.html" class="nc" data-t="DevOps">
+        </a><a href="/news/2026-07-25-amazon-eks-now-lets-teams-roll-back-kubernetes-updates-witho" class="nc" data-t="DevOps">
           <div class="nc-vis" style="background:linear-gradient(135deg,#8B5CF622,#8B5CF608);"><span style="font-size:2.5rem;">⚙️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#8B5CF61f;color:#8B5CF6;">DevOps</span><span class="nc-time">2026-07-25 · 06:07 PM IST</span></div>
@@ -206,7 +273,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">AWS adds rollback capabilities to EKS cluster upgrades, reducing risk for teams managing container infrastructure.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-aws-celebrates-builder-platform-growth-with-ai-agent-tools-a.html" class="nc" data-t="Cloud">
+        </a><a href="/news/2026-07-25-aws-celebrates-builder-platform-growth-with-ai-agent-tools-a" class="nc" data-t="Cloud">
           <div class="nc-vis" style="background:linear-gradient(135deg,#3B82F622,#3B82F608);"><span style="font-size:2.5rem;">☁️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#3B82F61f;color:#3B82F6;">Cloud</span><span class="nc-time">2026-07-25 · 05:14 PM IST</span></div>
@@ -214,7 +281,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">AWS expands its developer community platform with new AI capabilities and sandbox environments one year after launch.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-amazon-web-services-marks-major-milestones-with-enhanced-sec.html" class="nc" data-t="Cloud">
+        </a><a href="/news/2026-07-25-amazon-web-services-marks-major-milestones-with-enhanced-sec" class="nc" data-t="Cloud">
           <div class="nc-vis" style="background:linear-gradient(135deg,#3B82F622,#3B82F608);"><span style="font-size:2.5rem;">☁️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#3B82F61f;color:#3B82F6;">Cloud</span><span class="nc-time">2026-07-25 · 05:14 PM IST</span></div>
@@ -222,7 +289,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">AWS celebrates 20 years of cloud infrastructure while rolling out new security scanning capabilities and developer support platforms.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-hackers-exploit-browser-code-to-secretly-build-dangerous-sof.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-25-hackers-exploit-browser-code-to-secretly-build-dangerous-sof" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-25 · 05:14 PM IST</span></div>
@@ -230,7 +297,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Cybercriminals are using website scripts to assemble malware directly in browser memory, bypassing traditional security tools.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-amazon-s-message-delivery-system-celebrates-20-years-of-keep.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-amazon-s-message-delivery-system-celebrates-20-years-of-keep" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 03:18 PM IST</span></div>
@@ -238,7 +305,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">AWS&#x27;s core messaging service marks two decades of powering enterprise communications globally.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-criminals-use-stolen-personal-data-to-launch-threatening-ext.html" class="nc" data-t="AI">
+        </a><a href="/news/2026-07-25-criminals-use-stolen-personal-data-to-launch-threatening-ext" class="nc" data-t="AI">
           <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-07-25 · 03:18 PM IST</span></div>
@@ -246,7 +313,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Hackers weaponize breached databases to send fake blackmail threats demanding thousands in ransom payments.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-aws-simplifies-cloud-development-with-new-lambda-shortcuts-a.html" class="nc" data-t="Cloud">
+        </a><a href="/news/2026-07-25-aws-simplifies-cloud-development-with-new-lambda-shortcuts-a" class="nc" data-t="Cloud">
           <div class="nc-vis" style="background:linear-gradient(135deg,#3B82F622,#3B82F608);"><span style="font-size:2.5rem;">☁️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#3B82F61f;color:#3B82F6;">Cloud</span><span class="nc-time">2026-07-25 · 02:01 PM IST</span></div>
@@ -254,7 +321,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Amazon Web Services rolls out faster Lambda deployment tools and expands AI capabilities with latest OpenAI models available through Bedrock.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-major-java-library-under-active-attack-with-no-fix-available.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-25-major-java-library-under-active-attack-with-no-fix-available" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-25 · 02:01 PM IST</span></div>
@@ -262,7 +329,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Fastjson 1.x faces critical remote code execution attacks while developers race to patch the vulnerability.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-digital-threats-growing-faster-than-companies-can-defend-the.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-digital-threats-growing-faster-than-companies-can-defend-the" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 12:09 PM IST</span></div>
@@ -270,7 +337,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Businesses struggle to keep pace with evolving cyber attacks as security gaps widen across industries.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-criminal-gang-launches-unified-control-center-for-ransomware.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-criminal-gang-launches-unified-control-center-for-ransomware" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 12:09 PM IST</span></div>
@@ -278,7 +345,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Cybercriminals operating a notorious ransomware scheme are using a centralized platform to manage attacks, stolen data, and criminal payments.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-criminal-gang-shifts-strategy-directly-attacking-manufacturi.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-criminal-gang-shifts-strategy-directly-attacking-manufacturi" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 12:09 PM IST</span></div>
@@ -286,7 +353,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Hackers now breach factory design tools directly instead of stealing login credentials, bypassing traditional security layers.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-gitlab-security-flaw-exposed-after-patch-released-hackers-no.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-25-gitlab-security-flaw-exposed-after-patch-released-hackers-no" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-25 · 12:09 PM IST</span></div>
@@ -294,7 +361,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Researchers published working attack code for a patched GitLab vulnerability, putting unupdated servers at immediate risk.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-chatgpt-experiences-major-global-service-disruption.html" class="nc" data-t="AI">
+        </a><a href="/news/2026-07-25-chatgpt-experiences-major-global-service-disruption" class="nc" data-t="AI">
           <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-07-25 · 10:43 AM IST</span></div>
@@ -302,7 +369,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">OpenAI&#x27;s ChatGPT went offline worldwide, leaving millions of users unable to access the popular AI assistant.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-critical-security-gaps-discovered-in-rockwell-s-industrial-s.html" class="nc" data-t="Cloud">
+        </a><a href="/news/2026-07-25-critical-security-gaps-discovered-in-rockwell-s-industrial-s" class="nc" data-t="Cloud">
           <div class="nc-vis" style="background:linear-gradient(135deg,#3B82F622,#3B82F608);"><span style="font-size:2.5rem;">☁️</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#3B82F61f;color:#3B82F6;">Cloud</span><span class="nc-time">2026-07-25 · 09:12 AM IST</span></div>
@@ -310,7 +377,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Rockwell Automation patches dangerous vulnerabilities in Arena software that could allow attackers to seize control of manufacturing systems.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-25-security-flaw-in-gitlab-allows-logged-in-users-to-execute-da.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-25-security-flaw-in-gitlab-allows-logged-in-users-to-execute-da" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-25 · 09:12 AM IST</span></div>
@@ -318,7 +385,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">A newly disclosed vulnerability in GitLab enables authenticated users to run system commands with elevated privileges.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-delivery-company-ontrac-warns-users-of-major-cybersecurity-i.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-delivery-company-ontrac-warns-users-of-major-cybersecurity-i" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 09:20 PM IST</span></div>
@@ -326,7 +393,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">OnTrac shipping platform compromised in network intrusion, affecting customer data security</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-automated-ai-tool-weaponized-in-major-cyberattack-against-th.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-automated-ai-tool-weaponized-in-major-cyberattack-against-th" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 07:46 PM IST</span></div>
@@ -334,7 +401,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Hackers deployed an intelligent automation system to breach Thailand&#x27;s finance ministry, raising alarms about AI-powered cyber threats.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-criminals-exploit-hotel-networks-to-capture-business-email-p.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-criminals-exploit-hotel-networks-to-capture-business-email-p" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 05:51 PM IST</span></div>
@@ -342,7 +409,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Attackers are intercepting hotel Wi-Fi traffic to redirect users to fake login pages and steal Microsoft 365 credentials.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-north-korean-hackers-use-fake-video-calls-to-target-cryptocu.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-north-korean-hackers-use-fake-video-calls-to-target-cryptocu" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 05:51 PM IST</span></div>
@@ -350,7 +417,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Cybercriminals disguise malware in fake Zoom meetings to steal digital wallet passwords from crypto owners.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-week-s-major-security-threats-ai-malware-car-hacking-and-mas.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-week-s-major-security-threats-ai-malware-car-hacking-and-mas" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 03:43 PM IST</span></div>
@@ -358,7 +425,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">Researchers uncover dangerous AI malware, vehicle security flaws, and hundreds of Linux bugs affecting millions of devices worldwide.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-microsoft-s-update-goes-wrong-knocks-office-365-off-line-for.html" class="nc" data-t="AI">
+        </a><a href="/news/2026-07-24-microsoft-s-update-goes-wrong-knocks-office-365-off-line-for" class="nc" data-t="AI">
           <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-07-24 · 03:43 PM IST</span></div>
@@ -366,7 +433,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">A software update designed to improve Microsoft 365 backfired, leaving millions unable to access email and documents.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-critical-windows-flaw-allows-regular-employees-to-masquerade.html" class="nc" data-t="Security">
+        </a><a href="/news/2026-07-24-critical-windows-flaw-allows-regular-employees-to-masquerade" class="nc" data-t="Security">
           <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-07-24 · 03:43 PM IST</span></div>
@@ -374,7 +441,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">A newly discovered vulnerability in Windows Active Directory lets ordinary staff members trick systems into thinking they are the network&#x27;s central authority.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-email-security-startup-aegisai-secures-major-funding-boost-f.html" class="nc" data-t="AI">
+        </a><a href="/news/2026-07-24-email-security-startup-aegisai-secures-major-funding-boost-f" class="nc" data-t="AI">
           <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-07-24 · 02:11 PM IST</span></div>
@@ -382,7 +449,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <p class="nc-sum">AegisAI closes $36M funding round, bringing total capital to $49M for AI-powered email protection technology.</p>
             <span class="nc-link">Read full story →</span>
           </div>
-        </a><a href="/news/2026-07-24-european-police-bust-massive-fake-website-network-targeting-.html" class="nc" data-t="General">
+        </a><a href="/news/2026-07-24-european-police-bust-massive-fake-website-network-targeting-" class="nc" data-t="General">
           <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
           <div class="nc-body">
             <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-07-24 · 02:11 PM IST</span></div>
@@ -396,7 +463,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/security-news.html">Security News</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/security-news">Security News</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© 2026 ITVedas · Original reporting</p>
 </footer>
 <script>
@@ -413,5 +480,6 @@ document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>f(b.d
 </script>
 <script src="/js/nav-search.js" defer></script>
 <script src="/js/nav-mobile.js" defer></script>
+<script src="/js/nav-mega.js" defer></script>
 </body>
 </html>
