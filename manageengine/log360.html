@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP" integrity="sha384-qNMB2F0d3S6aW1K9CzqGNfvhCNYPqc2J8t0F7bD2U3z8N4E3s1k6q5t6u7v8w9x"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<meta name="description" content="ManageEngine Log360 reviewed: mid-market SIEM compared to Splunk Enterprise Security, IBM QRadar, Microsoft Sentinel, and Elastic Security.">
+<meta name="robots" content="noindex,follow">
+<meta property="og:title" content="ManageEngine Log360 Reviewed — SIEM Compared | ITVedas">
+<meta property="og:description" content="Log360 vs Splunk, QRadar, Microsoft Sentinel, and Elastic Security — an honest SIEM comparison for mid-market IT teams.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/manageengine/log360">
+<link rel="canonical" href="https://www.itvedas.com/manageengine/log360">
+<title>ManageEngine Log360 Reviewed — SIEM Compared | ITVedas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070C;--bg2:#0E0E17;--bg3:#161624;--text:#F2F2FA;--sub:#C8C8E0;--muted:#9C9CBE;--accent:#FF6B35;--accent2:#8B5CF6;--cyan:#06B6D4;--green:#10B981;--amber:#FBBF24;--border:rgba(255,255,255,0.09);--radius:16px;--fd:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:16px;line-height:1.75;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:var(--fd);font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:var(--accent);}
+.nav-links{display:flex;gap:1.5rem;align-items:center;}
+.nav-links>a{color:var(--muted);text-decoration:none;font-size:0.875rem;transition:color .2s;}
+.nav-links>a:hover{color:var(--text);}
+.nav-cta{background:var(--accent);color:#fff !important;padding:0.45rem 1.1rem;border-radius:100px;font-weight:600;}
+.hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+.hero h1{font-family:var(--fd);font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;line-height:1.15;margin-bottom:1.25rem;}
+.wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+.art h2{font-family:var(--fd);font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+.art p{color:var(--sub);margin-bottom:1.25rem;}
+.art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+.art li{margin-bottom:.4rem;}
+.art strong{color:var(--text);}
+.fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+.fact-box strong{display:block;font-family:var(--fd);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+.takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.5rem;margin:2rem 0;}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem;}
+th,td{text-align:left;padding:.65rem .75rem;border-bottom:1px solid var(--border);color:var(--sub);}
+th{color:var(--text);font-family:var(--fd);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;}
+.tool-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin:1.5rem 0;}
+.tool-card h3{margin-top:0;font-family:var(--fd);}
+.tool-card.featured{border-left:4px solid var(--accent);}
+.banner-slot{text-align:center;margin:1.5rem 0;}
+.banner-slot img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);}
+.banner-slot small{display:block;color:var(--muted);font-size:.75rem;margin-top:.4rem;}
+.resources{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin:1.5rem 0;}
+.resources h3{font-family:var(--fd);font-size:1rem;margin-bottom:.5rem;}
+.resources p.note{font-size:.8rem;color:var(--muted);margin-bottom:.75rem;}
+.resources a{display:block;color:var(--sub);text-decoration:none;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.9rem;}
+.resources a:last-child{border-bottom:none;}
+.resources a:hover{color:var(--accent);}
+.disclosure{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.85rem;color:var(--muted);}
+.disclosure strong{color:var(--amber);}
+.back-link{display:inline-block;margin-top:1rem;color:var(--accent);text-decoration:none;font-size:.9rem;font-weight:600;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+.fl{font-family:var(--fd);font-weight:700;font-size:1.1rem;color:var(--text);}
+.fl span{color:var(--accent);}
+</style>
+<link rel="stylesheet" href="/css/nav-mega.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <div class="nav-links">
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel mega">
+        <div class="nav-mega-grid">
+          <div class="nav-mega-col"><div class="nav-mega-col-title">Core IT</div>
+            <a href="/articles/networking/">🌐 Networking</a><a href="/articles/cloud/">☁️ Cloud</a><a href="/articles/linux/">🐧 Linux</a><a href="/articles/hardware/">🖥️ Hardware</a></div>
+          <div class="nav-mega-col"><div class="nav-mega-col-title">Security &amp; Compliance</div>
+            <a href="/articles/security/">🔐 Security</a><a href="/articles/compliance/">📋 Compliance</a><a href="/articles/cve/">🎯 CVE Analysis</a></div>
+          <div class="nav-mega-col"><div class="nav-mega-col-title">Dev, Data &amp; AI</div>
+            <a href="/articles/api/">🔌 APIs</a><a href="/articles/devops/">🚀 DevOps</a><a href="/articles/databases/">🗄️ Databases</a><a href="/articles/ai-models/">🤖 AI Models</a></div>
+          <div class="nav-mega-col"><div class="nav-mega-col-title">Microsoft Stack</div>
+            <a href="/articles/azure/">☁️ Azure</a><a href="/articles/powershell/">🔷 PowerShell</a><a href="/articles/iis/">🖧 IIS</a><a href="/articles/sql-server/">🗄️ SQL Server</a></div>
+        </div>
+        <div class="nav-mega-footer"><span>15 topic areas &middot; 100+ guides</span><a href="/chapters">Browse all chapters &rarr;</a></div>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/quiz">🧠 Skill Quiz</a><a href="/career-navigator">🧭 Career Navigator</a><a href="/career-paths">🛤️ Career Paths</a><a href="/cve-listing">🎯 CVE Database</a><a href="/tools/">🛠️ Developer Tools</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+      <div class="nav-drop-panel simple">
+        <a href="/news">📰 News</a><a href="/security-news">🛡️ Security News</a><a href="/news/archive/">🗂️ News Archive</a><a href="/problems-solutions">🔧 Problems &amp; Solutions</a><a href="/faq">❓ FAQ</a><a href="/manageengine/">🤝 Recommended Tools</a>
+      </div>
+    </div>
+    <a href="/about">About</a>
+    <a href="/services">Services</a>
+    <a href="/contact">Contact</a>
+    <a href="/chapters" class="nav-cta">Start Learning</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/manageengine/">Recommended Tools</a> &rsaquo; Log360</div>
+  <div class="ch-badge">🛡️ SIEM</div>
+  <h1>ManageEngine Log360: SIEM for Teams Splunk Is Overkill For</h1>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Splunk and QRadar are the SIEM market's default reference points — and often more platform (and budget) than a mid-size IT team actually needs. Log360 is one of the tools built specifically for that gap. Here's the honest comparison.</p>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>SIEM combines log collection, real-time correlation, UEBA (user/entity behavior analytics), and compliance reporting into one platform</li>
+        <li>Enterprise SIEM deployments (Splunk, QRadar) routinely run into six or seven figures annually once licensing, storage, and skilled staff are counted</li>
+        <li>Log360 bundles log management, UEBA, and compliance reporting (HIPAA, PCI-DSS, GDPR, SOX) at a price point built for the mid-market, not the largest enterprises</li>
+      </ul>
+    </div>
+
+    <h2>What SIEM Actually Solves</h2>
+    <p>Without a SIEM, a security team is managing dozens of disconnected tools, each with its own alerts and dashboards — a breach might trigger alerts across multiple systems, but nobody sees the full attack chain until it's too late. SIEM centralizes log collection from firewalls, servers, and applications, normalizes it into a common format, and correlates events across systems and time to surface the alerts that actually matter instead of drowning analysts in noise. See our full guide on <a href="/articles/security/" style="color:var(--accent);">what SIEM is and how it works</a> for the underlying mechanics.</p>
+    <p>Where SIEM platforms actually differ is less about whether they can do this in principle, and more about ingestion scale, ease of deployment, and total cost — which is exactly where the market splits into enterprise-scale platforms and mid-market-focused ones.</p>
+
+    <div class="banner-slot">
+      <img src="/assets/affiliate/manageengine/banners/5.Security information and event management/Log360/Log360 B1.jpeg" alt="ManageEngine Log360">
+      <small>ManageEngine Log360</small>
+    </div>
+
+    <h2>Who It's For</h2>
+    <p>Mid-size IT/security teams that need real SIEM capability — log management, UEBA, compliance reporting — without the multi-terabyte-per-day ingestion scale or seven-figure budget that Splunk and QRadar are built around. It's not built to compete with those platforms at the largest-enterprise end; it's built for the much larger segment of organizations below that scale who still have genuine compliance and threat-detection requirements.</p>
+
+    <h2>How It Compares</h2>
+    <div class="tool-card">
+      <h3>Splunk Enterprise Security</h3>
+      <p>The market leader — ingests virtually any data source, excels at correlation, and offers the most powerful visualization and search of any tool here. Used heavily by Fortune 500 companies and government agencies. Also the most expensive and operationally heaviest platform in this comparison by a wide margin.</p>
+    </div>
+    <div class="tool-card">
+      <h3>IBM QRadar</h3>
+      <p>Strong in threat intelligence integration and compliance reporting, popular in regulated industries, and handles high-volume environments well. Similar enterprise pricing and operational weight to Splunk — a fit for the same scale of organization, not a lighter-weight alternative to it.</p>
+    </div>
+    <div class="tool-card">
+      <h3>Microsoft Sentinel</h3>
+      <p>Microsoft's cloud-native SIEM, deeply integrated with Azure and Microsoft 365 — the natural default if your organization is already Microsoft-centric. Consumption-based pricing can be lower than legacy platforms at moderate scale, though costs scale with ingestion volume in a way that needs active monitoring.</p>
+    </div>
+    <div class="tool-card featured">
+      <h3>ManageEngine Log360</h3>
+      <p>A unified SIEM aimed squarely at mid-market IT teams who find Splunk or QRadar overkill on both price and operational complexity. Bundles log management, UEBA, and compliance reporting (HIPAA, PCI-DSS, GDPR, SOX) into one console, with pricing that's typically a fraction of the enterprise incumbents above. The tradeoff is scale — it's not built for the multi-terabyte-per-day ingestion that Splunk or QRadar handle at the largest enterprises, so it fits best for organizations needing real SIEM capability without a seven-figure line item.</p>
+    </div>
+    <div class="tool-card">
+      <h3>Elastic Security</h3>
+      <p>Built on the open-source Elastic Stack (Elasticsearch, Logstash, Kibana), with commercial support available. Growing quickly because it's more affordable and more customizable than the legacy enterprise platforms — the tradeoff is more hands-on configuration work to get the same out-of-box compliance reporting that Log360 or QRadar ship with by default.</p>
+    </div>
+
+    <table>
+      <tr><th>Tool</th><th>Best fit</th><th>Relative cost</th></tr>
+      <tr><td>Splunk Enterprise Security</td><td>Largest enterprises, maximum flexibility</td><td>Highest</td></tr>
+      <tr><td>IBM QRadar</td><td>Regulated, high-volume enterprise environments</td><td>High</td></tr>
+      <tr><td>Microsoft Sentinel</td><td>Already Azure/M365-centric</td><td>Consumption-based</td></tr>
+      <tr><td><strong>Log360</strong></td><td>Mid-market, real SIEM without enterprise budget</td><td>Lower, fixed-tier</td></tr>
+      <tr><td>Elastic Security</td><td>Budget-conscious, comfortable with more setup</td><td>Lower, more DIY</td></tr>
+    </table>
+
+    <div class="takeaways">
+      <h2>Bottom Line</h2>
+      <ul>
+        <li>Largest-scale enterprise, need maximum ingestion and correlation flexibility, budget isn't the constraint? Splunk or QRadar.</li>
+        <li>Already deep in the Azure/Microsoft 365 ecosystem? Sentinel keeps SIEM in the same platform.</li>
+        <li>Mid-size team needing real SIEM — log management, UEBA, compliance reporting — without enterprise-tier pricing? Log360 is built for exactly that gap.</li>
+        <li>Comfortable with more hands-on configuration in exchange for lower cost and full customization? Elastic Security.</li>
+      </ul>
+    </div>
+
+    <div class="resources">
+      <h3>📄 Vendor eBooks (trackable landing pages)</h3>
+      <p class="note">These are the only ManageEngine links on this page with a real, trackable affiliate landing page today — everything else on this site links straight to ManageEngine's own pages with no tracking.</p>
+      <a href="https://www.manageengine.com/log-management/combining-threat-intelligence-with-ueba-ebook.html" target="_blank" rel="noopener sponsored">Combining Threat Intelligence With UEBA</a>
+      <a href="https://www.manageengine.com/log-management/ebooks/integrating-ueba-with-zero-trust-to-secure-business.html" target="_blank" rel="noopener sponsored">Securing Business Data by Integrating UEBA and Zero Trust</a>
+      <a href="https://www.manageengine.com/log-management/ebooks/ciso-cybersecurity-metrics-budgeting-ebook.html" target="_blank" rel="noopener sponsored">CISO Handbook: Cybersecurity Metrics, Budgeting and Leadership</a>
+      <a href="https://www.manageengine.com/log-management/ebooks/how-to-calculate-costsavings-for-siem-implementation.html" target="_blank" rel="noopener sponsored">How to Calculate the Cost Savings From Your SIEM Implementation</a>
+      <a href="https://www.manageengine.com/log-management/getting-the-best-out-of-your-SIEM.html" target="_blank" rel="noopener sponsored">Getting the Best Out of Your SIEM</a>
+    </div>
+
+    <div class="disclosure">
+      <strong>Disclosure:</strong> ITVedas participates in the ManageEngine affiliate program. The eBook links above go to ManageEngine's own trackable landing pages, and we may earn a commission if you become a customer after visiting one, at no extra cost to you. Splunk, QRadar, Microsoft Sentinel, and Elastic Security are included on their own merits — we don't have affiliate relationships with them, and their placement above isn't influenced by which vendor pays us.
+    </div>
+
+    <a href="/manageengine/" class="back-link">← Back to all ManageEngine tools</a>
+  </article>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p style="margin-top:.5rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script src="/js/nav-search.js" defer></script>
+<script src="/js/nav-mobile.js" defer></script>
+<script src="/js/nav-mega.js" defer></script>
+</body>
+</html>
