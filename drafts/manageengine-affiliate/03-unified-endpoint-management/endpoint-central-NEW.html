@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Unified endpoint management compared: ManageEngine Endpoint Central vs Microsoft Intune, Jamf Pro, and Automox for patching, deployment, and device management at scale.">
+  <meta name="robots" content="index,follow">
+  <title>Unified Endpoint Management Compared: Endpoint Central vs Intune, Jamf, Automox | IT Vedas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);--r:12px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo span{color:#FF6B35;}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;line-height:1.15;margin-bottom:1.25rem;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art li{margin-bottom:.4rem;}
+    .art strong{color:var(--text);}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
+    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);}
+    .fl span{color:#FF6B35;}
+    table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem;}
+    th,td{text-align:left;padding:.65rem .75rem;border-bottom:1px solid var(--border);color:var(--sub);}
+    th{color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;}
+    .tool-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin:1.5rem 0;}
+    .tool-card h3{margin-top:0;}
+    .tool-card.featured{border-left:4px solid #FF6B35;}
+    .banner-slot{text-align:center;margin:1.5rem 0;}
+    .banner-slot img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);}
+    .banner-slot small{display:block;color:var(--muted);font-size:.75rem;margin-top:.4rem;}
+    .note{background:var(--bg2);border:1px solid var(--border);border-left:4px solid #6EE7B7;border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;font-size:.9rem;}
+    .disclosure{background:var(--bg2);border:1px solid var(--border);border-left:4px solid #FBBF24;border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.85rem;color:var(--muted);}
+    .disclosure strong{color:#FBBF24;}
+    .draft-banner{background:#2A2210;border:1px solid #FBBF24;color:#FBBF24;padding:.75rem 1.25rem;border-radius:8px;margin:0 auto;max-width:860px;font-size:.85rem;position:relative;top:64px;}
+  </style>
+</head>
+<body>
+<div class="draft-banner">📝 DRAFT — new page from scratch for review. Not live. This category wasn't in the original promotion plan — it's a new recommendation. Endpoint Central turned out to have the single richest asset set in the entire WorkDrive library (~60+ banner files across 5 campaign variants) with zero existing host content on the site, which is the strongest asset-to-content gap found in the whole audit. Uses the real "Endpoint Central Dark" banner below.</div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/articles/">Articles</a> &rsaquo; Unified Endpoint Management Compared</div>
+  <div class="ch-badge">💻 Endpoint Management</div>
+  <h1>Unified Endpoint Management Compared: Endpoint Central vs. Intune, Jamf Pro, Automox</h1>
+  <p style="font-size:1.05rem;color:var(--sub);line-height:1.8;border-left:3px solid var(--accent);padding-left:1rem;">Patch a mixed fleet of Windows, macOS, and mobile devices from one console, or juggle three separate tools? Here's how the leading unified endpoint management (UEM) platforms handle it differently.</p>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>UEM tools converge device management (laptops, mobile, servers) and patch management into one console — the alternative is separate MDM + patch tools that don't share visibility</li>
+        <li>Platform breadth is the biggest differentiator: some tools are best-in-class for one OS and adequate elsewhere</li>
+        <li>Third-party application patching (Chrome, Java, Adobe, Zoom) is often the actual gap in Windows-native tools like WSUS/Intune alone</li>
+      </ul>
+    </div>
+
+    <h2>Why "Just Use Intune" Isn't Always the Full Answer</h2>
+    <p>Microsoft Intune is the default reflex for a lot of IT teams once they're on Microsoft 365 — it's already licensed, it's deeply integrated with Entra ID and Conditional Access, and for a Windows-and-mobile-only fleet it genuinely covers most of what you need. The gaps show up in two places: third-party application patching (Intune's native patch story is strong for Windows updates, weaker for the long tail of Chrome/Java/Adobe/Zoom-style apps that are actually a bigger source of exploitable vulnerabilities), and mixed-OS fleets where macOS management wants something more purpose-built than Intune's macOS support currently offers.</p>
+    <p>The tools below aren't all solving the identical problem — where they specialize matters more than a feature-count comparison.</p>
+
+    <div class="banner-slot">
+      <img src="/assets/affiliate/manageengine/banners/3.Unified endpoint management and security/Endpoint Central/Filehorse/Endpoint Central Dark (PNG).png" alt="ManageEngine Endpoint Central">
+      <small>ManageEngine Endpoint Central — banner asset from the affiliate library</small>
+    </div>
+
+    <h2>The Tools</h2>
+
+    <div class="tool-card">
+      <h3>Microsoft Intune</h3>
+      <p>The obvious default if you're already on Microsoft 365/Entra ID — no separate licensing conversation, tight Conditional Access integration, solid Windows and mobile (iOS/Android) management. Third-party app patching and macOS management are the two areas where dedicated UEM tools still out-specialize it.</p>
+    </div>
+
+    <div class="tool-card">
+      <h3>Jamf Pro</h3>
+      <p>The category standard for Apple-heavy fleets — deep macOS, iOS, iPadOS, and tvOS management with zero-touch deployment and Apple-specific compliance features no cross-platform tool matches. Not a realistic choice if your fleet is majority Windows; it's built for Apple depth, not breadth.</p>
+    </div>
+
+    <div class="tool-card featured">
+      <h3>ManageEngine Endpoint Central</h3>
+      <p>Broad cross-platform coverage (Windows, macOS, Linux, iOS, Android, Chrome OS) from one console, with patch management — including the third-party application patching gap mentioned above — built in rather than a separate module. Also covers remote troubleshooting and OS deployment/imaging in the same platform. The tradeoff versus Jamf: less Apple-specific depth if your fleet is heavily Mac-first; the tradeoff versus Intune: it's a separate tool and license rather than something already bundled into an M365 subscription.</p>
+    </div>
+
+    <div class="tool-card">
+      <h3>Automox</h3>
+      <p>Cloud-native and patch-management-first — lighter weight than the full UEM suites here, with a strong reputation specifically for fast, reliable OS and third-party patching across Windows, macOS, and Linux. Worth a look if patching is your primary pain point and you don't need the broader device-management/imaging feature set the other three include.</p>
+    </div>
+
+    <h2>Quick Comparison</h2>
+    <table>
+      <tr><th>Tool</th><th>Best fit</th><th>Cross-platform depth</th><th>3rd-party app patching</th></tr>
+      <tr><td>Microsoft Intune</td><td>Already on M365/Entra ID, Windows+mobile</td><td>Windows-first</td><td>Basic</td></tr>
+      <tr><td>Jamf Pro</td><td>Apple-heavy or Apple-only fleets</td><td>Apple-first</td><td>N/A (Apple-focused)</td></tr>
+      <tr><td><strong>Endpoint Central</strong></td><td>Mixed-OS fleets wanting one console</td><td>Broad (Win/Mac/Linux/mobile)</td><td>Strong, built-in</td></tr>
+      <tr><td>Automox</td><td>Patching is the primary pain point</td><td>Broad, lighter-weight</td><td>Strong, patching-focused</td></tr>
+    </table>
+
+    <div class="note">
+      <strong>Related on this site:</strong> if patch and vulnerability prioritization specifically (not device management broadly) is what you're solving for, see our guides on <a href="/chapters/cve/what-is-a-security-patch-and-how-to-apply-it" style="color:#6EE7B7;">what a security patch is and how to apply it</a> and <a href="/chapters/cve/what-is-vulnerability-management" style="color:#6EE7B7;">vulnerability management</a> — ManageEngine's dedicated Patch Manager Plus and Vulnerability Manager Plus products fit that narrower use case, though (unlike Endpoint Central) neither currently has banner creative in our asset library.
+    </div>
+
+    <div class="takeaways">
+      <h2>Bottom Line</h2>
+      <ul>
+        <li>Already fully on Microsoft 365 with a Windows/mobile-only fleet? Intune is the path of least resistance.</li>
+        <li>Apple-heavy or Apple-only? Jamf Pro is the specialist and hard to beat on Apple depth.</li>
+        <li>Mixed Windows/macOS/Linux fleet wanting one console with strong third-party patching built in? Endpoint Central.</li>
+        <li>Patching specifically is the pain point, not broader device management? Automox is the lighter-weight specialist.</li>
+      </ul>
+    </div>
+
+    <div class="disclosure">
+      <strong>Disclosure:</strong> ITVedas participates in the ManageEngine affiliate program. If you buy Endpoint Central after clicking a link on this page, we may earn a commission at no extra cost to you. Microsoft Intune, Jamf Pro, and Automox are included on their own merits — we don't have affiliate relationships with them, and their placement above isn't influenced by which vendor pays us.
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+</footer>
+</body>
+</html>

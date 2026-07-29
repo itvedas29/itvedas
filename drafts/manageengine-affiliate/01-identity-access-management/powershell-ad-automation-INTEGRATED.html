@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Automate Active Directory with PowerShell. Bulk user management, group policies, and enterprise identity automation.">
+  <meta name="robots" content="index,follow">
+  <title>PowerShell Active Directory Automation | IT Vedas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:#6366F1;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+    .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
+    .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;line-height:1.15;margin-bottom:1.25rem;}
+    .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
+    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;}
+    .art p{color:var(--sub);margin-bottom:1.25rem;}
+    .art ul{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
+    .art code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.15em .45em;font-size:.875em;color:#6366F1;font-family:'Courier New',monospace;}
+    .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
+    .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
+    .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0;}
+    .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:1.5rem;margin:2rem 0;}
+    .doc-metadata{display:flex;gap:1.5rem;align-items:center;margin:1.5rem 0 2rem;flex-wrap:wrap;}
+    .difficulty-badge{display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;}
+    .difficulty-advanced{background:rgba(251,191,36,0.2);color:#FBBF24;border:1px solid rgba(251,191,36,0.4);}
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);}
+    /* --- new: affiliate integration styles --- */
+    .draft-banner{background:#2A2210;border:1px solid #FBBF24;color:#FBBF24;padding:.75rem 1.25rem;border-radius:8px;margin:6.5rem 2rem 0;max-width:860px;margin-left:auto;margin-right:auto;font-size:.85rem;}
+    .me-callout{background:var(--bg2);border:1px solid var(--border);border-left:4px solid #FF6B35;border-radius:12px;padding:1.5rem;margin:2rem 0;}
+    .me-callout h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.6rem;color:var(--text);}
+    .disclosure{background:var(--bg2);border:1px solid var(--border);border-left:4px solid #FBBF24;border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.85rem;color:var(--muted);}
+    .disclosure strong{color:#FBBF24;}
+  </style>
+</head>
+<body>
+<div class="draft-banner">📝 DRAFT — sample integration for review. Not live. Shows an ADManager Plus mention added near the end of the article. No banner used here — ADManager Plus has zero image assets in the WorkDrive library (confirmed during the asset audit), so this is a text-only callout demonstrating that gap honestly rather than forcing an unrelated banner in.</div>
+<nav>
+  <a href="/" class="logo">IT<span style="color:#FF6B35;">Vedas</span></a>
+</nav>
+
+<div class="hero">
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;"><a href="/">Home</a> › <a href="/articles/powershell/">PowerShell</a> › AD Automation</div>
+  <div class="ch-badge">🔷 PowerShell</div>
+  <h1>PowerShell Active Directory Automation</h1>
+  <div style="display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;">
+    <span>📅 July 04, 2026</span><span>12 min read</span>
+  </div>
+</div>
+
+<div class="doc-metadata">
+  <div class="difficulty-badge difficulty-advanced">ADVANCED</div>
+  <div style="color:#6EE7B7;font-weight:600;">⏱ 12 min read</div>
+  <div style="color:var(--muted);font-size:0.9rem;">
+    <strong>Prerequisites:</strong>
+    <ul style="margin:0.5rem 0 0 1.5rem;list-style:none;">
+      <li style="margin-bottom:0.3rem;">✓ PowerShell fundamentals</li>
+      <li>✓ Active Directory basics</li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrap">
+  <article class="art">
+    <div class="fact-box">
+      <strong>Key Facts</strong>
+      <ul>
+        <li>PowerShell ActiveDirectory module provides cmdlets for user, group, and OU management</li>
+        <li>Bulk operations reduce manual admin time from hours to minutes</li>
+        <li>Password policies enforce complexity and prevent reuse across 1000s of users</li>
+        <li>Import-Csv enables batch operations from Excel or CSV files</li>
+      </ul>
+    </div>
+
+    <h2>Bulk User Creation from CSV</h2>
+    <p>Create 100 users in minutes instead of hours. CSV files provide data, PowerShell automates the rest:</p>
+
+    <pre><code># Import-Users.ps1
+$csvPath = "C:\users\newusers.csv"
+$users = Import-Csv $csvPath
+
+foreach ($user in $users) {
+  $displayName = "{0} {1}" -f $user.FirstName, $user.LastName
+
+  New-ADUser -Name $displayName `
+    -GivenName $user.FirstName `
+    -Surname $user.LastName `
+    -SamAccountName $user.Username `
+    -UserPrincipalName "$($user.Username)@example.com" `
+    -Path "OU=Users,DC=example,DC=com" `
+    -AccountPassword (ConvertTo-SecureString $user.Password -AsPlainText -Force) `
+    -Enabled $true
+
+  Add-ADGroupMember -Identity $user.Department -Members $user.Username
+  Write-Host "Created user: $displayName"
+}</code></pre>
+
+    <h2>Password Management & Security</h2>
+    <p>Enforce strong passwords and reset policies at scale:</p>
+
+    <pre><code># Reset password for all users in IT department
+$itUsers = Get-ADGroupMember -Identity "IT" -Recursive
+
+foreach ($user in $itUsers) {
+  $newPassword = [System.Web.Security.Membership]::GeneratePassword(16, 3)
+  Set-ADAccountPassword -Identity $user -NewPassword (ConvertTo-SecureString $newPassword -AsPlainText -Force) -Reset
+
+  # Send password to user (not shown for security)
+  Write-Host "Reset password for $($user.SamAccountName)"
+}</code></pre>
+
+    <div class="takeaways">
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Use Get-ADUser, New-ADUser, Set-ADUser for user management</li>
+        <li>Import-Csv enables bulk operations from files</li>
+        <li>Automate group membership with Add-ADGroupMember</li>
+        <li>Secure passwords with ConvertTo-SecureString</li>
+      </ul>
+    </div>
+
+    <!-- ==================== NEW: ManageEngine ADManager Plus mention ==================== -->
+    <div class="me-callout">
+      <h3>When scripting stops scaling</h3>
+      <p>The scripts above work well until you need self-service (help desk resetting passwords without touching a script), approval workflows for sensitive changes, or a full audit trail of who ran what. At that point, most teams either build a lot of wrapper tooling around these scripts, or move to a dedicated AD management platform that adds a UI, role-based delegation, and reporting on top of the same underlying AD cmdlets.</p>
+      <p><strong>ManageEngine ADManager Plus</strong> is one option built specifically for this: bulk provisioning templates, help-desk-safe delegated actions, and pre-built compliance reports (inactive users, password expiry, group membership changes) without writing PowerShell for each request. It's not the only option in this space — <strong>NetIQ/Micro Focus Directory and Resource Administrator</strong> and <strong>Quest Active Roles</strong> cover similar ground with different pricing and integration tradeoffs — but ADManager Plus is worth a look if your team is outgrowing ad hoc scripts and doesn't want to build a full internal tool to replace them.</p>
+    </div>
+
+    <!-- Category Context -->
+    <div style="background:#f5f5f5;padding:1rem;margin:1rem 0;border-left:4px solid #0066cc;border-radius:0.25rem;">
+      <strong>Category:</strong> <a href="/articles/powershell/" style="color:#0066cc;">Powershell</a>
+      <br/><small>Browse more articles and resources in this category</small>
+    </div>
+
+    <div class="disclosure">
+      <strong>Disclosure:</strong> ITVedas participates in the ManageEngine affiliate program. If you buy ADManager Plus after clicking a link on this page, we may earn a commission at no extra cost to you. We've named two real alternatives above; ADManager Plus isn't presented as the only option.
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div style="font-weight:700;">IT<span style="color:#FF6B35;">Vedas</span></div>
+</footer>
+</body>
+</html>
