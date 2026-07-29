@@ -19,9 +19,22 @@ from core.indexnow import submit as _indexnow_submit
 
 ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
+GA4_ID  = os.environ.get("GA4_ID", "").strip()
 SITE    = "https://www.itvedas.com"
 
 COMPONENT = "news-agent"
+
+
+def ga4_snippet():
+    """GA4 tag, mirroring content-writer.py's helper of the same name.
+
+    Was never wired up here even though the workflow already passes
+    GA4_ID to this script - every news article, news.html, and
+    security-news.html has been publishing with zero analytics on it."""
+    if not GA4_ID:
+        return ""
+    return f"""<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{GA4_ID}');</script>"""
 
 # Shared grouped/mega-menu header nav (see css/nav-mega.css + js/nav-mega.js)
 # for news.html and security-news.html specifically. Both pages are fully
@@ -383,6 +396,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 .flinks a:hover{{color:#FF6B35;}}
 @media(max-width:640px){{nav{{padding:0 1.25rem;}}.hero,.article{{padding-left:1.25rem;padding-right:1.25rem;}}}}
 </style>
+{ga4_snippet()}
 </head>
 <body>
 <nav>
@@ -506,6 +520,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 @media(max-width:768px){{nav{{padding:0 1.25rem;}}.nav-links{{display:none;}}.hero,.main{{padding-left:1.25rem;padding-right:1.25rem;}}.grid{{grid-template-columns:1fr;}}}}
 </style>
 <link rel="stylesheet" href="/css/nav-mega.css">
+{ga4_snippet()}
 </head>
 <body>
 <nav>
@@ -665,6 +680,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 @media(max-width:768px){{nav{{padding:0 1.25rem;}}.nav-links{{display:none;}}.hero,.main{{padding-left:1.25rem;padding-right:1.25rem;}}.grid{{grid-template-columns:1fr;}}}}
 </style>
 <link rel="stylesheet" href="/css/nav-mega.css">
+{ga4_snippet()}
 </head>
 <body>
 <nav>

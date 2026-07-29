@@ -78,6 +78,8 @@ jobs:
       #    to them once they age out of news.html/security-news.html's
       #    "latest ~40" window ──
       - name: Rebuild news archive
+        env:
+          GA4_ID: ${{ secrets.GA4_ID }}
         run: python3 scripts/generate-news-archive.py
 
       # ── Commit & push everything the agents produced ──

@@ -18,6 +18,7 @@ Safe to re-run any time; fully derived from the current news/*.html files.
 
 import html
 import json
+import os
 import pathlib
 import re
 import sys
@@ -27,6 +28,16 @@ NEWS_DIR = ROOT / "news"
 ARCHIVE_DIR = NEWS_DIR / "archive"
 PER_PAGE = 60
 SITE = "https://www.itvedas.com"
+GA4_ID = os.environ.get("GA4_ID", "").strip()
+
+
+def ga4_snippet():
+    """GA4 tag, matching content-writer.py's/news-agent.py's helper of the
+    same name - the archive pages had no analytics on them at all."""
+    if not GA4_ID:
+        return ""
+    return f"""<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{GA4_ID}');</script>"""
 
 CARD_CSS = """
 :root{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--accent:#FF6B35;--border:rgba(255,255,255,0.08);}
@@ -204,6 +215,7 @@ def render_page(items, page_num, total_pages):
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>{CARD_CSS}</style>
 <link rel="stylesheet" href="/css/nav-mega.css">
+{ga4_snippet()}
 </head>
 <body>
 <nav>
