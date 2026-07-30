@@ -21,6 +21,7 @@ def get_html_files():
         "news": [],     # Individual news files
         "chapter_content": [],  # Chapter pages
         "chapter_hubs": [],  # Chapter hub landing pages (chapters/<hub>/index.html)
+        "manageengine": [],  # ManageEngine affiliate hub + product pages
     }
 
     # Root HTML files (home, about, faq, etc.). index.html is excluded here
@@ -59,6 +60,12 @@ def get_html_files():
     for news_file in (ROOT / "news").rglob("*.html"):
         if news_file.name != "index.html":
             files["news"].append(news_file)
+
+    # ManageEngine affiliate hub + product pages
+    manageengine_dir = ROOT / "manageengine"
+    if manageengine_dir.is_dir():
+        for f in manageengine_dir.glob("*.html"):
+            files["manageengine"].append(f)
 
     return files
 
@@ -149,6 +156,12 @@ def build_sitemap():
         lastmod = get_file_modified_date(f)
         add_url(file_to_url(f), lastmod, "weekly", 0.7)
 
+    # Add ManageEngine hub + product pages
+    for f in sorted(files["manageengine"]):
+        lastmod = get_file_modified_date(f)
+        prio = 0.7 if f.name == "index.html" else 0.6
+        add_url(file_to_url(f), lastmod, "monthly", prio)
+
     # Write sitemap
     tree = ET.ElementTree(urlset)
     ET.indent(tree, space="  ")
@@ -157,14 +170,16 @@ def build_sitemap():
 
     total_urls = (len(files["main"]) + len(files["chapters"]) +
                   len(files["articles"]) + len(files["chapter_content"]) +
-                  len(files["chapter_hubs"]) + len(files["news"]))
-    print(f"✓ Sitemap generated: {total_urls} URLs")
+                  len(files["chapter_hubs"]) + len(files["news"]) +
+                  len(files["manageengine"]))
+    print(f"Sitemap generated: {total_urls} URLs")
     print(f"  - Main pages: {len(files['main'])}")
     print(f"  - Article categories: {len(files['chapters'])}")
     print(f"  - Chapter hub pages: {len(files['chapter_hubs'])}")
     print(f"  - Chapter pages: {len(files['chapter_content'])}")
     print(f"  - Articles: {len(files['articles'])}")
     print(f"  - News: {len(files['news'])}")
+    print(f"  - ManageEngine: {len(files['manageengine'])}")
 
     return total_urls
 
