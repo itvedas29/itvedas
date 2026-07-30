@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Generative AI has changed the offense side of cybersecurity — AI phishing, deepfake scams, and adaptive malware. Here's why Zero Trust is the architectural answer.">
+<meta name="keywords" content="zero trust generative AI cyberattacks, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Zero Trust vs. Generative AI Cyberattacks: Why Continuous Verification Wins | ITVedas">
+<meta property="og:description" content="Generative AI has changed the offense side of cybersecurity — AI phishing, deepfake scams, and adaptive malware. Here's why Zero Trust is the architectural answer.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-zero-trust-vs-generative-ai-cyberattacks">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-zero-trust-vs-generative-ai-cyberattacks">
+<title>Zero Trust vs. Generative AI Cyberattacks: Why Continuous Verification Wins | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Zero Trust vs. Generative AI Cyberattacks: Why Continuous Verification Wins", "description": "Generative AI has changed the offense side of cybersecurity — AI phishing, deepfake scams, and adaptive malware. Here's why Zero Trust is the architectural answer.", "keywords": "zero trust generative AI cyberattacks", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Zero Trust vs. Generative AI Cyberattacks: Why Continuous Verification Wins</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#how-generative-ai-changed-the-offense">How generative AI changed the offense</a></li><li><a href="#four-ways-attackers-are-weaponizing-generative-ai">Four ways attackers are weaponizing generative AI</a></li><li><a href="#why-perimeter-based-security-cant-keep-up">Why perimeter-based security can't keep up</a></li><li><a href="#the-five-core-principles-of-zero-trust">The five core principles of Zero Trust</a></li><li><a href="#putting-zero-trust-into-practice">Putting Zero Trust into practice</a></li><li><a href="#common-mistakes-when-adopting-zero-trust">Common mistakes when adopting Zero Trust</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Zero Trust vs. Generative AI Cyberattacks: Why Continuous Verification Wins</h1>
+<p>For most of the history of enterprise security, defenders could rely on one quiet assumption: an attacker's output had a tell. Phishing emails had awkward phrasing. Fake voices sounded synthetic. Malware behaved the same way every time it ran, which is exactly what let signature-based detection work at all. Generative AI has spent the last two years quietly erasing that assumption, and the security models built around it haven't caught up everywhere.</p>
+<p>This article covers how attackers are actually using generative AI today — not speculative future risk, but documented patterns already showing up in the wild — and why Zero Trust, an architecture built around continuous verification rather than one-time trust, is the response that actually matches the shape of the new threat.</p>
+<h2 id="how-generative-ai-changed-the-offense">How generative AI changed the offense</h2>
+<p>Generative AI models — the transformer-based language models behind modern chatbots, diffusion models behind image generation, and reinforcement-learning systems that improve through interaction — are trained on enormous datasets to recognize patterns and then reproduce content that fits those patterns convincingly. That's a legitimate and valuable capability. It's also, without much extra effort, a capability for reproducing exactly the kind of content a social-engineering attack needs: a colleague's writing style, an executive's speaking voice, a company's internal tone.</p>
+<p>What used to require real skill — a convincing phishing email, a passable voice impersonation — now requires little more than access to a capable model and a small sample of the target's public communications. That shift has measurably changed attacker economics: campaigns that once needed a skilled operator can now be run at a much larger scale with a much lower skill floor, and the resulting content is harder for both humans and legacy filters to flag as fake.</p>
+<h2 id="four-ways-attackers-are-weaponizing-generative-ai">Four ways attackers are weaponizing generative AI</h2>
+<h3>AI-powered phishing-as-a-service</h3>
+<p>Phishing used to be recognizable by its rough edges — stilted grammar, generic greetings, obvious spoofed sender addresses. AI-generated phishing removes most of those tells. Criminal services now offer phishing-email generation as a product, producing messages that mimic a specific organization's internal writing style and adjust their content based on how a target responds, turning a static email into something closer to a live, adaptive social-engineering conversation. Industry threat trackers have documented a sharp rise in phishing volume coinciding with this shift, along with a notable move toward "payloadless" attacks that skip a malicious attachment or link entirely and rely purely on convincing social engineering — which is precisely the kind of content generative AI is best at producing and precisely the kind that link-scanning and attachment-sandboxing defenses don't catch, because there's nothing malicious to scan.</p>
+<h3>Deepfake voice and video scams</h3>
+<p>Deepfake technology has moved well past manipulated video clips shared online — it's now being used in live voice calls and real-time video meetings, trained on publicly available recordings of executives, business partners, or colleagues to impersonate them convincingly in the moment. In one widely reported 2024 case, a finance employee at a multinational firm's Hong Kong office joined what looked like a routine video call with several colleagues, including the company's CFO, and was instructed to process a series of transfers. Every participant on that call other than the employee was an AI-generated deepfake, reconstructed from public footage and audio of the real executives — and the employee ended up authorizing transfers totaling roughly $25 million before the deception was discovered. The case is now one of the most cited examples of how convincing real-time deepfake impersonation has become, and why "I was on a video call with them" no longer functions as verification on its own.</p>
+<h3>AI-assisted malware that adapts</h3>
+<p>Traditional malware detection leans heavily on signatures — known patterns in a file's code or behavior that security tools have already catalogued. AI-assisted malware complicates that by analyzing the security tooling present on a target system and adjusting its own code or behavior in response, aiming to stay a step ahead of whatever detection logic it encounters. Security researchers have also documented the emergence of purpose-built malicious language models, marketed openly on criminal forums as tools for generating convincing phishing content and assisting with malware development, effectively packaging offensive AI capability as a product for less technically skilled attackers.</p>
+<h3>Synthetic identity fraud</h3>
+<p>Generative AI can construct entire fabricated identities — a name, a plausible history, a believable digital footprint spanning social media and other online activity — none of which correspond to a real person, or which blend real stolen data (like a genuine Social Security number) with fabricated details to pass identity checks. These synthetic identities have already been used to open fraudulent financial accounts, secure lines of credit, and set up shell companies undetected for extended periods before defrauding institutions, with documented cases resulting in millions of dollars in losses and federal prosecutions. Unlike stolen-identity fraud, there's no real victim to notice unauthorized activity and report it, which is part of what makes synthetic identities so durable as a fraud vector.</p>
+<h2 id="why-perimeter-based-security-cant-keep-up">Why perimeter-based security can't keep up</h2>
+<p>Every attack pattern above shares a common trait: it targets trust rather than a technical vulnerability. A perimeter-based security model — verify a user once at login, then trust their device and session implicitly from there — has no good answer for an attacker who gets past that initial verification through a convincing deepfake call or an AI-crafted phishing email that a spam filter never flags. Once inside, that implicit trust is exactly what lets an attacker move laterally, escalate privileges, and access far more than the single account they compromised.</p>
+<p>Analysts covering cybercrime economics have projected that global losses from cybercrime will continue climbing sharply as AI lowers the barrier to running sophisticated campaigns at scale — which makes the case for architectural change, not just better filters, considerably more urgent. A security model has to assume that any given verification event, however convincing, might be exactly the kind of impersonation these tools are now built to produce.</p>
+<blockquote>A firewall asks whether you're allowed in. Zero Trust keeps asking whether you still should be, for as long as you're inside.</blockquote>
+<h2 id="the-five-core-principles-of-zero-trust">The five core principles of Zero Trust</h2>
+<p>NIST's Special Publication 800-207 frames Zero Trust as a shift away from securing broad network perimeters toward protecting individual resources and users directly, with no implicit trust extended to any account or device regardless of its location. In practice, that framework breaks down into five operating principles.</p>
+<p><strong>1. Verify every user and device, continuously.</strong> Multi-factor and adaptive authentication confirm identity at login, but Zero Trust doesn't stop there — continuous identity verification throughout a session is what catches an account that was compromised after the initial login succeeded, which is precisely the scenario a convincing deepfake or phishing attack is designed to create.</p>
+<p><strong>2. Enforce least-privilege access.</strong> Role-based access control limits each user to only the resources their role actually requires, so that a single compromised account — however it was compromised — can't be used to reach systems and data far outside its legitimate scope.</p>
+<p><strong>3. Monitor and analyze behavior continuously.</strong> User behavior analytics (UBA), often AI-driven itself, establishes a baseline of normal activity per account and flags deviations — a login at an unusual hour, an unusual volume of data access, a request pattern that doesn't match the account's history — as candidates for review, catching account misuse that authentication alone would miss.</p>
+<p><strong>4. Enforce microsegmentation.</strong> Rather than one flat network where broad access is the default, critical systems are isolated from each other with access policies enforced between them individually. If one segment is compromised, microsegmentation is what keeps that compromise from spreading laterally to everything else.</p>
+<p><strong>5. Automate threat detection and response.</strong> Because AI-driven attacks can move at machine speed, manual response processes are often too slow to matter. Automated detection paired with automated containment — isolating an account or session the moment risk indicators cross a threshold — closes the gap between detection and action from hours down to seconds.</p>
+<h2 id="putting-zero-trust-into-practice">Putting Zero Trust into practice</h2>
+<p>These five principles are architectural intent; turning them into an enforced reality requires an identity platform capable of applying them consistently across every account and system in the environment, not just the ones that were easiest to configure first. ManageEngine <a href="/manageengine/ad360.html">AD360</a> is built around exactly that requirement as a unified identity platform. It enforces least-privilege access through role-based access control with automated provisioning and deprovisioning, so accounts only carry the permissions their current role justifies. Its adaptive MFA layers context-aware authentication — analyzing device, location, and risk level before granting access — on top of standard credentials, addressing the exact gap a convincing deepfake or phishing attempt is designed to exploit. Built-in user behavior analytics flags anomalies like logins at unusual hours or unusual volumes of failed attempts, giving security teams the continuous-monitoring layer Zero Trust depends on. And single sign-on reduces the number of standing passwords in the environment in the first place, shrinking the attack surface that AI-powered credential attacks have to work with. None of these pieces individually is Zero Trust — together, applied consistently, they're what turns the five principles from a framework on paper into daily enforcement.</p>
+<h2 id="common-mistakes-when-adopting-zero-trust">Common mistakes when adopting Zero Trust</h2>
+<p><strong>Treating Zero Trust as a one-time login upgrade.</strong> Adding MFA at sign-in without continuous verification and behavior monitoring stops the easiest attacks but leaves the door open for anything that gets past that first check — including a convincing deepfake or social-engineering attempt that talks its way past a human reviewer.</p>
+<p><strong>Skipping microsegmentation because it's operationally harder.</strong> Identity controls without network segmentation still allow a single compromised account to move laterally once inside. Zero Trust is weakest when it's implemented as an identity project alone, without the network-segmentation half of the architecture.</p>
+<p><strong>Assuming employees can reliably spot AI-generated fakes.</strong> Training staff to look for the old tells — awkward phrasing, robotic voices — is increasingly unreliable advice, since those tells are exactly what generative AI has gotten good at eliminating. Verification needs to be procedural (a callback to a known number, a secondary approval channel) rather than left to a human's ability to detect a fake in the moment.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is Zero Trust only relevant for large enterprises with dedicated security teams?</strong> No — the core principles scale down. A small organization can enforce least-privilege access, turn on MFA everywhere, and set up basic anomaly alerting without a large security team; the architecture matters more than the size of the deployment behind it.</p>
+<p><strong>Can Zero Trust fully prevent a deepfake-based social engineering attack?</strong> Not entirely on its own — deepfakes exploit human trust, not a technical control. What Zero Trust does is limit the damage: least-privilege access caps what a tricked employee's credentials can actually authorize, and behavioral monitoring can catch the unusual activity that follows even if the initial deception succeeds.</p>
+<p><strong>How is Zero Trust different from just requiring MFA everywhere?</strong> MFA is one control within Zero Trust, not the whole architecture. Zero Trust also requires least-privilege access, network microsegmentation, continuous behavioral monitoring, and automated response — MFA alone verifies identity at one point in time, while Zero Trust assumes that verification needs to continue for as long as access exists.</p>
+<p>Generative AI hasn't introduced a new category of attack so much as it has made the oldest one — deception — dramatically more convincing and far cheaper to run at scale. Defenses built around trusting a single verification event were already showing their age before AI accelerated the problem. Zero Trust doesn't promise that no attacker will ever get through the first check; it promises that getting through the first check isn't the same as winning, which is precisely the assumption every security architecture needs to make now that the first check is no longer as reliable as it used to be.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#how-generative-ai-changed-the-offense">How generative AI changed the offense</a></li><li><a href="#four-ways-attackers-are-weaponizing-generative-ai">Four ways attackers are weaponizing generative AI</a></li><li><a href="#why-perimeter-based-security-cant-keep-up">Why perimeter-based security can't keep up</a></li><li><a href="#the-five-core-principles-of-zero-trust">The five core principles of Zero Trust</a></li><li><a href="#putting-zero-trust-into-practice">Putting Zero Trust into practice</a></li><li><a href="#common-mistakes-when-adopting-zero-trust">Common mistakes when adopting Zero Trust</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

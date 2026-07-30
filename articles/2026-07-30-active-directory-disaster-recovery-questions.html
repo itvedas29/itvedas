@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A practical self-assessment for Active Directory disaster recovery: object, GPO, and attribute-level recovery, backup automation, and unified AD/M365 backup.">
+<meta name="keywords" content="Active Directory disaster recovery plan questions, AD backup and recovery, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Active Directory Disaster Recovery: The Questions Most DR Plans Never Ask | ITVedas">
+<meta property="og:description" content="A practical self-assessment for Active Directory disaster recovery: object, GPO, and attribute-level recovery, backup automation, and unified AD/M365 backup.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-active-directory-disaster-recovery-questions">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-active-directory-disaster-recovery-questions">
+<title>Active Directory Disaster Recovery: The Questions Most DR Plans Never Ask | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Active Directory Disaster Recovery: The Questions Most DR Plans Never Ask", "description": "A practical self-assessment for Active Directory disaster recovery: object, GPO, and attribute-level recovery, backup automation, and unified AD/M365 backup.", "keywords": "Active Directory disaster recovery plan questions, AD backup and recovery", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Active Directory Disaster Recovery: The Questions Most DR Plans Never Ask</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-most-ad-dr-plans-have-a-blind-spot">Why most AD DR plans have a blind spot</a></li><li><a href="#object-level-recovery-can-you-restore-500-accounts-including-the-ceos">Object-level recovery: can you restore 500 accounts, including the CEO's?</a></li><li><a href="#group-policy-object-recovery-undoing-damage-before-it-becomes-a-breach">Group Policy Object recovery: undoing damage before it becomes a breach</a></li><li><a href="#attribute-level-recovery-fixing-one-field-without-restoring-everything">Attribute-level recovery: fixing one field without restoring everything</a></li><li><a href="#backup-automation-are-you-still-doing-this-by-hand">Backup automation: are you still doing this by hand?</a></li><li><a href="#visibility-and-change-comparison-knowing-what-changed-before-you-restore">Visibility and change comparison: knowing what changed before you restore</a></li><li><a href="#unified-backup-across-ad-azure-ad-microsoft-365-exchange-and-google-workspace">Unified backup across AD, Azure AD, Microsoft 365, Exchange, and Google Workspace</a></li><li><a href="#a-self-assessment-checklist">A self-assessment checklist</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Active Directory Disaster Recovery: The Questions Most DR Plans Never Ask</h1>
+<p>Most Active Directory disaster recovery plans are written for the disaster everyone already imagines: a domain controller dies, a data center floods, ransomware encrypts a file server. Those scenarios matter, and most organizations have at least a rough answer for them. But ask a slightly different question — "an administrator just deleted the wrong organizational unit, or a script ran with the wrong filter and touched 500 accounts, how do we undo it?" — and the confident answers tend to dry up.</p>
+<p>That gap exists because AD disasters aren't always dramatic. They're frequently small, quiet, and self-inflicted: a fat-fingered PowerShell command, a Group Policy Object edited by the wrong person, an attribute overwritten during a bulk import. None of that trips a fire alarm. All of it can be just as damaging as a ransomware outbreak if you can't reverse it cleanly. This article works through the questions a genuinely resilient AD DR plan needs to answer, organized around the recovery scenarios that actually happen in production environments.</p>
+<h2 id="why-most-ad-dr-plans-have-a-blind-spot">Why most AD DR plans have a blind spot</h2>
+<p>Traditional DR planning optimizes for two numbers: <strong>recovery time objective</strong> (how long until systems are back) and <strong>recovery point objective</strong> (how much data you can afford to lose). Those metrics work well for infrastructure-level failure — a dead server, a corrupted volume, a destroyed site. They work far less well for Active Directory, because AD isn't really "up" or "down" in the way a database server is. It's a living, constantly-changing directory of identities, permissions, and policies, and the failure mode that actually causes the most pain is a <strong>bad change that replicates everywhere before anyone notices</strong>.</p>
+<p>A full forest restore from a system state backup is a blunt instrument. It typically requires taking domain controllers offline, it rolls back every object in scope — not just the one that broke — and depending on your backup cadence you could lose hours or days of legitimate changes made to unrelated accounts, groups, and policies in the process. For the everyday AD incidents — an accidental deletion, a bad GPO edit, one wrong attribute — a full authoritative restore is often worse than the problem it's meant to fix. Granular, object-level recovery is what actually closes the gap, and it's the part most DR plans leave unanswered.</p>
+<h2 id="object-level-recovery-can-you-restore-500-accounts-including-the-ceos">Object-level recovery: can you restore 500 accounts, including the CEO's?</h2>
+<p>Picture this: an administrator runs a cleanup script against what they believe is a stale, unused OU of contractor accounts. The scope parameter is wrong. Five hundred accounts get deleted, including — because organizational charts are rarely as tidy as they look on paper — the CEO's own account, which happened to sit in that OU after a recent reorg. Within minutes, five hundred people can't log in, can't access email, and can't authenticate to a single downstream application. The CEO is one of them.</p>
+<p>The Active Directory Recycle Bin can technically undelete objects, but it restores them in a mostly bare state — group memberships, security permissions, and other linked attributes frequently don't come back cleanly, and there's no built-in preview of what you're about to restore before you commit. So the real questions to ask are more specific than "do we have a backup":</p>
+<ul>
+<li>Can you restore all 500 accounts in one operation, rather than one at a time?</li>
+<li>How long would that restoration actually take — minutes, or most of a shift?</li>
+<li>Does the restore bring back group memberships and security permissions along with the base object, or do you have to reconstruct those manually afterward?</li>
+<li>Can you preview exactly what will be restored before you commit to the operation, so you don't overwrite something that changed legitimately after the deletion?</li>
+<li>If a non-admin, delegated user (say, an IT operations lead) needs to trigger a restore for their own team's accounts, can they do that without a full domain admin credential?</li>
+</ul>
+<blockquote>A backup you can't restore quickly, completely, and with confidence in what you're overwriting isn't a recovery plan — it's a hope.</blockquote>
+<h2 id="group-policy-object-recovery-undoing-damage-before-it-becomes-a-breach">Group Policy Object recovery: undoing damage before it becomes a breach</h2>
+<p>GPOs are one of the highest-leverage, lowest-visibility objects in AD. A single policy can lock down or open up access for thousands of endpoints at once, which makes it an efficient tool for administrators and an equally efficient tool for anyone with malicious intent or a careless mouse click. Consider a scenario where a GPO that restricts access to a finance share for everyone outside the finance OU gets accidentally unlinked during a routine cleanup of "unused" policies — and nobody notices until an internal audit six weeks later flags that half the company has had access to payroll data the entire time.</p>
+<p>Recovering from GPO damage raises questions that are different from object recovery:</p>
+<ul>
+<li>Do you have a backup of GPO state that runs frequently enough that you're not restoring from a version that's weeks stale?</li>
+<li>Can you roll a GPO back to a specific prior version, rather than only the single most recent backup?</li>
+<li>Can you undo a specific setting within a GPO without reverting every other setting in that same policy back to an old state?</li>
+<li>If a GPO link — not the GPO itself — gets disabled or deleted, can you recover the link along with the policy, or only one of the two?</li>
+</ul>
+<p>The time pressure here is real. A misconfigured GPO that loosens security controls is a live exposure for as long as it stays broken, which means GPO recovery time directly maps to how long a hole in your defenses stays open.</p>
+<h2 id="attribute-level-recovery-fixing-one-field-without-restoring-everything">Attribute-level recovery: fixing one field without restoring everything</h2>
+<p>Not every AD disaster involves deletion. Some of the costliest mistakes are single attribute changes that ripple outward. Imagine a bulk update meant to correct a typo in a department name instead runs against the wrong filter and silently reassigns hundreds of users from "Support" to a department that doesn't route their tickets anywhere. Nothing is deleted. Nothing looks broken in AD itself. It just quietly breaks a business process until customers start complaining that nobody is answering them.</p>
+<p>This is where full-object or full-forest restores are the wrong tool entirely — you don't want to roll back every other attribute on those accounts, you want to fix exactly one field. The relevant questions:</p>
+<ul>
+<li>Can you restore a specific attribute — like department, title, or a custom schema attribute — across many objects at once, without touching anything else on those objects?</li>
+<li>Can you also recover linked attributes, such as group memberships, a user's manager, or their list of direct reports, independently of a full object restore?</li>
+<li>If security permissions on an object were altered rather than its visible attributes, can those be restored on their own?</li>
+<li>Does your organization actually know what an hour of this kind of silent misconfiguration costs in lost productivity, missed SLAs, or reputational damage? Most don't have a number, which makes it hard to justify investment in faster recovery until after the damage is already done.</li>
+</ul>
+<div class="callout"><div class="callout-title">Pro Tip</div>Attribute-level recovery depends on having incremental history for every object, not just periodic full snapshots. If your backup tool only captures full copies at set intervals, you can only restore an attribute to whatever it happened to be at the last snapshot — which may not be the correct prior value at all. Look for a backup approach that records every change as it happens, so any point-in-time value is recoverable, not just the value at your last scheduled backup.</div>
+<h2 id="backup-automation-are-you-still-doing-this-by-hand">Backup automation: are you still doing this by hand?</h2>
+<p>A surprising number of AD backup strategies still rely on someone remembering to kick off a job, or a scheduled task that nobody has verified runs successfully. Manual backup processes fail quietly — a script errors out, a service account's password expires, a drive fills up — and the first sign of trouble is discovering, mid-emergency, that your most recent usable backup is three months old.</p>
+<p>Worth asking honestly:</p>
+<ul>
+<li>Is your AD backup process fully automated, or does it depend on a person remembering to run it?</li>
+<li>Can backups be scheduled to run outside business hours, when the environment is quieter and less likely to be mid-change?</li>
+<li>Are your backups incremental — capturing only what changed since the last cycle — or does every backup re-capture the entire directory, which costs more time and storage than necessary?</li>
+<li>Do you get proactive notification when a scheduled backup fails, or would you only find out when you go looking for a backup that isn't there?</li>
+</ul>
+<p>Incremental backups matter for more than storage efficiency. They also shrink your recovery point objective, because a system capturing every change as it happens can restore to a much more recent state than one that only takes a full snapshot once a week.</p>
+<h2 id="visibility-and-change-comparison-knowing-what-changed-before-you-restore">Visibility and change comparison: knowing what changed before you restore</h2>
+<p>Restoring the wrong thing is its own category of disaster. If you can't see exactly what changed, when, and by whom, you're restoring blind — which means you might overwrite a legitimate change along with the bad one, or restore the wrong version entirely. This is the part of a DR plan that's easy to skip because it isn't really about recovery mechanics, it's about visibility into your directory over time.</p>
+<p>Ask yourself:</p>
+<ul>
+<li>Can you compare your live AD environment against a specific backup version to see exactly what's different, before you restore anything?</li>
+<li>Can you generate a list of every backup version available for a given object or OU, so you can pick the correct point in time rather than guessing?</li>
+<li>Can you see, at the attribute level, how many changes were made to a specific object and exactly when each one happened?</li>
+<li>Can you choose to roll back a single change out of several, rather than being forced to undo everything since the last backup?</li>
+</ul>
+<p>This kind of change visibility is also what turns a recovery tool into an audit tool — useful well beyond the moment something breaks, because it gives you a defensible record of who changed what, which matters just as much for compliance reviews as it does for firefighting.</p>
+<h2 id="unified-backup-across-ad-azure-ad-microsoft-365-exchange-and-google-workspace">Unified backup across AD, Azure AD, Microsoft 365, Exchange, and Google Workspace</h2>
+<p>Very few organizations run pure on-premises AD anymore. Identity now typically spans on-prem AD, Azure AD (Entra ID), Microsoft 365 mailboxes and SharePoint sites, on-premises or online Exchange, and in some environments, Google Workspace as well. A DR plan that only covers on-prem AD and treats the cloud side as "someone else's problem" is only solving part of the disaster.</p>
+<p>Questions worth putting in front of whoever owns this plan:</p>
+<ul>
+<li>Do you have one solution that can back up and restore AD, Azure AD, Microsoft 365, Exchange, and Google Workspace, or are you stitching together several disconnected tools and hoping the gaps between them never matter?</li>
+<li>Can you back up Exchange data at the item level — individual emails, contacts, and calendar entries — not just entire mailboxes?</li>
+<li>Can you configure retention policies that hold Microsoft 365 backup data for whatever duration your compliance obligations require, independent of Microsoft's own native retention settings?</li>
+</ul>
+<p>Fragmented backup tooling across identity platforms is a common blind spot precisely because each platform's native backup and recovery options look adequate in isolation. The failure shows up during an actual incident, when you discover that restoring a compromised hybrid identity means coordinating three separate consoles, three separate credential sets, and three separate recovery timelines — while the CEO is still locked out.</p>
+<p>This is the exact gap that a dedicated AD backup and recovery platform is built to close. <a href="/manageengine/recoverymanager-plus.html">ManageEngine RecoveryManager Plus</a>, for example, is built specifically around object, attribute, and GPO-level recovery for AD, alongside backup for Azure AD, Microsoft 365, Exchange, and Google Workspace from a single console — the kind of unified, granular capability this section's questions are pointing toward, rather than a general-purpose backup product that happens to also cover AD.</p>
+<h2 id="a-self-assessment-checklist">A self-assessment checklist</h2>
+<p>If you want a quick gut-check on where your current plan stands, run through this list honestly:</p>
+<ul>
+<li>We can restore a bulk deletion of hundreds of accounts, including group memberships and permissions, in one operation.</li>
+<li>We can preview a restore before committing to it.</li>
+<li>We can roll a GPO back to any of several prior versions, not just the last backup.</li>
+<li>We can restore a single attribute across many objects without touching anything else.</li>
+<li>Our backups run automatically, on a schedule, with failure notifications.</li>
+<li>Our backups are incremental, not full-snapshot-only.</li>
+<li>We can compare our live directory against a backup version before restoring.</li>
+<li>We have one console for backup and recovery across AD, Azure AD, M365, Exchange, and (if relevant) Google Workspace.</li>
+<li>Non-admin staff can be granted scoped restore permissions without handing out domain admin rights.</li>
+</ul>
+<p>If more than two or three of those are honest "no"s, your DR plan is covering the disasters that make headlines while leaving the ones that actually happen on a Tuesday afternoon unaddressed.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Isn't the Active Directory Recycle Bin enough for object recovery?</strong> It helps, but it has real limits. It restores a deleted object in a largely bare state, group memberships and some linked attributes often need to be reconstructed separately, there's no built-in way to preview what you're restoring, and it does nothing for GPOs or attribute-level mistakes that don't involve deletion at all.</p>
+<p><strong>How is attribute-level recovery different from restoring a whole object?</strong> Restoring a whole object rolls back every field on that object to a prior state, which can undo legitimate changes made after the mistake you're trying to fix. Attribute-level recovery targets exactly the field that broke — a department name, a group membership, a security permission — and leaves everything else on the object untouched.</p>
+<p><strong>How often should AD backups run?</strong> Full backups are commonly scheduled weekly or monthly depending on environment size, but the more important number is your incremental backup frequency, since that determines how much recent change you'd lose in a restore. Environments with frequent AD change should lean toward more frequent incremental cycles rather than relying on a distant full backup.</p>
+<p>Disaster recovery plans age quickly, and the disasters they're written for tend to be the dramatic, obvious ones. The everyday incidents — a bad script, an unlinked GPO, one wrong attribute — are quieter, more frequent, and just as capable of costing real time and money if your plan can't answer for them. Before the next incident lands on your desk, whichever kind it turns out to be, it's worth going back through these questions and being honest about which ones you can actually answer today.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-most-ad-dr-plans-have-a-blind-spot">Why most AD DR plans have a blind spot</a></li><li><a href="#object-level-recovery-can-you-restore-500-accounts-including-the-ceos">Object-level recovery: can you restore 500 accounts, including the CEO's?</a></li><li><a href="#group-policy-object-recovery-undoing-damage-before-it-becomes-a-breach">Group Policy Object recovery</a></li><li><a href="#attribute-level-recovery-fixing-one-field-without-restoring-everything">Attribute-level recovery</a></li><li><a href="#backup-automation-are-you-still-doing-this-by-hand">Backup automation</a></li><li><a href="#visibility-and-change-comparison-knowing-what-changed-before-you-restore">Visibility and change comparison</a></li><li><a href="#unified-backup-across-ad-azure-ad-microsoft-365-exchange-and-google-workspace">Unified backup across platforms</a></li><li><a href="#a-self-assessment-checklist">A self-assessment checklist</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

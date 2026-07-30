@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Why manual joiners-movers-leavers processes create stale accounts and compliance gaps, and how HCM-triggered automation with approval workflows fixes the user lifecycle.">
+<meta name="keywords" content="joiners movers leavers JML automation identity lifecycle management, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Automating Joiners, Movers, and Leavers: The Identity Lifecycle Model Explained | ITVedas">
+<meta property="og:description" content="Why manual joiners-movers-leavers processes create stale accounts and compliance gaps, and how HCM-triggered automation with approval workflows fixes the user lifecycle.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-automating-joiners-movers-leavers-lifecycle">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-automating-joiners-movers-leavers-lifecycle">
+<title>Automating Joiners, Movers, and Leavers: The Identity Lifecycle Model Explained | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Automating Joiners, Movers, and Leavers: The Identity Lifecycle Model Explained", "description": "Why manual joiners-movers-leavers processes create stale accounts and compliance gaps, and how HCM-triggered automation with approval workflows fixes the user lifecycle.", "keywords": "joiners movers leavers JML automation identity lifecycle management", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 12 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Automating Joiners, Movers, and Leavers: The Identity Lifecycle Model Explained</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-joiners-movers-and-leavers-actually-means">What joiners, movers, and leavers actually means</a></li><li><a href="#why-manual-jml-quietly-becomes-a-security-problem">Why manual JML quietly becomes a security problem</a></li><li><a href="#the-automation-patterns-that-fix-it">The automation patterns that fix it</a></li><li><a href="#approval-workflows-and-who-should-hold-the-keys">Approval workflows and who should hold the keys</a></li><li><a href="#the-compliance-angle-why-auditors-care-about-jml">The compliance angle: why auditors care about JML</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Automating Joiners, Movers, and Leavers: The Identity Lifecycle Model Explained</h1>
+<p>Ask most IT teams how long it takes to fully revoke a departing employee's access, and you'll get a shrug rather than a number. Ask how many accounts in Active Directory belong to people who left the company eight months ago, and the shrug gets longer. This isn't negligence — it's the natural result of managing user identity as a series of manual, one-off requests instead of a defined lifecycle with a beginning, middle, and end.</p>
+<p>The <strong>Joiners-Movers-Leavers (JML)</strong> model gives that lifecycle a name and a structure. It's a simple idea with outsized security consequences: every employee's relationship with your systems moves through exactly three transitions — arriving, changing roles, and departing — and each one is an access-control event whether you treat it as one or not. This article covers what the JML model actually involves, why doing it by hand creates real risk, and the automation patterns — HCM-triggered provisioning, structured approval workflows, and event-driven deprovisioning — that turn it into something reliable and auditable.</p>
+<h2 id="what-joiners-movers-and-leavers-actually-means">What joiners, movers, and leavers actually means</h2>
+<p>JML breaks the employee identity lifecycle into three distinct stages, each with its own access-control objective:</p>
+<ul>
+<li><strong>Joiners (onboarding).</strong> A new hire needs an identity created and provisioned with exactly the access their role requires — no more, no less — ideally available on or before their first day.</li>
+<li><strong>Movers (transfers).</strong> An existing employee changes role, department, or location, and their access needs to shift to match — which almost always means both granting new permissions and removing old ones, not just adding.</li>
+<li><strong>Leavers (offboarding).</strong> An employee exits the organization, and every credential, group membership, and license tied to their identity needs to be revoked, on a timeline that doesn't leave a window of unnecessary access after their last day.</li>
+</ul>
+<p>Underneath all three sits a broader discipline called <strong>user lifecycle management (ULM)</strong> — the ongoing practice of provisioning, adjusting, and revoking access so that, at any given moment, what an employee can actually reach in your systems matches what their current role requires. JML is the practical shape that discipline takes as three recurring, high-frequency events.</p>
+<h2 id="why-manual-jml-quietly-becomes-a-security-problem">Why manual JML quietly becomes a security problem</h2>
+<p>Handled manually — spreadsheets, email chains between HR and IT, ad hoc account creation — JML degrades in predictable ways as an organization grows past a couple hundred employees:</p>
+<ul>
+<li><strong>Onboarding drags.</strong> Manually provisioning a new hire across Active Directory, email, and a handful of SaaS tools is genuinely time-consuming once you account for coordination between HR and IT, and it directly shapes a new employee's first impression of the company. A new hire who can't log into anything on day one isn't a minor inconvenience — it's a productivity and retention issue from the very first hour.</li>
+<li><strong>HR and IT stay disconnected.</strong> When onboarding coordination runs through phone calls, emails, or CSV exports that someone has to manually reconcile, every handoff is a place where a request can get lost, delayed, or misinterpreted — and IT ends up maintaining brittle provisioning scripts that break every time an HR system's export format changes.</li>
+<li><strong>Access provisioning gets miscalibrated.</strong> Getting a new hire's permissions right by hand is a balancing act — too little access and they can't do their job, too much and you've created unnecessary risk. Manual processes tend to drift toward "grant broadly and sort it out later," because that's the path of least resistance under time pressure.</li>
+<li><strong>Entitlement creep accumulates silently.</strong> Every mover event that only adds access without removing what's no longer needed leaves a residue. Multiply that across years of role changes and an organization ends up with employees holding permissions to systems they haven't touched since a role they left long ago — access nobody remembers granting and nobody is actively tracking.</li>
+<li><strong>External users fall outside the safety net entirely.</strong> Contractors and partners often don't exist in the core HR system that would otherwise trigger a JML event, so their accounts get created manually and, too often, never systematically reviewed or expired.</li>
+<li><strong>Leaver access lingers.</strong> This is the most consequential failure mode. Deprovisioning across every system an employee touched during their tenure is tedious and easy to partially miss — and it is not unusual for a meaningful share of former employees to retain access to at least one system well after their last day, simply because offboarding stopped at the obvious accounts and never checked the rest.</li>
+</ul>
+<blockquote>An access right nobody remembers granting is still a door nobody is watching.</blockquote>
+<p>None of these failures require malice or incompetence — they're the predictable outcome of running a high-frequency, high-stakes process through manual coordination. That's the case for automation: not that manual JML is done carelessly, but that it doesn't scale safely no matter how careful the people running it are.</p>
+<h2 id="the-automation-patterns-that-fix-it">The automation patterns that fix it</h2>
+<p>Automated JML doesn't eliminate human judgment — it removes the manual, repetitive execution while keeping humans in control of the decisions that matter. Three patterns do most of the work:</p>
+<p><strong>HCM-triggered provisioning.</strong> Instead of IT waiting for an email from HR, the HR/HCM platform (Workday, BambooHR, UltiPro, and similar systems) becomes the source of truth that triggers identity events directly. The moment HR marks a new hire as active, that record synchronizes automatically with the identity management system — job title, department, manager, and location all flow through — and account creation across Active Directory, Microsoft 365, and Google Workspace happens against a predefined template rather than being assembled by hand each time. The same mechanism handles movers: a role change recorded in HR propagates automatically, adjusting group memberships and permissions to match the new position without a separate manual request.</p>
+<p><strong>Role-based provisioning templates.</strong> Rather than an administrator deciding permissions case by case, provisioning rules map roles, departments, and locations to predefined access bundles enforcing least privilege by construction. A new hire in a given role gets exactly the access template built for that role — consistent every time, and without the drift toward over-permissioning that manual provisioning tends to produce under time pressure.</p>
+<p><strong>Event-driven deprovisioning.</strong> The leaver side works the same way in reverse: when HR marks someone's status as terminated or resigned, that single event triggers a defined sequence — group memberships removed, the account disabled, licenses reclaimed, mailboxes handled, and the account moved into a dedicated holding location for departed users rather than left in place among active accounts. Because the trigger is a status change in the system of record, not a task someone has to remember to perform, the timing gap between an employee's last day and access revocation shrinks from days or weeks down to as fast as the HR update itself propagates.</p>
+<h2 id="approval-workflows-and-who-should-hold-the-keys">Approval workflows and who should hold the keys</h2>
+<p>Full automation without oversight is its own risk — nobody wants account deletions or permission grants firing without any check. Mature JML automation solves this with structured approval workflows built around four distinct roles:</p>
+<ul>
+<li><strong>Requester</strong> — raises the request for a specific action, such as a new account or a permission change.</li>
+<li><strong>Reviewer</strong> — assesses the request, weighs the pros and cons, and makes a recommendation before it goes further.</li>
+<li><strong>Approver</strong> — holds the actual authority to sign off on the action.</li>
+<li><strong>Executor</strong> — carries out the approved action once authorization is complete.</li>
+</ul>
+<p>Splitting these into distinct roles, each configurable per workflow, means no single person can both request and approve their own change — a basic segregation-of-duties control that manual, email-driven processes routinely skip because it's inconvenient. It also means the automation isn't a black box: every account creation, permission change, or deprovisioning action has a documented chain of who asked for it, who reviewed it, and who authorized it, before the system executes anything.</p>
+<p>This is precisely the mechanism <strong>ManageEngine ADManager Plus</strong> (<a href="/manageengine/admanager-plus.html">/manageengine/admanager-plus.html</a>) builds around for JML automation — HCM integrations that trigger onboarding, modification templates for movers that adjust group memberships and folder permissions in bulk, and offboarding policies triggered directly off a "resigned" status in the HR system, all wrapped in configurable requester-reviewer-approver-executor workflows so automation never bypasses accountability. For organizations that need this identity lifecycle automation combined with broader governance — access certification campaigns, adaptive authentication, and UEBA-driven anomaly detection across the same accounts — <strong>ManageEngine AD360</strong> (<a href="/manageengine/ad360.html">/manageengine/ad360.html</a>) extends the same JML foundation into a fuller identity and access management platform.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Build your leaver automation around a dedicated holding OU rather than immediate deletion. Disabling an account and moving it out of active use closes the security gap immediately, while keeping the account (and its data ownership trail) intact for a defined retention period protects against the very real scenario of an offboarding mistake, a rehire, or a legal hold that needs the account's history preserved.</div>
+<h2 id="the-compliance-angle-why-auditors-care-about-jml">The compliance angle: why auditors care about JML</h2>
+<p>JML isn't just an operational efficiency story — it sits directly inside the control set that regulators and auditors evaluate. <strong>SOX</strong> requires demonstrable controls over who can access financial systems and evidence that those controls operate consistently, which is exactly what a documented approval workflow and audit trail provide. <strong>HIPAA</strong> requires that access to protected health information be limited to what a role actually needs and revoked promptly when it's no longer justified — the mover and leaver stages, respectively. <strong>GDPR</strong> expects organizations to be able to demonstrate who had access to personal data and when that access was granted or removed, which is difficult to reconstruct from email threads and trivial to produce from an automated system's logs.</p>
+<p>Every JML event handled through an automated workflow generates a timestamped record: who requested the change, who approved it, what the change was, and when it executed. That record is the audit trail auditors ask for directly, rather than something compliance teams have to reconstruct after the fact from scattered tickets and memory. It also protects the organization in the other direction — when a help desk technician or administrator makes a change, audit reports tied to their actions make it possible to review exactly what was done, closing off a common insider-risk blind spot in manually administered environments.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>A 600-employee healthcare services company runs JML entirely through manual coordination: HR emails IT when someone joins or leaves, and role changes get handled whenever a manager happens to remember to ask. An internal audit ahead of a HIPAA compliance review turns up 14 accounts belonging to employees who left the company in the prior year, three of which still have active access to a system containing patient records. None of this was intentional negligence — it was the predictable result of offboarding depending on someone remembering to follow up across five different systems.</p>
+<p>The company implements HCM-triggered automation: the HR platform becomes the trigger for every JML event, provisioning templates handle joiners consistently by role, and a leaver policy tied to "terminated" status in HR automatically removes group memberships, disables the account, and moves it to a departed-users OU the same day HR processes the exit. Movers — internal transfers between departments, which the audit had also flagged as a source of accumulated stale access — now trigger automatic permission reconciliation instead of relying on a manager's memory to request the change.</p>
+<p>Approval workflows are configured so that access changes to systems holding patient data require a reviewer and approver beyond the original requester, satisfying the segregation-of-duties expectation the auditors specifically called out. Six months later, a follow-up review finds zero stale leaver accounts and a complete, timestamped record of every access change in the period — turning what had been the audit's single largest finding into a control the company can point to with confidence.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<ul>
+<li><strong>Automating joiners and leavers but leaving movers manual.</strong> Movers are the quietest source of entitlement creep because a role change often adds access without anyone thinking to remove what's no longer needed. If mover events aren't wired into the same automation as joiners and leavers, the JML model is only two-thirds implemented, and entitlement creep continues to accumulate through the gap.</li>
+<li><strong>Skipping the approval workflow to move faster.</strong> Automation without requester-reviewer-approver-executor separation just makes mistakes happen faster and with less accountability. The workflow isn't friction for its own sake — it's the segregation-of-duties control that both security teams and auditors expect to see.</li>
+<li><strong>Forgetting external users and contractors.</strong> If your automation is wired exclusively to the core HR system, anyone who exists outside it — contractors, partners, temporary staff — falls back into manual handling by default, quietly recreating the exact risk the automation was built to eliminate, just for a smaller population.</li>
+</ul>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Does JML automation require replacing our existing HR system?</strong><br>No. JML automation platforms are designed to integrate with existing HCM systems via API or scheduled CSV import rather than replace them — the HR platform stays the system of record for employee data, and the identity platform reacts to changes in it.</p>
+<p><strong>What happens to a mover's old access if the automation only knows their new role?</strong><br>Well-built mover automation works from modification templates that explicitly remove group memberships and permissions tied to the previous role at the same time it grants the new ones, rather than only adding access. This is precisely the gap that causes entitlement creep when handled manually, so it's worth confirming any automation tool you evaluate handles removal, not just addition.</p>
+<p><strong>Is same-day deprovisioning realistic, or is that an unreasonable bar?</strong><br>It's realistic once deprovisioning is triggered directly by an HR status change rather than a manual handoff — the automation can execute within minutes of HR marking someone as terminated. The larger practical question is making sure HR actually updates that status promptly on the employee's last day, since the automation is only as fast as the trigger that starts it.</p>
+<p>JML automation isn't a nice-to-have efficiency project — it's what turns identity management from a collection of error-prone manual tasks into a governed, auditable process that scales with the organization instead of falling further behind it every quarter. Get the joiners, movers, and leavers stages wired to a single source of truth with proper approval controls in place, and the stale-account problem that shows up in almost every first-time compliance audit simply stops accumulating.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-joiners-movers-and-leavers-actually-means">What joiners, movers, and leavers actually means</a></li><li><a href="#why-manual-jml-quietly-becomes-a-security-problem">Why manual JML quietly becomes a security problem</a></li><li><a href="#the-automation-patterns-that-fix-it">The automation patterns that fix it</a></li><li><a href="#approval-workflows-and-who-should-hold-the-keys">Approval workflows and who should hold the keys</a></li><li><a href="#the-compliance-angle-why-auditors-care-about-jml">The compliance angle: why auditors care about JML</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Why annual, point-in-time compliance audits keep failing organizations, and what it actually takes to run continuous IT compliance day to day.">
+<meta name="keywords" content="continuous IT compliance best practices, point in time audit vs continuous compliance, Compliance guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Why Point-in-Time Compliance Audits Fail (And What Continuous Compliance Looks Like) | ITVedas">
+<meta property="og:description" content="Why annual, point-in-time compliance audits keep failing organizations, and what it actually takes to run continuous IT compliance day to day.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-continuous-it-compliance-best-practices">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-continuous-it-compliance-best-practices">
+<title>Why Point-in-Time Compliance Audits Fail (And What Continuous Compliance Looks Like) | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Why Point-in-Time Compliance Audits Fail (And What Continuous Compliance Looks Like)", "description": "Why annual, point-in-time compliance audits keep failing organizations, and what it actually takes to run continuous IT compliance day to day.", "keywords": "continuous IT compliance best practices, point in time audit vs continuous compliance", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Compliance", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#EC4899;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#EC48991f;border:1px solid #EC489944;color:#EC4899;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#EC489910,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#EC489914,#8B5CF610);border:1px solid #EC489933;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#EC489914,#8B5CF614);border:1px solid #EC489933;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/compliance/" class="nav-back">← Compliance</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/compliance/">Compliance</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Compliance</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 11 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Why Point-in-Time Compliance Audits Fail (And What Continuous Compliance Looks Like)</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#the-problem-with-treating-compliance-as-an-event">The problem with treating compliance as an event</a></li><li><a href="#four-ways-point-in-time-compliance-quietly-fails-you">Four ways point-in-time compliance quietly fails you</a></li><li><a href="#what-continuous-compliance-actually-means">What continuous compliance actually means</a></li><li><a href="#the-four-practices-that-make-it-work">The four practices that make it work</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Why Point-in-Time Compliance Audits Fail (And What Continuous Compliance Looks Like)</h1>
+<p>Picture the week before a compliance audit at a mid-sized organization. Someone in IT is exporting user access lists by hand. Someone else is chasing down department heads for sign-offs that were supposed to happen quarterly but didn't. A spreadsheet gets updated with logon failure counts pulled from three different systems, none of which talk to each other. Everyone agrees this is a bad way to do it, and everyone does it again next year anyway. This is <strong>point-in-time compliance</strong> — auditing as an annual event rather than an ongoing discipline — and it is quietly one of the biggest sources of audit failures, security blind spots, and wasted IT hours in organizations that should know better.</p>
+<p>The alternative, <strong>continuous compliance</strong>, isn't a new framework or a new set of controls to memorize. It's a change in operating rhythm: instead of assembling evidence once a year under deadline pressure, you collect it as a byproduct of how the environment already runs, every day. This article breaks down why the reactive model breaks down in practice, what continuous compliance looks like operationally, and how organizations actually get there.</p>
+<h2 id="the-problem-with-treating-compliance-as-an-event">The problem with treating compliance as an event</h2>
+<p>Reactive compliance treats an audit the way a student treats a final exam — a single high-stakes checkpoint you cram for. The trouble is that regulatory frameworks like HIPAA, PCI DSS, SOX, and GDPR were never designed to be satisfied once a year; they describe an ongoing state an organization is supposed to maintain continuously. Auditing that state once and extrapolating "we were compliant" for the following twelve months is a convenient fiction, not an accurate one.</p>
+<p>The gap between "compliant on audit day" and "compliant every other day of the year" is where almost all real risk lives. A departing employee whose access wasn't revoked in week three of a quarter, a misconfigured share that opened sensitive data to an overly broad group in month two, a password policy that got silently relaxed to unblock a support ticket — none of these show up if the only time anyone checks is once a year, and all of them are exactly the kind of gap regulators, auditors, and attackers actually care about.</p>
+<blockquote>Compliance frameworks describe a state an organization is supposed to maintain every day of the year — not a snapshot it produces once for an auditor and hopes still resembles reality eleven months later.</blockquote>
+<h2 id="four-ways-point-in-time-compliance-quietly-fails-you">Four ways point-in-time compliance quietly fails you</h2>
+<p>The costs of reactive compliance rarely show up as a single dramatic failure. They accumulate in four recurring, well-documented ways:</p>
+<ul>
+<li><strong>Erroneous audit reports.</strong> When evidence collection is a manual, once-a-year scramble, it's also manual once-a-year work — done under time pressure, by people juggling other responsibilities, pulling data from systems that were never built to export it cleanly. Transcription errors, missed systems, and inconsistent definitions of "access reviewed" creep in, and the resulting report doesn't actually reflect what happened during the period it claims to cover.</li>
+<li><strong>Lack of security preparedness.</strong> An organization that only looks closely at its access controls, logon patterns, and account hygiene once a year has, by definition, no visibility into what's happening the other 360-odd days. Employees, contractors, service accounts, and connected applications generate activity constantly; without continuous monitoring, an organization has no early-warning system for the account takeover or privilege creep happening right now, only a retrospective report of what already went wrong.</li>
+<li><strong>Resource and workforce burden.</strong> Reactive compliance concentrates a year's worth of evidence-gathering into a few frantic weeks, regardless of organization size. IT staff and auditors end up doing the same tedious data-pulling exercise repeatedly, with no automation to carry the load, which is both an inefficient use of skilled people and a reliable way to burn out the team responsible for security.</li>
+<li><strong>Business and reputational losses.</strong> Non-compliance findings don't stay contained to a fine. Losing a compliance certification or failing an audit publicly damages trust with customers, partners, and investors, and that damage tends to cost far more in lost deals and stalled renewals than the direct penalty ever does.</li>
+</ul>
+<h2 id="what-continuous-compliance-actually-means">What continuous compliance actually means</h2>
+<p>Continuous compliance — sometimes called proactive compliance — reframes compliance as a standing operational discipline rather than a project with a due date. Evidence collection, control verification, and gap remediation happen on a rolling daily or near-daily basis, woven into how IT already operates, rather than as a separate exercise bolted on before an audit.</p>
+<p>This shift is already well underway. Industry research from compliance automation vendor Drata found that the overwhelming majority of organizations surveyed intend to adopt continuous compliance within the next five years — a strong signal that the annual-audit model is increasingly viewed as a liability rather than a norm, even by organizations that haven't made the switch yet.</p>
+<p>Practically, continuous compliance rests on three things working together: <strong>people</strong> who understand their control ownership as an everyday responsibility rather than a once-a-year fire drill, <strong>processes</strong> that generate evidence as a side effect of normal operations, and <strong>technology</strong> that can observe the environment and surface anomalies or gaps in near real time instead of waiting to be asked.</p>
+<h2 id="the-four-practices-that-make-it-work">The four practices that make it work</h2>
+<p>Organizations that successfully move from reactive to continuous compliance tend to converge on the same set of practices, regardless of which specific framework they're governed by.</p>
+<h3>1. Know exactly which standards apply to you, and where</h3>
+<p>Before you can continuously prove compliance, you need a precise map of what you're actually being measured against — which regulations apply based on your industry, which apply based on the jurisdictions you operate in or store data from, and which controls within each standard are relevant to your environment. Skipping this step means either wasting effort proving compliance with requirements that don't apply to you, or worse, missing ones that do.</p>
+<h3>2. Close known security gaps before they become audit findings</h3>
+<p>Continuous compliance and continuous security posture are two sides of the same coin — a control gap you haven't fixed will surface as an audit finding eventually, so fixing it proactively is cheaper than explaining it retroactively. This is where fundamentals like enforced multi-factor authentication (MFA), single sign-on (SSO) across your directory and connected applications, and automated, template-driven user lifecycle management earn their keep: they reduce the number of standing exceptions an auditor can find in the first place, and they cut down on the human error that comes from provisioning, modifying, and deprovisioning accounts by hand.</p>
+<h3>3. Establish real-time, continuous controls</h3>
+<p>This is the practice that most distinguishes continuous compliance from its reactive predecessor. Rather than reviewing access and activity in scheduled bursts, continuous controls record what's happening across the environment every day and turn that stream into actionable insight. A particularly effective version of this is <strong>user behavior analytics (UBA)</strong> — machine-learning-driven baselining of what "normal" looks like for each individual user, so that a deviation (an unusual logon time, an atypical volume of file access, a login from an unexpected location) generates an alert automatically instead of waiting to be discovered during the next scheduled review. This is precisely the kind of continuous, evidence-generating control that platforms like <a href="/manageengine/ad360.html">ManageEngine AD360</a> are built around — mapping reports directly to specific compliance standards and applying UBA across a hybrid Active Directory and cloud identity environment so that anomalous activity gets flagged the day it happens, not the week before an audit.</p>
+<h3>4. Maintain lucid, audit-ready documentation</h3>
+<p>None of the above matters to an auditor if it isn't documented in a form that's accurate, accessible, and easy to interpret. Good compliance documentation isn't a wall of raw logs — it's structured reporting that turns raw activity (logon failures by user, logon failures caused by bad passwords, failures broken down by domain controller and source IP, sessions that ran longer than policy allows) into something a non-technical reviewer can actually read and trust. If your evidence trail requires an engineer to sit down and interpret it for the auditor, it isn't continuous compliance yet — it's just continuous logging.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Don't wait for a renewal deadline to test whether your evidence trail actually holds up. Pick one control at random — say, "MFA is enforced for all privileged accounts" — and try to produce dated proof of that being true for every day in the last quarter, not just today. If you can't, you don't have continuous compliance yet, no matter how good your policies look on paper.</div>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a 600-employee healthcare services company subject to HIPAA, which has historically treated its annual audit as a six-week scramble every spring. IT pulls access logs manually from Active Directory, Exchange, and a handful of cloud applications, cross-references them against an HR list that's usually a few weeks stale, and assembles a report that's technically accurate as of the day it was compiled but says nothing reliable about the other eleven months.</p>
+<p>After a near-miss the previous year — a terminated contractor's VPN access wasn't revoked for seventeen days because the offboarding ticket sat in a queue — the compliance lead pushes to restructure the process around continuous controls instead of an annual push. The organization maps its HIPAA-relevant controls to specific, ongoing evidence sources: access reviews move from an annual spreadsheet exercise to a scheduled quarterly cadence with automated reminders, MFA gets enforced organization-wide rather than only for a subset of "sensitive" accounts, and UBA-driven monitoring is turned on for the directory environment so that anomalous access patterns generate an alert the same day rather than surfacing months later during a review.</p>
+<p>Six months in, the compliance lead can produce a defensible answer to "prove this control was operating in March" without scrambling, because the evidence was already being captured as a byproduct of daily operations. The spring audit that used to take six weeks of preparation takes four days of report generation instead — the work happened continuously throughout the year, not in a burst beforehand.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<ul>
+<li><strong>Buying a tool before fixing the process.</strong> Continuous compliance is a people-process-technology problem in that order. A monitoring platform layered on top of undefined control ownership just produces more alerts nobody is accountable for acting on.</li>
+<li><strong>Treating "continuous" as "constant manual checking."</strong> The point of continuous compliance is to reduce manual burden, not multiply it by doing the same annual review monthly instead. If a control still requires a person to manually pull and cross-reference data every time, it hasn't actually been made continuous — it's just been made more frequent.</li>
+<li><strong>Collecting evidence nobody can interpret.</strong> Logging everything is not the same as documenting compliance. If your evidence trail requires specialized knowledge to translate into a plain answer for an auditor, you've built a data lake, not a compliance program.</li>
+</ul>
+<h2 id="frequently-asked-questions">Frequently answered questions</h2>
+<p><strong>Does continuous compliance replace the need for a formal annual audit?</strong><br>No — most regulatory frameworks still require a periodic formal audit or certification. What continuous compliance changes is how much work that audit takes and how confident you can be in the result, because the evidence has been accumulating accurately all year instead of being reconstructed under deadline pressure.</p>
+<p><strong>Is continuous compliance only realistic for large enterprises with big compliance teams?</strong><br>No — in fact smaller IT teams often benefit the most, because they have the least slack to absorb a six-week annual scramble. The practices that make continuous compliance work — automated evidence collection, template-based account lifecycle management, real-time monitoring — reduce headcount-hours needed rather than increasing them, which is precisely why lean teams adopt them first.</p>
+<p><strong>Where should a team with no continuous compliance program today actually start?</strong><br>Start with the control that would hurt the most if it silently failed for a month without anyone noticing — usually account deprovisioning or privileged access review — and make just that one control continuous and evidenced before expanding to the rest of your framework. Trying to make every control continuous simultaneously is how these initiatives stall.</p>
+<p>Reactive, point-in-time compliance isn't a lesser version of continuous compliance — it's a fundamentally different (and riskier) bet, one that assumes nothing important goes wrong in the gaps between audits. Given how much organizational activity happens in those gaps, that bet gets worse every year threat surfaces grow. Treating compliance as a daily operational habit rather than an annual event is what actually closes that gap.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#the-problem-with-treating-compliance-as-an-event">The problem with treating compliance as an event</a></li><li><a href="#four-ways-point-in-time-compliance-quietly-fails-you">Four ways point-in-time compliance quietly fails you</a></li><li><a href="#what-continuous-compliance-actually-means">What continuous compliance actually means</a></li><li><a href="#the-four-practices-that-make-it-work">The four practices that make it work</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

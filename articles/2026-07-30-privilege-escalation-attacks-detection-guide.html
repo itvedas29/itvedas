@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="How privilege escalation attacks unfold step by step in Active Directory, the AD misconfigurations attackers exploit, a real-world ransomware case study, and how to detect these attacks with Event Viewer and UBA.">
+<meta name="keywords" content="privilege escalation attacks detection guide Active Directory, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="How Privilege Escalation Attacks Actually Work — and How to Detect Them | ITVedas">
+<meta property="og:description" content="How privilege escalation attacks unfold step by step in Active Directory, the AD misconfigurations attackers exploit, a real-world ransomware case study, and how to detect these attacks with Event Viewer and UBA.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-privilege-escalation-attacks-detection-guide">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-privilege-escalation-attacks-detection-guide">
+<title>How Privilege Escalation Attacks Actually Work — and How to Detect Them | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "How Privilege Escalation Attacks Actually Work — and How to Detect Them", "description": "How privilege escalation attacks unfold step by step in Active Directory, the AD misconfigurations attackers exploit, a real-world ransomware case study, and how to detect these attacks with Event Viewer and UBA.", "keywords": "privilege escalation attacks detection guide Active Directory", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>How Privilege Escalation Attacks Actually Work — and How to Detect Them</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#privileged-accounts-why-attackers-want-them">Privileged accounts: why attackers want them</a></li><li><a href="#anatomy-of-a-privilege-escalation-attack">Anatomy of a privilege escalation attack</a></li><li><a href="#active-directory-vulnerabilities-attackers-exploit">The Active Directory vulnerabilities attackers exploit</a></li><li><a href="#case-study-the-uhs-ryuk-ransomware-attack">Case study: the UHS Ryuk ransomware attack</a></li><li><a href="#detecting-escalation-with-windows-event-viewer">Detecting escalation with Windows Event Viewer</a></li><li><a href="#beyond-event-viewer-uba-based-anomaly-detection">Beyond Event Viewer: UBA-based anomaly detection</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>How Privilege Escalation Attacks Actually Work — and How to Detect Them</h1>
+<p>Almost every serious breach involving Active Directory follows the same arc: an attacker gets a foothold with an ordinary, low-value account, and then spends the rest of the intrusion turning that foothold into domain-level control. The initial entry point is rarely the damaging part. What actually decides whether an incident becomes a headline is what happens next — whether the attacker can climb from "compromised standard user" to "compromised domain admin" before anyone notices. That climb is <strong>privilege escalation</strong>, and understanding its mechanics is the difference between logs that just sit there and logs that catch an attacker mid-climb.</p>
+<p>This guide walks through how a privilege escalation attack actually unfolds step by step, the specific AD misconfigurations that make the climb possible, a real ransomware incident that shows the whole chain end to end, and the practical detection options available to you — from the Windows Event IDs you can start watching today to the behavioral analytics that catch what those event IDs alone cannot.</p>
+<h2 id="privileged-accounts-why-attackers-want-them">Privileged accounts: why attackers want them</h2>
+<p>A privileged account is any identity that carries rights beyond what a standard user has — domain administrator accounts that control the entire directory, local administrator accounts scoped to a single machine, service accounts that run unattended processes, and emergency "break glass" accounts kept for contingencies. In a typical enterprise, these accounts are relatively few in number but disproportionately powerful: a single compromised domain admin credential can touch every workstation, server, and mailbox in the environment.</p>
+<p>That combination — high value, comparatively low volume — makes privileged accounts the single most targeted asset class in AD. Microsoft's own vulnerability disclosure data backs this up: in its 2023 Vulnerabilities Report, elevation of privilege was the leading vulnerability category for the third year running, accounting for more than half of all disclosed Microsoft vulnerabilities that year. Separately, industry research from the Identity Defined Security Alliance found that poorly managed identities were the second most common root cause of breaches reported by surveyed organizations. Put simply: if an attacker can find one weak link in how you manage privileged identities, the payoff is usually worth the effort of finding it.</p>
+<h2 id="anatomy-of-a-privilege-escalation-attack">Anatomy of a privilege escalation attack</h2>
+<p>Privilege escalation attacks are rarely a single move — they're a chain, and each link depends on the one before it. The chain generally runs through four stages, and understanding each one tells you where to place detection.</p>
+<h3>1. Access exploitation</h3>
+<p>Every attack needs a way in. Attackers get their initial foothold through password guessing and brute force, phishing, credential stuffing against reused passwords, keylogging, man-in-the-middle interception, session hijacking, exploitation of unpatched software or zero-days, and simple misconfigured access controls left open to the internet. None of these require privileged access — they just require one weak point, and in a large organization there's almost always one somewhere.</p>
+<h3>2. Privilege escalation</h3>
+<p>Once inside with a low-privilege foothold, the attacker looks for a way to become someone more powerful. This is where AD-specific weaknesses come into play — insecure service permissions, unquoted service paths, weak registry permissions, overprivileged user accounts, and stale local admin passwords are all common escalation paths. The goal at this stage is rarely to stop at "slightly more access" — attackers push toward domain administrator, because that's the level of control that makes everything downstream possible.</p>
+<h3>3. Lateral movement</h3>
+<p>With elevated privileges in hand, the attacker starts moving sideways across the network rather than just up. Pass-the-hash and pass-the-ticket techniques let them authenticate to other systems without ever knowing the actual password, reusing captured hashes or Kerberos tickets instead. Commercial red-team frameworks like Cobalt Strike are frequently repurposed here, since they're built to mimic legitimate network activity while quietly pivoting from host to host.</p>
+<h3>4. Data exfiltration</h3>
+<p>The final stage is where the business impact lands — ransomware deployment, theft of sensitive records, or both. Attackers commonly plant backdoors during this stage as well, so that even if the ransomware is remediated and passwords are reset, they retain a way back in later. Many intrusions cycle back through reconnaissance and repeat this loop across additional systems before the payload finally detonates.</p>
+<blockquote>The initial compromise gets an attacker through the door. Privilege escalation is what gets them the keys to every room in the building.</blockquote>
+<h2 id="active-directory-vulnerabilities-attackers-exploit">The Active Directory vulnerabilities attackers exploit</h2>
+<p>The privilege escalation stage above doesn't happen by magic — it exploits specific, and usually preventable, weaknesses in how AD is configured and maintained:</p>
+<ul>
+<li><strong>Unpatched software.</strong> Known vulnerabilities in the OS, in AD-integrated applications, and in supporting components give attackers a documented, often automated path to elevated code execution.</li>
+<li><strong>Weak password policies.</strong> Short minimum lengths, no complexity requirements, and infrequent rotation make brute-force and credential-guessing attacks against AD accounts far more likely to succeed.</li>
+<li><strong>Misconfigured permissions.</strong> Incorrectly delegated rights on organizational units, groups, or individual objects can let a low-privilege user modify something they were never meant to touch — including, in the worst cases, group membership itself.</li>
+<li><strong>Overprivileged accounts.</strong> Accounts that accumulate access over time — through role changes, project work, or simple convenience — end up holding far more than they need, so a single compromised credential opens far more doors than it should.</li>
+<li><strong>Insecure service accounts.</strong> Service accounts frequently run with excessive rights, use passwords that never expire, and aren't monitored the way human accounts are, making them an efficient target for attackers seeking Kerberoasting-style abuse.</li>
+<li><strong>Group Policy misconfigurations.</strong> Incorrectly scoped GPOs can push insecure settings, weaken local security controls, or grant rights across far more of the environment than was intended.</li>
+</ul>
+<p>Every one of these is a configuration problem, not a software flaw — which is exactly why they're both preventable and, in practice, so common. Hardening AD against privilege escalation is largely a matter of continuously auditing for these six patterns rather than fixing them once and assuming they'll stay fixed.</p>
+<h2 id="case-study-the-uhs-ryuk-ransomware-attack">Case study: the UHS Ryuk ransomware attack</h2>
+<p>The 2020 ransomware attack against Universal Health Services (UHS), a large U.S. hospital and healthcare network, is a textbook illustration of the full chain described above, and it's worth walking through because every stage maps directly to a real event.</p>
+<p>It started with social engineering: employees were lured into opening a spam email containing a link to what looked like an innocuous shared document. The document carried a PowerShell script that, once executed, dropped the BazarLoader trojan onto the endpoint. BazarLoader installed a backdoor, and through that backdoor the attackers deployed BloodHound — a legitimate AD reconnaissance tool, repurposed here to map out group memberships, trust relationships, and privileged accounts worth targeting. With high-value targets identified, the attackers used Cobalt Strike to pivot laterally between accounts and systems. Along the way, they ran Mimikatz to harvest credentials cached in memory, using the recovered passwords to escalate their own privileges further and reach additional accounts. Once they'd spread widely enough, they detonated Ryuk ransomware across the network, encrypting files on a large scale and locking staff out of clinical and administrative systems.</p>
+<p>The financial impact was estimated at roughly $67 million, and the operational disruption to a hospital network carries obvious stakes beyond the balance sheet. What makes the case instructive is how ordinary each individual step was — a phishing email, a script, a legitimate recon tool, a legitimate red-team framework, a credential-dumping utility freely available online. No single stage required a novel exploit. The failure was that nothing in the chain got caught early enough to stop the escalation before it reached ransomware deployment.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Map your own environment against this chain. If you can't answer "would we catch a BloodHound-style recon sweep against our domain" or "would we notice Mimikatz reading LSASS memory," those are the gaps worth closing first — they sit early in the chain, well before ransomware ever detonates.</div>
+<h2 id="detecting-escalation-with-windows-event-viewer">Detecting escalation with Windows Event Viewer</h2>
+<p>Windows Event Viewer is the first line of defense most organizations already have, and a handful of event IDs carry outsized value for spotting privilege escalation in progress:</p>
+<ul>
+<li><code>4672</code> / <code>4673</code> / <code>4674</code> — special privileges assigned at logon, a privileged service being called, or an operation attempted on a privileged object. Together these flag accounts exercising administrative rights, including rights they shouldn't normally use.</li>
+<li><code>4728</code> / <code>4732</code> / <code>4756</code> — a user added to a privileged global, local, or universal security group respectively. Unexpected group membership changes are one of the clearest signals of an escalation attempt succeeding.</li>
+<li><code>4719</code> — the system audit policy was changed, which can indicate an attacker weakening logging coverage to move more freely.</li>
+<li><code>4648</code> — a logon using explicit credentials, a strong indicator of techniques like <code>runas</code> being used to move between accounts or systems.</li>
+<li><code>4740</code> — an account was locked out, useful for spotting brute-force attempts against privileged or service accounts.</li>
+<li><code>4624</code> / <code>4625</code> — successful and failed logon events, the baseline data for spotting unusual logon patterns, password-guessing attempts, and unauthorized access.</li>
+<li><code>1102</code> — the security audit log was cleared, which is almost never a legitimate administrative action and typically signals an attacker covering their tracks.</li>
+<li><code>4698</code> — a scheduled task was created, a common mechanism for establishing persistence after escalation.</li>
+<li><code>4663</code> — an attempt was made to access an object such as a file or folder, useful for tracking unauthorized access to sensitive resources.</li>
+<li><code>4735</code> — a security-enabled local group was changed, complementing the group-membership events above with modification detail.</li>
+</ul>
+<p>Collecting these event IDs is a meaningful starting point, but Event Viewer has real limits. The logs carry little context about intent, they're easy for an attacker with sufficient access to tamper with or clear outright, and correlating dozens of discrete event IDs into a single coherent attack story is a manual, time-consuming process even for an experienced analyst — one that doesn't scale across a large domain with thousands of daily logon events.</p>
+<h2 id="beyond-event-viewer-uba-based-anomaly-detection">Beyond Event Viewer: UBA-based anomaly detection</h2>
+<p>User behavior analytics (UBA) closes the gap that native logging leaves open by establishing a baseline of what normal looks like for each user and account, then flagging deviations from it. There are three complementary detection approaches worth understanding:</p>
+<p><strong>Time-based anomaly detection</strong> flags activity that falls outside a user's normal working pattern — a service account authenticating at 3 a.m. when it has only ever run during business hours, for instance, or a privileged logon from an account that has never previously been used outside a specific shift.</p>
+<p><strong>Pattern-based anomaly detection</strong> looks at sequences of events rather than single actions. Any one step in an attack chain — a logon, a group membership change, a software install — can look unremarkable in isolation. Strung together in an order or combination that deviates from the user's established pattern, the same events become a strong signal.</p>
+<p><strong>Count-based anomaly detection</strong> watches for volume spikes — a sudden surge in privileged actions, file modifications, or access attempts by a single account well beyond its typical frequency, even if each individual action would pass unnoticed on its own.</p>
+<p>This is the layer where a purpose-built auditing platform earns its keep. <a href="/manageengine/adaudit-plus.html">ManageEngine ADAudit Plus</a> is built specifically to close the gaps native Event Viewer logs leave open: it consolidates the event IDs above into a real-time, correlated audit trail, applies UBA to baseline normal behavior per user and account, and fires alerts the moment time-based, pattern-based, or count-based activity deviates from that baseline — turning what would otherwise be a manual log-correlation exercise into an automated early-warning system for exactly the kind of escalation chain the UHS case study walked through.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>What's the single most important event ID to start monitoring if I can only pick a few?</strong> Group membership changes — <code>4728</code>, <code>4732</code>, and <code>4756</code> — are hard to fake and directly indicate an account gaining privileged access. Pair them with <code>1102</code> for log tampering and <code>4648</code> for lateral movement, and you cover the highest-signal points in the chain with minimal noise.</p>
+<p><strong>Can privilege escalation happen without any malware being involved?</strong> Yes, and it's increasingly common. Techniques like pass-the-hash, Kerberoasting against weak service account passwords, or simply abusing a misconfigured delegation permission require no malicious binary at all — just legitimate Windows authentication mechanics used the wrong way. This is exactly why behavioral detection matters as much as signature-based antivirus.</p>
+<p><strong>How is privilege escalation different from lateral movement?</strong> Privilege escalation is about gaining more rights, typically on the system or account the attacker already controls. Lateral movement is about using those rights to reach additional systems. In practice they interleave — an attacker escalates just enough to move laterally, then escalates again on the new system — but they're distinct techniques worth tracking separately in your detection coverage.</p>
+<p>Privilege escalation is the hinge point of nearly every serious AD compromise — the stage where a minor foothold either gets contained or turns into domain-wide control. Native Windows logging gives you the raw material to catch it, but only behavioral analytics turns that raw material into something that reliably fires before the damage is done. Building detection coverage for both is one of the highest-leverage investments a security team can make in AD.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#privileged-accounts-why-attackers-want-them">Privileged accounts: why attackers want them</a></li><li><a href="#anatomy-of-a-privilege-escalation-attack">Anatomy of a privilege escalation attack</a></li><li><a href="#active-directory-vulnerabilities-attackers-exploit">The Active Directory vulnerabilities attackers exploit</a></li><li><a href="#case-study-the-uhs-ryuk-ransomware-attack">Case study: the UHS Ryuk ransomware attack</a></li><li><a href="#detecting-escalation-with-windows-event-viewer">Detecting escalation with Windows Event Viewer</a></li><li><a href="#beyond-event-viewer-uba-based-anomaly-detection">Beyond Event Viewer: UBA-based anomaly detection</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

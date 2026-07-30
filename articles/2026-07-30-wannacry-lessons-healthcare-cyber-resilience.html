@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="How the 2017 WannaCry ransomware attack exposed the NHS's patching and identity-management gaps, what Bedfordshire Hospitals fixed afterward, and how NCSC Cyber Essentials maps to user lifecycle management today.">
+<meta name="keywords" content="WannaCry NHS ransomware lessons healthcare cyber resilience, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="WannaCry, Revisited: What the NHS Attack Still Teaches Healthcare IT About Cyber Resilience | ITVedas">
+<meta property="og:description" content="How the 2017 WannaCry ransomware attack exposed the NHS's patching and identity-management gaps, what Bedfordshire Hospitals fixed afterward, and how NCSC Cyber Essentials maps to user lifecycle management today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-wannacry-lessons-healthcare-cyber-resilience">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-wannacry-lessons-healthcare-cyber-resilience">
+<title>WannaCry, Revisited: What the NHS Attack Still Teaches Healthcare IT About Cyber Resilience | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "WannaCry, Revisited: What the NHS Attack Still Teaches Healthcare IT About Cyber Resilience", "description": "How the 2017 WannaCry ransomware attack exposed the NHS's patching and identity-management gaps, what Bedfordshire Hospitals fixed afterward, and how NCSC Cyber Essentials maps to user lifecycle management today.", "keywords": "WannaCry NHS ransomware lessons healthcare cyber resilience", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 9 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>WannaCry, Revisited: What the NHS Attack Still Teaches Healthcare IT About Cyber Resilience</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-made-wannacry-different">What made WannaCry different</a></li><li><a href="#the-nhs-attack-scale-and-impact">The NHS attack: scale and real-world impact</a></li><li><a href="#why-the-nhs-was-an-easy-target">Why the NHS was an easy target</a></li><li><a href="#the-bedfordshire-hospitals-case-study">The Bedfordshire Hospitals case study</a></li><li><a href="#cyber-essentials-and-user-lifecycle-management">Cyber Essentials and user lifecycle management</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>WannaCry, Revisited: What the NHS Attack Still Teaches Healthcare IT About Cyber Resilience</h1>
+<p>On 12 May 2017, a piece of self-spreading ransomware brought parts of England's National Health Service to a standstill in a single afternoon. Ambulances were diverted, non-urgent surgeries were postponed, and staff at affected trusts were locked out of patient records with nothing more than a ransom note on screen. Almost a decade later, WannaCry is still the reference case every healthcare CISO reaches for — not because the malware itself was sophisticated, but because the conditions that let it spread so far inside the NHS are still common in healthcare IT environments today: unpatched legacy systems, thin visibility into what's actually connected to the network, and identity management processes that were never built to scale.</p>
+<p>This article walks through what actually happened, why the NHS in particular was so exposed, how one NHS trust rebuilt its approach to identity and account management in the years after, and how the UK's Cyber Essentials framework gives healthcare IT teams a concrete checklist for closing the same gaps before the next incident, not after.</p>
+<h2 id="what-made-wannacry-different">What made WannaCry different</h2>
+<p>WannaCry combined two things that are individually common but rarely paired together: a working exploit for a serious Windows vulnerability, and a worm component that let it spread without any user clicking anything. The vulnerability, nicknamed EternalBlue, sat in the SMBv1 file-sharing protocol and had originally been developed as an offensive tool by the US National Security Agency. It leaked publicly in early 2017 via a group calling itself the Shadow Brokers, and within weeks it had been weaponized into ransomware.</p>
+<p>Once WannaCry landed on a single unpatched machine, it didn't need a phishing click or a second stage download to move further — it scanned the local network and the wider internet for other machines running the same vulnerable SMB service and copied itself across automatically, encrypting files as it went. Microsoft had actually shipped a patch for EternalBlue two months earlier, in March 2017, which is precisely why this incident became the textbook case for patch management: the fix existed and was publicly available well before the outbreak, and organizations that had applied it were untouched.</p>
+<p>The outbreak was contained faster than it might have been only because a security researcher discovered and registered an unregistered domain name hardcoded into the malware, which acted as an accidental kill switch. But by the time that happened, the damage across thousands of unpatched machines worldwide was already done, and for infected devices with no backup to restore from, the encrypted files stayed inaccessible regardless.</p>
+<h2 id="the-nhs-attack-scale-and-impact">The NHS attack: scale and real-world impact</h2>
+<p>WannaCry infected roughly 200,000 devices across more than 150 countries, and the NHS accounted for a disproportionate share of that damage — close to 70,000 devices across English trusts were affected in some way, whether directly encrypted or simply taken offline as a precaution. Around 80 NHS trusts and hundreds of GP practices reported disruption, and because patient records, scheduling systems, and diagnostic equipment were suddenly unreachable, the practical consequence was that non-priority surgeries were postponed and appointments were cancelled at scale.</p>
+<p>No patient records are known to have been exfiltrated or exposed as part of the attack, which is a genuinely important distinction from a data-breach incident — but it doesn't make the episode less serious. A hospital that can't safely access a patient's history, allergies, or current medication isn't just facing an IT outage; it's facing a direct patient-safety problem. Independent estimates put the financial cost of the disruption at close to £92 million (roughly $92 million) once cancelled activity, IT recovery, and additional support are accounted for, even though the NHS never paid the ransom itself.</p>
+<blockquote>WannaCry didn't steal a single patient record from the NHS — and it still managed to cancel surgeries, divert ambulances, and cost close to £100 million in disruption. Availability failures hurt healthcare organizations just as much as confidentiality failures do.</blockquote>
+<h2 id="why-the-nhs-was-an-easy-target">Why the NHS was an easy target</h2>
+<p>Several factors combined to make the NHS more exposed than a typical large enterprise would have been:</p>
+<ul>
+<li><strong>Legacy operating systems.</strong> A meaningful portion of NHS estate was still running Windows XP and other operating systems Microsoft had already stopped supporting with routine security updates, leaving them permanently unpatched against vulnerabilities like EternalBlue by the time it surfaced.</li>
+<li><strong>Budget pressure on IT and security.</strong> Like most public health systems, NHS trusts operate under tight budget constraints, and cybersecurity investment has historically had to compete directly with frontline clinical spending — a competition it frequently loses, even when the long-term cost of an incident dwarfs the cost of prevention.</li>
+<li><strong>A large, flat, interconnected network.</strong> The N3 network connecting NHS sites across England meant that once WannaCry got a foothold anywhere on it, the worm behavior gave it a wide, poorly segmented surface to spread across, rather than being contained to a single site or department.</li>
+<li><strong>Prior warnings that weren't acted on.</strong> The NHS had received earlier guidance about the risks of unsupported systems and inadequate patching, but the scale of the eventual attack still outpaced the preparedness on the ground.</li>
+</ul>
+<p>The pattern here generalizes well beyond the NHS: healthcare IT environments tend to run a mix of clinical devices, legacy servers tied to specific software that can't easily be upgraded, and general-purpose Windows infrastructure — and the weakest link in that mix usually determines how far an attack can travel, not the strongest.</p>
+<h2 id="the-bedfordshire-hospitals-case-study">The Bedfordshire Hospitals case study</h2>
+<p>Bedfordshire Hospitals NHS Foundation Trust, which serves around 1.3 million patients with a workforce of more than 8,000 staff, is a useful case study precisely because its post-WannaCry problems weren't exotic — they were the same operational gaps most mid-sized healthcare organizations still carry today.</p>
+<p>The trust's IT team had limited visibility into its own asset estate, which made patch management inconsistent: patches went out, but nobody had a reliable way to confirm which devices had actually received them and which had silently fallen behind. Active Directory administration relied almost entirely on the Microsoft Management Console and hand-written PowerShell scripts — functional, but slow, hard to audit, and entirely dependent on a small number of people who knew the scripts. On top of that, user account management was largely manual: stale and disabled accounts accumulated rather than getting cleaned up, bulk account creation for new starters was tedious, and password reset cycles generated a steady stream of help desk tickets from staff who'd forgotten a password they'd just been forced to change. Layered on top of all of this was a compliance obligation the trust couldn't fully satisfy: under the UK GDPR and Data Protection Act, they needed to be able to show who had accessed sensitive patient files and when, and their existing tooling simply didn't give them that visibility.</p>
+<p>The fix wasn't a single product so much as a shift in approach: the trust adopted an identity governance and administration platform to take over day-to-day Active Directory account management, replacing ad hoc scripting with automated, auditable workflows. Stale and disabled accounts started getting identified and processed automatically instead of accumulating indefinitely. Routine account issues like lockouts moved to self-service, which cut the volume of tickets reaching the service desk and freed IT staff for higher-value work. And a behavior-driven auditing layer gave the trust the file-access visibility it needed to actually demonstrate GDPR and DPA compliance instead of asserting it.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>The gap that hurt Bedfordshire wasn't a missing firewall or missing antivirus — it was that nobody could quickly and confidently answer "who has access to what, and is any of it stale?" That question is exactly what platforms like <a href="/manageengine/ad360.html">ManageEngine AD360</a> and <a href="/manageengine/admanager-plus.html">ADManager Plus</a> are built to answer: centralized visibility into Active Directory accounts and permissions, automated detection and cleanup of inactive accounts, bulk provisioning templates instead of one-off PowerShell scripts, and audit-ready reporting that maps directly onto regulatory requirements like GDPR and the DPA.</div>
+<h2 id="cyber-essentials-and-user-lifecycle-management">Cyber Essentials and user lifecycle management</h2>
+<p>The UK's National Cyber Security Centre (NCSC) runs Cyber Essentials, a certification scheme launched in 2014 to give organizations of any size a baseline against common cyberattacks. It's built around five core technical controls, and while the scheme frames them broadly, each one has a direct, practical connection to how an organization manages user identities day to day.</p>
+<ul>
+<li><strong>Firewalls.</strong> A properly configured boundary between your network and the internet — the control that, applied consistently across NHS sites, would have blocked much of WannaCry's inbound spread over SMB in the first place.</li>
+<li><strong>Secure configuration.</strong> Devices and services shipped and maintained in a hardened state rather than default settings — which extends naturally to disabling unused accounts and turning off legacy protocols like SMBv1 that have no business being reachable from the wider network.</li>
+<li><strong>User access control.</strong> Every account should carry only the access its owner actually needs, administrative rights should be separated from everyday accounts, and there should be a defined process for granting, changing, and revoking access as people join, move within, or leave the organization — precisely the joiner-mover-leaver discipline that was missing at Bedfordshire before its overhaul.</li>
+<li><strong>Malware protection.</strong> Endpoint defenses that catch known malicious payloads before they can execute or spread further.</li>
+<li><strong>Security update management.</strong> Timely patching of operating systems and applications — the single control that, on its own, would have prevented the vast majority of WannaCry infections, since Microsoft's fix predated the outbreak by two months.</li>
+</ul>
+<p>Cyber Essentials guidance goes further than the five headline controls when it comes to identity specifically, calling for a documented review process for new account creation, least-privilege account design, minimal and controlled use of administrative privileges, strong authentication including multi-factor authentication where feasible, and — critically — regular review and removal of access rights that are no longer needed. Since its January 2022 update, the scheme also explicitly covers cloud services and requires MFA on accounts, reflecting how much healthcare IT has shifted toward hybrid and cloud-hosted infrastructure since 2017.</p>
+<p>None of this is achievable through good intentions alone at NHS scale. A trust with thousands of staff, rotating clinical rotations, agency and contract workers, and dozens of connected systems needs automated tooling to keep account creation, access reviews, and deprovisioning consistent — which is exactly the operational gap that turned Bedfordshire's manual, script-driven AD administration into a recurring source of risk until it was replaced with a managed, auditable process.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Treating patching as a one-off project instead of a standing process.</strong> Microsoft's EternalBlue patch existed for two months before WannaCry hit — the failure wasn't a lack of a fix, it was a lack of a reliable, continuously monitored process for confirming every device actually received it. Asset visibility has to come before patch compliance can mean anything.</p>
+<p><strong>Letting Active Directory administration depend on a handful of scripts and a handful of people.</strong> Manual PowerShell-driven AD management scales badly, is hard to audit, and creates a single point of failure when the one person who understands the scripts is unavailable. Bedfordshire's experience shows how quickly this becomes a genuine security gap, not just an inconvenience.</p>
+<p><strong>Letting stale accounts accumulate.</strong> Every disabled-but-not-deleted account, every contractor login left active after a placement ends, is a standing attack surface. Regular, automated account reviews aren't a nice-to-have compliance exercise — they directly reduce the number of ways an attacker (or a ransomware worm exploiting a compromised credential) can move through your environment.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Could WannaCry happen again today?</strong><br>The specific EternalBlue exploit is now patched almost everywhere, and SMBv1 has been disabled by default on modern Windows systems, so an identical outbreak is unlikely. But the underlying pattern — a known, patched vulnerability left unaddressed on enough machines to let a worm spread — remains entirely plausible with any future exploit, especially in environments still running unsupported legacy systems.</p>
+<p><strong>Is Cyber Essentials mandatory for NHS trusts and healthcare suppliers?</strong><br>Cyber Essentials itself is a voluntary scheme open to any UK organization, though it's been a mandatory requirement for suppliers to central government handling certain sensitive data since 2014. Separately, NHS organizations in England must complete the annual Data Security and Protection Toolkit self-assessment, which covers similar ground around access control, patching, and incident response.</p>
+<p><strong>What's the single highest-leverage change a healthcare IT team can make after reading about WannaCry?</strong><br>If forced to pick one, it's closing the gap between "we have a policy" and "we can prove the policy is being followed" for both patch management and account lifecycle management. Automated tooling that gives you a real-time, auditable view of both is what actually prevents a repeat of what happened at Bedfordshire and across the wider NHS in 2017.</p>
+<p>WannaCry is now old enough that some healthcare IT teams weren't in their current roles when it happened — but the conditions that made it so damaging haven't gone away, they've just moved. Legacy systems still linger in clinical environments that can't easily be upgraded, identity sprawl still accumulates in large organizations with high staff turnover, and budget pressure still pits security spending against frontline care. The lesson from the NHS attack was never really about one exploit; it was that visibility into your assets and your identities is what turns a contained incident into a footnote instead of a headline.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-made-wannacry-different">What made WannaCry different</a></li><li><a href="#the-nhs-attack-scale-and-impact">The NHS attack: scale and real-world impact</a></li><li><a href="#why-the-nhs-was-an-easy-target">Why the NHS was an easy target</a></li><li><a href="#the-bedfordshire-hospitals-case-study">The Bedfordshire Hospitals case study</a></li><li><a href="#cyber-essentials-and-user-lifecycle-management">Cyber Essentials and user lifecycle management</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

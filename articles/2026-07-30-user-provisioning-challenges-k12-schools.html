@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Why manual user provisioning breaks down in K-12 schools — seasonal onboarding surges, PowerShell dependence, learning loss, stale accounts, and FERPA/COPPA recordkeeping — and how automation fixes each.">
+<meta name="keywords" content="user provisioning challenges K-12 schools FERPA COPPA, Compliance guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="User Provisioning Challenges in K-12 Schools (and How to Fix Them) | ITVedas">
+<meta property="og:description" content="Why manual user provisioning breaks down in K-12 schools — seasonal onboarding surges, PowerShell dependence, learning loss, stale accounts, and FERPA/COPPA recordkeeping — and how automation fixes each.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-user-provisioning-challenges-k12-schools">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-user-provisioning-challenges-k12-schools">
+<title>User Provisioning Challenges in K-12 Schools (and How to Fix Them) | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "User Provisioning Challenges in K-12 Schools (and How to Fix Them)", "description": "Why manual user provisioning breaks down in K-12 schools — seasonal onboarding surges, PowerShell dependence, learning loss, stale accounts, and FERPA/COPPA recordkeeping — and how automation fixes each.", "keywords": "user provisioning challenges K-12 schools FERPA COPPA", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Compliance", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#EC4899;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#EC48991f;border:1px solid #EC489944;color:#EC4899;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#EC489910,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#EC489914,#8B5CF610);border:1px solid #EC489933;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#EC489914,#8B5CF614);border:1px solid #EC489933;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/compliance/" class="nav-back">← Compliance</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/compliance/">Compliance</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Compliance</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>User Provisioning Challenges in K-12 Schools (and How to Fix Them)</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#the-seasonal-surge-that-breaks-manual-provisioning">The seasonal surge that breaks manual provisioning</a></li><li><a href="#legacy-iam-and-the-powershell-trap">Legacy IAM and the PowerShell trap</a></li><li><a href="#when-slow-provisioning-becomes-learning-loss">When slow provisioning becomes learning loss</a></li><li><a href="#stale-accounts-the-risk-nobody-is-counting">Stale accounts: the risk nobody is counting</a></li><li><a href="#contingent-staff-and-ad-hoc-requests">Contingent staff and ad-hoc requests</a></li><li><a href="#ferpa-coppa-and-the-recordkeeping-problem">FERPA, COPPA, and the recordkeeping problem</a></li><li><a href="#what-automated-template-based-provisioning-fixes">What automated, template-based provisioning fixes</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>User Provisioning Challenges in K-12 Schools (and How to Fix Them)</h1>
+<p>Every August, K-12 IT departments run one of the most compressed identity events in any industry: hundreds or thousands of student and staff accounts need to exist, correctly configured, before the first bell rings. Miss the deadline and it isn't an abstract SLA violation — it's a classroom of students who can't log into the learning management system on day one. Few other sectors compress this much identity churn into this few weeks, with this little IT staff to absorb it.</p>
+<p>Digital learning tools are now a daily fixture of instruction rather than a supplement to it, which means the account behind each tool has to actually work, on time, for every student and teacher who needs it. When provisioning is still handled by hand — or by brittle scripts a single admin understands — that compressed seasonal load turns into the single biggest source of IT strain a school district faces all year. This article walks through where manual provisioning breaks down in K-12 environments specifically, and what an automated, role-based approach changes.</p>
+<h2 id="the-seasonal-surge-that-breaks-manual-provisioning">The seasonal surge that breaks manual provisioning</h2>
+<p>Unlike a typical corporate environment where onboarding trickles in a few people a week, schools face a hard seasonal cliff: a large share of a year's total account creation happens in a two-to-four-week window before the academic year starts, with a second smaller surge at semester breaks. Student rosters shift as families move, transfer, or enroll late; staff turnover clusters around the same calendar; and every one of those accounts typically needs presence not just in the core directory, but in a learning management system, a student information system, email, and whatever subject-specific tools a given grade or department uses.</p>
+<p>Handled manually, this means IT admins create standalone accounts application by application, student by student — a process that scales linearly with headcount and non-linearly with the number of connected systems. A district with a few thousand students and a dozen instructional platforms isn't looking at a few thousand account-creation actions; it's looking at a multiple of that, repeated every time a student's grade, class, or enrollment status changes throughout the year.</p>
+<h2 id="legacy-iam-and-the-powershell-trap">Legacy IAM and the PowerShell trap</h2>
+<p>Constrained IT budgets push a lot of districts toward scripting their way through the gap — usually PowerShell scripts assembled by whichever admin has the deepest AD knowledge, patched together over several years. These scripts work, in the narrow sense that they run, but they carry a specific kind of institutional risk: the knowledge of how they work concentrates in one or two people, they're brittle against schema changes or new applications, and they weren't built to handle the volume or the rapid mid-year changes that K-12 rosters generate. When that admin leaves — and turnover in school IT is not rare — the script becomes something nobody wants to touch, let alone extend.</p>
+<p>This isn't a hypothetical inefficiency. It's the difference between a provisioning process that scales as the district adds tools and one that requires a rewrite every time it does, at exactly the moment IT staff have the least slack to absorb that work.</p>
+<h2 id="when-slow-provisioning-becomes-learning-loss">When slow provisioning becomes learning loss</h2>
+<p>Account creation is only half the provisioning problem; the other half is permissions — access to a shared drive, a class folder, a specific application license. In a manual environment, a teacher or department head typically has to file a request and wait for an IT admin to act on it, and that queue routinely runs two to three weeks before access is actually granted.</p>
+<p>For a corporate environment, a two-week wait for folder access is an inconvenience. For a classroom, it's instructional time that doesn't come back — students without access to assigned material, teachers without prep time on the resources they need to teach with. Provisioning delay in K-12 isn't just an operational metric; it's a direct, measurable drag on the thing the institution exists to do.</p>
+<h2 id="stale-accounts-the-risk-nobody-is-counting">Stale accounts: the risk nobody is counting</h2>
+<p>The offboarding side of the same seasonal churn is where the security exposure concentrates. Students graduate or transfer, staff leave, and each of those departures should trigger deprovisioning — but manual deprovisioning is exactly as labor-intensive as manual provisioning, and it competes for attention with the more visible, more urgent task of getting new accounts stood up before the term starts.</p>
+<p>The result is accounts that quietly outlive the person they belonged to. Most districts running manual processes don't actually know how many stale accounts exist in their directory at any given time — the accounts aren't flagged, they're just there, invisible until someone goes looking. That's precisely the kind of gap that attackers targeting schools look for: an old student or staff credential is still a working door into the network, and nobody's watching it because nobody knows it's open.</p>
+<h2 id="contingent-staff-and-ad-hoc-requests">Contingent staff and ad-hoc requests</h2>
+<p>Schools also run a steady undercurrent of contingent access needs — substitute teachers, special education aides, seasonal non-teaching staff — people who need meaningful but limited access for a defined, often short, period. In a manual environment these requests tend to arrive over email, get handled ad hoc, and have no defined trigger for revocation once the assignment ends. There's frequently no formal process that tells IT "this substitute's placement ended, remove their access" — it depends on someone remembering to say so.</p>
+<p>That combination — access granted informally, without a defined end date, with no automatic revocation trigger — is a second, steady stream of stale accounts layered on top of the seasonal one, and it's arguably the harder one to catch because it doesn't align with any predictable calendar event like a semester end.</p>
+<h2 id="ferpa-coppa-and-the-recordkeeping-problem">FERPA, COPPA, and the recordkeeping problem</h2>
+<p>School data carries specific regulatory weight. The <strong>Family Educational Rights and Privacy Act (FERPA)</strong> governs student education records, and the <strong>Children's Online Privacy Protection Act (COPPA)</strong> governs how schools and their vendors handle the personal information of children under 13 — both of which apply directly to the accounts and access controls a school's IT department manages every day. COPPA violations in particular carry real financial teeth: penalties have run into the tens of thousands of dollars per violation, which is a meaningful number for a public school budget.</p>
+<p>Manual provisioning makes compliance with both regulations harder in a specific way: it doesn't naturally produce a record. When an admin grants access by hand, or a teacher's request is handled over email, there's often no durable trail showing who approved it, when it happened, or who touched a given student's data and why. Regulators and auditors don't just want to know that access is appropriately restricted — they want to see the record proving it, and manual processes are exactly the kind of piecemeal, undocumented workflow that produces gaps in that record.</p>
+<blockquote>A provisioning process that can't answer "who had access to this student's records, and when" isn't just inefficient — it's a compliance liability waiting for an audit to find it.</blockquote>
+<h2 id="what-automated-template-based-provisioning-fixes">What automated, template-based provisioning fixes</h2>
+<p>Each of the problems above traces back to the same root cause: provisioning that depends on a human repeating the same steps, correctly, at a volume and speed manual work can't sustain. Automated, template-based provisioning addresses that root cause directly, and this is where a tool like <a href="/manageengine/admanager-plus.html">ManageEngine ADManager Plus</a> is purpose-built for the K-12 case specifically:</p>
+<ul>
+<li><strong>Template-based bulk provisioning.</strong> Role- and class-based templates with prefilled attributes let admins create or modify hundreds of student and staff accounts at once from a CSV import or an HCM/SIS integration, instead of one-by-one — collapsing the seasonal surge from weeks of manual entry into a single bulk operation, with custom naming formats that eliminate the duplicate-login-name problem bulk creation otherwise causes.</li>
+<li><strong>Group and permission automation.</strong> When a student changes class or a teacher changes department, group membership and folder permissions update through the same templated workflow rather than a manual ticket — closing the two-to-three-week access-request gap that translates directly into lost instructional time.</li>
+<li><strong>Delegated administration.</strong> IT can hand narrowly-scoped technician roles to teachers or department heads — enabling accounts, resetting passwords, unlocking logins after a break — without granting them real AD rights. Requests that used to sit in an IT queue get resolved at the point of need, and IT time gets freed for higher-value work.</li>
+<li><strong>Just-in-time access for contingent staff.</strong> Substitutes, aides, and temporary staff can be granted access scoped to a specific duration, so the account expires on schedule instead of depending on someone remembering to revoke it — directly closing the ad-hoc-access gap described above.</li>
+<li><strong>Built-in audit trails.</strong> Every provisioning action, including those performed by delegated non-IT staff, is logged automatically — who did what, when, to which account — turning FERPA and COPPA recordkeeping from a manual reconstruction project into a report that already exists.</li>
+</ul>
+<div class="callout"><div class="callout-title">Pro Tip</div>Run a stale-account sweep before every semester start, not just at year-end. Automated reporting that flags accounts inactive beyond a set threshold catches both the graduated-student and the ended-contingent-assignment cases in one pass, rather than waiting for an annual cleanup to find months of exposure at once.</div>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a mid-sized district with roughly 6,000 students across a dozen schools, historically provisioning accounts through a mix of manual AD console work and a set of PowerShell scripts written by an admin who left two years ago. Every August, two IT staff spend nearly three weeks creating and correcting student and staff accounts across AD, the learning management system, and email — regularly missing the first day of instruction for a portion of students, whose access gets sorted out reactively over the first week of class.</p>
+<p>After moving to template-based provisioning tied to their student information system, the same August surge collapses to a scheduled bulk import validated over two to three days, with class-based templates automatically assigning the correct groups, folder permissions, and application access by grade level. Delegated technician roles let front-office staff at each school handle password resets and account unlocks locally, instead of routing every request through the two central IT staff. A quarterly stale-account report, previously nonexistent, turns up over 200 accounts belonging to students who transferred out or graduated the prior year — closed in an afternoon instead of sitting undetected. When the district's next FERPA-related audit request comes in, the access history for a flagged student record is a report export rather than a week of digging through tickets and email.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Does automated provisioning replace the need for a human approval step?</strong><br>No, and it shouldn't — the goal is to remove repetitive manual execution, not oversight. Well-designed automated provisioning still routes sensitive actions through approval workflows; it just replaces "an admin manually creates each account" with "an admin approves a bulk action that executes consistently," which is faster and less error-prone while keeping a human decision point in place.</p>
+<p><strong>How does this help smaller districts with only one or two IT staff, not just large ones?</strong><br>Smaller IT teams generally have the least slack to absorb manual, repetitive work, which makes automation proportionally more valuable to them, not less. A one-person IT department that no longer has to hand-create every account in August is a one-person IT department that can actually get to security and infrastructure work the rest of the year.</p>
+<p><strong>Does this only apply to student accounts, or staff too?</strong><br>Both, and treating them separately is part of what causes gaps. Staff turnover, contingent hires, and role changes generate the same provisioning and deprovisioning load as student rosters do — a unified, template-based approach covering both is what actually closes the stale-account and compliance-recordkeeping problems district-wide.</p>
+<p>The seasonal intensity of K-12 provisioning isn't going away — enrollment will keep shifting, staff will keep turning over, and the number of instructional platforms a student touches will likely keep growing. What changes the outcome is whether that churn is absorbed by a process built to handle volume and produce a record automatically, or by IT staff doing the same manual steps a little faster every year. The former scales with the district; the latter just gets more painful.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#the-seasonal-surge-that-breaks-manual-provisioning">The seasonal surge that breaks manual provisioning</a></li><li><a href="#legacy-iam-and-the-powershell-trap">Legacy IAM and the PowerShell trap</a></li><li><a href="#when-slow-provisioning-becomes-learning-loss">When slow provisioning becomes learning loss</a></li><li><a href="#stale-accounts-the-risk-nobody-is-counting">Stale accounts: the risk nobody is counting</a></li><li><a href="#contingent-staff-and-ad-hoc-requests">Contingent staff and ad-hoc requests</a></li><li><a href="#ferpa-coppa-and-the-recordkeeping-problem">FERPA, COPPA, and the recordkeeping problem</a></li><li><a href="#what-automated-template-based-provisioning-fixes">What automated, template-based provisioning fixes</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

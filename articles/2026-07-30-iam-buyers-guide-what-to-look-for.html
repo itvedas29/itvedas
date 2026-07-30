@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A vendor-neutral checklist for evaluating any Identity and Access Management platform, built around Gartner's critical IAM capabilities and what red flags look like.">
+<meta name="keywords" content="IAM buyer's guide, identity and access management evaluation checklist, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What to Look for When Evaluating an IAM Platform: The Buyer's Checklist | ITVedas">
+<meta property="og:description" content="A vendor-neutral checklist for evaluating any Identity and Access Management platform, built around Gartner's critical IAM capabilities and what red flags look like.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-iam-buyers-guide-what-to-look-for">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-iam-buyers-guide-what-to-look-for">
+<title>What to Look for When Evaluating an IAM Platform: The Buyer's Checklist | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "What to Look for When Evaluating an IAM Platform: The Buyer's Checklist", "description": "A vendor-neutral checklist for evaluating any Identity and Access Management platform, built around Gartner's critical IAM capabilities and what red flags look like.", "keywords": "IAM buyer's guide, identity and access management evaluation checklist", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>What to Look for When Evaluating an IAM Platform: The Buyer's Checklist</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-iam-evaluation-needs-more-than-a-feature-list">Why IAM evaluation needs more than a feature list</a></li><li><a href="#identity-lifecycle-management-and-entitlement-management">Identity lifecycle management and entitlement management</a></li><li><a href="#approval-workflows-and-policy-and-role-management">Approval workflows and policy and role management</a></li><li><a href="#real-time-change-auditing-and-access-certification">Real-time change auditing and access certification</a></li><li><a href="#authentication-strong-adaptive-and-saas-ready">Authentication: strong, adaptive, and SaaS-ready</a></li><li><a href="#self-service-requests-and-ml-based-behavior-analytics">Self-service requests and ML-based behavior analytics</a></li><li><a href="#deployment-extensibility-and-high-availability">Deployment, extensibility, and high availability</a></li><li><a href="#putting-the-checklist-to-work">Putting the checklist to work</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>What to Look for When Evaluating an IAM Platform: The Buyer's Checklist</h1>
+<p>Every Identity and Access Management vendor's homepage looks roughly the same: secure your identities, stop breaches, streamline access. The differences that actually matter — the ones that decide whether the platform still fits eighteen months after rollout — live several layers below the marketing copy, in details like whether a workflow can be delegated to three approval stages, or whether the audit log can tell you the old value of a changed attribute, not just that it changed.</p>
+<p>Gartner publishes a well-regarded list of capabilities it considers critical for a mature IAM platform, and it's a genuinely useful lens for evaluating <strong>any</strong> vendor, not just the one whose ebook you happened to read. This article walks through those capabilities grouped into practical categories, explains why each one actually matters day to day, and — more usefully than most buyer's guides — describes what it looks like when a vendor is quietly missing one.</p>
+<h2 id="why-iam-evaluation-needs-more-than-a-feature-list">Why IAM evaluation needs more than a feature list</h2>
+<p>Most IAM RFPs get answered with a checkbox matrix: yes, we do provisioning; yes, we do SSO; yes, we do auditing. The problem is that "yes" hides an enormous range of maturity. A vendor can technically support approval workflows with a single hardcoded two-step process, or with a fully configurable multi-stage engine that adapts to different request types — both would honestly answer "yes" on an RFP. The gap only becomes visible once you're deployed and discover the tool can't accommodate how your organization actually approves access.</p>
+<p>The categories below are grouped by function rather than listed as an arbitrary fifteen-item checklist, because in practice these capabilities interact — access certification is only meaningful if entitlement management is accurate, and adaptive authentication is only useful if the identity lifecycle feeding it is clean. Evaluate them as a connected system, not fifteen separate yes/no boxes.</p>
+<h2 id="identity-lifecycle-management-and-entitlement-management">Identity lifecycle management and entitlement management</h2>
+<p><strong>Identity lifecycle management</strong> covers what happens to an account from the moment someone joins the organization to the moment they leave: provisioning, role changes as they move teams, and — critically — deprovisioning when they exit. <strong>Entitlement management</strong> is the closely related discipline of tracking exactly what access each identity actually holds, so that access can be granted, adjusted, and revoked systematically instead of by memory.</p>
+<p>Why it matters: deprovisioning delay is one of the most common, least glamorous sources of breaches. An account that should have been disabled on someone's last day but sits active for another three weeks is a live credential with nobody watching it. Manual, ticket-driven deprovisioning almost always has this lag built in.</p>
+<p><strong>Red flag:</strong> if a vendor's lifecycle automation only handles the "happy path" of new-hire provisioning and treats role changes or terminations as manual follow-up tasks, you've found the gap. Ask specifically how the platform handles a mid-year department transfer, not just a day-one onboarding — that's where lifecycle tools quietly fall apart.</p>
+<h2 id="approval-workflows-and-policy-and-role-management">Approval workflows and policy and role management</h2>
+<p><strong>Approval-based workflows</strong> let an organization define who must sign off before an access request, account creation, or permission change goes live — often more than one person, depending on what's being requested. <strong>Policy and role management</strong> is the underlying structure of role-based access control: defined roles, least-privilege defaults, and separation of duties so that no single account accumulates more privilege than its function requires.</p>
+<p>Why it matters: access decisions that never touch a human approver tend to drift toward "grant it and move on," which is exactly how privilege creep happens — employees accumulate access over years of role changes, and nobody ever revokes what's no longer needed. A configurable approval chain, tied to actual role definitions, is what keeps that drift in check.</p>
+<blockquote>An IAM platform that can grant access instantly but can't explain, months later, why a given account has a given permission has only solved half the problem.</blockquote>
+<p><strong>Red flag:</strong> rigid, single-stage approval that can't be customized per request type or department. If finance-related access requests need a different approval chain than a generic software license request, and the platform can't express that distinction, expect workarounds and shadow processes to appear within months of go-live.</p>
+<h2 id="real-time-change-auditing-and-access-certification">Real-time change auditing and access certification</h2>
+<p><strong>Real-time change auditing</strong> means every meaningful change — a permission grant, a group membership change, a password reset, a logon event — is captured as it happens, with enough detail to reconstruct what changed and who changed it, not just that something changed. <strong>Access certification</strong> is the periodic review process where managers or resource owners confirm that existing access still makes sense, and revoke what doesn't.</p>
+<p>Why it matters: these two capabilities are how an organization actually proves compliance rather than just claiming it. Regulatory frameworks including SOX, HIPAA, PCI, GDPR, and FISMA all effectively require evidence that access is monitored and periodically reviewed, and "we assume access is correct" doesn't hold up during an audit.</p>
+<p><strong>Red flag:</strong> auditing that only logs that an event happened without capturing the before and after values. If a permission changed and the log can't tell you what it changed from and to, root-cause investigations turn into guesswork. Also watch for certification that's a manual spreadsheet exercise bolted onto the platform rather than a built-in, trackable review workflow — it technically satisfies the requirement but nobody will keep doing it consistently.</p>
+<h2 id="authentication-strong-adaptive-and-saas-ready">Authentication: strong, adaptive, and SaaS-ready</h2>
+<p>This cluster covers four related Gartner capabilities: <strong>strong user authentication</strong> (MFA, biometrics, methods resistant to impersonation), <strong>adaptive authentication</strong> (risk-based decisions using signals like location, device, and time of access), <strong>SaaS application enablement</strong> (SAML-based SSO across common enterprise SaaS tools), and <strong>non-standard application enablement</strong> (extending identity management to in-house or legacy applications that don't speak standard protocols out of the box).</p>
+<p>Why it matters: authentication that's static — the same challenge every time, regardless of context — is both less secure and more annoying than it needs to be. Adaptive authentication lets a platform step up verification only when something looks unusual, like a login from a new country or an impossible-travel pattern, instead of forcing MFA friction on every single login. And an IAM platform that only covers standard protocols leaves your custom internal applications outside its own security perimeter, which for most mid-size and larger organizations is a meaningful blind spot.</p>
+<p><strong>Red flag:</strong> "MFA support" that means only push notifications, with no fallback method, no risk-based triggering, and no way to enforce stronger authentication specifically for privileged accounts. Also ask directly how the vendor handles custom, non-standard applications — a vague answer here usually means "not well."</p>
+<h2 id="self-service-requests-and-ml-based-behavior-analytics">Self-service requests and ML-based behavior analytics</h2>
+<p><strong>Self-service access requests</strong> let end users request membership to a resource or group directly, routed through an approval workflow, instead of filing a help desk ticket and waiting. <strong>Reporting with ML-based user behavior analytics</strong> builds a behavioral baseline per user and flags deviations — an account logging in at 3 a.m. from an unfamiliar location, or a service account suddenly touching file shares it's never accessed before — as potential signs of compromise or insider misuse.</p>
+<p>Why it matters: self-service done well reduces help desk load without weakening control, because the approval workflow — not the absence of one — is what keeps it secure. UBA, meanwhile, is one of the few capabilities on this list that catches threats none of your static rules were written to detect, because it's comparing behavior against a baseline rather than checking it against a fixed rule set.</p>
+<p><strong>Red flag:</strong> self-service that skips the approval step entirely in the name of convenience, or UBA that's really just static threshold alerting (more than N failed logins) rebranded as "analytics." Genuine behavioral baselining should look different for every user and adapt over time — ask the vendor to explain, concretely, how the baseline is built and how false positives are handled.</p>
+<h2 id="deployment-extensibility-and-high-availability">Deployment, extensibility, and high availability</h2>
+<p>The last cluster is more operational than functional, but it determines whether the platform survives contact with your actual infrastructure: <strong>ease of deployment</strong> (can you start managing identities without a lengthy professional-services engagement), <strong>API-based target application enablement</strong> (can the platform integrate with your existing tools via REST APIs rather than requiring proprietary connectors for everything), and <strong>high availability</strong> (does the platform have automatic failover, so an outage on one instance doesn't take down identity management for the whole organization).</p>
+<p>Why it matters: an IAM platform that's difficult to deploy tends to stay partially deployed — organizations roll out the easy parts and quietly shelve the harder integrations, which undermines the whole point of centralizing identity management. And because IAM sits in the critical path for logins and access decisions, an outage in the IAM layer itself can lock out an entire workforce, not just fail to add value — high availability isn't a nice-to-have here, it's closer to a prerequisite.</p>
+<p><strong>Red flag:</strong> deployment estimates measured in months rather than days or weeks for core functionality, or a vendor that can't clearly describe its failover architecture when asked. Also check whether "API support" means a genuinely open REST API you can build against, or a narrow set of pre-built integrations with no path to extend it yourself.</p>
+<h2 id="putting-the-checklist-to-work">Putting the checklist to work</h2>
+<p>In a demo or proof-of-concept, don't just ask "do you support X" for each capability above — ask the vendor to show you the specific screen or workflow, live, with a realistic scenario: a mid-year role change, a multi-stage approval for a sensitive resource, an audit trail for a permission that changed twice in one week. Vendors that can walk through these scenarios fluently, without scrambling to find the right screen, are usually the ones where the capability is genuinely built in rather than a checkbox answered generously.</p>
+<p>It's also worth deciding upfront whether you want a single consolidated platform covering most of this list, or a best-of-breed stack of point solutions stitched together. Consolidated suites reduce integration overhead and give you one place to correlate identity activity across the list above; point solutions can offer deeper functionality in a specific area at the cost of more integration work. Neither approach is universally right — it depends on your team's size and appetite for maintaining integrations. <a href="/manageengine/ad360.html">ManageEngine AD360</a> is one example of a suite built to cover most of this checklist in a modular way, bundling lifecycle management, auditing, self-service, and authentication components under one console — useful context for what a consolidated approach looks like in practice, whichever vendor you ultimately evaluate.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Do we need every capability on this list on day one?</strong> No. Most organizations phase IAM rollouts, starting with identity lifecycle management and authentication, then layering in auditing, certification, and behavior analytics as the program matures. What matters during evaluation is confirming the platform can eventually cover the full list without requiring a rip-and-replace later.</p>
+<p><strong>Is a consolidated IAM suite always better than point solutions?</strong> Not always. A suite reduces integration work and gives unified visibility, but a specialized point solution may outperform a suite's equivalent module in a specific area, like adaptive authentication or UBA. The right call depends on how much integration overhead your team can realistically absorb.</p>
+<p><strong>How do we test ML-based user behavior analytics before committing to a vendor?</strong> Ask for a proof-of-concept against a sample of your real (anonymized, if needed) log data rather than a canned demo dataset. Genuine baselining behaves very differently across real, messy usage patterns than it does against a vendor's curated demo environment, and that difference is exactly what you need to see before signing.</p>
+<p>A feature checklist can tell you what a vendor claims to support. Only a scenario-driven evaluation — walking through real workflows, asking for the before-and-after on audit logs, testing self-service and approval chains with your own data — tells you whether the platform will actually hold up once it's running your organization's identities for real.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-iam-evaluation-needs-more-than-a-feature-list">Why evaluation needs more than a feature list</a></li><li><a href="#identity-lifecycle-management-and-entitlement-management">Identity lifecycle and entitlement management</a></li><li><a href="#approval-workflows-and-policy-and-role-management">Approval workflows and policy management</a></li><li><a href="#real-time-change-auditing-and-access-certification">Real-time auditing and access certification</a></li><li><a href="#authentication-strong-adaptive-and-saas-ready">Strong, adaptive, and SaaS-ready authentication</a></li><li><a href="#self-service-requests-and-ml-based-behavior-analytics">Self-service and ML-based behavior analytics</a></li><li><a href="#deployment-extensibility-and-high-availability">Deployment, extensibility, and high availability</a></li><li><a href="#putting-the-checklist-to-work">Putting the checklist to work</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

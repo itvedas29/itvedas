@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A sysadmin's field guide to the endpoint security risks introduced by remote and hybrid work, mapped to the fixes CISA and NIST SP 800-63B actually recommend.">
+<meta name="keywords" content="endpoint security risks remote work sysadmin guide, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="A Sysadmin's Field Guide to Endpoint Security Risks in the Remote and Hybrid Work Era | ITVedas">
+<meta property="og:description" content="A sysadmin's field guide to the endpoint security risks introduced by remote and hybrid work, mapped to the fixes CISA and NIST SP 800-63B actually recommend.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-sysadmin-guide-endpoint-security-risks">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-sysadmin-guide-endpoint-security-risks">
+<title>A Sysadmin's Field Guide to Endpoint Security Risks in the Remote and Hybrid Work Era | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "A Sysadmin's Field Guide to Endpoint Security Risks in the Remote and Hybrid Work Era", "description": "A sysadmin's field guide to the endpoint security risks introduced by remote and hybrid work, mapped to the fixes CISA and NIST SP 800-63B actually recommend.", "keywords": "endpoint security risks remote work sysadmin guide", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>A Sysadmin's Field Guide to Endpoint Security Risks in the Remote and Hybrid Work Era</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-the-endpoint-is-now-the-frontline">Why the endpoint is now the frontline</a></li><li><a href="#seven-endpoint-risks-reshaping-the-attack-surface">Seven endpoint risks reshaping the attack surface</a></li><li><a href="#what-cisa-and-nist-sp-800-63b-actually-recommend">What CISA and NIST SP 800-63B actually recommend</a></li><li><a href="#turning-guidance-into-a-rollout-checklist">Turning guidance into a rollout checklist</a></li><li><a href="#common-mistakes-that-undercut-endpoint-security">Common mistakes that undercut endpoint security</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>A Sysadmin's Field Guide to Endpoint Security Risks in the Remote and Hybrid Work Era</h1>
+<p>The network perimeter didn't collapse all at once — it eroded quietly, one laptop taken home, one personal phone enrolled for email, one RDP session opened through a home router. What used to be a compact, physically contained set of assets — desktops, servers, switches, all inside a building the IT team controlled — is now a scattered fleet of endpoints logging in from kitchen tables, coffee shops, and airport lounges. Every one of those endpoints is a new edge of the network, and every edge is somewhere an attacker can push.</p>
+<p>This guide walks through the endpoint risks that show up most often in distributed environments, and pairs each one with the fix that CISA and NIST's SP 800-63B digital identity guidelines actually call for — not vague "improve your posture" advice, but specific controls a sysadmin can plan into next quarter's rollout.</p>
+<h2 id="why-the-endpoint-is-now-the-frontline">Why the endpoint is now the frontline</h2>
+<p>When every device sat inside a corporate building, security teams could lean on network-level controls — a hardened perimeter, a well-managed DMZ, physical access restrictions — to do a lot of the work. Remote and hybrid work removed that layer. The endpoint itself, wherever it happens to be sitting, has to carry security decisions that used to be enforced upstream by the network.</p>
+<p>The practical consequence is a visibility gap. IT can't see the Wi-Fi network a laptop just joined, can't see whether a personal phone syncing corporate email has a lock screen enabled, and often can't see a login attempt until it's already succeeded or failed. Centralized, perimeter-first tooling was never built to answer those questions, which is exactly why identity and endpoint-level controls have become the primary defense rather than a backup layer. Get this wrong and the fallout isn't abstract — a single compromised endpoint can be the entry point for ransomware that spreads laterally or a quiet data leak that surfaces months later in a breach notification.</p>
+<h2 id="seven-endpoint-risks-reshaping-the-attack-surface">Seven endpoint risks reshaping the attack surface</h2>
+<h3>1. Unsecured public Wi-Fi</h3>
+<p>An employee firing off an urgent email from an airport lounge or a coffee shop is convenient right up until someone else on that same open network is running a packet sniffer. Public Wi-Fi has no enforced encryption between client and access point by default, which makes it straightforward for an attacker on the same network to intercept login credentials, inject malicious payloads into unencrypted traffic, or sit in the middle of a session entirely. The device itself may be fully patched and well-managed — the network it's connected to is the actual point of failure.</p>
+<h3>2. Unmanaged personal devices (BYOD)</h3>
+<p>BYOD policies solve a convenience problem and create a visibility one. Once corporate data lands on a personal phone or laptop, IT has little insight into how it's stored, whether it's synced to a personal cloud account, or what other apps on that device might have access to it. A lost or stolen personal device carrying cached credentials or unencrypted attachments turns an everyday inconvenience into a full data-breach investigation.</p>
+<h3>3. Weak password policies</h3>
+<p>Reused passwords, default manufacturer credentials left untouched on network devices, and passwords that just barely clear a length requirement are still the norm in a lot of organizations. Attackers don't need to work hard against this — password spraying and brute-force tools cycle through common and previously breached passwords at scale, and advanced persistent threat groups have specifically targeted sectors like healthcare, academia, and local government precisely because password hygiene there tends to lag. The same weak policies that let attackers in also cause a secondary problem: repeated failed attempts trigger account lockouts, creating a self-inflicted denial of service for legitimate users.</p>
+<h3>4. Single-factor authentication</h3>
+<p>A username and password is one piece of evidence, and it's the piece attackers are best equipped to steal — through phishing, credential-stuffing lists compiled from other breaches, or social engineering that talks a user into handing it over directly. Compromised credentials remain one of the most common single factors behind confirmed breaches industry-wide, and single-factor logins are especially risky for remote desktop access, where a stolen password is often the only thing standing between an attacker and full control of a machine.</p>
+<h3>5. Misconfigured cloud services</h3>
+<p>Moving to Microsoft 365, Google Workspace, or similar cloud suites doesn't automatically bring strong security with it — the platform ships with configurable protections, and if nobody configures them, the default posture is weaker than most admins assume. By a wide margin, the most common misconfiguration is simply never turning on multi-factor authentication for cloud accounts, which leaves them exposed to brute-force and password-guessing attacks. Outlook Web Access deployments in particular are a frequent target for exactly this kind of guessing attack, precisely because so many of them still authenticate with nothing but a password.</p>
+<h3>6. RDP security vulnerabilities</h3>
+<p>Remote Desktop Protocol is convenient enough that employees often reuse their regular device password for RDP logins rather than manage a separate credential, which means any credential-stuffing list that catches their device password also catches their remote access. Beyond weak credentials, RDP implementations have also had documented man-in-the-middle weaknesses that let an attacker intercept and hijack an active session outright — a second failure mode layered on top of the first.</p>
+<h3>7. Weak VPN security</h3>
+<p>A VPN is only as strong as the authentication protecting it and the segmentation behind it. Weak or shared passwords on VPN accounts, combined with split tunneling that lets a device talk to both the corporate network and the open internet simultaneously, create an opening for VPN hijacking and man-in-the-middle attacks. And because a VPN endpoint typically grants broad access into the internal network with few additional checks, a single compromised VPN credential can be far more damaging than a single compromised application login.</p>
+<h2 id="what-cisa-and-nist-sp-800-63b-actually-recommend">What CISA and NIST SP 800-63B actually recommend</h2>
+<p>The good news is that none of the seven risks above require exotic countermeasures — they map cleanly onto a short list of controls that CISA and NIST's identity guidelines have been recommending consistently.</p>
+<p><strong>Multi-factor authentication at the endpoint, not just the app.</strong> NIST SP 800-63B calls for a second authentication factor beyond a password — a one-time code, a push notification, a hardware token, or a biometric check — and CISA's guidance echoes it directly: never rely on a username and password alone. The important nuance is coverage. MFA bolted onto one cloud app while machine logins, VPN connections, and RDP sessions stay single-factor leaves the exact gaps described above wide open. Effective coverage means MFA at the OS login screen, the VPN gateway, and OWA, not just the SaaS dashboard.</p>
+<p><strong>Enforced password policies with real teeth.</strong> Length and complexity minimums are table stakes; the more effective layer is blocking specific weak patterns — dictionary words, palindromes, repeated characters pulled from a username, and reuse of a recent password — at the point of creation, so a weak password never gets set in the first place rather than getting flagged after the fact.</p>
+<p><strong>Blocking known-breached credentials before they're reused.</strong> CISA's credential-hardening guidance specifically calls for checking new passwords against databases of previously compromised credentials — services like Have I Been Pwned maintain exactly this kind of list — so a password that's already circulating on criminal forums never gets set as a live credential in your environment, even if it technically satisfies every complexity rule.</p>
+<p><strong>Passwordless access through SSO.</strong> Fewer standing passwords means fewer things for an attacker to phish, guess, or find in a breach dump. Single sign-on backed by SAML, OAuth, or OpenID Connect lets a user authenticate once — ideally with a strong factor like a passkey or biometric — and reach every authorized application without typing a password into each one separately, which also cuts down on the password fatigue that drives people toward reuse in the first place.</p>
+<p><strong>Conditional, risk-based access rules.</strong> Not every login attempt deserves the same level of trust. CISA recommends hardening conditional access so that context — the device being used, the IP address or geolocation it's coming from, the time of day — factors into whether a login is allowed, challenged with a step-up authentication prompt, or blocked outright. A login attempt from an unrecognized country at 3 a.m. local time is a meaningfully different risk than the same user logging in from their usual laptop during business hours, and policy should treat it that way.</p>
+<p>ManageEngine <a href="/manageengine/adselfservice-plus.html">ADSelfService Plus</a> is built specifically around this set of recommendations rather than treating them as separate projects. It layers MFA across more than twenty authentication methods — from TOTP and push notifications to FIDO2 passkeys and hardware tokens — onto Windows, macOS, and Linux logins, VPN connections, OWA, and cloud applications; enforces custom password policies that block weak, dictionary, and reused passwords at the OU or domain level; checks new passwords against Have I Been Pwned during resets so breached credentials never get reused; and offers SSO for passwordless access alongside conditional access rules based on device, location, and time. For a sysadmin working through the risk list above, it's less a separate tool to bolt on and more a single console for enforcing the exact controls CISA and NIST already describe.</p>
+<blockquote>An endpoint outside the office isn't automatically less secure — it's just no longer protected by anything you didn't explicitly configure for it.</blockquote>
+<h2 id="turning-guidance-into-a-rollout-checklist">Turning guidance into a rollout checklist</h2>
+<p>Recommendations are only useful once they're sequenced. A practical rollout order looks like this:</p>
+<ul>
+<li><strong>Start with MFA on the highest-value login paths</strong> — VPN, RDP, and OWA first, since these are the paths most directly exposed to the internet and most commonly targeted by credential-based attacks.</li>
+<li><strong>Layer in breached-credential blocking</strong> at the next password reset cycle, so it's enforced without requiring a disruptive forced reset for every user on day one.</li>
+<li><strong>Tighten password policy rules</strong> gradually by OU, starting with privileged accounts and service accounts, where a compromise has the highest blast radius.</li>
+<li><strong>Introduce conditional access rules</strong> in monitor-only mode first to see what legitimate traffic looks like, then switch to enforcement once you're confident the rules won't lock out remote employees traveling or working odd hours.</li>
+<li><strong>Move toward SSO and passwordless</strong> last, once MFA and conditional access are stable, since it depends on both being solid to be a net security improvement rather than a convenience-only change.</li>
+</ul>
+<h2 id="common-mistakes-that-undercut-endpoint-security">Common mistakes that undercut endpoint security</h2>
+<p><strong>Treating BYOD as an IT afterthought.</strong> A device that was never provisioned by IT still needs a security baseline — minimum OS version, encryption enabled, screen lock enforced — before it's allowed to touch corporate data, not after an incident reveals it should have had one.</p>
+<p><strong>Enabling MFA for SaaS apps but not for machine and VPN logins.</strong> Attackers go around the strongest control in your environment by finding the weakest one still standing. Partial MFA coverage often just redirects an attacker's effort rather than stopping it.</p>
+<p><strong>Setting conditional access rules too rigidly on day one.</strong> Rules that don't account for legitimate travel, shared devices, or time zone differences generate enough support tickets that admins quietly loosen them — often more than the original risk justified. Start in monitoring mode and tighten gradually based on real traffic patterns.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is MFA alone enough to close most of these endpoint risks?</strong> It closes a large share of them, particularly single-factor authentication and misconfigured cloud services, but not all. Weak VPN segmentation, unmanaged BYOD devices, and unsecured public Wi-Fi involve network and device-management gaps that MFA doesn't directly address — MFA needs to sit alongside password policy enforcement, conditional access, and device baselines, not replace them.</p>
+<p><strong>Should organizations block public Wi-Fi use outright rather than try to secure it?</strong> Blocking it is rarely enforceable once employees are remote — a better approach is requiring a VPN or a zero-trust network access tool for any connection made outside a trusted network, so the public Wi-Fi itself becomes irrelevant to what an attacker on that network can actually see.</p>
+<p><strong>How does passwordless SSO reduce risk if a compromised device can still reach every app?</strong> It shifts the security burden onto a single, strongly protected authentication event — typically backed by a passkey, biometric, or hardware token — rather than dozens of independently guessable passwords. Combined with conditional access and endpoint MFA, a compromised device credential alone is no longer sufficient to reach sensitive applications.</p>
+<p>Endpoint security in a remote and hybrid environment isn't a single project with a finish line — it's a continuously enforced baseline that has to travel with the device wherever it goes. The seven risks covered here aren't hypothetical edge cases; they're the patterns showing up in breach reports year after year, and every one of them has a documented, well-understood fix. The organizations that stay ahead aren't the ones with the most tools — they're the ones that actually enforce MFA, password policy, and conditional access consistently across every login path, not just the ones that were easiest to configure first.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-the-endpoint-is-now-the-frontline">Why the endpoint is now the frontline</a></li><li><a href="#seven-endpoint-risks-reshaping-the-attack-surface">Seven endpoint risks reshaping the attack surface</a></li><li><a href="#what-cisa-and-nist-sp-800-63b-actually-recommend">What CISA and NIST SP 800-63B actually recommend</a></li><li><a href="#turning-guidance-into-a-rollout-checklist">Turning guidance into a rollout checklist</a></li><li><a href="#common-mistakes-that-undercut-endpoint-security">Common mistakes that undercut endpoint security</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

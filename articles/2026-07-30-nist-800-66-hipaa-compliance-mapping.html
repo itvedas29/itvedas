@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A practical mapping between NIST 800-66's HIPAA Security Rule guidance and real IAM controls — access authorization, access modification, and termination of access, explained with concrete implementation steps.">
+<meta name="keywords" content="NIST 800-66 HIPAA compliance mapping IAM controls, Compliance guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="NIST 800-66 and HIPAA: Mapping the Security Rule to Real IAM Controls | ITVedas">
+<meta property="og:description" content="A practical mapping between NIST 800-66's HIPAA Security Rule guidance and real IAM controls — access authorization, access modification, and termination of access, explained with concrete implementation steps.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-nist-800-66-hipaa-compliance-mapping">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-nist-800-66-hipaa-compliance-mapping">
+<title>NIST 800-66 and HIPAA: Mapping the Security Rule to Real IAM Controls | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "NIST 800-66 and HIPAA: Mapping the Security Rule to Real IAM Controls", "description": "A practical mapping between NIST 800-66's HIPAA Security Rule guidance and real IAM controls — access authorization, access modification, and termination of access, explained with concrete implementation steps.", "keywords": "NIST 800-66 HIPAA compliance mapping IAM controls", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Compliance", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#EC4899;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#EC48991f;border:1px solid #EC489944;color:#EC4899;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#EC489910,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#EC489914,#8B5CF610);border:1px solid #EC489933;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#EC489914,#8B5CF614);border:1px solid #EC489933;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/compliance/" class="nav-back">← Compliance</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/compliance/">Compliance</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Compliance</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>NIST 800-66 and HIPAA: Mapping the Security Rule to Real IAM Controls</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-healthcare-compliance-keeps-failing-at-the-it-layer">Why healthcare compliance keeps failing at the IT layer</a></li><li><a href="#what-nist-800-66-actually-is">What NIST 800-66 actually is</a></li><li><a href="#the-three-areas-revision-2-expands">The three areas revision 2 expands</a></li><li><a href="#mapping-recommendations-to-hipaa-citations-and-iam-controls">Mapping recommendations to HIPAA citations and IAM controls</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>NIST 800-66 and HIPAA: Mapping the Security Rule to Real IAM Controls</h1>
+<p>HIPAA's Security Rule is a compliance requirement, but it isn't a technical specification — it tells you that access to protected health information must be appropriately restricted and monitored, without telling you which log to check or which control actually satisfies the requirement. That translation gap is exactly what <strong>NIST Special Publication 800-66</strong> exists to close. It's the closest thing healthcare IT has to an official answer key, mapping HIPAA's legal obligations to concrete technical and administrative safeguards.</p>
+<p>This article walks through what NIST 800-66 covers, what changed in its second revision, and — most usefully — how its recommendations line up against specific HIPAA Security Rule citations and the identity and access management (IAM) controls that actually satisfy them in a real environment.</p>
+<h2 id="why-healthcare-compliance-keeps-failing-at-the-it-layer">Why healthcare compliance keeps failing at the IT layer</h2>
+<p>Healthcare remains one of the most heavily targeted sectors for cyberattacks, and the volume keeps climbing. Enforcement data submitted to the US Congress by the HHS Office for Civil Rights shows HIPAA violation counts rising by roughly 39% between 2017 and 2021, and separate reporting has tracked hundreds of healthcare breaches affecting tens of millions of individuals in a single half-year period. The pattern behind most of these incidents traces back to three recurring structural problems, not exotic attack techniques.</p>
+<p><strong>Lack of IT visibility.</strong> A typical healthcare delivery organization (HDO) runs on a patchwork of directories, electronic health record systems, medical devices, identity providers, and administrative software, often accumulated through years of mergers, department-level purchasing, and vendor-specific systems. Without a consolidated view across that patchwork, IT and security teams end up with identity and data silos where a genuine threat can go unnoticed simply because no one system shows the full picture.</p>
+<p><strong>Siloed identity management.</strong> Healthcare organizations run on more than permanent staff — contractors, agency clinicians, interns, and rotating residents all need accounts, often with access to sensitive systems, and often for a defined, short window. When onboarding and offboarding are manual and IT visibility is already thin, temporary accounts don't get closed out reliably, and they accumulate as inactive-but-still-valid credentials sitting on the network as an unnecessary attack surface.</p>
+<p><strong>Unmanaged access permissions.</strong> Access rights are supposed to shrink or change as a person's role changes, but in practice they tend to only grow. Without a clear, current picture of who can reach what protected health information (PHI) and why, organizations can't tell the difference between appropriate access and quiet privilege creep — and insiders, whether careless or malicious, are one of the most common sources of healthcare data exposure precisely because of that gap.</p>
+<h2 id="what-nist-800-66-actually-is">What NIST 800-66 actually is</h2>
+<p>NIST 800-66, formally titled the introductory resource guide for implementing the HIPAA Security Rule, was first published in 2008 by the National Institute of Standards and Technology. It isn't a law and it isn't itself enforceable — HIPAA and its implementing regulations remain the legal requirement — but it's the standard reference healthcare organizations and their auditors use to translate the Security Rule's administrative, physical, and technical safeguard requirements into practical guidance. Where the Security Rule says access to ePHI must be authorized appropriately, NIST 800-66 walks through what "appropriately" should actually involve.</p>
+<h2 id="the-three-areas-revision-2-expands">The three areas revision 2 expands</h2>
+<p>The current revision of NIST 800-66 substantially expands the guidance around identity and access management, organizing it into three connected areas that map neatly onto the lifecycle of a user account:</p>
+<ul>
+<li><strong>Access Authorization.</strong> Before anyone touches ePHI, the organization needs to have decided and documented how access to privileged functions gets granted in the first place, and whether a single access control method is sufficient or whether the risk assessment calls for layered controls.</li>
+<li><strong>Access Establishment and Modification.</strong> Access isn't a one-time grant — personnel access to ePHI needs periodic review to confirm it's still authorized and still needed, and it needs to be actively modified, not just left alone, whenever a review turns up a mismatch between what someone has and what their current role requires.</li>
+<li><strong>Termination of Access.</strong> When someone's relationship with the organization ends or changes, their access needs to end or change with it. The revision specifically calls out user recertification processes as a mechanism for enforcing least privilege on an ongoing basis, not just at the moment someone leaves.</li>
+</ul>
+<p>Read together, these three areas describe a full identity lifecycle: authorize deliberately, review and adjust continuously, and terminate cleanly. Most HIPAA-related access failures trace back to a break in one of these three links — usually the middle one, where access reviews either don't happen on a defined cadence or happen without any real modification following from them.</p>
+<h2 id="mapping-recommendations-to-hipaa-citations-and-iam-controls">Mapping recommendations to HIPAA citations and IAM controls</h2>
+<p>The genuinely useful part of NIST 800-66 is that it doesn't stop at abstract principles — it ties recommendations back to specific numbered provisions of the HIPAA Security Rule. Here's how the major recommendation clusters translate into implementable controls.</p>
+<h3>Authentication and identity verification</h3>
+<p>NIST 800-66 recommends implementing strong user authentication and verifying user identity before granting access — this maps to HIPAA §164.312(a)(1) (access control) and §164.312(d) (person or entity authentication). In practice, this is where multi-factor authentication, single sign-on, and passwordless authentication live. The control isn't satisfied by a username and password alone; the Security Rule's authentication requirement is specifically about confirming that the person requesting access is who they claim to be, which is exactly what MFA and risk-based authentication (evaluating factors like geolocation, device type, and recent failed logon attempts) are designed to do.</p>
+<h3>Role-based access control</h3>
+<p>The recommendation to enforce access based on job function maps to HIPAA §164.312(a)(2)(iii) (access control) and connects back to the Access Authorization and Access Establishment provisions. The corresponding IAM control is role-based access control (RBAC): access rights defined by role, group, and department rather than granted ad hoc per request, ideally provisioned through templates so bulk changes — like a new cohort of residents starting at once — don't require rebuilding permissions from scratch each time.</p>
+<h3>Access reviews and certification</h3>
+<p>This is the recommendation most organizations struggle to operationalize. NIST 800-66 calls for regularly reviewing personnel access to ePHI and modifying it based on what those reviews find, tying back to HIPAA §164.308(a)(4)(i) and §164.308(a)(4)(ii)(C) (information access management). The IAM control is a recurring access certification workflow — not a one-time audit, but a scheduled process where managers or resource owners actively confirm each person under their scope still needs the access they currently hold, with the results feeding directly into deprovisioning.</p>
+<h3>Audit logging and monitoring</h3>
+<p>NIST 800-66 recommends maintaining user activity logs and audit trails and monitoring for anomalous activity, mapping to HIPAA §164.312(b) (audit controls). This is satisfied by real-time auditing of file and system access, with particular attention to access attempts against sensitive or restricted resources, and ideally supplemented by user behavior analytics that can flag activity deviating from a person's established access pattern — the kind of anomaly a static permissions list would never surface on its own.</p>
+<h3>Incident response</h3>
+<p>Finally, the guide recommends a documented incident response process, mapping to HIPAA §164.308(a)(6)(i) (security incident procedures). For identity specifically, this means having a defined, fast path to revoke access and force credential resets for a compromised account, backed by the audit trail from the previous control so the scope of an incident can actually be established rather than guessed at.</p>
+<blockquote>"[We will] continue to provide guidance and technical assistance on compliance with the HIPAA Rules" — OCR Director Melanie Fontes Rainer, on the agency's enforcement posture toward healthcare organizations.</blockquote>
+<div class="callout"><div class="callout-title">Pro Tip</div>Platforms purpose-built for AD and identity governance, like <a href="/manageengine/ad360.html">ManageEngine AD360</a>, ship with pre-built reporting aligned to HIPAA (and other frameworks like GDPR, PCI-DSS, and SOX) alongside access certification workflows — which turns the Access Establishment and Modification requirement from a manual quarterly scramble into a scheduled, evidence-generating process your compliance team can point to directly.</div>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a mid-sized hospital network running three separate EHR-adjacent directories accumulated through two prior acquisitions, with contractor and locum clinician accounts provisioned manually by whichever department needed the extra staffing. An internal audit ahead of a HIPAA risk assessment finds 340 active accounts belonging to people who left contracts or rotations more than 90 days earlier, several dozen of which still have standing access to ePHI-bearing systems.</p>
+<p>Working from the NIST 800-66 framework, the security team first tackles Access Authorization: they formalize a documented process requiring every new account, including short-term contractor accounts, to go through a defined approval step tied to role rather than ad hoc departmental requests. Next, Access Establishment and Modification: they stand up a quarterly access certification cycle where department managers must actively confirm each person's access is still needed, rather than access defaulting to "still valid" by omission. Finally, Termination of Access: they integrate offboarding triggers from HR and contract-management systems directly into the identity platform, so an end-date on a locum's contract automatically flags the account for review rather than relying on someone remembering to submit a ticket.</p>
+<p>Within two quarters, the stale-account count drops from 340 to single digits, and — just as importantly — the organization now has a documented, repeatable process to show a HIPAA auditor, rather than a one-time cleanup that will quietly decay again without a supporting workflow behind it.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<p><strong>Treating NIST 800-66 as a checklist to complete once.</strong> Every one of its three core recommendation areas is explicitly about an ongoing process — authorization decisions, recurring reviews, and termination triggers — not a static configuration you set and forget. A HIPAA audit six months after a one-time cleanup will usually find the same problems creeping back.</p>
+<p><strong>Running access reviews without a modification step attached.</strong> A review that confirms "yes, this person still has access" without ever asking "should they" isn't actually satisfying the Access Establishment and Modification guidance — it's just documentation theater. The review has to be able to result in access being pulled back, or it isn't doing its job.</p>
+<p><strong>Leaving contractor and temporary accounts outside the standard lifecycle.</strong> These accounts are explicitly called out in the underlying problem NIST 800-66 addresses, and they're consistently the accounts most likely to be missed by manual processes because they don't sit neatly inside a standard HR onboarding/offboarding pipeline.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is following NIST 800-66 legally required for HIPAA compliance?</strong><br>No — HIPAA itself, not NIST 800-66, is the legal requirement. NIST 800-66 is guidance, but it's the guidance HHS and auditors reference most often when evaluating whether an organization's technical safeguards are reasonable and appropriate, which makes it a de facto standard even without being law itself.</p>
+<p><strong>How is NIST 800-66 different from NIST 800-53 or the NIST Cybersecurity Framework?</strong><br>NIST 800-53 is a broad, general-purpose catalog of security and privacy controls used across federal systems and many industries. The NIST Cybersecurity Framework is a high-level risk-management structure. NIST 800-66 is narrower and specifically scoped to interpreting the HIPAA Security Rule, making it the more directly actionable reference for healthcare-specific compliance work.</p>
+<p><strong>Do small clinics need the same level of IAM automation as large hospital networks?</strong><br>The scale of tooling should match the scale of the organization, but the underlying requirement doesn't change — even a small practice handling ePHI needs a documented authorization process, some form of periodic access review, and a reliable way to terminate access. Smaller organizations can often meet this with lighter-weight tooling, but skipping the process entirely because the staff count is low is a common and risky assumption.</p>
+<p>NIST 800-66 works precisely because it refuses to stay abstract — every recommendation eventually points back to a specific HIPAA citation and, from there, to a control you can actually build and audit. Organizations that treat identity lifecycle management as a continuous, automated process rather than an annual scramble consistently produce cleaner audits and, more importantly, close the exact gaps that keep showing up in HHS enforcement data year after year.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-healthcare-compliance-keeps-failing-at-the-it-layer">Why healthcare compliance keeps failing at the IT layer</a></li><li><a href="#what-nist-800-66-actually-is">What NIST 800-66 actually is</a></li><li><a href="#the-three-areas-revision-2-expands">The three areas revision 2 expands</a></li><li><a href="#mapping-recommendations-to-hipaa-citations-and-iam-controls">Mapping recommendations to HIPAA citations and IAM controls</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

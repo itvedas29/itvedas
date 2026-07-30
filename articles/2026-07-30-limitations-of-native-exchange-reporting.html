@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Why native Exchange Admin Center, PowerShell, and raw XML audit logs fall short for real operational visibility, alerting, and compliance reporting.">
+<meta name="keywords" content="limitations of native Exchange reporting, Exchange auditing tools, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Why Native Microsoft Exchange Reporting Falls Short (and What Fills the Gap) | ITVedas">
+<meta property="og:description" content="Why native Exchange Admin Center, PowerShell, and raw XML audit logs fall short for real operational visibility, alerting, and compliance reporting.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-limitations-of-native-exchange-reporting">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-limitations-of-native-exchange-reporting">
+<title>Why Native Microsoft Exchange Reporting Falls Short (and What Fills the Gap) | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Why Native Microsoft Exchange Reporting Falls Short (and What Fills the Gap)", "description": "Why native Exchange Admin Center, PowerShell, and raw XML audit logs fall short for real operational visibility, alerting, and compliance reporting.", "keywords": "limitations of native Exchange reporting, Exchange auditing tools", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 9 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Why Native Microsoft Exchange Reporting Falls Short (and What Fills the Gap)</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-exchange-visibility-is-a-security-problem-not-just-an-admin-chore">Why Exchange visibility is a security problem, not just an admin chore</a></li><li><a href="#the-manual-log-parsing-problem">The manual log-parsing problem</a></li><li><a href="#the-lack-of-real-time-alerting">The lack of real-time alerting</a></li><li><a href="#mailbox-permission-tracking-gaps">Mailbox permission tracking gaps</a></li><li><a href="#compliance-reporting-difficulty">Compliance reporting difficulty</a></li><li><a href="#what-a-dedicated-reporting-layer-actually-adds">What a dedicated reporting layer actually adds</a></li><li><a href="#a-practical-checklist">A practical checklist</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Why Native Microsoft Exchange Reporting Falls Short (and What Fills the Gap)</h1>
+<p>Email is still the system most attackers try to touch first and the system most auditors ask about last-minute. It carries sensitive attachments, it's the default recovery path for half of your other accounts, and it's where a compromised mailbox turns into a business email compromise incident within hours, not days. Given how central it is, it's a little surprising how thin Microsoft's own native tooling is when it comes to actually reporting on and auditing what's happening inside an Exchange environment.</p>
+<p>This isn't a knock on Exchange itself as a mail platform — it's a specific, well-known gap in the reporting and auditing layer that sits on top of it. Administrators who've spent time in the Exchange Admin Center or Exchange Management Shell already know the shape of the problem. This article breaks down exactly where native tooling falls short and what a dedicated reporting layer needs to provide to close the gap.</p>
+<h2 id="why-exchange-visibility-is-a-security-problem-not-just-an-admin-chore">Why Exchange visibility is a security problem, not just an admin chore</h2>
+<p>It's tempting to file "Exchange reporting" under routine administration — mailbox sizes, storage growth, the occasional usage report for a capacity planning meeting. In practice, the same data that answers those questions is also the data that answers much sharper questions: who accessed a mailbox they don't normally use, when a distribution list quietly gained an external member, or whether a departing employee's forwarding rule is siphoning mail to a personal address before their last day.</p>
+<p>The wider your visibility gap into Exchange, the more of that activity happens without anyone noticing until it's already a problem — and by the time an anomaly in email activity becomes visible through its consequences (a phishing campaign launched from a compromised internal account, a data leak traced back to a forwarding rule), the investigation is starting from a deficit. Good Exchange reporting isn't a nice-to-have next to security monitoring; it's part of it.</p>
+<h2 id="the-manual-log-parsing-problem">The manual log-parsing problem</h2>
+<p>Say you want to know which mailboxes had auditing enabled and review recent audit activity. The native path runs through the Exchange Management Shell: cmdlets like <code>Set-Mailbox</code> to configure auditing, then a look at the audit log through the Exchange Admin Center or further PowerShell queries to pull the results. That part is manageable. The problem shows up right after.</p>
+<p>The audit output itself comes back as raw, largely unstructured data — effectively XML that wasn't designed for a human to read casually. For any environment with more than a handful of mailboxes, that means sifting through what can easily run to hundreds of thousands of lines to find the handful of events that actually matter, and doing the correlation — connecting a permission change here to a login there — entirely by hand. There's no reporting layer translating raw entries into "who did what, to what, and when" in a form you can scan in thirty seconds.</p>
+<blockquote>A log you can technically query isn't the same as a report you can actually read — and the difference is exactly the time an administrator spends turning one into the other.</blockquote>
+<p>This matters more than it sounds like on paper. An administrator who has to manually parse logs every time a question comes up will, in practice, only do it when something has already clearly gone wrong. Routine proactive review — the kind that catches problems before they escalate — quietly stops happening, not because anyone decided it wasn't worth doing, but because the tooling makes it expensive enough that it keeps losing to whatever's more urgent that day.</p>
+<h2 id="the-lack-of-real-time-alerting">The lack of real-time alerting</h2>
+<p>Native Exchange tooling is fundamentally built around <strong>pull</strong>, not <strong>push</strong>. If you want to know whether something changed, you go and look — run a cmdlet, open the admin center, generate a report. There's no equivalent of "notify me the moment a mailbox permission changes" or "alert me if a user's storage quota spikes abnormally overnight" built into the platform in a way that's easy to configure and act on.</p>
+<p>That gap matters most for exactly the events that shouldn't wait for someone to go looking:</p>
+<ul>
+<li>A mailbox suddenly granted full-access or send-as permission to another user — a classic step in setting up covert access to sensitive mail.</li>
+<li>Bulk changes to distribution group membership, especially additions of external or unexpected addresses.</li>
+<li>Unusual spikes in outbound mail volume from a single account, often the first visible sign of a compromised mailbox being used to send spam or phishing mail internally.</li>
+<li>Repeated failed logon attempts against a mailbox, or successful logons from unfamiliar locations.</li>
+</ul>
+<p>Without real-time alerting, every one of these is only discoverable retroactively, during a scheduled review or after the damage prompted someone to go check. The delay between the event and someone noticing it is, in effect, the attacker's dwell time.</p>
+<h2 id="mailbox-permission-tracking-gaps">Mailbox permission tracking gaps</h2>
+<p>Mailbox permissions — full access, send-as, send-on-behalf, folder-level delegation — accumulate over time in most organizations, usually for legitimate reasons: an assistant needs calendar access, a manager needs to cover a colleague's inbox during leave, a shared mailbox gets delegated to a growing list of team members. Individually, each grant is reasonable. Collectively, over a few years, they add up to a permission map almost nobody in the organization could reconstruct from memory.</p>
+<p>Native tooling can tell you the current state of permissions on a given mailbox if you specifically query it, one mailbox at a time. What it doesn't give you easily is the other direction: a consolidated view across the whole environment of who has access to what, when each grant was made, and whether any of it should have been revoked already — for instance, permissions left over from a role someone moved out of six months ago. Reconstructing that picture natively means writing and maintaining your own scripts to enumerate permissions across every mailbox and diff the results over time, which is exactly the kind of ongoing engineering effort most IT teams don't have spare capacity for.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Treat mailbox permission sprawl the same way you'd treat AD group membership sprawl: schedule a periodic review, not just a reactive one. If you can't currently produce a full list of every non-owner with access to every mailbox in under a few minutes, that's a strong sign your current tooling is making the review harder than it needs to be — and harder reviews get skipped.</div>
+<h2 id="compliance-reporting-difficulty">Compliance reporting difficulty</h2>
+<p>Most regulatory frameworks that touch email — SOX, HIPAA, PCI DSS, GLBA, GDPR, and FISMA among them — share a common underlying requirement even though their specific language differs: organizations need to demonstrate, with evidence, who accessed what data, when, and whether appropriate controls were in place. For an Exchange environment, that means producing records of mailbox access, permission changes, and content handling on demand, not reconstructing them from scratch when an auditor asks.</p>
+<p>Native Exchange tooling can technically supply the underlying data for most of this, since the audit logs exist. What it doesn't supply is the reporting layer that turns raw logs into something resembling a compliance report — pre-formatted, mapped to a specific regulation's requirements, ready to hand to an auditor. Building that mapping yourself, mandate by mandate, from raw XML audit entries is a substantial and easy-to-get-wrong undertaking, and it's work that has to be redone or re-verified every time the regulatory requirements shift.</p>
+<p>The practical result in a lot of organizations is that compliance reporting for Exchange becomes a rushed, once-a-year scramble ahead of an audit, rather than a continuous, low-effort byproduct of normal operations — which is backwards from how it should work, and considerably more stressful for whoever ends up owning the task.</p>
+<h2 id="what-a-dedicated-reporting-layer-actually-adds">What a dedicated reporting layer actually adds</h2>
+<p>The gaps above share a common shape: the underlying data mostly exists somewhere in Exchange, but turning it into something usable requires manual effort, scripting expertise, or both, applied consistently and repeatedly. A dedicated Exchange reporting and auditing tool exists specifically to remove that manual layer — pre-built reports instead of raw XML, configurable real-time alerts instead of pull-only queries, and a consolidated permission and compliance view instead of one-mailbox-at-a-time scripting.</p>
+<p><a href="/manageengine/exchange-reporter-plus.html">ManageEngine Exchange Reporter Plus</a> is a purpose-built example of this category — a GUI-based reporting, auditing, and monitoring layer over Exchange Server, Exchange Online, and related services, with prebuilt reports covering mailbox activity and permissions, configurable alert profiles for real-time notification on critical changes, and out-of-the-box compliance reports mapped to mandates like SOX, HIPAA, PCI DSS, GLBA, and FISMA. The value isn't that it accesses different data than the native tools — it's that it removes the manual translation step between "the data exists" and "the data is actually useful to an administrator or an auditor."</p>
+<h2 id="a-practical-checklist">A practical checklist</h2>
+<p>Before assuming your current Exchange visibility is adequate, work through these questions honestly:</p>
+<ul>
+<li>Could you produce a report of every mailbox permission change in the last 90 days without writing a new script from scratch?</li>
+<li>Would you find out about an unexpected full-access grant on a sensitive mailbox within minutes, or only during your next scheduled review?</li>
+<li>Can you generate a compliance-ready report for your relevant regulatory mandate today, in a format you'd actually hand to an auditor?</li>
+<li>Do you have a consolidated view of who has access to which mailboxes across the whole organization, or only the ability to check one mailbox at a time?</li>
+<li>Is your Exchange monitoring proactive — alerts that come to you — or reactive, requiring someone to go looking?</li>
+</ul>
+<p>If most of those answers involve "we'd have to build that" or "we'd find out eventually," that's the manual-tooling gap showing up in practice, not a hypothetical risk.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Can PowerShell scripting close these gaps on its own?</strong> To a meaningful degree, yes — most of what a dedicated tool provides can theoretically be built with enough custom PowerShell scripting and scheduled tasks. The tradeoff is ongoing engineering time: someone has to write, test, and maintain those scripts indefinitely, and update them every time Microsoft changes cmdlet behavior or a compliance mandate's requirements shift. A dedicated reporting tool trades that ongoing maintenance burden for a licensing cost.</p>
+<p><strong>Does Microsoft 365's built-in compliance center solve this for Exchange Online?</strong> It helps for organizations fully in the cloud, and Microsoft has invested more in this area over time, but coverage and depth still vary by license tier, and hybrid environments running on-premises Exchange alongside Exchange Online often find native tooling inconsistent across the two. Dedicated third-party reporting tools are frequently chosen specifically because they present one consistent view across both.</p>
+<p><strong>Is real-time alerting really necessary, or is daily reporting good enough?</strong> It depends on what you're trying to catch. Daily reporting is fine for capacity and usage trends. For security-relevant events — permission escalation, unusual send volume, suspicious logons — the gap between the event and detection directly extends how long an attacker or a rule-breaking insider has to operate unnoticed, which is exactly why those specific events warrant real-time alerting rather than a daily digest.</p>
+<p>Native Exchange tooling was never really designed to be a security and compliance reporting platform — it was designed to let administrators configure and manage the mail system, with auditing bolted on as a byproduct. That's a reasonable design choice for Microsoft to have made, but it leaves a real gap for any organization that needs to actually see, in usable form, what's happening inside its Exchange environment — and closing that gap is worth treating as a deliberate decision, not an afterthought.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-exchange-visibility-is-a-security-problem-not-just-an-admin-chore">Why Exchange visibility is a security problem</a></li><li><a href="#the-manual-log-parsing-problem">The manual log-parsing problem</a></li><li><a href="#the-lack-of-real-time-alerting">The lack of real-time alerting</a></li><li><a href="#mailbox-permission-tracking-gaps">Mailbox permission tracking gaps</a></li><li><a href="#compliance-reporting-difficulty">Compliance reporting difficulty</a></li><li><a href="#what-a-dedicated-reporting-layer-actually-adds">What a dedicated reporting layer adds</a></li><li><a href="#a-practical-checklist">A practical checklist</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

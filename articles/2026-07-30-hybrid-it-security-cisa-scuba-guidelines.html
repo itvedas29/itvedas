@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="How CISA's SCuBA guidance applies to hybrid AD and Azure AD environments, why duplicated identities create risk, and the unified controls that close the gap.">
+<meta name="keywords" content="hybrid IT security CISA SCuBA guidelines AD Azure AD, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Securing Hybrid IT: Applying CISA's SCuBA Guidelines to On-Prem AD and Azure AD | ITVedas">
+<meta property="og:description" content="How CISA's SCuBA guidance applies to hybrid AD and Azure AD environments, why duplicated identities create risk, and the unified controls that close the gap.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-hybrid-it-security-cisa-scuba-guidelines">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-hybrid-it-security-cisa-scuba-guidelines">
+<title>Securing Hybrid IT: Applying CISA's SCuBA Guidelines to On-Prem AD and Azure AD | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Securing Hybrid IT: Applying CISA's SCuBA Guidelines to On-Prem AD and Azure AD", "description": "How CISA's SCuBA guidance applies to hybrid AD and Azure AD environments, why duplicated identities create risk, and the unified controls that close the gap.", "keywords": "hybrid IT security CISA SCuBA guidelines AD Azure AD", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 10 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Securing Hybrid IT: Applying CISA's SCuBA Guidelines to On-Prem AD and Azure AD</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-hybrid-identity-actually-looks-like">What hybrid identity actually looks like</a></li><li><a href="#why-two-identity-planes-are-harder-to-secure-than-one">Why two identity planes are harder to secure than one</a></li><li><a href="#what-cisas-scuba-guidance-actually-recommends">What CISA's SCuBA guidance actually recommends</a></li><li><a href="#the-controls-that-unify-a-hybrid-identity-estate">The controls that unify a hybrid identity estate</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Securing Hybrid IT: Applying CISA's SCuBA Guidelines to On-Prem AD and Azure AD</h1>
+<p>Most enterprises never made a clean jump from on-premises Active Directory to the cloud. They landed somewhere in between, and stayed there — years past what anyone originally called a "transition period." Legacy line-of-business apps still need low-latency access to an on-prem AD, sensitive workloads stay put for regulatory reasons, and meanwhile every new SaaS tool, every Microsoft 365 rollout, and every remote-work initiative adds another cloud identity layer on top. That's hybrid IT, and it isn't a phase — for most organizations it's the permanent operating model.</p>
+<p>The problem is that identity and access management (IAM) tooling rarely evolved to match. Admins end up running two parallel identity systems — on-prem AD and Azure AD (or another cloud IdP) — stitched together with synchronization jobs, custom scripts, and a lot of manual double-entry. The <strong>Cybersecurity and Infrastructure Security Agency (CISA)</strong> recognized this gap explicitly in its <strong>Secure Cloud Business Applications (SCuBA)</strong> project, publishing hybrid identity solutions architecture guidance aimed at exactly this seam between on-prem and cloud identity. This article walks through where hybrid identity actually breaks down, what SCuBA recommends, and how to translate that guidance into controls you can implement.</p>
+<h2 id="what-hybrid-identity-actually-looks-like">What hybrid identity actually looks like</h2>
+<p>In a hybrid architecture, a single employee typically has two parallel identity footprints: an on-prem AD account governing access to internal file shares, legacy applications, and site logins, and a cloud identity — often Azure AD, synchronized from that same on-prem account — governing Microsoft 365, SaaS single sign-on, and cloud-native services. Directory synchronization tools keep the two loosely in step, but "loosely" is the operative word: sync intervals, conflicting attribute sources, and manually-managed exceptions all introduce drift between what an admin thinks a user's access looks like and what it actually is.</p>
+<p>Layer in a second or third cloud platform — Google Workspace for a subset of departments, an independent HCM system, an Exchange Server that hasn't been fully migrated — and the picture gets messier still. Every one of those platforms has its own user objects, its own group model, and often its own authentication path. None of this is unusual; it's simply what happens when an organization adopts cloud services incrementally instead of migrating everything on a single weekend.</p>
+<h2 id="why-two-identity-planes-are-harder-to-secure-than-one">Why two identity planes are harder to secure than one</h2>
+<p>The security cost of running parallel identity systems shows up in a handful of predictable, recurring ways:</p>
+<ul>
+<li><strong>Duplicated provisioning effort.</strong> Onboard one new employee and an admin using native tools has to create a matching identity in AD, then again in Azure AD or Microsoft 365, then again in Google Workspace, then again in whatever else the role requires — each with its own console, its own naming convention, and its own chance to be forgotten or done inconsistently. The same duplication applies in reverse at offboarding, which is the more dangerous direction: a missed step there leaves a live account behind.</li>
+<li><strong>Repeated and reused credentials.</strong> When employees juggle logins across systems that were never unified under single sign-on, password fatigue sets in and the same password gets reused across applications. That single habit is what turns one leaked credential into a foothold across multiple systems, and it's exactly the mechanism behind credential-stuffing and brute-force campaigns.</li>
+<li><strong>Low visibility into indicators of compromise.</strong> Splitting activity across two or more logging domains means SOC teams are working from a fragmented, partially-duplicated view of the network. A pattern that would be an obvious red flag in a single consolidated timeline — repeated failed logins, an unusual process spawned from an unexpected parent, a spike in privileged file access — can sit unnoticed across separate log stores long enough for an attacker to complete lateral movement.</li>
+<li><strong>Inconsistent compliance reporting.</strong> Most compliance frameworks require organizations to show who accessed what, when, and from where, across the full environment — not just the on-prem half or the cloud half. Assembling that picture manually from disconnected systems is slow, error-prone, and exactly the kind of piecemeal reporting that turns a routine audit into a costly one.</li>
+</ul>
+<blockquote>Every unmanaged seam between identity systems is a place where an attacker only has to be right once, and your monitoring only has to miss once.</blockquote>
+<h2 id="what-cisas-scuba-guidance-actually-recommends">What CISA's SCuBA guidance actually recommends</h2>
+<p>SCuBA's hybrid identity solutions architecture guidance isn't a product endorsement — it's a set of architectural principles for securing the connective tissue between on-prem and cloud identity, aimed primarily at federal agencies but broadly applicable to any hybrid enterprise. Two recommendations come up repeatedly and are worth calling out specifically:</p>
+<p>First, deploy <strong>multi-factor authentication (MFA) and single sign-on (SSO)</strong> consistently across both environments, treating phishing resistance as a baseline expectation rather than an aspiration. A hybrid environment where MFA is enforced in the cloud but optional on-prem, or where SSO covers half the application portfolio, is only as strong as its weakest enforced path — and attackers reliably find that path.</p>
+<p>Second, apply <strong>behavioral, risk-based monitoring</strong> to identity activity rather than relying on static rules alone. CISA specifically frames this around establishing what normal user behavior looks like, which assets carry the most risk, and who should plausibly be requesting access to a given resource — then flagging deviations from that baseline. That's a meaningfully higher bar than traditional signature-based alerting, and it requires visibility that spans both identity planes, not one.</p>
+<p>Underneath both of these sits a structural precondition the guidance keeps returning to: you can't apply consistent MFA, consistent SSO, or consistent behavioral baselining to an identity estate that's split across disconnected consoles. Unification isn't a nice-to-have layered on top of the security controls — it's the thing that makes the controls possible to apply consistently in the first place.</p>
+<h2 id="the-controls-that-unify-a-hybrid-identity-estate">The controls that unify a hybrid identity estate</h2>
+<p>Translating that guidance into practice comes down to five control areas, each addressing one of the gaps above:</p>
+<h3>Unified identity lifecycle management</h3>
+<p>Provisioning, modification, and deprovisioning need to happen from one workflow that fans out to every connected directory and application, not from five separate admin consoles run in sequence. Template-based creation — pulling attributes from an HR system so a new hire's department, title, and group memberships populate consistently across AD, Azure AD, Exchange, and any connected SaaS platform — removes both the manual labor and the inconsistency that comes with doing it by hand five times. The same logic matters even more at offboarding: a single deprovisioning action that actually reaches every connected system is what prevents an account in the third or fourth platform down the list from quietly staying active.</p>
+<h3>Centralized MFA across endpoints and applications</h3>
+<p>MFA needs to cover the full surface — Windows, macOS, and Linux logins, VPN and RADIUS-based gateways, Outlook Web Access, and cloud application sign-ins — under one policy, not a patchwork where cloud apps require a second factor and legacy on-prem systems don't. Supporting a broad range of authentication factors, rather than mandating a single hardware token, is what makes org-wide enforcement realistic without constant help-desk friction over lost devices.</p>
+<h3>Single sign-on that spans on-prem and cloud</h3>
+<p>SSO built on standard protocols (SAML, OAuth, OpenID Connect) collapses the number of credentials a user juggles, which directly attacks the password-reuse problem — there's simply less to reuse when one authentication event covers both the internal application and the SaaS tool. It also gives security teams one place to revoke access instantly rather than chasing sessions across systems.</p>
+<h3>Real-time, cross-environment change auditing</h3>
+<p>Detecting the indicators of compromise that matter — anomalous logon patterns, privilege escalation, unusual file or folder activity, a spike in failed authentication attempts — requires a single audit trail spanning both AD and the cloud directory, correlated automatically rather than reviewed log-by-log across separate consoles. This is also where the behavioral baselining CISA calls for actually becomes achievable: you can't baseline "normal" against a dataset that's missing half the activity.</p>
+<h3>Consistent compliance and backup/recovery</h3>
+<p>Regulatory frameworks like HIPAA, SOX, and GDPR don't care which directory an access event happened in — they expect one coherent answer to "who accessed what, and when." Reporting built to span both environments turns an audit from a multi-week evidence hunt into a scheduled export. The same logic extends to disaster recovery: object-level backup and restoration across on-prem AD, Azure AD, and connected mail and collaboration platforms means a bad change or a ransomware event doesn't require rebuilding half the identity estate from scratch.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Don't treat identity unification as a monitoring upgrade you bolt on after the fact. Start by consolidating the provisioning workflow first — every duplicated manual step you remove is also a duplicated opportunity for drift and error you remove, which makes the auditing and monitoring layered on top of it dramatically more trustworthy.</div>
+<p>Platforms purpose-built for this problem, like <a href="/manageengine/ad360.html">ManageEngine AD360</a>, package these five control areas into a single console spanning AD, Azure AD, Microsoft 365, Google Workspace, and Exchange — which is precisely the kind of consolidation SCuBA's guidance points toward: fewer disconnected admin surfaces, one policy for MFA and SSO enforcement, and one correlated audit trail instead of five partial ones. Whether an organization builds that unification through an integrated platform or through carefully-wired native tools, the underlying requirement from the guidance doesn't change — the seam between on-prem and cloud identity has to be actively managed, not left to sync jobs and best intentions.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a mid-sized healthcare-adjacent logistics company running on-prem AD for its warehouse management systems and Azure AD for Microsoft 365 and a handful of SaaS tools. A departing warehouse supervisor's AD account gets disabled the day they leave — HR's exit checklist covers that — but the Azure AD account, provisioned separately eighteen months earlier by a different admin during a Microsoft 365 rollout, isn't on that checklist at all. It stays active with mailbox access and Teams membership for four months before a routine license-cost review turns it up.</p>
+<p>Nothing malicious happened in this case, but the exposure window was real: four months of a live, unmonitored account with mailbox access tied to a former employee, invisible to anyone until a cost audit — not a security review — happened to surface it. The fix wasn't a better offboarding checklist; checklists that span two disconnected consoles fail exactly this way eventually. The fix was collapsing provisioning and deprovisioning into one workflow that touches every connected directory the moment HR marks the employee as terminated, backed by a unified audit view that would have flagged the still-active cloud session well before a billing report did.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<ul>
+<li><strong>Treating directory sync as identity unification.</strong> Tools that synchronize AD to Azure AD keep attributes loosely aligned, but they don't give you a single provisioning workflow, a single MFA policy, or a single audit trail. Sync is plumbing, not governance — it moves data between two systems that are still independently managed.</li>
+<li><strong>Enforcing MFA and SSO inconsistently across environments.</strong> Rolling out strong authentication to cloud apps first and leaving on-prem systems on password-only "for now" is how that gap becomes permanent. Attackers don't respect your migration roadmap; they'll use whichever path is weaker today.</li>
+<li><strong>Auditing each environment in isolation.</strong> Reviewing on-prem AD logs and cloud sign-in logs as two separate exercises, on two separate schedules, means correlated attack patterns — the kind that span both environments by design — never get connected until after the fact, if at all.</li>
+</ul>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is SCuBA a compliance requirement, or just guidance?</strong><br>SCuBA originated as CISA guidance primarily for U.S. federal civilian agencies and their cloud deployments, so it carries mandatory weight in that context. For private-sector organizations it isn't a regulatory requirement, but the underlying architecture recommendations — consistent MFA and SSO, behavioral monitoring, unified visibility — are widely applicable best practice for any organization running hybrid AD and cloud identity, regardless of sector.</p>
+<p><strong>Does adopting these controls mean abandoning on-prem AD entirely?</strong><br>No. SCuBA's hybrid guidance explicitly addresses organizations that will run on-prem and cloud identity side by side for the foreseeable future — it's not a migration mandate. The goal is securing the hybrid state itself, not accelerating a full cloud move that many organizations have legitimate reasons to delay.</p>
+<p><strong>Where should a resource-constrained IT team start?</strong><br>Start with provisioning and deprovisioning, since that's where duplicated effort and stale accounts originate. A single onboarding/offboarding workflow that reaches every connected directory closes the highest-risk gap fastest, and it makes every control layered on top of it — MFA enforcement, SSO rollout, unified auditing — easier to implement consistently, because you're no longer managing identity truth in five different places.</p>
+<p>Hybrid IT isn't a temporary awkward phase between on-prem and cloud — for most organizations, it's simply what the environment looks like for years at a stretch. Treating the seam between AD and Azure AD as a permanent architectural feature, rather than a gap to be closed later, is what actually reduces risk: unify the identity lifecycle, enforce authentication consistently across both planes, and give the SOC one correlated view instead of two partial ones. That's the throughline of CISA's SCuBA guidance, and it holds regardless of which specific tools an organization uses to implement it.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-hybrid-identity-actually-looks-like">What hybrid identity actually looks like</a></li><li><a href="#why-two-identity-planes-are-harder-to-secure-than-one">Why two identity planes are harder to secure than one</a></li><li><a href="#what-cisas-scuba-guidance-actually-recommends">What CISA's SCuBA guidance actually recommends</a></li><li><a href="#the-controls-that-unify-a-hybrid-identity-estate">The controls that unify a hybrid identity estate</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

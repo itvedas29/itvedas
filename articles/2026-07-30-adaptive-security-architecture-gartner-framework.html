@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Why perimeter-only security fails, and how Gartner's Adaptive Security Architecture — Predict, Prevent, Detect, Respond — gives IT teams a continuous, identity-centric framework instead.">
+<meta name="keywords" content="Gartner adaptive security architecture predict prevent detect respond framework, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Gartner's Adaptive Security Architecture: Predict, Prevent, Detect, Respond Explained | ITVedas">
+<meta property="og:description" content="Why perimeter-only security fails, and how Gartner's Adaptive Security Architecture — Predict, Prevent, Detect, Respond — gives IT teams a continuous, identity-centric framework instead.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-30-adaptive-security-architecture-gartner-framework">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-30-adaptive-security-architecture-gartner-framework">
+<title>Gartner's Adaptive Security Architecture: Predict, Prevent, Detect, Respond Explained | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Gartner's Adaptive Security Architecture: Predict, Prevent, Detect, Respond Explained", "description": "Why perimeter-only security fails, and how Gartner's Adaptive Security Architecture — Predict, Prevent, Detect, Respond — gives IT teams a continuous, identity-centric framework instead.", "keywords": "Gartner adaptive security architecture predict prevent detect respond framework", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-30", "dateModified": "2026-07-30", "articleSection": "Security", "educationalLevel": "Advanced / Expert"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-30</span>
+    <span class="badge-info">⏱ 11 min read</span>
+    <span class="badge-info">🎓 Advanced / Expert</span>
+  </div>
+  <h1>Gartner's Adaptive Security Architecture: Predict, Prevent, Detect, Respond Explained</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#why-perimeter-only-security-fails">Why perimeter-only security fails</a></li><li><a href="#the-four-stages-predict-prevent-detect-respond">The four stages: Predict, Prevent, Detect, Respond</a></li><li><a href="#the-four-components-that-power-the-loop">The four components that power the loop</a></li><li><a href="#why-identity-is-the-new-control-plane">Why identity is the new control plane</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <h1>Gartner's Adaptive Security Architecture: Predict, Prevent, Detect, Respond Explained</h1>
+<p>Most security programs are still built around a question from a decade ago: how do we keep attackers out? That question assumes a boundary — a network perimeter, a firewall rule set, a VPN gateway — that separates "trusted" from "untrusted." It made sense when employees, applications, and data all sat inside a building you controlled. It makes far less sense when your workforce logs in from home Wi-Fi, your applications run in three different clouds, and your most valuable data lives in a SaaS platform you don't operate. Attackers know this too, which is why so many modern breaches don't involve breaching a perimeter at all — they involve a stolen credential walking in the front door.</p>
+<p>Gartner's <strong>Adaptive Security Architecture (ASA)</strong> is a response to that shift. It's not a product category or a checklist — it's a way of framing security as a continuous cycle rather than a wall. This article breaks down what the framework actually means, why "prevent-only" thinking leaves organizations exposed, and how the four stages of ASA fit together with identity-centric monitoring to close the gap.</p>
+<h2 id="why-perimeter-only-security-fails">Why perimeter-only security fails</h2>
+<p>Traditional security architecture optimizes almost entirely for prevention: firewalls, antivirus, intrusion prevention systems, and access control lists, all designed to stop a threat before it gets in. The implicit assumption is that if prevention is strong enough, detection and response barely matter — the bad guys simply won't get through.</p>
+<p>That assumption breaks down for three connected reasons. First, the attack surface no longer has a single edge. Cloud infrastructure, remote endpoints, SaaS applications, and third-party integrations all extend the effective perimeter past anything a firewall can see, let alone control. Second, attackers have gotten faster and more automated — modern intrusion techniques increasingly skip malware entirely in favor of stolen credentials and living-off-the-land tooling that prevention controls were never designed to catch, because nothing about a valid login looks malicious to a firewall. Third, and most uncomfortably, no prevention control is ever 100% effective indefinitely. A security architecture that only invests in keeping attackers out has no answer for the moment — and eventually there is a moment — when one gets in anyway.</p>
+<p>Gartner frames this as the difference between <strong>incident response</strong> and <strong>continual response</strong>. Incident response is reactive by nature: something happens, an alert fires, and a team scrambles to contain it. Continual response is a standing posture — ongoing monitoring, continuous risk assessment, and defenses that adjust themselves as conditions change, rather than waiting for a trigger. ASA is built around continual response, treating security not as a wall you build once but as a loop that never stops running.</p>
+<blockquote>A security architecture built only to keep attackers out has nothing left to do the moment one gets in.</blockquote>
+<h2 id="the-four-stages-predict-prevent-detect-respond">The four stages: Predict, Prevent, Detect, Respond</h2>
+<p>Gartner's ASA framework organizes security activity into four stages that run continuously and feed into each other, rather than a linear sequence you complete once. Each stage has a distinct job:</p>
+<ul>
+<li><strong>Predict.</strong> Anticipate likely threats and attack paths before they materialize. This means assessing and prioritizing exposure across your environment, baselining normal system and user behavior so deviations are visible later, and using threat intelligence to understand what techniques are actually being used against organizations like yours right now. Prediction isn't fortune-telling — it's disciplined risk assessment that narrows down where an attacker is most likely to try next.</li>
+<li><strong>Prevent.</strong> Harden systems and isolate exposure based on what the predict stage surfaced. This includes classic controls — patching, configuration hardening, access restrictions — but applied with priority given to the highest-risk exposures identified upstream, rather than spread evenly and thinly across everything.</li>
+<li><strong>Detect.</strong> Assume prevention will sometimes fail, and build the visibility to notice when it does. This requires continuous monitoring across users, systems, network activity, and application payloads — not periodic scans, but an always-on view that can surface an incident while it's still small.</li>
+<li><strong>Respond.</strong> Once something is detected, confirm and prioritize the risk, contain the incident, and — critically — feed what was learned back into the predict and prevent stages. A response that doesn't produce a policy change or a new detection rule is a wasted response; the whole point of the loop is that each cycle makes the next one stronger.</li>
+</ul>
+<p>The stages sit on top of two continuous threads that run underneath all four: <strong>continuous visibility and assessment</strong> of your posture, and <strong>policy</strong> that gets adjusted as conditions change, all governed by ongoing compliance requirements. Nothing in this model is a one-time project — the loop is the architecture.</p>
+<h2 id="the-four-components-that-power-the-loop">The four components that power the loop</h2>
+<p>Underneath the four stages, Gartner describes four functional components that make the loop actually work in practice:</p>
+<ul>
+<li><strong>Visibility</strong> — the ability to see what's actually happening across the network, endpoints, and identity systems. Without visibility, "detect" is just a label on an empty box. This is typically built from network monitoring, endpoint telemetry, and intrusion detection tooling working together rather than any single source.</li>
+<li><strong>Intelligence</strong> — the ability to interpret what visibility tools are showing you. Raw log volume isn't insight; you need analysts and, increasingly, machine-assisted analytics that can tell the difference between a benign anomaly and an early-stage attack.</li>
+<li><strong>Automation</strong> — the ability to act on intelligence without waiting for a human to manually execute every step. Automatically quarantining a file flagged as malware, or disabling an account showing anomalous login behavior, compresses the time between detection and containment from hours to seconds.</li>
+<li><strong>Response</strong> — the ability to execute a real plan once an incident is confirmed, not improvise one under pressure. This means pre-built playbooks, clear ownership, and the authority to act quickly once intelligence and automation have done their part.</li>
+</ul>
+<p>These four components map cleanly onto the four stages: visibility and intelligence largely serve predict and detect, while automation and response serve prevent and respond. Weakness in any one component drags the whole loop down — automation without intelligence just acts fast on bad information, and visibility without automation means you see problems form in real time but can only react to them at human speed.</p>
+<div class="callout"><div class="callout-title">Pro Tip</div>Don't try to build all four ASA stages to full maturity at once. Most organizations get the fastest risk reduction by shoring up detect first — because it's usually the weakest of the four in a perimeter-oriented program — then using what detection surfaces to sharpen predict and prevent. Respond maturity tends to follow naturally once you're actually generating real incidents to practice on.</div>
+<h2 id="why-identity-is-the-new-control-plane">Why identity is the new control plane</h2>
+<p>If the perimeter no longer defines the boundary of what needs protecting, something else has to anchor the architecture — and for most organizations, that's identity. Every stage of ASA touches identity in some way: predicting risk means understanding which accounts have excessive standing privilege, preventing breaches means enforcing least-privilege access and strong authentication, detecting threats means noticing when a user's behavior deviates from their own baseline, and responding means being able to disable or restrict an account the instant it's implicated.</p>
+<p>This is where <strong>user and entity behavior analytics (UEBA)</strong> earns its place in an adaptive architecture. Rather than relying purely on static rules and signature-based alerts, UEBA profiles what normal looks like for each user and device — typical logon hours, typical resource access, typical device fingerprint — and flags deviations for investigation. It's a natural fit for the predict and detect stages, because it turns identity activity itself into a continuous source of threat visibility, not just an access-control gate you configure once.</p>
+<p>In practice, this is exactly the territory covered by identity-centric platforms like <strong>ManageEngine AD360</strong> (<a href="/manageengine/ad360.html">/manageengine/ad360.html</a>), which combines identity lifecycle management, adaptive risk-based authentication, real-time change auditing, and UEBA-driven anomaly detection in a single console spanning Active Directory, Microsoft 365, and Exchange. Rather than treating identity governance and threat detection as separate disciplines, a platform like this lets an organization implement the detect and respond stages of ASA around the identity layer specifically — flagging an unusual logon location or a suspicious privilege change as it happens, and giving administrators the audit trail and controls to act on it immediately rather than discovering it during a quarterly review.</p>
+<h2 id="a-real-world-example">A real-world example</h2>
+<p>Consider a mid-sized financial services firm that, for years, ran a textbook perimeter model: strong firewalls, mandatory VPN for remote access, and an antivirus suite on every endpoint. Its security team spent almost all its budget and attention on prevention, with detection limited to a SIEM that mostly generated noise nobody had time to triage properly.</p>
+<p>An attacker obtains a valid employee's credentials through a phishing email — nothing about the login itself trips any prevention control, because it's a real username and password used through the VPN exactly as intended. Under the old model, this session would likely run unnoticed for days or weeks, since nothing in the architecture was watching for behavioral anomalies once someone was authenticated.</p>
+<p>After adopting an ASA-aligned approach, the same firm has baselined normal behavior for every account as part of its predict stage. The compromised account logs in from a new geographic location at an unusual hour and immediately begins querying resources it has never touched before — a clear deviation from its baseline. UEBA-driven detection flags the session within minutes rather than weeks. Automated response temporarily restricts the account's access pending review, an analyst confirms the compromise using the audit trail, and the incident is contained before any data leaves the network. The firm then feeds the technique back into its prevention layer, tightening conditional access rules for that class of account — closing the loop exactly as the framework intends.</p>
+<h2 id="common-mistakes-to-avoid">Common mistakes to avoid</h2>
+<ul>
+<li><strong>Treating ASA as a product to buy rather than a model to operate.</strong> No single tool implements all four stages end to end. Organizations that go shopping for "the ASA solution" usually end up with a point product bolted onto an otherwise unchanged, prevention-heavy architecture. ASA is a way of organizing people, process, and technology together — the technology alone doesn't get you there.</li>
+<li><strong>Building detect and respond without ever closing the loop back to predict.</strong> An organization that investigates and contains every incident but never updates its risk model or hardening priorities based on what it learned is running incident response with extra steps, not continual response. The feedback loop is what makes the architecture adaptive rather than just reactive.</li>
+<li><strong>Ignoring identity as the connective tissue across all four stages.</strong> Teams sometimes bolt UEBA or adaptive authentication onto an existing perimeter stack as an afterthought, rather than recognizing identity as the layer that ties prediction, prevention, detection, and response together once the network boundary stops being meaningful.</li>
+</ul>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>Is Adaptive Security Architecture the same thing as Zero Trust?</strong><br>They're closely related but not identical. Zero Trust is primarily an access philosophy — never trust, always verify, regardless of network location. ASA is a broader operating model for the entire security lifecycle, of which strong identity verification (a Zero Trust principle) is one supporting element, alongside prediction, detection, and response capabilities that Zero Trust alone doesn't specify.</p>
+<p><strong>Do small and mid-sized organizations really need all four ASA stages, or is this only relevant for large enterprises?</strong><br>The framework scales down fine — smaller organizations just implement it with fewer, more consolidated tools. A single identity and access platform with built-in behavior analytics and auditing can cover meaningful ground across predict, detect, and respond without requiring a dedicated team for each stage, which matters most for organizations that can't staff a full security operations center.</p>
+<p><strong>Where should a team with limited budget start?</strong><br>Start with visibility, because none of the other three stages work without it. You can't predict risk you can't see, can't detect a deviation from a baseline you never established, and can't respond to an incident you didn't notice. Identity and access telemetry is usually the highest-leverage place to start, since it's relevant to every stage of the loop.</p>
+<p>Adaptive Security Architecture isn't a rejection of prevention — it's an acknowledgment that prevention alone was never going to be enough once the perimeter stopped being a meaningful boundary. Organizations that build the full predict-prevent-detect-respond loop, anchored around continuous identity visibility, end up with something a static firewall rule set never could: a security posture that gets measurably better every time it's tested, instead of one that only finds out it failed after the damage is done.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#why-perimeter-only-security-fails">Why perimeter-only security fails</a></li><li><a href="#the-four-stages-predict-prevent-detect-respond">The four stages: Predict, Prevent, Detect, Respond</a></li><li><a href="#the-four-components-that-power-the-loop">The four components that power the loop</a></li><li><a href="#why-identity-is-the-new-control-plane">Why identity is the new control plane</a></li><li><a href="#a-real-world-example">A real-world example</a></li><li><a href="#common-mistakes-to-avoid">Common mistakes to avoid</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
