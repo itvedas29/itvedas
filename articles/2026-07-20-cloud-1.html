@@ -87,6 +87,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 @media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How fast does Kubernetes scale up?", "acceptedAnswer": {"@type": "Answer", "text": "Usually within 1-2 minutes. The system detects high demand (1-2 seconds), makes the decision (10-30 seconds), pulls the container image, and starts it (30-60 seconds). Total time: roughly 90 seconds in most setups."}}, {"@type": "Question", "name": "Does auto scaling cost extra?", "acceptedAnswer": {"@type": "Answer", "text": "No. Kubernetes is open-source and free. However, you pay for the underlying servers you use. The benefit is you pay only for servers you actually need, reducing overall costs by 30-50% on average."}}, {"@type": "Question", "name": "Can auto scaling break my app?", "acceptedAnswer": {"@type": "Answer", "text": "Rarely, if configured properly. The main risk is rapid scaling up and down (called \"thrashing\"). Fix this by setting scale-down delays and using stable metrics. Most apps handled by Google Cloud and AWS have built-in safeguards."}}]}</script>
 </head>
 <body>
 <div class="progress"><div class="pb" id="pb"></div></div>
