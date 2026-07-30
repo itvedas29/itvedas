@@ -457,13 +457,13 @@ def build_page(content, meta, date_str, modified_date=None, filename=None, level
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:{color};--border:rgba(255,255,255,0.08);}}
+:root{{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:{color};--border:rgba(24,34,56,0.12);}}
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
 html{{scroll-behavior:smooth;}}
 body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}}
 .progress{{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}}
 .pb{{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}}
-nav{{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
+nav{{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
 .logo{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}}
 .logo span{{color:#FF6B35;}}
 .nav-back{{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}}
@@ -482,7 +482,7 @@ article{{min-width:0;}}
 .toc-label{{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}}
 .toc ul{{list-style:none;}}
 .toc a{{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}}
-.toc a:hover{{color:var(--text);background:rgba(255,255,255,0.04);border-left-color:var(--accent);padding-left:0.9rem;}}
+.toc a:hover{{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}}
 article h2{{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}}
 article h2::before{{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}}
 article h3{{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}}
@@ -602,12 +602,12 @@ def update_homepage(state):
         )
     section = (
         '<!-- LATEST_ARTICLES_START -->\n'
-        '<div id="latest-articles" style="background:#13131C;border-top:1px solid rgba(255,255,255,0.08);'
-        'border-bottom:1px solid rgba(255,255,255,0.08);padding:5rem 2rem;">'
+        '<div id="latest-articles" style="background:#FFFFFF;border-top:1px solid rgba(24,34,56,0.12);'
+        'border-bottom:1px solid rgba(24,34,56,0.12);padding:5rem 2rem;">'
         '<div style="max-width:1200px;margin:0 auto;">'
         '<div style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FF6B35;margin-bottom:0.75rem;">Latest Articles</div>'
         '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;">Fresh from the Knowledge Hub</h2>'
-        '<p style="color:#8888A8;margin-bottom:2.5rem;max-width:500px;">New articles every Monday, Wednesday and Friday — always plain English, always free.</p>'
+        '<p style="color:#6B7A94;margin-bottom:2.5rem;max-width:500px;">New articles every Monday, Wednesday and Friday — always plain English, always free.</p>'
         f'<div class="latest-articles-grid">{items}</div></div></div>\n'
         '<!-- LATEST_ARTICLES_END -->'
     )
@@ -669,11 +669,11 @@ def build_chapter_pages(state):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{{--bg:#0A0A0F;--bg2:#13131C;--text:#F0F0F8;--muted:#8888A8;--sub:#D0D0E8;--accent:{color};--border:rgba(255,255,255,0.08);}}
+:root{{--bg:#EEF3FC;--bg2:#FFFFFF;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:{color};--border:rgba(24,34,56,0.12);}}
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
 html{{scroll-behavior:smooth;}}
 body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}}
-nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
+nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}}
 .logo{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}}
 .logo span{{color:#FF6B35;}}
 .nav-links{{display:flex;gap:1.5rem;}}
@@ -707,7 +707,7 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .other{{margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);}}
 .oc-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.75rem;margin-top:1.5rem;}}
 .oc{{display:flex;align-items:center;gap:0.6rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1rem;text-decoration:none;color:var(--sub);font-size:0.875rem;transition:border-color .2s,color .2s;}}
-.oc:hover{{border-color:rgba(255,255,255,0.2);color:var(--text);}}
+.oc:hover{{border-color:rgba(24,34,56,0.22);color:var(--text);}}
 footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}}
 .fl{{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}}
 .fl span{{color:#FF6B35;}}
@@ -794,14 +794,14 @@ def send_email(meta, filename, score):
         msg = MIMEMultipart("alternative")
         msg["Subject"] = f"ITVedas published: {meta['title']}"
         msg["From"], msg["To"] = SMTP_FROM, NOTIFY_TO
-        html = f"""<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#0A0A0F;color:#F0F0F8;border-radius:12px;overflow:hidden;">
+        html = f"""<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;background:#EEF3FC;color:#182238;border-radius:12px;overflow:hidden;">
 <div style="background:linear-gradient(135deg,#FF6B35,#8B5CF6);padding:1.75rem;text-align:center;"><h1 style="margin:0;font-size:1.4rem;color:#fff;">New ITVedas article is live</h1></div>
 <div style="padding:1.75rem;">
-<div style="background:#13131C;border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;">
-<p style="font-size:0.75rem;color:#8888A8;margin:0 0 0.5rem;text-transform:uppercase;letter-spacing:0.1em;">{meta['topic']}</p>
+<div style="background:#FFFFFF;border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;">
+<p style="font-size:0.75rem;color:#6B7A94;margin:0 0 0.5rem;text-transform:uppercase;letter-spacing:0.1em;">{meta['topic']}</p>
 <h2 style="margin:0 0 0.75rem;font-size:1.25rem;">{meta['title']}</h2>
-<p style="color:#8888A8;margin:0 0 1rem;font-size:0.9rem;">{meta['description']}</p>
-<p style="color:#8888A8;margin:0;font-size:0.85rem;">Quality score: <strong style="color:#10B981;">{score}/100</strong> · {datetime.date.today().isoformat()}</p>
+<p style="color:#6B7A94;margin:0 0 1rem;font-size:0.9rem;">{meta['description']}</p>
+<p style="color:#6B7A94;margin:0;font-size:0.85rem;">Quality score: <strong style="color:#10B981;">{score}/100</strong> · {datetime.date.today().isoformat()}</p>
 </div>
 <div style="text-align:center;"><a href="{SITE_URL}/articles/{filename}" style="display:inline-block;background:#FF6B35;color:#fff;padding:0.85rem 2rem;border-radius:8px;text-decoration:none;font-weight:600;">View Live Article →</a></div>
 </div></div>"""

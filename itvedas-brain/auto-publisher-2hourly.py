@@ -220,7 +220,7 @@ Article category: {topic['category']}
 <link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/auto-generated/{slug}.html">
 <link rel="alternate" hreflang="en" href="https://itvedas.com/articles/auto-generated/{slug}.html">
 <style>
-:root{{--bg:#0A0A0F;--bg2:#13131C;--bg3:#1C1C2A;--text:#F0F0F8;--muted:#8888A8;--accent:#FF6B35;}}
+:root{{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--accent:#FF6B35;}}
 *{{box-sizing:border-box;margin:0;padding:0;}}
 body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.8;}}
 article{{max-width:860px;margin:4rem auto;padding:2rem;}}
