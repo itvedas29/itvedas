@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn how phishing attacks work and 5 proven ways to protect yourself. Keep your passwords and money safe from scammers today.">
+<meta name="keywords" content="how does a phishing attack work and how to avoid it, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="How Does a Phishing Attack Work and How to Avoid It | ITVedas">
+<meta property="og:description" content="Learn how phishing attacks work and 5 proven ways to protect yourself. Keep your passwords and money safe from scammers today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-07-31-security">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-07-31-security">
+<title>How Does a Phishing Attack Work and How to Avoid It | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "How Does a Phishing Attack Work and How to Avoid It", "description": "Learn how phishing attacks work and 5 proven ways to protect yourself. Keep your passwords and money safe from scammers today.", "keywords": "how does a phishing attack work and how to avoid it", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-07-31", "dateModified": "2026-07-31", "articleSection": "Security", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-07-31</span>
+    
+    <span class="badge-info">⏱ 7 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>How Does a Phishing Attack Work and How to Avoid It</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-a-phishing-attack">What Is a Phishing Attack?</a></li><li><a href="#how-does-a-phishing-attack-work">How Does a Phishing Attack Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example">A Real-World Example</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#how-to-protect-yourself-5-simple-steps">How to Protect Yourself: 5 Simple Steps</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#final-thoughts-you-re-in-control">Final Thoughts: You're in Control</a></li></ul></div>
+    <h1>How Does a Phishing Attack Work and How to Avoid It</h1>
+
+<p>Every day, millions of people receive fake emails designed to steal their passwords and money. These are called <strong>phishing attacks</strong>, and they're one of the easiest ways criminals hack into your accounts. The scary part? They look completely real.</p>
+
+<p>The good news: you can protect yourself. This guide shows exactly how phishing works and gives you five simple steps to stay safe. Whether you use Gmail, WhatsApp, or online banking, this matters to you.</p>
+
+<h2 id="what-is-a-phishing-attack">What Is a Phishing Attack?</h2>
+
+<blockquote>
+  <strong>Phishing</strong> is when a criminal pretends to be someone you trust (like your bank or Netflix) and tricks you into giving them your password or personal information. They "fish" for your data by casting a fake line and hoping you'll bite.
+</blockquote>
+
+<p>Think of it like this: imagine a thief calling you pretending to be your bank manager. They sound real, use your name, mention your account number. You believe them and tell them your PIN. That's phishing—but done through email, text, or fake websites instead of phone calls.</p>
+
+<p>In simple terms: A criminal sends you a fake message that looks like it's from someone real, hoping you'll click a link or enter your password.</p>
+
+<h2 id="how-does-a-phishing-attack-work">How Does a Phishing Attack Work?</h2>
+
+<p>Phishing attacks follow a simple but dangerous pattern. Here's the step-by-step process criminals use:</p>
+
+<ol>
+  <li><strong>They choose a target.</strong> Attackers pick a company everyone uses—Amazon, Google, your bank. Millions of people trust these names.</li>
+  
+  <li><strong>They copy the official email or website.</strong> Using free tools, they create a fake email address or website that looks identical to the real thing. The website <code>amaz0n.com</code> (with a zero instead of the letter O) might fool you for seconds.</li>
+  
+  <li><strong>They send thousands of fake messages.</strong> They email millions of people saying "Your account will close!" or "Click here to confirm payment." Most people delete it. But some click.</li>
+  
+  <li><strong>You click the link or enter your information.</strong> The fake website looks real. You type your email and password, thinking you're logging into the real site. You just gave criminals everything they need.</li>
+  
+  <li><strong>They steal your account.</strong> Now they have your password. They log into your real account, change it, steal your money, or sell your information.</li>
+</ol>
+
+<p>In simple terms: Fake message → You trust it → You click → You enter password → Criminal has access.</p>
+
+<div class="callout">
+  <div class="callout-title">Pro Tip</div>
+  <p>Criminals send phishing messages to thousands of people at once. Most ignore it. But if even 1% of people fall for it, that's still thousands of victims.</p>
+</div>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p>Phishing isn't just annoying—it directly affects your money and safety. Here's what happens if you fall for one:</p>
+
+<ul>
+  <li><strong>Your bank account gets emptied.</strong> A criminal logs into your banking app and transfers money to themselves.</li>
+  
+  <li><strong>Your email is hijacked.</strong> Criminals use your email to reset passwords on Netflix, Amazon, and other services. They use these accounts or sell them online.</li>
+  
+  <li><strong>Your identity is stolen.</strong> Criminals use your personal information (name, address, date of birth) to open credit cards or loans in your name.</li>
+  
+  <li><strong>Your photos and private messages are exposed.</strong> If they access your Gmail or WhatsApp, they can see everything you've ever shared.</li>
+</ul>
+
+<p>In simple terms: One phishing click can lead to your money being stolen, your accounts being hacked, or your identity being used by criminals.</p>
+
+<h2 id="a-real-world-example">A Real-World Example</h2>
+
+<p>Let's walk through exactly what a phishing attack looks like:</p>
+
+<p><strong>The Setup:</strong> You get an email from what looks like Netflix. The subject says "Your payment method has expired." It looks official—it even has Netflix's logo.</p>
+
+<p><strong>The Email Says:</strong> "Dear Customer, your payment method failed. Click here to update your card immediately. Your account will be canceled in 24 hours if you don't act now."</p>
+
+<p><strong>What You See:</strong> A big red button that says "UPDATE PAYMENT METHOD." You're nervous about losing Netflix, so you click it.</p>
+
+<p><strong>The Fake Website:</strong> You land on a page that looks exactly like Netflix. You see the Netflix logo, login form, and everything looks right. You enter your email and password.</p>
+
+<p><strong>What Really Happened:</strong> That website is fake. The criminal now has your Netflix email and password. But that's not all—most people use the same password everywhere. They try your password on Gmail, Amazon, and your bank. Two of those three probably work. Now they have full access to your accounts.</p>
+
+<p>In simple terms: One fake email made you think you had to act fast. You weren't careful. Your accounts are now compromised.</p>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<h3>Mistake #1: Trusting the Email Address</h3>
+
+<p><strong>The Problem:</strong> You see an email from "Netflix-Support@netflix.com" and assume it's real. But criminals can fake the name part. It might actually be from "netflix-support@fakenews.net" but the interface hides it.</p>
+
+<p><strong>The Fix:</strong> Always hover over or click the sender's name to see the full email address. Real Netflix emails come from addresses ending in <code>@netflix.com</code>, never from Gmail or Yahoo. If you're not sure, go directly to the official website instead of clicking links.</p>
+
+<h3>Mistake #2: Acting Too Fast</h3>
+
+<p><strong>The Problem:</strong> Phishing emails create panic: "Your account will close!" "Unusual activity detected!" "Click now or lose access!" This urgency makes you skip safety checks.</p>
+
+<p><strong>The Fix:</strong> Take a breath. Legitimate companies never demand instant action via email. If Netflix says your payment failed, log into Netflix directly using your bookmarks or typed URL—don't click the email link. Check if there's actually a problem.</p>
+
+<h3>Mistake #3: Not Checking the Link</h3>
+
+<p><strong>The Problem:</strong> You see a link that says "Click here to update your account." It looks official, so you click. But the actual URL is something like <code>amaz0n-security.tk</code>—completely fake.</p>
+
+<p><strong>The Fix:</strong> Before clicking any link, hover over it (don't click yet) to see the real URL. If it doesn't match the company's official website, it's fake. When in doubt, type the company's website address directly into your browser instead.</p>
+
+<h2 id="how-to-protect-yourself-5-simple-steps">How to Protect Yourself: 5 Simple Steps</h2>
+
+<ol>
+  <li><strong>Check the sender's email address carefully.</strong> Hover over the name to see the full email. Does it end in the company's official domain?</li>
+  
+  <li><strong>Look for spelling and grammar mistakes.</strong> Real companies proofread. Fake emails often have typos: "Amaz0n" instead of "Amazon" or "varify" instead of "verify."</li>
+  
+  <li><strong>Hover over links before clicking.</strong> See where the link actually goes. If it doesn't match the company's website, don't click it.</li>
+  
+  <li><strong>Never enter passwords from email links.</strong> Go directly to the official website instead. Type the address yourself or use a bookmark.</li>
+  
+  <li><strong>Use two-factor authentication (<code>2FA</code>).</strong> This means even if someone gets your password, they still can't access your account without a second approval (usually a code sent to your phone). Enable this on Gmail, Amazon, your bank, and any account with money.</li>
+</ol>
+
+<div class="callout">
+  <div class="callout-title">Pro Tip</div>
+  <p>If you get a suspicious email from "your bank," call your bank directly using the number on your debit card. Don't use any number from the email. Ask if they actually sent that message. Real banks always confirm this way.</p>
+</div>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Q: Is it safe to open phishing emails?</h3>
+
+<p><strong>A:</strong> Yes, opening the email is safe. The danger is clicking links or downloading attachments. Just delete it. However, if you've already clicked a link and entered information, change your passwords immediately and contact the real company.</p>
+
+<h3>Q: What should I do if I already clicked a phishing link?</h3>
+
+<p><strong>A:</strong> Don't panic. Here's what to do: (1) If you entered a password, change it immediately on the official website. (2) Check your account for suspicious activity. (3) Enable two-factor authentication if you haven't already. (4) Consider checking your credit report for unauthorized accounts. (5) If money was taken, contact your bank right away.</p>
+
+<h3>Q: Can I get phishing emails on WhatsApp or text messages?</h3>
+
+<p><strong>A:</strong> Yes. This is called <strong><code>smishing</code></strong> (SMS phishing). Someone might text you: "Amazon: Your package couldn't be delivered. Click here to reschedule." Same rules apply—don't click links from unexpected messages. Go directly to the official app instead.</p>
+
+<h2 id="final-thoughts-you-re-in-control">Final Thoughts: You're in Control</h2>
+
+<p>Phishing attacks are common, but they only work if you're not paying attention. You now know how they work and exactly how to stop them. The criminals are counting on you being rushed, tired, or trusting. Prove them wrong. Take two extra seconds to check the sender's email, hover over links, and go directly to official websites when entering passwords. That small habit will keep your money, your identity, and your accounts safe. You've got this.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-a-phishing-attack">What Is a Phishing Attack?</a></li><li><a href="#how-does-a-phishing-attack-work">How Does a Phishing Attack Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example">A Real-World Example</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#how-to-protect-yourself-5-simple-steps">How to Protect Yourself: 5 Simple Steps</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#final-thoughts-you-re-in-control">Final Thoughts: You're in Control</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
