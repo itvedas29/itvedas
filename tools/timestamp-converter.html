@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online Unix timestamp converter. Convert between Unix epoch time (seconds or milliseconds) and human-readable UTC / local dates instantly.">
+<meta property="og:title" content="Unix Timestamp Converter | IT Vedas">
+<meta property="og:description" content="Convert between Unix timestamps and human-readable UTC / local dates instantly.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/timestamp-converter">
+  <link rel="canonical" href="https://www.itvedas.com/tools/timestamp-converter">
+  <title>Unix Timestamp Converter | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #8888A8; margin-bottom: 2rem; font-size: 0.95rem; }
+    .now-bar {
+      background: #13131C;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .now-bar .label { color: #8888A8; font-size: 0.85rem; }
+    .now-bar .val { font-family: 'Courier New', monospace; color: #10B981; font-size: 1.3rem; font-weight: 700; }
+    .editor { background: #13131C; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #8888A8; }
+    input[type=text], input[type=datetime-local] {
+      width: 100%;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    input:focus { outline: none; border-color: #10B981; }
+    .out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+    .out-box { background: #0A0A0F; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.9rem 1rem; }
+    .out-box .k { color: #8888A8; font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .out-box .v { font-family: 'Courier New', monospace; color: #F0F0F8; font-size: 0.95rem; word-break: break-all; }
+    button { padding: 0.6rem 1.2rem; background: transparent; border: 1px solid rgba(16,185,129,0.4); color: #10B981; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .status { padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+    .status.error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #F87171; display: block; }
+    @media (max-width: 640px) { .out-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>⏰ Unix Timestamp Converter</h1>
+    <p class="description">Convert between Unix epoch time and human-readable dates in both UTC and your local timezone. Accepts seconds or milliseconds — all conversions happen locally in your browser.</p>
+
+    <div class="now-bar">
+      <div>
+        <div class="label">Current Unix time (seconds)</div>
+        <div class="val" id="nowValue">—</div>
+      </div>
+      <button data-onclick="useNow" class="handler-useNow">Use current time</button>
+    </div>
+
+    <div class="editor">
+      <label for="tsInput">Timestamp → Date</label>
+      <input type="text" id="tsInput" placeholder="Enter Unix timestamp (e.g. 1769385600)" spellcheck="false">
+      <div class="status" id="tsStatus"></div>
+      <div class="out-grid" id="tsOut" style="display:none;">
+        <div class="out-box"><div class="k">UTC</div><div class="v" id="outUtc"></div></div>
+        <div class="out-box"><div class="k">Local (<span id="tzName"></span>)</div><div class="v" id="outLocal"></div></div>
+        <div class="out-box"><div class="k">ISO 8601</div><div class="v" id="outIso"></div></div>
+        <div class="out-box"><div class="k">Relative</div><div class="v" id="outRel"></div></div>
+      </div>
+    </div>
+
+    <div class="editor">
+      <label for="dateInput">Date → Timestamp</label>
+      <input type="datetime-local" id="dateInput" step="1">
+      <div class="out-grid">
+        <div class="out-box"><div class="k">Unix (seconds)</div><div class="v" id="outSec">—</div></div>
+        <div class="out-box"><div class="k">Unix (milliseconds)</div><div class="v" id="outMs">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function tick() {
+      document.getElementById('nowValue').textContent = Math.floor(Date.now() / 1000);
+    }
+    setInterval(tick, 1000); tick();
+
+    document.getElementById('tzName').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
+
+    function relativeTime(then) {
+      const diff = then - Date.now();
+      const abs = Math.abs(diff);
+      const units = [['year',31536000000],['day',86400000],['hour',3600000],['minute',60000],['second',1000]];
+      for (const [name, ms] of units) {
+        if (abs >= ms || name === 'second') {
+          const v = Math.round(diff / ms);
+          const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+          return rtf.format(v, name);
+        }
+      }
+    }
+
+    function convertTimestamp() {
+      const raw = document.getElementById('tsInput').value.trim();
+      const status = document.getElementById('tsStatus');
+      const out = document.getElementById('tsOut');
+      if (!raw) { status.className = 'status'; out.style.display = 'none'; return; }
+
+      if (!/^-?\d+$/.test(raw)) {
+        status.textContent = '✗ Enter a numeric Unix timestamp';
+        status.className = 'status error';
+        out.style.display = 'none';
+        return;
+      }
+
+      let num = parseInt(raw, 10);
+      // Heuristic: 13+ digits = milliseconds, else seconds
+      const ms = raw.replace('-', '').length >= 13 ? num : num * 1000;
+      const d = new Date(ms);
+      if (isNaN(d.getTime())) {
+        status.textContent = '✗ Out of range';
+        status.className = 'status error';
+        out.style.display = 'none';
+        return;
+      }
+
+      status.className = 'status';
+      out.style.display = 'grid';
+      document.getElementById('outUtc').textContent = d.toUTCString();
+      document.getElementById('outLocal').textContent = d.toLocaleString();
+      document.getElementById('outIso').textContent = d.toISOString();
+      document.getElementById('outRel').textContent = relativeTime(ms);
+    }
+
+    function convertDate() {
+      const val = document.getElementById('dateInput').value;
+      if (!val) return;
+      const d = new Date(val);
+      if (isNaN(d.getTime())) return;
+      document.getElementById('outSec').textContent = Math.floor(d.getTime() / 1000);
+      document.getElementById('outMs').textContent = d.getTime();
+    }
+
+    function useNow() {
+      document.getElementById('tsInput').value = Math.floor(Date.now() / 1000);
+      convertTimestamp();
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('dateInput').value =
+        now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + 'T' +
+        pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+      convertDate();
+    }
+
+    document.getElementById('tsInput').addEventListener('input', convertTimestamp);
+    document.getElementById('dateInput').addEventListener('input', convertDate);
+    useNow();
+  </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</body>
+</html>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Unix Timestamp Converter | IT Vedas",
+  "description": "Convert between Unix timestamps and human-readable UTC / local dates instantly.",
+  "url": "https://www.itvedas.com/tools/timestamp-converter/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</html>
