@@ -97,7 +97,6 @@ NAV_MEGA_HTML = """<div class="nav-links">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
       <div class="nav-drop-panel simple">
         <a href="/news">📰 News</a>
-        <a href="/security-news">🛡️ Security News</a>
         <a href="/news/archive/">🗂️ News Archive</a>
         <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
         <a href="/faq">❓ FAQ</a>
@@ -428,7 +427,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
   <div class="flinks">
-    <a href="/">Home</a><a href="/news">News</a><a href="/security-news">Security News</a>
+    <a href="/">Home</a><a href="/news">News</a>
     <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
   </div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas</p>
@@ -537,13 +536,14 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 </div>
 <div class="main">
   <div class="filters">{filter_btns}</div>
+  <p style="font-size:.85rem;color:#64748B;margin:-0.5rem 0 1.5rem;">Want just breaches, CVEs and patches? <a href="/security-news" style="color:#10B981;font-weight:600;">See the dedicated security feed →</a></p>
   <div class="grid" id="grid">{cards}</div>
   <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>
 </div>
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>Original IT news and guides — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/security-news">Security News</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news/archive/">Full Archive</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} ITVedas · Original reporting</p>
 </footer>
 <script>

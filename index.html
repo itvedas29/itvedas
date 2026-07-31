@@ -202,7 +202,7 @@ nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;disp
 .tool-result.show{display:block;}
 
 /* news strip */
-.news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.news-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
 .news-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.35rem 1.5rem;text-decoration:none;color:inherit;transition:border-color .25s;display:flex;gap:1rem;align-items:flex-start;}
 .news-card:hover{border-color:rgba(16,185,129,0.4);}
 .news-card .ni{font-size:1.4rem;flex-shrink:0;}
@@ -306,7 +306,7 @@ footer{border-top:1px solid var(--border);margin-top:5rem;padding:3.5rem 2rem 2.
       <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
       <div class="nav-drop-panel simple">
         <a href="/news">📰 News</a>
-        <a href="/security-news">🛡️ Security News</a>
+        
         <a href="/news/archive/">🗂️ News Archive</a>
         <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
         <a href="/faq">❓ FAQ</a>
@@ -535,20 +535,13 @@ $ ssh student@lab
     <div class="sec-label">Stay Current</div>
     <h2>News &amp; live updates</h2>
     <div class="news-grid">
-      <a class="news-card" href="/news">
+      <div class="news-card">
         <span class="ni">📰</span>
         <div>
-          <h3>IT News</h3>
-          <p>268 stories and counting — cloud, AI, enterprise tech and industry moves, updated daily.</p>
+          <h3><a href="/news" style="color:inherit;text-decoration:none;">IT News</a></h3>
+          <p>268 stories and counting — cloud, AI, enterprise tech, breaches, ransomware, patches and CVE alerts, updated daily. Filter to security-only right on the page, or jump straight to the <a href="/security-news" style="font-weight:600;">dedicated security feed →</a></p>
         </div>
-      </a>
-      <a class="news-card" href="/security-news">
-        <span class="ni">🛡️</span>
-        <div>
-          <h3>Security News</h3>
-          <p>Breaches, ransomware, patches and CVE alerts — what happened and what you should do about it.</p>
-        </div>
-      </a>
+      </div>
     </div>
   </div>
 </div>
@@ -569,7 +562,7 @@ $ ssh student@lab
     </div>
     <div>
       <h4>Security</h4>
-      <a href="/security-news">Security News</a>
+      
       <a href="/articles/cve/">CVE Database</a>
       <a href="/news">IT News</a>
     </div>

@@ -176,7 +176,6 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
   <div class="flinks">
     <a href="/">Home</a>
     <a href="/news.html">News</a>
-    <a href="/security-news.html">Security News</a>
     <a href="/#chapters">Chapters</a>
     <a href="/career-paths.html">Career Paths</a>
     <a href="/faq.html">FAQ</a>

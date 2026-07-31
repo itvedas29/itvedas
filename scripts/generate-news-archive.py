@@ -127,7 +127,6 @@ NAV_MEGA_HTML = """<div class="nav-links">
       <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
       <div class="nav-drop-panel simple">
         <a href="/news">📰 News</a>
-        <a href="/security-news">🛡️ Security News</a>
         <a href="/news/archive/" class="active">🗂️ News Archive</a>
         <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
         <a href="/faq">❓ FAQ</a>
@@ -231,7 +230,7 @@ def render_page(items, page_num, total_pages):
   <div class="pager">{''.join(pager_links)}</div>
 </div>
 <footer>
-  <div class="flinks"><a href="/">Home</a><a href="/news">Latest News</a><a href="/security-news">Security News</a><a href="/sitemap.xml">Sitemap</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news">Latest News</a><a href="/sitemap.xml">Sitemap</a></div>
   <p style="margin-top:1rem;">&copy; 2026 ITVedas &middot; Original reporting</p>
 </footer>
 <script src="/js/nav-mega.js" defer></script>
