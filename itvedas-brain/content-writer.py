@@ -569,7 +569,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 <script>
@@ -595,7 +595,7 @@ def update_homepage(state):
     for a in recent:
         c = color_for(a.get("topic", "IT"))
         items += (
-            f'<a href="/articles/{a["file"]}" class="lac">'
+            f'<a href="/articles/{a["file"].removesuffix(".html")}" class="lac">'
             f'<span class="lac-badge" style="background:{c}1a;color:{c};">{a.get("topic","IT")}</span>'
             f'<div class="lac-title">{esc(a.get("title","Article"))}</div>'
             f'<div class="lac-meta">{a.get("date","")} · {a.get("rt","5 min read")}</div></a>'
@@ -635,7 +635,7 @@ def build_chapter_pages(state):
         arts = list(reversed(arts))
         if arts:
             cards = "".join(
-                f'<a href="/articles/{a["file"]}" class="art">'
+                f'<a href="/articles/{a["file"].removesuffix(".html")}" class="art">'
                 f'<div class="art-meta"><span>📅 {a.get("date","")}</span><span>⏱ {a.get("rt","5 min read")}</span></div>'
                 f'<h3 class="art-title">{esc(a.get("title","Article"))}</h3>'
                 f'<span class="art-link">Read article →</span></a>'
@@ -720,7 +720,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <body>
 <nav>
   <a href="/" class="logo">IT<span>Vedas</span></a>
-  <div class="nav-links"><a href="/">Home</a><a href="/news.html">📰 News</a><a href="/security-news.html" style="color:#10B981">🛡️ Security</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="nav-links"><a href="/">Home</a><a href="/news">📰 News</a><a href="/security-news" style="color:#10B981">🛡️ Security</a><a href="/#chapters">All Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
 </nav>
 <div class="hero">
   <div class="hero-glow"></div>
@@ -752,7 +752,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <footer>
   <div class="fl">IT<span>Vedas</span></div>
   <p>The complete IT knowledge hub — explained simply, for everyone.</p>
-  <div class="flinks"><a href="/">Home</a><a href="/news.html">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/#chapters">Chapters</a><a href="mailto:{CONTACT}">Contact</a></div>
   <p style="margin-top:1rem;">© {datetime.date.today().year} {SITE_NAME} · Knowledge for everyone</p>
 </footer>
 </body>

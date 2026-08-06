@@ -162,7 +162,11 @@ NEWS_FEEDS = [
 # left linking out to the source. Still capped (well above what a normal
 # run sees) so a pathological feed dump can't trigger unbounded Claude
 # calls / runtime in a single run.
-MAX_NEW_ARTICLES_PER_RUN = 25
+MAX_NEW_ARTICLES_PER_RUN = 8  # cut from 25 on 2026-08-06: news cron moved from
+# hourly to once-daily as part of an indexing-recovery pass (77% of the sitemap
+# was thin autopilot /news/ pages, GSC showed only 46 indexed). A once-daily run
+# would otherwise still dump up to 25 new pages in a single burst; capping it
+# lower keeps daily publish volume down while indexing catches up.
 
 def write_with_openai(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
