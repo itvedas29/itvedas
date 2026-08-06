@@ -29,7 +29,7 @@ def get_html_files():
     # without this it'd also appear as .../index.html (pre-clean-URL-fix)
     # or as a near-duplicate trailing-slash "/" entry (post-fix).
     for f in ROOT.glob("*.html"):
-        if f.name not in ["cve-database.html", "cve-database-complete.html", "index.html"]:
+        if f.name not in ["cve-database.html", "cve-database-complete.html", "index.html", "404.html"]:
             files["main"].append(f)
 
     # Article category index pages (articles/networking/, articles/cloud/, etc.)
