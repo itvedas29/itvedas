@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="A fresh attack method lets hackers bypass protections built into modern processors from major chip makers.">
+<meta name="keywords" content="Security news, IT news, Researchers Discover New CPU Weakness That Sideste">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Researchers Discover New CPU Weakness That Sidesteps Intel and AMD Security Patches | ITVedas News">
+<meta property="og:description" content="A fresh attack method lets hackers bypass protections built into modern processors from major chip makers.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://www.itvedas.com/news/2026-08-07-researchers-discover-new-cpu-weakness-that-sidesteps-intel-a">
+<title>Researchers Discover New CPU Weakness That Sidesteps Intel and AMD Security Patches | ITVedas News</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Researchers Discover New CPU Weakness That Sidesteps Intel and AMD Security Patches", "description": "A fresh attack method lets hackers bypass protections built into modern processors from major chip makers.", "datePublished": "2026-08-07", "dateModified": "2026-08-07", "author": {"@type": "Organization", "name": "ITVedas"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10B98122,#10B98108);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#10B98118,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #10B98144);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🔐</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news">News</a> › Security</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-08-07 · 05:01 AM IST</span>
+    <span class="badge-info">⏱ 3 min read</span>
+  </div>
+  <h1>Researchers Discover New CPU Weakness That Sidesteps Intel and AMD Security Patches</h1>
+  <p class="summary">A fresh attack method lets hackers bypass protections built into modern processors from major chip makers.</p>
+</div>
+<div class="article">
+  <h2 id="a-new-crack-in-the-armor">A New Crack in the Armor</h2>
+
+<p>Security researchers have identified a previously unknown technique that allows attackers to slip past security measures designed to protect Intel and AMD processors. Think of it like discovering a back door to a house that was supposed to be protected by an upgraded lock system—the lock works fine, but there's another way in that nobody anticipated.</p>
+
+<p>This attack, which involves manipulating processor interrupts (the signals that tell a computer to stop what it's doing and handle something urgent), can potentially give attackers access to sensitive information stored in your system's memory. The concerning part? The defenses that chip makers deployed years ago to stop similar attacks don't catch this new method.</p>
+
+<p>Meanwhile, Cisco, a major networking equipment manufacturer, has released emergency software patches to fix multiple serious security problems in their network switching and routing products. These vulnerabilities could allow unauthorized access to systems running Cisco equipment, regardless of how those systems are configured—suggesting the problems are deeply embedded in the software itself.</p>
+
+<h2 id="why-this-double-threat-matters">Why This Double Threat Matters</h2>
+
+<p>The CPU vulnerability affects the heart of computing—the processor itself. Unlike software problems that can be patched through updates, hardware-level weaknesses are far trickier to fix. While companies can issue software updates, truly solving this would ideally require changes at the chip level, which would mean replacing hardware for affected users.</p>
+
+<p>The Cisco situation compounds this concern. Network equipment sits at the boundary between your organization and the outside world. If attackers breach it, they can potentially see traffic moving through your systems and gain footholds deeper inside your infrastructure.</p>
+
+<p><strong>The combination creates a perfect storm:</strong> Attackers might use the processor vulnerability to extract secrets from your systems, while simultaneously exploiting Cisco equipment to move around your network undetected.</p>
+
+<h2 id="real-world-impact">Real-World Impact</h2>
+
+<p>This particularly affects organizations and businesses that rely on both Intel or AMD servers and Cisco networking gear—which is most large enterprises. Financial institutions, healthcare providers, government agencies, and cloud service providers should all consider themselves at risk.</p>
+
+<p>Individuals using consumer laptops and desktops face less immediate risk, since the attack requires fairly sophisticated expertise and direct system access. However, if you use cloud services, your data might be stored on vulnerable servers.</p>
+
+<h2 id="what-you-should-do-now">What You Should Do Now</h2>
+
+<ul>
+<li><strong>If you manage Cisco equipment:</strong> Prioritize installing the latest security patches. These are critical updates released specifically to address severe vulnerabilities.</li>
+<li><strong>If you run enterprise servers:</strong> Review your current CPU models and contact your hardware vendors about whether firmware updates or mitigation strategies are available.</li>
+<li><strong>For everyone:</strong> Keep all software and operating systems fully updated. While this won't eliminate the CPU vulnerability entirely, it closes other doors attackers might use.</li>
+<li><strong>Monitor for warnings:</strong> Watch for official notices from Intel and AMD about potential workarounds or firmware updates coming in the future.</li>
+</ul>
+
+<h2 id="looking-forward">Looking Forward</h2>
+
+<p>This discovery demonstrates that even heavily scrutinized security systems can have blind spots. The processor defenses from previous years showed that protection is possible, but each new technique requires new thinking.</p>
+
+<p>Organizations should treat this as a reminder that security requires constant vigilance—no single patch creates permanent safety, and staying informed about emerging threats is as important as applying known fixes.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://thehackernews.com/2026/08/new-interrupt-injection-attack-can.html" target="_blank" rel="noopener nofollow">source</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news">News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>
