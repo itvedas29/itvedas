@@ -3,9 +3,17 @@
 # (deleted in ad2d82dd when the site moved to Cloudflare Pages) — that
 # deletion silently dropped these headers since wrangler.toml has no
 # header config of its own.
+#
+# script-src additionally allowlists cdnjs.cloudflare.com and
+# cdn.jsdelivr.net because several /tools/ pages load a library from
+# one of those CDNs (crypto-js, jsrsasign, js-yaml, marked) — without
+# them the CSP silently breaks those tools (script never loads, button
+# clicks do nothing, no visible error to the user). Also allowlists
+# static.cloudflareinsights.com, Cloudflare Pages' own auto-injected
+# analytics beacon, which this CSP was otherwise blocking too.
 
 /*
-  Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';
+  Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
