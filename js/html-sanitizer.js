@@ -55,13 +55,16 @@ const HTMLSanitizer = (() => {
         continue;
       }
 
-      // Remove disallowed attributes
+      // Remove disallowed attributes. Snapshot into a plain array first —
+      // node.attributes is a live NamedNodeMap, and removing an item while
+      // iterating it shifts subsequent indices, silently skipping every
+      // other disallowed attribute.
       const allowedAttrs = ALLOWED_TAGS[tagName];
-      for (let attr of node.attributes) {
+      Array.from(node.attributes).forEach(attr => {
         if (!allowedAttrs.includes(attr.name)) {
           node.removeAttribute(attr.name);
         }
-      }
+      });
 
       // Validate href for links
       if (tagName === 'a' && node.href) {
