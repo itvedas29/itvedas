@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.">
+  <meta name="description" content="Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain via Cloudflare's DNS-over-HTTPS resolver.">
 <meta property="og:title" content="DNS Lookup | IT Vedas">
-<meta property="og:description" content="DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.">
+<meta property="og:description" content="Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/dns-lookup">>
+<meta property="og:url" content="https://www.itvedas.com/tools/dns-lookup">
   <title>DNS Lookup | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/dns-lookup">
   <style>
@@ -17,6 +17,7 @@
       color: #182238;
       font-family: 'Inter', -apple-system, sans-serif;
       padding: 2rem;
+      line-height: 1.7;
     }
     .container { max-width: 900px; margin: 0 auto; }
     h1 { font-size: 2rem; margin-bottom: 2rem; }
@@ -52,6 +53,7 @@
       cursor: pointer;
     }
     button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
     .record-type-buttons {
       display: flex;
       gap: 0.5rem;
@@ -101,6 +103,18 @@
       font-size: 0.9rem;
       word-break: break-all;
     }
+    .record-ttl { color: #6B7A94; font-size: 0.78rem; margin-top: 0.3rem; }
+    .status-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .status-noerror { background: rgba(16,185,129,0.15); color: #10B981; }
+    .status-nxdomain { background: rgba(239,68,68,0.15); color: #EF4444; }
     .info-text {
       color: #6B7A94;
       font-size: 0.9rem;
@@ -108,6 +122,40 @@
       padding-top: 1rem;
       border-top: 1px solid rgba(24,34,56,0.12);
     }
+    .error-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #B91C1C;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .content-section { margin-top: 2.5rem; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -119,7 +167,7 @@
     <div class="search-section">
       <div class="input-group">
         <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
-        <button data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
+        <button id="lookupBtn" data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
       </div>
       <div class="record-type-buttons">
         <button class="record-btn active" data-onclick="setRecordType" data-arg="A" class="handler-setRecordType">A</button>
@@ -127,14 +175,60 @@
         <button class="record-btn" data-onclick="setRecordType" data-arg="CNAME" class="handler-setRecordType">CNAME</button>
         <button class="record-btn" data-onclick="setRecordType" data-arg="MX" class="handler-setRecordType">MX</button>
         <button class="record-btn" data-onclick="setRecordType" data-arg="TXT" class="handler-setRecordType">TXT</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="NS" class="handler-setRecordType">NS</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="SOA" class="handler-setRecordType">SOA</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="CAA" class="handler-setRecordType">CAA</button>
       </div>
     </div>
+
+    <div class="error-box" id="errorBox"></div>
 
     <div class="results" id="results">
       <h2 style="margin-bottom: 1.5rem; color: #6366F1;" id="resultTitle"></h2>
       <div id="resultsList"></div>
       <div class="info-text">
-        <strong>Note:</strong> This is an educational tool showing example DNS records. For real DNS lookups, use nslookup, dig, or host commands.
+        <strong>Note:</strong> Records are resolved live via Cloudflare's public DNS-over-HTTPS resolver (1.1.1.1) — this reflects what Cloudflare's global resolver currently returns, not a full propagation check across every DNS server worldwide.
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>A DNS lookup queries the Domain Name System to find the records associated with a domain — such as its IP address (A/AAAA), mail servers (MX), or text records (TXT). This tool performs a real, live lookup via Cloudflare's public resolver and returns the actual current records.</p>
+
+      <h2>What is DNS?</h2>
+      <p>DNS (Domain Name System) translates human-readable domain names like <code>example.com</code> into the IP addresses computers use to route traffic. Different record types serve different purposes: A/AAAA records point to servers, MX records route email, TXT records hold verification and policy data (like SPF/DKIM), and NS records identify a domain's authoritative name servers.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Enter a domain name (without <code>http://</code> or a trailing path).</li>
+        <li>Choose a record type — A, AAAA, CNAME, MX, TXT, NS, SOA, or CAA.</li>
+        <li>Click Lookup to query Cloudflare's resolver and see the live results.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Your query is sent to ITVEDAS's own server, which asks Cloudflare's public DNS resolver for the requested records — it never connects to the domain you're looking up. Nothing you search is logged or stored.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Why don't my results match what I see elsewhere?</h3>
+        <p>Different DNS resolvers can briefly disagree while changes propagate, and results are cached per record's TTL (time to live) — a lower TTL means changes show up faster everywhere.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What does NXDOMAIN mean?</h3>
+        <p>NXDOMAIN means the domain doesn't exist in DNS at all — check for typos, or the domain may not be registered.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I look up subdomains?</h3>
+        <p>Yes — enter the full hostname, e.g. <code>mail.example.com</code>.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+        <a href="/tools/whois-lookup.html">WHOIS Lookup</a>
+        <a href="/tools/ssl-certificate-info.html">SSL Certificate Info</a>
+        <a href="/tools/http-header-analyzer.html">HTTP Header Analyzer</a>
+        <a href="/tools/cidr-calculator.html">CIDR Calculator</a>
       </div>
     </div>
   </div>
@@ -142,54 +236,77 @@
   <script>
     let currentRecordType = 'A';
 
-    const sampleRecords = {
-      'A': { 'example.com': '93.184.216.34', 'google.com': '142.250.185.46' },
-      'AAAA': { 'example.com': '2606:2800:220:1:248:1893:25c8:1946', 'google.com': '2607:f8b0:4004:80d::200e' },
-      'CNAME': { 'www.example.com': 'example.com', 'mail.example.com': 'mail.google.com' },
-      'MX': { 'example.com': '10 mail.example.com', 'google.com': '10 smtp.google.com' },
-      'TXT': { 'example.com': 'v=spf1 -all', 'google.com': 'v=spf1 include:_spf.google.com ~all' }
-    };
-
     function setRecordType(type) {
       currentRecordType = type;
       document.querySelectorAll('.record-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
     }
 
-    function lookupDNS() {
-      const domain = document.getElementById('domain').value.toLowerCase().trim();
+    async function lookupDNS() {
+      const domainInput = document.getElementById('domain');
+      const domain = domainInput.value.trim().toLowerCase();
+      const errorBox = document.getElementById('errorBox');
+      const results = document.getElementById('results');
+      const lookupBtn = document.getElementById('lookupBtn');
+
+      errorBox.style.display = 'none';
       if (!domain) return;
 
-      const records = sampleRecords[currentRecordType];
-      const result = records[domain];
+      lookupBtn.disabled = true;
+      lookupBtn.textContent = 'Looking up…';
 
+      try {
+        const res = await fetch(`/api/dns-lookup?domain=${encodeURIComponent(domain)}&type=${encodeURIComponent(currentRecordType)}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorBox.textContent = data.error || 'Lookup failed. Please check the domain and try again.';
+          errorBox.style.display = 'block';
+          results.classList.remove('active');
+          return;
+        }
+
+        renderResults(data);
+      } catch (e) {
+        errorBox.textContent = 'Network error — please try again.';
+        errorBox.style.display = 'block';
+      } finally {
+        lookupBtn.disabled = false;
+        lookupBtn.textContent = 'Lookup';
+      }
+    }
+
+    function renderResults(data) {
       const resultsList = document.getElementById('resultsList');
       const resultTitle = document.getElementById('resultTitle');
+      const statusClass = data.status === 'NOERROR' ? 'status-noerror' : 'status-nxdomain';
 
-      resultTitle.textContent = `${currentRecordType} Records for ${domain}`;
+      resultTitle.innerHTML = `${data.type} Records for ${escapeHtml(data.domain)} <span class="status-badge ${statusClass}">${data.status}</span>`;
 
-      if (result) {
-        if (Array.isArray(result)) {
-          resultsList.innerHTML = result.map(r => `
-            <div class="record-item">
-              <div class="record-type">${currentRecordType}</div>
-              <div class="record-value">${r}</div>
-            </div>
-          `).join('');
-        } else {
-          resultsList.innerHTML = `
-            <div class="record-item">
-              <div class="record-type">${currentRecordType}</div>
-              <div class="record-value">${result}</div>
-            </div>
-          `;
-        }
+      if (data.records && data.records.length > 0) {
+        resultsList.innerHTML = data.records.map(r => `
+          <div class="record-item">
+            <div class="record-type">${data.type}</div>
+            <div class="record-value">${escapeHtml(r.data)}</div>
+            <div class="record-ttl">TTL: ${r.ttl}s</div>
+          </div>
+        `).join('');
       } else {
-        resultsList.innerHTML = `<div style="color: #6B7A94;">No ${currentRecordType} records found (sample data only)</div>`;
+        resultsList.innerHTML = `<div style="color: #6B7A94;">No ${data.type} records found for this domain.</div>`;
       }
 
       document.getElementById('results').classList.add('active');
     }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.getElementById('domain').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') lookupDNS();
+    });
   </script>
 <script src="/js/inline-handler-setup.js" defer></script>
 
@@ -198,7 +315,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "DNS Lookup | IT Vedas",
-  "description": "DNS lookup tool. Query DNS records (A, AAAA, CNAME, MX, TXT). Educational DNS lookup simulator.",
+  "description": "Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain.",
   "url": "https://www.itvedas.com/tools/dns-lookup/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"

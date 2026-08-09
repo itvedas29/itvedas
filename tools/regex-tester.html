@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online regex tester. Test JavaScript regular expressions against sample text with live match highlighting, groups, and flags. Runs safely off the main thread.">
+<meta property="og:title" content="Regex Tester - Test Regular Expressions Online | IT Vedas">
+<meta property="og:description" content="Free online regex tester. Test JavaScript regular expressions with live match highlighting, groups, and flags.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/regex-tester">
+  <title>Regex Tester - Test Regular Expressions Online | IT Vedas</title>
+<link rel="canonical" href="https://www.itvedas.com/tools/regex-tester">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #EEF3FC;
+      color: #182238;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      line-height: 1.7;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .description { color: #6B7A94; margin-bottom: 2rem; font-size: 0.95rem; }
+    .panel {
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .pattern-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .slash { font-family: 'Courier New', monospace; font-size: 1.2rem; color: #6B7A94; }
+    input#pattern {
+      flex: 1;
+      min-width: 240px;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      color: #182238;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-family: 'Courier New', monospace;
+    }
+    input#pattern:focus { outline: none; border-color: #10B981; }
+    input#pattern.invalid { border-color: #EF4444; }
+    .flags { display: flex; gap: 0.4rem; }
+    .flag-btn {
+      width: 2.2rem;
+      height: 2.2rem;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #6366F1;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .flag-btn.active { background: #6366F1; color: white; border-color: #6366F1; }
+    textarea {
+      width: 100%;
+      height: 180px;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      color: #182238;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-top: 1rem;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    .highlighted {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 60px;
+    }
+    .highlighted mark { background: rgba(16,185,129,0.35); border-radius: 3px; }
+    .status-line { margin-top: 0.75rem; font-size: 0.85rem; color: #6B7A94; }
+    .status-line.error { color: #EF4444; }
+    .status-line.warn { color: #B45309; }
+    .match-list { margin-top: 1rem; max-height: 260px; overflow-y: auto; }
+    .match-item {
+      background: #EEF3FC;
+      border-left: 3px solid #6366F1;
+      padding: 0.6rem 0.85rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+    .content-section { margin-top: 2.5rem; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🔤 Regex Tester</h1>
+    <p class="description">Test JavaScript regular expressions against sample text, with live highlighting and match details.</p>
+
+    <div class="panel">
+      <div class="pattern-row">
+        <span class="slash">/</span>
+        <input type="text" id="pattern" placeholder="Enter regex pattern, e.g. \b\w+@\w+\.\w+\b">
+        <span class="slash">/</span>
+        <div class="flags">
+          <button class="flag-btn active" data-onclick="toggleFlag" data-arg="g" class="handler-toggleFlag" title="Global">g</button>
+          <button class="flag-btn" data-onclick="toggleFlag" data-arg="i" class="handler-toggleFlag" title="Case-insensitive">i</button>
+          <button class="flag-btn" data-onclick="toggleFlag" data-arg="m" class="handler-toggleFlag" title="Multiline">m</button>
+          <button class="flag-btn" data-onclick="toggleFlag" data-arg="s" class="handler-toggleFlag" title="Dotall">s</button>
+          <button class="flag-btn" data-onclick="toggleFlag" data-arg="u" class="handler-toggleFlag" title="Unicode">u</button>
+        </div>
+      </div>
+      <textarea id="testString" placeholder="Enter test text here...">Contact us at support@example.com or sales@example.com for help.</textarea>
+      <div class="status-line" id="statusLine"></div>
+      <div class="highlighted" id="highlighted"></div>
+      <div class="match-list" id="matchList"></div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>A regular expression (regex) is a pattern used to match, search, or extract text. This tester runs your pattern against sample text using JavaScript's regex engine, highlighting every match and listing captured groups — safely, in a background worker with a time limit so a runaway pattern can't freeze your browser.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Type a pattern between the slashes — no need to add the slashes yourself.</li>
+        <li>Toggle flags: <code>g</code> (all matches), <code>i</code> (case-insensitive), <code>m</code> (multiline), <code>s</code> (dot matches newline), <code>u</code> (unicode).</li>
+        <li>Edit the test text — matches highlight and update live.</li>
+      </ol>
+
+      <h2>Example</h2>
+      <p>Pattern <code>\b\w+@\w+\.\w+\b</code> against the default text matches both email addresses. Try adding the <code>i</code> flag and typing <code>SUPPORT@EXAMPLE.COM</code> to see case-insensitive matching in action.</p>
+
+      <h2>Privacy &amp; safety</h2>
+      <div class="privacy-note">Matching runs entirely in your browser, in a separate Web Worker thread with a 2-second time limit. If a pattern causes catastrophic backtracking, the worker is terminated automatically instead of freezing the page — your text never leaves your device.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>What is catastrophic backtracking?</h3>
+        <p>Certain regex patterns (like nested quantifiers, e.g. <code>(a+)+$</code>) can cause the engine to try an exponential number of combinations on some inputs, effectively hanging. This tool detects that by timing out and terminating the worker.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Does this match Python or PCRE regex exactly?</h3>
+        <p>No — this uses JavaScript's native regex engine. Syntax is very similar to PCRE/Python but has some differences (e.g. lookbehind support varies by engine version).</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/json-formatter.html">JSON Formatter</a>
+        <a href="/tools/html-viewer.html">HTML Viewer</a>
+        <a href="/tools/unix-timestamp-converter.html">Unix Timestamp Converter</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeFlags = new Set(['g']);
+    let worker = null;
+    let workerTimeout = null;
+
+    function createWorker() {
+      if (worker) worker.terminate();
+      worker = new Worker('/js/regex-tester-worker.js');
+      worker.onmessage = handleWorkerResult;
+      worker.onerror = () => setStatus('Worker error — pattern could not run.', 'error');
+      return worker;
+    }
+
+    function toggleFlag(flag) {
+      const btn = event.target;
+      if (activeFlags.has(flag)) {
+        activeFlags.delete(flag);
+        btn.classList.remove('active');
+      } else {
+        activeFlags.add(flag);
+        btn.classList.add('active');
+      }
+      runMatch();
+    }
+
+    function setStatus(text, type) {
+      const el = document.getElementById('statusLine');
+      el.textContent = text;
+      el.className = 'status-line' + (type ? ' ' + type : '');
+    }
+
+    function runMatch() {
+      const patternInput = document.getElementById('pattern');
+      const pattern = patternInput.value;
+      const testString = document.getElementById('testString').value;
+      const highlighted = document.getElementById('highlighted');
+      const matchList = document.getElementById('matchList');
+
+      patternInput.classList.remove('invalid');
+
+      if (!pattern) {
+        highlighted.textContent = '';
+        matchList.innerHTML = '';
+        setStatus('');
+        return;
+      }
+
+      const flags = Array.from(activeFlags).join('');
+      const w = createWorker();
+
+      clearTimeout(workerTimeout);
+      setStatus('Running…');
+
+      workerTimeout = setTimeout(() => {
+        w.terminate();
+        worker = null;
+        setStatus('Pattern took too long to run — likely catastrophic backtracking. Try simplifying it.', 'warn');
+      }, 2000);
+
+      w.postMessage({ pattern, flags, testString });
+    }
+
+    function handleWorkerResult(e) {
+      clearTimeout(workerTimeout);
+      const { error, matches, truncated } = e.data;
+      const highlighted = document.getElementById('highlighted');
+      const matchList = document.getElementById('matchList');
+      const testString = document.getElementById('testString').value;
+      const patternInput = document.getElementById('pattern');
+
+      if (error) {
+        patternInput.classList.add('invalid');
+        setStatus('Invalid pattern: ' + error, 'error');
+        highlighted.textContent = '';
+        matchList.innerHTML = '';
+        return;
+      }
+
+      setStatus(`${matches.length} match${matches.length !== 1 ? 'es' : ''}${truncated ? ' (showing first 1000)' : ''}`);
+      highlighted.innerHTML = buildHighlight(testString, matches);
+      matchList.innerHTML = matches.slice(0, 200).map((m, i) => `
+        <div class="match-item">
+          Match ${i + 1} at index ${m.index}: <strong>${escapeHtml(m.match)}</strong>
+          ${m.groups.length ? '<br>Groups: ' + m.groups.map(g => escapeHtml(g === undefined ? '(undefined)' : g)).join(', ') : ''}
+        </div>
+      `).join('');
+    }
+
+    function buildHighlight(text, matches) {
+      if (!matches.length) return escapeHtml(text);
+      let result = '';
+      let last = 0;
+      for (const m of matches) {
+        result += escapeHtml(text.slice(last, m.index));
+        result += '<mark>' + escapeHtml(m.match) + '</mark>';
+        last = m.index + m.match.length;
+      }
+      result += escapeHtml(text.slice(last));
+      return result;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.getElementById('pattern').addEventListener('input', debounce(runMatch, 300));
+    document.getElementById('testString').addEventListener('input', debounce(runMatch, 300));
+
+    function debounce(fn, ms) {
+      let t;
+      return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+    }
+
+    runMatch();
+  </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Regex Tester - Test Regular Expressions Online | IT Vedas",
+  "description": "Free online regex tester. Test JavaScript regular expressions with live match highlighting, groups, and flags.",
+  "url": "https://www.itvedas.com/tools/regex-tester/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet — no signup required.">
+<meta property="og:title" content="IP Address Checker - What Is My IP? | IT Vedas">
+<meta property="og:description" content="Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/ip-address-checker">
+  <title>IP Address Checker - What Is My IP? | IT Vedas</title>
+<link rel="canonical" href="https://www.itvedas.com/tools/ip-address-checker">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #EEF3FC;
+      color: #182238;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #6B7A94; margin-bottom: 2rem; font-size: 0.95rem; }
+    .ip-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .ip-value {
+      font-family: 'Courier New', monospace;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #10B981;
+      word-break: break-all;
+      margin-bottom: 0.75rem;
+    }
+    .ip-loading { color: #6B7A94; font-size: 1rem; }
+    button {
+      padding: 0.6rem 1.25rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover { opacity: 0.9; }
+    .details-grid {
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .detail-item .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7A94; margin-bottom: 0.3rem; }
+    .detail-item .value { font-weight: 600; font-size: 1rem; }
+    .error-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #B91C1C;
+      padding: 1rem;
+      border-radius: 8px;
+      display: none;
+    }
+    .content-section { margin-top: 2.5rem; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🌍 IP Address Checker</h1>
+    <p class="description">See your public IP address and network details exactly as the internet sees them.</p>
+
+    <div class="ip-card">
+      <div class="ip-value" id="ipValue">Loading…</div>
+      <button data-onclick="copyIP" class="handler-copyIP">📋 Copy IP</button>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="details-grid" id="detailsGrid" style="display:none;">
+      <div class="detail-item"><div class="label">Country</div><div class="value" id="dCountry">—</div></div>
+      <div class="detail-item"><div class="label">Region</div><div class="value" id="dRegion">—</div></div>
+      <div class="detail-item"><div class="label">City</div><div class="value" id="dCity">—</div></div>
+      <div class="detail-item"><div class="label">ISP / Network</div><div class="value" id="dAsOrg">—</div></div>
+      <div class="detail-item"><div class="label">ASN</div><div class="value" id="dAsn">—</div></div>
+      <div class="detail-item"><div class="label">Timezone</div><div class="value" id="dTimezone">—</div></div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>Your public IP address is the address your router or device presents to the wider internet. This page shows it instantly, along with the country, region, and internet provider (ASN) Cloudflare's network sees it connecting from — no signup or third-party service required.</p>
+
+      <h2>What is a public IP address?</h2>
+      <p>A public IP address identifies your connection on the internet, similar to a mailing address. It's assigned by your Internet Service Provider (ISP) and is different from the private IP address (like 192.168.1.5) used inside your home or office network. Websites and services see your public IP, not your private one.</p>
+
+      <h2>How this tool works</h2>
+      <p>This page makes a request to ITVEDAS's own edge servers, which read the connection details Cloudflare's network already has for your request (IP address, coarse geolocation, ASN) and return them to your browser. No external IP-lookup service is called and no data is stored.</p>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Your IP and network details are read from the request itself and returned directly to you. Nothing is logged, stored, or shared with third parties.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Why does my IP change?</h3>
+        <p>Most home internet connections use dynamic IPs that your ISP can reassign periodically, or when you reconnect. Mobile connections and VPNs also change your visible IP frequently.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Does this show my IPv6 address too?</h3>
+        <p>It shows whichever address (IPv4 or IPv6) your device used to reach ITVEDAS. If your network supports IPv6 and prefers it, you may see an IPv6 address here.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is my public IP the same as my location?</h3>
+        <p>Not precisely — geolocation from an IP is approximate and based on ISP registration data, typically accurate to city or region level, not an exact address.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/dns-lookup.html">DNS Lookup</a>
+        <a href="/tools/cidr-calculator.html">CIDR Calculator</a>
+        <a href="/tools/whois-lookup.html">WHOIS Lookup</a>
+        <a href="/tools/ssl-certificate-info.html">SSL Certificate Info</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentIP = '';
+
+    async function loadIP() {
+      const ipValue = document.getElementById('ipValue');
+      const errorBox = document.getElementById('errorBox');
+      try {
+        const res = await fetch('/api/my-ip');
+        if (!res.ok) throw new Error('Request failed');
+        const data = await res.json();
+        currentIP = data.ip || 'unknown';
+        ipValue.textContent = currentIP;
+
+        document.getElementById('dCountry').textContent = data.country || '—';
+        document.getElementById('dRegion').textContent = data.region || '—';
+        document.getElementById('dCity').textContent = data.city || '—';
+        document.getElementById('dAsOrg').textContent = data.asOrganization || '—';
+        document.getElementById('dAsn').textContent = data.asn ? ('AS' + data.asn) : '—';
+        document.getElementById('dTimezone').textContent = data.timezone || '—';
+        document.getElementById('detailsGrid').style.display = 'grid';
+      } catch (e) {
+        ipValue.textContent = 'Unavailable';
+        errorBox.textContent = 'Could not detect your IP address right now. Please try again.';
+        errorBox.style.display = 'block';
+      }
+    }
+
+    function copyIP() {
+      if (!currentIP) return;
+      navigator.clipboard.writeText(currentIP).then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      });
+    }
+
+    loadIP();
+  </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</html><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "IP Address Checker - What Is My IP? | IT Vedas",
+  "description": "Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet.",
+  "url": "https://www.itvedas.com/tools/ip-address-checker/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</body>
+</html>

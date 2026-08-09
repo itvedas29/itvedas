@@ -22,6 +22,7 @@ def get_html_files():
         "chapter_content": [],  # Chapter pages
         "chapter_hubs": [],  # Chapter hub landing pages (chapters/<hub>/index.html)
         "manageengine": [],  # ManageEngine affiliate hub + product pages
+        "tools": [],  # Free IT tools hub + individual tool pages
     }
 
     # Root HTML files (home, about, faq, etc.). index.html is excluded here
@@ -66,6 +67,12 @@ def get_html_files():
     if manageengine_dir.is_dir():
         for f in manageengine_dir.glob("*.html"):
             files["manageengine"].append(f)
+
+    # Tools hub + individual tool pages
+    tools_dir = ROOT / "tools"
+    if tools_dir.is_dir():
+        for f in tools_dir.glob("*.html"):
+            files["tools"].append(f)
 
     return files
 
@@ -162,6 +169,12 @@ def build_sitemap():
         prio = 0.7 if f.name == "index.html" else 0.6
         add_url(file_to_url(f), lastmod, "monthly", prio)
 
+    # Add tools hub + individual tool pages
+    for f in sorted(files["tools"]):
+        lastmod = get_file_modified_date(f)
+        prio = 0.8 if f.name == "index.html" else 0.7
+        add_url(file_to_url(f), lastmod, "monthly", prio)
+
     # Write sitemap
     tree = ET.ElementTree(urlset)
     ET.indent(tree, space="  ")
@@ -171,7 +184,7 @@ def build_sitemap():
     total_urls = (len(files["main"]) + len(files["chapters"]) +
                   len(files["articles"]) + len(files["chapter_content"]) +
                   len(files["chapter_hubs"]) + len(files["news"]) +
-                  len(files["manageengine"]))
+                  len(files["manageengine"]) + len(files["tools"]))
     print(f"Sitemap generated: {total_urls} URLs")
     print(f"  - Main pages: {len(files['main'])}")
     print(f"  - Article categories: {len(files['chapters'])}")
@@ -180,6 +193,7 @@ def build_sitemap():
     print(f"  - Articles: {len(files['articles'])}")
     print(f"  - News: {len(files['news'])}")
     print(f"  - ManageEngine: {len(files['manageengine'])}")
+    print(f"  - Tools: {len(files['tools'])}")
 
     return total_urls
 
