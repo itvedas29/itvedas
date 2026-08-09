@@ -4,6 +4,8 @@ import unittest
 import re
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
 
 class TestSessionIDGeneration(unittest.TestCase):
     """Test secure session ID generation"""
@@ -24,9 +26,9 @@ class TestSessionIDGeneration(unittest.TestCase):
 
     def test_math_random_not_used_for_sessions(self):
         """Math.random() should not be used for session generation"""
-        js_file = Path("/home/user/itvedas/js/analytics-tracker.js")
+        js_file = Path(str(REPO_ROOT) + "/js/analytics-tracker.js")
         if js_file.exists():
-            content = js_file.read_text()
+            content = js_file.read_text(encoding="utf-8")
             # Should use crypto.getRandomValues, not Math.random
             self.assertIn("crypto.getRandomValues", content)
 
@@ -104,9 +106,9 @@ class TestContentSecurityPolicy(unittest.TestCase):
 
     def test_csp_header_present(self):
         """CSP header should be set in netlify.toml"""
-        netlify_file = Path("/home/user/itvedas/netlify.toml")
+        netlify_file = Path(str(REPO_ROOT) + "/netlify.toml")
         if netlify_file.exists():
-            content = netlify_file.read_text()
+            content = netlify_file.read_text(encoding="utf-8")
             self.assertIn("Content-Security-Policy", content)
 
     def test_csp_policy_structure(self):
@@ -129,23 +131,23 @@ class TestHTTPSecurityHeaders(unittest.TestCase):
 
     def test_hsts_header_present(self):
         """HSTS header should be configured"""
-        netlify_file = Path("/home/user/itvedas/netlify.toml")
+        netlify_file = Path(str(REPO_ROOT) + "/netlify.toml")
         if netlify_file.exists():
-            content = netlify_file.read_text()
+            content = netlify_file.read_text(encoding="utf-8")
             self.assertIn("Strict-Transport-Security", content)
 
     def test_x_content_type_options(self):
         """X-Content-Type-Options should be nosniff"""
-        netlify_file = Path("/home/user/itvedas/netlify.toml")
+        netlify_file = Path(str(REPO_ROOT) + "/netlify.toml")
         if netlify_file.exists():
-            content = netlify_file.read_text()
+            content = netlify_file.read_text(encoding="utf-8")
             self.assertIn("X-Content-Type-Options", content)
 
     def test_x_frame_options(self):
         """X-Frame-Options should prevent clickjacking"""
-        netlify_file = Path("/home/user/itvedas/netlify.toml")
+        netlify_file = Path(str(REPO_ROOT) + "/netlify.toml")
         if netlify_file.exists():
-            content = netlify_file.read_text()
+            content = netlify_file.read_text(encoding="utf-8")
             self.assertIn("X-Frame-Options", content)
 
 
@@ -227,13 +229,13 @@ class TestHTMLSanitization(unittest.TestCase):
 
     def test_html_sanitizer_exists(self):
         """HTML sanitizer module should exist"""
-        sanitizer_file = Path("/home/user/itvedas/js/html-sanitizer.js")
+        sanitizer_file = Path(str(REPO_ROOT) + "/js/html-sanitizer.js")
         self.assertTrue(sanitizer_file.exists())
 
     def test_sanitizer_functions_present(self):
         """Sanitizer should have required functions"""
-        sanitizer_file = Path("/home/user/itvedas/js/html-sanitizer.js")
-        content = sanitizer_file.read_text()
+        sanitizer_file = Path(str(REPO_ROOT) + "/js/html-sanitizer.js")
+        content = sanitizer_file.read_text(encoding="utf-8")
 
         required_functions = [
             "sanitizeHTML",
@@ -246,8 +248,8 @@ class TestHTMLSanitization(unittest.TestCase):
 
     def test_allowed_tags_defined(self):
         """Sanitizer should define allowed tags"""
-        sanitizer_file = Path("/home/user/itvedas/js/html-sanitizer.js")
-        content = sanitizer_file.read_text()
+        sanitizer_file = Path(str(REPO_ROOT) + "/js/html-sanitizer.js")
+        content = sanitizer_file.read_text(encoding="utf-8")
         self.assertIn("ALLOWED_TAGS", content)
 
 
