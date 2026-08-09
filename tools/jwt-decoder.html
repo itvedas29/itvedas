@@ -7,7 +7,7 @@
 <meta property="og:title" content="JWT Decoder | IT Vedas">
 <meta property="og:description" content="JWT decoder. Decode and analyze JSON Web Tokens, view claims and expiration time.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/jwt-decoder">>
+<meta property="og:url" content="https://www.itvedas.com/tools/jwt-decoder">
   <title>JWT Decoder | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/jwt-decoder">
   <style>
@@ -91,6 +91,31 @@
       border-radius: 8px;
       margin-top: 1rem;
     }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -118,6 +143,40 @@
         <div id="expiration" style="padding: 1rem; background: #EEF3FC; border-radius: 8px;"></div>
       </div>
       <div id="error-msg"></div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>A JWT (JSON Web Token) is a compact, three-part token used for authentication and authorization. This tool decodes the header and payload of any JWT so you can inspect its claims and expiration — entirely in your browser.</p>
+
+      <h2>What is a JWT?</h2>
+      <p>A JWT has three Base64URL-encoded parts separated by dots: a header (algorithm/type), a payload (claims — the actual data), and a signature (verifies the token wasn't tampered with, using a secret only the issuing server knows). Decoding the header and payload requires no secret; verifying the signature does.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Paste a JWT into the input box.</li>
+        <li>Click Decode JWT to see the header, payload/claims, and expiration status.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Decoding happens entirely in your browser — the token never leaves your device. This matters for JWTs, since they often carry session or identity data.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Does this tool verify the signature?</h3>
+        <p>No — it only decodes and displays the header and payload, which requires no secret. Verifying a signature requires the issuer's secret key or public key, which this tool intentionally doesn't ask for.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is a decoded JWT sensitive?</h3>
+        <p>Yes — the payload is plain, readable data (not encrypted), so anyone with the token can see its claims. Never paste a production JWT from a system you don't control into a third-party tool.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/base64-encoder.html">Base64 Encoder</a>
+        <a href="/tools/json-formatter.html">JSON Formatter</a>
+        <a href="/tools/hash-generator.html">Hash Generator</a>
+      </div>
     </div>
   </div>
 

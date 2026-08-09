@@ -7,7 +7,7 @@
 <meta property="og:title" content="HTTP Header Analyzer | IT Vedas">
 <meta property="og:description" content="HTTP header analyzer. Parse and analyze HTTP response headers for security and performance insights.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/http-header-analyzer">>
+<meta property="og:url" content="https://www.itvedas.com/tools/http-header-analyzer">
   <title>HTTP Header Analyzer | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/http-header-analyzer">
   <style>
@@ -88,6 +88,31 @@
     .badge-good { background: rgba(16,185,129,0.2); color: #6EE7B7; }
     .badge-warning { background: rgba(251,191,36,0.2); color: #FBBF24; }
     .badge-bad { background: rgba(239,68,68,0.2); color: #F87171; }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -106,6 +131,41 @@
       <div id="headersList"></div>
       <h2 style="margin-top: 2rem; margin-bottom: 1.5rem; color: #6366F1;">Security Check</h2>
       <div id="securityCheck"></div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>HTTP response headers carry metadata about a web response — content type, caching rules, and security policies. This tool parses headers you paste in and flags whether key security headers (HSTS, X-Frame-Options, X-Content-Type-Options) are present.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Get the raw response headers for a site — e.g. from your browser's DevTools Network tab, or a command like <code>curl -I https://example.com</code>.</li>
+        <li>Paste them in, one header per line, in <code>Name: value</code> format.</li>
+        <li>Click Analyze Headers to see them parsed and checked against common security best practices.</li>
+      </ol>
+
+      <h2>What the security checks mean</h2>
+      <ul>
+        <li><strong>Strict-Transport-Security (HSTS)</strong> — tells browsers to always use HTTPS for this domain, preventing downgrade attacks.</li>
+        <li><strong>X-Frame-Options</strong> — prevents the page from being embedded in an iframe on another site (clickjacking protection).</li>
+        <li><strong>X-Content-Type-Options: nosniff</strong> — stops browsers from guessing a file's MIME type in a way that could enable attacks.</li>
+      </ul>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Parsing and analysis happen entirely in your browser. The headers you paste are never sent to any server.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Does this tool fetch headers from a live URL?</h3>
+        <p>No — you paste headers you've already captured (e.g. via DevTools or curl). This keeps the tool simple and avoids any server-side request on your behalf.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/ssl-certificate-info.html">SSL Certificate Info</a>
+        <a href="/tools/dns-lookup.html">DNS Lookup</a>
+        <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+      </div>
     </div>
   </div>
 

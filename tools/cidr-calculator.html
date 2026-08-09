@@ -7,7 +7,7 @@
 <meta property="og:title" content="CIDR Calculator - Network Addressing Tool | IT Vedas">
 <meta property="og:description" content="CIDR calculator for network engineers. Convert CIDR notation to IP ranges and calculate network addressing.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/cidr-calculator">>
+<meta property="og:url" content="https://www.itvedas.com/tools/cidr-calculator">
   <link rel="canonical" href="https://www.itvedas.com/tools/cidr-calculator">
   <title>CIDR Calculator - Network Addressing Tool | IT Vedas</title>
   <style>
@@ -63,6 +63,31 @@
     .result-row:last-child { border-bottom: none; }
     .result-label { color: #6B7A94; font-weight: 600; }
     .result-value { color: #10B981; font-family: monospace; font-weight: 500; }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -104,6 +129,43 @@
           <span class="result-label">Total Hosts:</span>
           <span class="result-value" id="hosts">-</span>
         </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>CIDR (Classless Inter-Domain Routing) notation, like <code>192.168.1.0/24</code>, compactly describes an IP network and its size. This tool converts that notation into the network address, broadcast address, subnet mask, usable host range, and total host count.</p>
+
+      <h2>What is CIDR notation?</h2>
+      <p>The number after the slash is the prefix length — how many bits of the address are fixed as the "network" portion. A /24 fixes the first 24 bits, leaving 8 bits (256 addresses, 254 usable hosts) for individual devices. Smaller prefix numbers mean larger networks: a /16 has far more addresses than a /28.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Enter an address in CIDR notation, e.g. <code>10.0.0.0/16</code> or <code>192.168.1.0/24</code>.</li>
+        <li>Click Calculate to see the network address, broadcast address, subnet mask, first/last usable host, and total host count.</li>
+      </ol>
+
+      <h2>Example</h2>
+      <p><code>192.168.1.0/24</code> → Network: 192.168.1.0, Broadcast: 192.168.1.255, Mask: 255.255.255.0, Hosts: 254 (192.168.1.1 – 192.168.1.254).</p>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">All calculations run locally in your browser using plain JavaScript bitwise math. Nothing is sent anywhere.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Why is the host count 2 less than the address count?</h3>
+        <p>Every subnet reserves its first address as the network address and its last as the broadcast address — neither is assignable to a host.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What's the difference between a subnet mask and CIDR notation?</h3>
+        <p>They express the same thing two ways: <code>/24</code> is equivalent to a subnet mask of <code>255.255.255.0</code>.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/dns-lookup.html">DNS Lookup</a>
+        <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+        <a href="/tools/whois-lookup.html">WHOIS Lookup</a>
       </div>
     </div>
   </div>

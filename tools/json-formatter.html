@@ -7,7 +7,7 @@
 <meta property="og:title" content="JSON Formatter - Validate & Format JSON | IT Vedas">
 <meta property="og:description" content="JSON formatter and validator. Format, minify, and validate JSON with syntax highlighting.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/json-formatter">>
+<meta property="og:url" content="https://www.itvedas.com/tools/json-formatter">
   <link rel="canonical" href="https://www.itvedas.com/tools/json-formatter">
   <title>JSON Formatter - Validate & Format JSON | IT Vedas</title>
   <style>
@@ -92,6 +92,31 @@
       .editor-container { grid-template-columns: 1fr; }
       textarea { height: 300px; }
     }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -118,6 +143,42 @@
         <div class="editor-label">Output JSON</div>
         <textarea id="output" readonly placeholder='Formatted JSON will appear here...'></textarea>
         <div class="status" id="outputStatus"></div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>JSON formatting adds indentation and line breaks to JSON data so it's easier for people to read and inspect. This tool validates, formats, and minifies JSON entirely in your browser, with instant feedback on syntax errors.</p>
+
+      <h2>What is JSON?</h2>
+      <p>JSON (JavaScript Object Notation) is a lightweight, text-based data format used almost universally for APIs, configuration files, and data exchange between systems. It's built from a small set of structures — objects (<code>{}</code>), arrays (<code>[]</code>), strings, numbers, booleans, and null.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Paste your JSON into the input box — it auto-formats as you type.</li>
+        <li>Click <strong>Format</strong> for pretty-printed, indented output, or <strong>Minify</strong> to strip all whitespace.</li>
+        <li>Click Copy Output to copy the result to your clipboard.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Parsing, formatting, and validation all happen locally using your browser's built-in JSON engine. Nothing is uploaded or stored.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Why does it say my JSON is invalid?</h3>
+        <p>Common causes: trailing commas, single quotes instead of double quotes, unquoted keys, or a missing closing bracket. The error message includes the position where parsing failed.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What's the difference between formatting and minifying?</h3>
+        <p>Formatting adds indentation for readability; minifying removes all unnecessary whitespace to reduce file size — useful before sending JSON over a network.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/xml-formatter.html">XML Formatter</a>
+        <a href="/tools/yaml-formatter.html">YAML Formatter</a>
+        <a href="/tools/jwt-decoder.html">JWT Decoder</a>
+        <a href="/tools/regex-tester.html">Regex Tester</a>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@
 <meta property="og:title" content="Base64 Encoder/Decoder | IT Vedas">
 <meta property="og:description" content="Base64 encoder and decoder. Convert text and files to Base64 and decode Base64 strings instantly.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/base64-encoder">>
+<meta property="og:url" content="https://www.itvedas.com/tools/base64-encoder">
   <link rel="canonical" href="https://www.itvedas.com/tools/base64-encoder">
   <title>Base64 Encoder/Decoder | IT Vedas</title>
   <style>
@@ -92,6 +92,31 @@
       .editor-container { grid-template-columns: 1fr; }
       textarea { height: 300px; }
     }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -118,6 +143,40 @@
         <div class="editor-label">Output</div>
         <textarea id="output" readonly placeholder='Encoded/Decoded result will appear here...'></textarea>
         <div class="status" id="outputStatus"></div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>Base64 is a way of representing binary data using only 64 printable ASCII characters, so it can safely travel through text-based systems like email, URLs, or JSON. This tool encodes text to Base64 or decodes Base64 back to text, instantly and entirely in your browser.</p>
+
+      <h2>What is Base64 encoding?</h2>
+      <p>Base64 converts arbitrary bytes into a text-safe format using the characters A-Z, a-z, 0-9, +, and /. It's not encryption — it's an encoding, meaning anyone can decode it back to the original data. It's commonly used for embedding images in CSS/HTML, encoding credentials in HTTP Basic Auth headers, and representing binary attachments in email (MIME).</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Paste plain text into the input box to encode it, then click <strong>Encode to Base64</strong>.</li>
+        <li>Paste a Base64 string to decode it back to plain text, then click <strong>Decode from Base64</strong>.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">All encoding and decoding happens locally in your browser using JavaScript's built-in <code>btoa</code>/<code>atob</code> functions. Nothing you enter is sent anywhere.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Is Base64 encryption?</h3>
+        <p>No. Base64 is reversible by anyone with no key required — it provides no confidentiality. Don't use it to "hide" sensitive data.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Why does decoding sometimes fail?</h3>
+        <p>The input must be valid Base64 (correct alphabet and padding). Extra whitespace, line breaks, or a truncated string will cause a decode error.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/jwt-decoder.html">JWT Decoder</a>
+        <a href="/tools/json-formatter.html">JSON Formatter</a>
+        <a href="/tools/hash-generator.html">Hash Generator</a>
       </div>
     </div>
   </div>

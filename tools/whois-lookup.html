@@ -7,7 +7,7 @@
 <meta property="og:title" content="WHOIS Lookup | IT Vedas">
 <meta property="og:description" content="WHOIS lookup tool. Query domain WHOIS information. Educational WHOIS lookup simulator.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/whois-lookup">>
+<meta property="og:url" content="https://www.itvedas.com/tools/whois-lookup">
   <title>WHOIS Lookup | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/whois-lookup">
   <style>
@@ -86,6 +86,31 @@
       margin-top: 1rem;
       font-size: 0.9rem;
     }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -106,6 +131,27 @@
       <div id="resultsList"></div>
       <div class="disclaimer">
         <strong>⚠️ Educational Tool:</strong> This shows sample WHOIS data. For real WHOIS queries, use whois command or ICANN WHOIS lookup at whois.icann.org
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>WHOIS is a protocol for looking up domain registration details — registrar, registration/expiration dates, and name servers. This page demonstrates the shape of that data with two sample domains; for a real domain's current WHOIS record, use the ICANN Lookup tool linked below.</p>
+
+      <h2>What is WHOIS?</h2>
+      <p>Every registered domain has a WHOIS record maintained by its registrar, showing who registered it, when, and which name servers it uses. Since GDPR and similar privacy regulations, many registrars now redact personal registrant details by default.</p>
+
+      <h2>Get a real WHOIS lookup</h2>
+      <p>This demo only has sample data for <code>example.com</code> and <code>google.com</code>. For any other domain, use <a href="https://lookup.icann.org" rel="nofollow noopener" target="_blank">ICANN Lookup</a>, or run <code>whois example.com</code> from a terminal if you have the <code>whois</code> package installed.</p>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">This demo runs entirely in your browser against a small built-in sample dataset — nothing is looked up or transmitted.</div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/dns-lookup.html">DNS Lookup</a>
+        <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+        <a href="/tools/cidr-calculator.html">CIDR Calculator</a>
       </div>
     </div>
   </div>

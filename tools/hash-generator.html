@@ -7,7 +7,7 @@
 <meta property="og:title" content="Hash Generator | IT Vedas">
 <meta property="og:description" content="Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/hash-generator">>
+<meta property="og:url" content="https://www.itvedas.com/tools/hash-generator">
   <title>Hash Generator | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/hash-generator">
   <style>
@@ -100,6 +100,31 @@
       font-size: 0.85rem;
     }
     .copy-btn:hover { opacity: 0.9; }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -137,6 +162,41 @@
         <div class="hash-name">SHA512:</div>
         <div class="hash-value" id="sha512">-</div>
         <button class="copy-btn" data-onclick="copyHash" data-arg="sha512" class="handler-copyHash">Copy</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>A cryptographic hash function turns any input into a fixed-length string of characters — the same input always produces the same hash, and even a tiny change in input produces a completely different one. This tool generates MD5, SHA-1, SHA-256, and SHA-512 hashes of your text instantly.</p>
+
+      <h2>What are hashes used for?</h2>
+      <p>Hashes are used to verify file integrity (comparing a downloaded file's hash to a published checksum), store password verification data without storing the password itself, detect duplicate content, and generate checksums for version control and data deduplication.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Type or paste text into the input box.</li>
+        <li>Click Generate Hashes to see MD5, SHA-1, SHA-256, and SHA-512 results.</li>
+        <li>Click Copy next to any hash to copy it to your clipboard.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Hashing runs entirely in your browser. Your input text is never sent to any server.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Which hash algorithm should I use?</h3>
+        <p>For anything security-sensitive, use SHA-256 or SHA-512. MD5 and SHA-1 are fast but cryptographically broken — collisions can be deliberately engineered — so they're only suitable for non-security uses like quick checksums or cache keys.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can a hash be reversed back to the original text?</h3>
+        <p>Not directly — hashing is one-way by design. Weak or predictable inputs (like common passwords) can still be reversed via lookup tables ("rainbow tables"), which is why passwords need salting, not just hashing.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/password-generator.html">Password Generator</a>
+        <a href="/tools/base64-encoder.html">Base64 Encoder</a>
+        <a href="/tools/jwt-decoder.html">JWT Decoder</a>
       </div>
     </div>
   </div>

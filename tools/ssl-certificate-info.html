@@ -7,7 +7,7 @@
 <meta property="og:title" content="SSL Certificate Info | IT Vedas">
 <meta property="og:description" content="SSL certificate information generator. Generate certificate details and examine certificate properties.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.itvedas.com/tools/ssl-certificate-info">>
+<meta property="og:url" content="https://www.itvedas.com/tools/ssl-certificate-info">
   <title>SSL Certificate Info | IT Vedas</title>
 <link rel="canonical" href="https://www.itvedas.com/tools/ssl-certificate-info">
   <style>
@@ -90,6 +90,31 @@
     .badge-valid { background: rgba(16,185,129,0.2); color: #6EE7B7; }
     .badge-expired { background: rgba(239,68,68,0.2); color: #F87171; }
     .badge-expiring { background: rgba(251,191,36,0.2); color: #FBBF24; }
+    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
+    .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
+    .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .privacy-note {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #0F5132;
+    }
+    .faq-item { margin-bottom: 1.25rem; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a {
+      color: #10B981;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+    }
+    .related-tools a:hover { border-color: #10B981; }
   </style>
 </head>
 <body>
@@ -105,6 +130,36 @@
 
     <div class="results" id="results">
       <div id="certInfo"></div>
+    </div>
+
+    <div class="content-section">
+      <h2>Quick Answer</h2>
+      <p>This tool parses an SSL/TLS certificate you paste in PEM format and shows its subject, issuer, serial number, validity window, and whether it's expired or expiring soon — entirely in your browser.</p>
+
+      <h2>How to get a certificate's PEM text</h2>
+      <p>To check a live website's certificate, use your browser: click the padlock icon → Connection is secure → Certificate → Details → Export, or run <code>openssl s_client -connect example.com:443 -showcerts</code> from a terminal. Paste the resulting PEM block (starting with <code>-----BEGIN CERTIFICATE-----</code>) here.</p>
+
+      <h2>How to use this tool</h2>
+      <ol>
+        <li>Paste a certificate in PEM format into the box.</li>
+        <li>Click Parse Certificate to see its subject, issuer, validity dates, and expiration status.</li>
+      </ol>
+
+      <h2>Privacy</h2>
+      <div class="privacy-note">Parsing happens entirely in your browser using a client-side X.509 library. The certificate text is never sent to any server.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Can I check a live domain's certificate without downloading it?</h3>
+        <p>Not with this tool — it only parses a PEM you provide. Use <a href="/tools/http-header-analyzer.html">HTTP Header Analyzer</a> or your browser's own certificate viewer to inspect a live site's certificate first, then paste it here for detail.</p>
+      </div>
+
+      <h2>Related Tools</h2>
+      <div class="related-tools">
+        <a href="/tools/http-header-analyzer.html">HTTP Header Analyzer</a>
+        <a href="/tools/dns-lookup.html">DNS Lookup</a>
+        <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+      </div>
     </div>
   </div>
 
