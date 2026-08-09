@@ -50,9 +50,12 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Invalid JSON body" }, 400);
   }
 
-  const answers = body.answers;
+  const answers = body && typeof body === "object" ? body.answers : undefined;
   if (!Array.isArray(answers) || answers.length === 0) {
     return jsonResponse({ error: "Missing answers array" }, 400);
+  }
+  if (answers.some(a => !a || typeof a !== "object")) {
+    return jsonResponse({ error: "Invalid answers array" }, 400);
   }
 
   // Cap input size defensively — prevents abuse via huge payloads driving up cost
