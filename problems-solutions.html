@@ -120,7 +120,7 @@ pre,code{font-family:'Fira Code','JetBrains Mono',monospace}
 <aside class="sidebar">
   <div class="sidebar-section">
     <h4>All Topics</h4>
-    <a href="#all" class="active" data-filter-chapter="all" class="filter-chapter">
+    <a href="#all" class="active filter-chapter" data-filter-chapter="all">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       All Problems <span class="count" id="count-all">45</span>
     </a>
@@ -208,7 +208,7 @@ pre,code{font-family:'Fira Code','JetBrains Mono',monospace}
 
     <!-- CARD -->
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Cannot connect to the internet — all pings fail</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -235,7 +235,7 @@ cat /etc/resolv.conf  # check DNS servers</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">DNS resolution failing — domain not found</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -260,7 +260,7 @@ systemd-resolve --status      # check systemd-resolved</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">High network latency and packet loss</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -287,7 +287,7 @@ nethogs                       # per-process bandwidth monitor</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">SSH connection refused on port 22</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -314,7 +314,7 @@ ufw status              # firewall blocking?</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">SSL certificate error in browser</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -339,7 +339,7 @@ curl -vI https://domain.com 2>&1 | grep -E "expire|SSL|cert"</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="low">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-low">Low</span>
         <span class="problem-title">VPN connected but no internet access</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -359,7 +359,7 @@ curl -vI https://domain.com 2>&1 | grep -E "expire|SSL|cert"</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Port 80/443 not accessible from outside</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -385,7 +385,7 @@ curl -I http://YOUR_IP</div>
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Common HTTP error codes and what actually causes them</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -415,7 +415,7 @@ tail -f /var/log/nginx/access.log       # confirm the request even reached nginx
     </div>
 
     <div class="problem-card" data-chapter="networking" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Emails going to spam or not arriving at all</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -451,7 +451,7 @@ dig TXT _dmarc.yourdomain.com                 # DMARC policy</div>
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Server getting brute-forced via SSH</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -475,7 +475,7 @@ sudo grep "Failed password" /var/log/auth.log | awk '{print ₹940}' | sort | un
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Website defaced or injected with malware</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -501,7 +501,7 @@ grep -r "iframe" /var/www/ --include="*.html"              # injected iframes</d
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Ransomware encrypted files on server</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -523,7 +523,7 @@ grep -r "iframe" /var/www/ --include="*.html"              # injected iframes</d
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">API keys accidentally pushed to GitHub</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -545,7 +545,7 @@ grep -r "iframe" /var/www/ --include="*.html"              # injected iframes</d
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Users logging in from suspicious locations</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -567,7 +567,7 @@ grep -r "iframe" /var/www/ --include="*.html"              # injected iframes</d
     </div>
 
     <div class="problem-card" data-chapter="security" data-sev="low">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-low">Low</span>
         <span class="problem-title">Missing security headers on web application</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -597,7 +597,7 @@ add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsaf
     </div>
 
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Disk 100% full — server unresponsive</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -624,7 +624,7 @@ find / -name "*.log" -size +100M 2>/dev/null # big log files</div>
     </div>
 
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">CPU at 100% — server crawling</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -648,7 +648,7 @@ iotop                         # if it's I/O wait, not CPU</div>
     </div>
 
     <div class="problem-card" data-chapter="linux" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Permission denied errors on files/directories</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -674,7 +674,7 @@ stat /path/to/file         # full permission details</div>
     </div>
 
     <div class="problem-card" data-chapter="linux" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Service fails to start after reboot</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -697,7 +697,7 @@ journalctl -u servicename --since "1 hour ago"</div>
     </div>
 
     <div class="problem-card" data-chapter="linux" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Out of memory — OOM killer killing processes</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -730,7 +730,7 @@ ps aux --sort=-%mem | head -10    # top memory processes</div>
     </div>
 
     <div class="problem-card" data-chapter="cloud" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">AWS bill unexpectedly high — cost spike</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -752,7 +752,7 @@ ps aux --sort=-%mem | head -10    # top memory processes</div>
     </div>
 
     <div class="problem-card" data-chapter="cloud" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">EC2 instance unreachable after security group change</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -773,7 +773,7 @@ ps aux --sort=-%mem | head -10    # top memory processes</div>
     </div>
 
     <div class="problem-card" data-chapter="cloud" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">S3 bucket public — data exposed</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -793,7 +793,7 @@ ps aux --sort=-%mem | head -10    # top memory processes</div>
     </div>
 
     <div class="problem-card" data-chapter="cloud" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Kubernetes pod stuck in CrashLoopBackOff</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -827,7 +827,7 @@ kubectl logs POD_NAME -c CONTAINER     # specific container logs</div>
     </div>
 
     <div class="problem-card" data-chapter="devops" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Docker container exits immediately after start</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -851,7 +851,7 @@ docker run -it IMAGE /bin/sh   # run interactively to debug</div>
     </div>
 
     <div class="problem-card" data-chapter="devops" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">CI/CD pipeline failing on every push</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -873,7 +873,7 @@ docker run -it IMAGE /bin/sh   # run interactively to debug</div>
     </div>
 
     <div class="problem-card" data-chapter="devops" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Git merge conflicts blocking deployment</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -892,7 +892,7 @@ docker run -it IMAGE /bin/sh   # run interactively to debug</div>
     </div>
 
     <div class="problem-card" data-chapter="devops" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Nginx 502 Bad Gateway error</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -926,7 +926,7 @@ ss -tlnp | grep 8000                  # is backend listening on expected port?</
     </div>
 
     <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">MySQL queries extremely slow — full table scans</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -950,7 +950,7 @@ SHOW VARIABLES LIKE 'slow_query_log%';  -- enable slow query log</div>
     </div>
 
     <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Database connection pool exhausted</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -975,7 +975,7 @@ SHOW FULL PROCESSLIST;   -- see all open connections</div>
     </div>
 
     <div class="problem-card" data-chapter="databases" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Accidentally deleted important data — no backup</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -996,7 +996,7 @@ SHOW FULL PROCESSLIST;   -- see all open connections</div>
     </div>
 
     <div class="problem-card" data-chapter="databases" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Deadlock errors in database logs</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1028,7 +1028,7 @@ SHOW FULL PROCESSLIST;   -- see all open connections</div>
     </div>
 
     <div class="problem-card" data-chapter="hardware" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Server overheating — thermal throttling</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1052,7 +1052,7 @@ dmesg | grep -i "thermal\|throttl"        # kernel thermal events</div>
     </div>
 
     <div class="problem-card" data-chapter="hardware" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Hard drive failing — S.M.A.R.T. errors</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1075,7 +1075,7 @@ dmesg | grep -i "error\|ata\|I/O"  # kernel disk errors</div>
     </div>
 
     <div class="problem-card" data-chapter="hardware" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">RAM causing random crashes and blue screens</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1109,7 +1109,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="compliance" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">GDPR violation — user data processed without consent</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1131,7 +1131,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="compliance" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">PCI DSS — storing plain-text card data</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1152,7 +1152,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="compliance" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Audit log gaps — missing activity records</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1183,7 +1183,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Why does my WiFi keep disconnecting?</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1206,7 +1206,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">VPN client won't connect or times out</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1229,7 +1229,7 @@ sudo memtester 1G 1              # test 1GB of RAM, 1 pass
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Computer feels slow — diagnosing poor SSD/disk performance</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1258,7 +1258,7 @@ fsutil behavior query DisableDeleteNotify   # 0 = TRIM enabled</div>
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Troubleshooting a Windows Blue Screen of Death (BSOD)</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1281,7 +1281,7 @@ fsutil behavior query DisableDeleteNotify   # 0 = TRIM enabled</div>
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="med">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-med">Medium</span>
         <span class="problem-title">Printer not printing or stuck in the queue</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1304,7 +1304,7 @@ fsutil behavior query DisableDeleteNotify   # 0 = TRIM enabled</div>
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="high">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-high">High</span>
         <span class="problem-title">Computer won't turn on — no display, no POST</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1328,7 +1328,7 @@ fsutil behavior query DisableDeleteNotify   # 0 = TRIM enabled</div>
     </div>
 
     <div class="problem-card" data-chapter="everyday" data-sev="low">
-      <div class="problem-header" class="problem-toggle">
+      <div class="problem-header problem-toggle">
         <span class="severity sev-low">Low</span>
         <span class="problem-title">Decoding common Windows error codes (0x80070005 and friends)</span>
         <svg class="toggle-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
