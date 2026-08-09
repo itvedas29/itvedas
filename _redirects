@@ -8,6 +8,14 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 # All /cve/* requests redirect to /articles/cve/ (301 for SEO)
 /cve              /articles/cve/     301
 /cve/             /articles/cve/     301
+
+# Individual CVE detail pages: cve-listing.html's viewCVE() navigates to
+# /cve/{id}/, and cve-detail.html reads the ID back out of the URL path
+# client-side. These rewrites must come before the catch-all below or
+# every per-CVE link gets swallowed into the generic /articles/cve/ listing.
+/cve/:id/         /cve-detail.html   200
+/cve/:id          /cve-detail.html   200
+
 /cve/:splat       /articles/cve/     301
 
 # NOTE: Cloudflare Pages automatically serves .html files for extensionless URLs
