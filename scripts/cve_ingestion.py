@@ -9,8 +9,10 @@ Usage:
 """
 
 import json
+import os
 import requests
 import sys
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 import hashlib
@@ -26,7 +28,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 CONFIG = {
     'NVD_API_URL': 'https://services.nvd.nist.gov/rest/json/cves/2.0',
-    'NVD_API_KEY': None,  # Set via environment variable or config
+    'NVD_API_KEY': os.environ.get('NVD_API_KEY'),  # cve-daily-sync.yml passes this in; unauthenticated NVD requests are limited to 5/30s vs 50/30s with a key
     'DATABASE_FILE': 'cve-database-full.json',
     'LAST_SYNC_FILE': '.cve_last_sync',
     'REPORT_FILE': 'cve-ingestion-report.json',
@@ -176,7 +178,7 @@ class CVEIngester:
             logger.error(f"Error normalizing CVE {nvd_cve.get('id', 'unknown')}: {e}")
             return None
 
-    def fetch_from_nvd(self, start_index=0):
+    def fetch_from_nvd(self, start_index=0, _retries=3):
         """Fetch CVEs from NVD API"""
         try:
             logger.info(f"Fetching CVEs from NVD (index: {start_index})...")
@@ -213,7 +215,16 @@ class CVEIngester:
                 logger.info(f"Fetched {len(vulnerabilities)} CVEs from NVD")
                 return vulnerabilities, data.get('totalResults', 0)
             elif response.status_code == 403:
-                logger.error("NVD API rate limit exceeded or API key invalid")
+                # Rate limited -- distinct from "no more results" (a real
+                # 200 with an empty page). Backing off and retrying instead
+                # of returning ([], 0) avoids silently truncating the sync
+                # mid-batch, which the caller can't tell apart from "done".
+                if _retries > 0:
+                    wait = (4 - _retries) * 10
+                    logger.warning(f"NVD API rate limited, retrying in {wait}s ({_retries} attempts left)...")
+                    time.sleep(wait)
+                    return self.fetch_from_nvd(start_index, _retries - 1)
+                logger.error("NVD API rate limit exceeded after retries, giving up on this batch")
                 return [], 0
             else:
                 logger.error(f"NVD API error: {response.status_code}")

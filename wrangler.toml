@@ -1,28 +1,26 @@
+# This project is a Cloudflare Pages project connected directly to GitHub
+# (itvedas29/itvedas, production branch "main") -- for a Git-connected Pages
+# project, the dashboard is authoritative for build settings and custom
+# domains, NOT this file. Confirmed directly in the dashboard (2026-08-09):
+#   - Build command / build output / root directory are all blank there,
+#     i.e. Cloudflare deploys the repo root as static assets with no build
+#     step. That's correct for this site: there's no real build to run, and
+#     build.sh's status-check output was never actually reaching production.
+#   - itvedas.com and www.itvedas.com are attached via Settings > Custom
+#     domains, not via any route/zone config below.
+# This file previously carried several Workers-only fields (account_id,
+# zone_id, route, workers_dev, [env.production].routes) that have no effect
+# on a Pages project and were left blank/inert. Removed them rather than
+# leave config that looks load-bearing but isn't.
+
 name = "itvedas"
-type = "javascript"
-account_id = ""
-workers_dev = true
-route = ""
-zone_id = ""
 
-# Cloudflare Pages configuration
-[env.production]
-name = "itvedas"
-routes = [
-  { pattern = "itvedas.com", zone_name = "itvedas.com" },
-  { pattern = "*.itvedas.com", zone_name = "itvedas.com" }
-]
-
-# Build configuration for Cloudflare Pages
-[build]
-command = "bash build.sh"
-cwd = "./"
-watch_paths = ["itvedas-brain/cve-aggregator.py"]
-
-# Observability
+# Governs Workers Logs for Pages Functions (functions/api/*.js) -- this one
+# IS respected for Pages Functions, unlike the build settings above.
 [observability]
 enabled = true
 
-# Function configuration
+# Matches Cloudflare Pages' default Functions directory convention; kept
+# explicit for clarity.
 [functions]
 directory = "functions"
