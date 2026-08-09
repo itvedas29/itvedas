@@ -13,8 +13,12 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 # /cve/{id}/, and cve-detail.html reads the ID back out of the URL path
 # client-side. These rewrites must come before the catch-all below or
 # every per-CVE link gets swallowed into the generic /articles/cve/ listing.
-/cve/:id/         /cve-detail.html   200
-/cve/:id          /cve-detail.html   200
+# Target must be the extensionless clean URL (/cve-detail), not
+# /cve-detail.html -- Cloudflare Pages' automatic .html-trimming redirect
+# fires even on a 200 rewrite target, which turned this into a real 308
+# redirect to /cve-detail and stripped the CVE ID off the URL entirely.
+/cve/:id/         /cve-detail   200
+/cve/:id          /cve-detail   200
 
 /cve/:splat       /articles/cve/     301
 
