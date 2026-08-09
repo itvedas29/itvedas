@@ -37,8 +37,7 @@ Subscribe email address to ITVedas newsletter and updates.
 ```json
 {
   "success": true,
-  "message": "Successfully subscribed",
-  "count": 1234
+  "message": "Successfully subscribed"
 }
 ```
 

@@ -4,8 +4,6 @@
 // (not the Workers `export default { fetch }` module convention) or Pages
 // will never route requests to this handler.
 
-const MAX_SUBSCRIBERS = 20000;
-
 const ALLOWED_ORIGINS = [
   "https://itvedas.com",
   "https://www.itvedas.com",
@@ -43,35 +41,27 @@ export async function onRequestPost(context) {
       return jsonResponse({ success: false, message: 'Unable to process subscription. Please try again later.' }, 500);
     }
 
-    // Store in KV
-    const subscribers = await env.SUBSCRIBERS.get('list') || '[]';
-    const list = JSON.parse(subscribers);
+    // One KV entry per subscriber, keyed by normalized email — avoids the
+    // read-modify-write race a single shared list value had (two concurrent
+    // signups could clobber each other) and makes dedup case-insensitive
+    // for free, since the key itself is normalized.
+    const key = `subscriber:${email.toLowerCase()}`;
 
-    // Check for duplicates
-    if (list.some(s => s.email === email)) {
+    const existing = await env.SUBSCRIBERS.get(key);
+    if (existing) {
       return jsonResponse({ success: false, message: 'Already subscribed' }, 400);
     }
 
-    // Cap unbounded growth — protects the KV value from hitting size limits
-    if (list.length >= MAX_SUBSCRIBERS) {
-      console.error('Subscribe error: subscriber list at capacity');
-      return jsonResponse({ success: false, message: 'Unable to process subscription. Please try again later.' }, 503);
-    }
-
-    // Add new subscriber
-    list.push({
+    await env.SUBSCRIBERS.put(key, JSON.stringify({
       email,
       timestamp: timestamp || new Date().toISOString(),
       verified: false,
       source: 'homepage-signup'
-    });
-
-    await env.SUBSCRIBERS.put('list', JSON.stringify(list));
+    }));
 
     return jsonResponse({
       success: true,
-      message: 'Successfully subscribed',
-      count: list.length
+      message: 'Successfully subscribed'
     });
 
   } catch (error) {
