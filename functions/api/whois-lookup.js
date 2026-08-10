@@ -90,9 +90,13 @@ export async function onRequestPost() {
 }
 
 async function getRdapBase(tld) {
-  const res = await fetchWithTimeout(RDAP_BOOTSTRAP_URL, {
-    cf: { cacheTtl: 3600, cacheEverything: true }
-  });
+  // No `cf` fetch options here (e.g. cacheEverything) -- that requires
+  // zone/plan settings this project doesn't have and throws at runtime
+  // in production Pages Functions despite working in local `wrangler
+  // pages dev`, which is exactly the kind of local/production gap that
+  // broke this endpoint twice already. Plain fetch, matching the proven
+  // pattern in dns-lookup.js and my-ip.js.
+  const res = await fetchWithTimeout(RDAP_BOOTSTRAP_URL);
   if (!res.ok) return null;
 
   const data = await res.json();
