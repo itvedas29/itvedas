@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="WHOIS lookup tool. Query domain WHOIS information. Educational WHOIS lookup simulator.">
+  <meta name="description" content="Free real WHOIS lookup tool. Query live domain registration data — registrar, creation/expiry dates, name servers, and status — straight from the registry's WHOIS server.">
 <meta property="og:title" content="WHOIS Lookup | IT Vedas">
-<meta property="og:description" content="WHOIS lookup tool. Query domain WHOIS information. Educational WHOIS lookup simulator.">
+<meta property="og:description" content="Free real WHOIS lookup tool. Query live domain registration data straight from the registry's WHOIS server.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.itvedas.com/tools/whois-lookup">
   <title>WHOIS Lookup | IT Vedas</title>
@@ -17,6 +17,7 @@
       color: #182238;
       font-family: 'Inter', -apple-system, sans-serif;
       padding: 2rem;
+      line-height: 1.7;
     }
     .container { max-width: 900px; margin: 0 auto; }
     h1 { font-size: 2rem; margin-bottom: 2rem; }
@@ -30,7 +31,6 @@
     .input-group {
       display: flex;
       gap: 1rem;
-      margin-bottom: 1rem;
     }
     input {
       flex: 1;
@@ -52,6 +52,16 @@
       cursor: pointer;
     }
     button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #B91C1C;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
     .results {
       background: #FFFFFF;
       border: 1px solid rgba(24,34,56,0.12);
@@ -60,6 +70,7 @@
       display: none;
     }
     .results.active { display: block; }
+    .meta-row { color: #6B7A94; font-size: 0.82rem; margin-bottom: 1.25rem; }
     .info-row {
       display: flex;
       gap: 1.5rem;
@@ -77,16 +88,32 @@
       color: #4A5568;
       word-break: break-word;
     }
-    .disclaimer {
-      background: rgba(251,191,36,0.1);
-      border: 1px solid rgba(251,191,36,0.3);
-      color: #FBBF24;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      font-size: 0.9rem;
+    .summary-block { margin-bottom: 1.5rem; }
+    .raw-toggle {
+      background: transparent;
+      border: 1px solid rgba(99,102,241,0.4);
+      color: #6366F1;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
     }
-    .content-section { margin-top: 2.5rem; line-height: 1.7; }
+    .raw-toggle:hover { opacity: 0.85; }
+    pre.raw-whois {
+      display: none;
+      background: #182238;
+      color: #D1D9EC;
+      padding: 1.25rem;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    pre.raw-whois.active { display: block; }
+    .content-section { margin-top: 2.5rem; }
     .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
     .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
     .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
@@ -118,34 +145,55 @@
     <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
 
     <h1>🔍 WHOIS Lookup</h1>
+    <p style="color:#6B7A94; margin-bottom: 1.5rem; font-size: 0.95rem;">Real, live domain registration data — queried directly from the registry's WHOIS server, not sample data.</p>
 
     <div class="search-section">
       <div class="input-group">
-        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
-        <button data-onclick="whoisLookup" class="handler-whoisLookup">Lookup</button>
+        <input type="text" id="domain" placeholder="Enter a registered domain (e.g., example.com)">
+        <button id="lookupBtn" data-onclick="whoisLookup" class="handler-whoisLookup">Lookup</button>
       </div>
     </div>
 
+    <div class="error-box" id="errorBox"></div>
+
     <div class="results" id="results">
-      <h2 style="margin-bottom: 1.5rem; color: #6366F1;">WHOIS Information</h2>
-      <div id="resultsList"></div>
-      <div class="disclaimer">
-        <strong>⚠️ Educational Tool:</strong> This shows sample WHOIS data. For real WHOIS queries, use whois command or ICANN WHOIS lookup at whois.icann.org
-      </div>
+      <h2 style="margin-bottom: 0.5rem; color: #6366F1;">WHOIS Information</h2>
+      <div class="meta-row" id="metaRow"></div>
+      <div class="summary-block" id="summaryBlock"></div>
+      <button class="raw-toggle handler-toggleRaw" id="rawToggle" data-onclick="toggleRaw">Show raw WHOIS record</button>
+      <pre class="raw-whois" id="rawWhois"></pre>
     </div>
 
     <div class="content-section">
       <h2>Quick Answer</h2>
-      <p>WHOIS is a protocol for looking up domain registration details — registrar, registration/expiration dates, and name servers. This page demonstrates the shape of that data with two sample domains; for a real domain's current WHOIS record, use the ICANN Lookup tool linked below.</p>
+      <p>WHOIS is a protocol for looking up domain registration details — registrar, registration/expiration dates, and name servers. This tool queries the actual authoritative WHOIS server for your domain in real time and returns its live record, both as a parsed summary and the full raw response.</p>
 
       <h2>What is WHOIS?</h2>
-      <p>Every registered domain has a WHOIS record maintained by its registrar, showing who registered it, when, and which name servers it uses. Since GDPR and similar privacy regulations, many registrars now redact personal registrant details by default.</p>
+      <p>Every registered domain has a WHOIS record maintained by its registry and registrar, showing who registered it, when, and which name servers it uses. Since GDPR and similar privacy regulations, many registrars now redact personal registrant details by default — this is normal and doesn't mean the lookup failed.</p>
 
-      <h2>Get a real WHOIS lookup</h2>
-      <p>This demo only has sample data for <code>example.com</code> and <code>google.com</code>. For any other domain, use <a href="https://lookup.icann.org" rel="nofollow noopener" target="_blank">ICANN Lookup</a>, or run <code>whois example.com</code> from a terminal if you have the <code>whois</code> package installed.</p>
+      <h2>How this tool works</h2>
+      <p>ITVEDAS's own edge server asks IANA's root WHOIS server which registry runs your domain's TLD, queries that registry over the WHOIS protocol (port 43), and — for TLDs like <code>.com</code>/<code>.net</code> that use a "thin" registry model — follows the referral to the registrar's own WHOIS server for the full record. It never connects anywhere except official WHOIS servers discovered through that chain.</p>
 
       <h2>Privacy</h2>
-      <div class="privacy-note">This demo runs entirely in your browser against a small built-in sample dataset — nothing is looked up or transmitted.</div>
+      <div class="privacy-note">Your query goes to ITVEDAS's own server, which relays it to the relevant WHOIS servers on your behalf — your browser never connects to them directly. Nothing you search is logged or stored.</div>
+
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>Why don't I see a registrant name or email?</h3>
+        <p>Most registrars redact this by default under GDPR/ICANN privacy policies. This is expected — it's not a failed lookup.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Why does a subdomain show "No match"?</h3>
+        <p>WHOIS only has records for registered domains, not subdomains — look up <code>example.com</code>, not <code>www.example.com</code>.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Some fields are missing from the summary — why?</h3>
+        <p>Every registry formats its WHOIS output slightly differently, and the summary only extracts commonly-used field names. The full raw record (toggle above) always has everything the server returned, even if the summary parser didn't recognize a particular line.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Why did the lookup fail for my TLD?</h3>
+        <p>A handful of TLDs don't run a classic WHOIS service (some rely on RDAP only, or restrict access). If that happens, try <a href="https://lookup.icann.org" rel="nofollow noopener" target="_blank">ICANN Lookup</a> instead.</p>
+      </div>
 
       <h2>Related Tools</h2>
       <div class="related-tools">
@@ -157,64 +205,107 @@
   </div>
 
   <script>
-    const sampleWhois = {
-      'example.com': {
-        'Registrar': 'IANA Example Registrar',
-        'Registrar IANA ID': '292',
-        'Registrant Name': 'Example Registrant',
-        'Registrant Email': 'admin@example.com',
-        'Created Date': '1995-08-14',
-        'Updated Date': '2022-08-15',
-        'Expiration Date': '2025-08-13',
-        'Nameserver': ['ns1.example.com', 'ns2.example.com'],
-        'Status': 'clientTransferProhibited'
-      },
-      'google.com': {
-        'Registrar': 'MarkMonitor Inc.',
-        'Registrar IANA ID': '292',
-        'Registrant Name': 'Google LLC',
-        'Registrant Email': 'admin@google.com',
-        'Created Date': '1997-09-15',
-        'Updated Date': '2023-09-14',
-        'Expiration Date': '2028-09-14',
-        'Nameserver': ['ns1.google.com', 'ns2.google.com', 'ns3.google.com', 'ns4.google.com'],
-        'Status': 'clientUpdateProhibited clientTransferProhibited'
-      }
+    const SUMMARY_LABELS = {
+      registrar: 'Registrar',
+      registrarUrl: 'Registrar URL',
+      createdDate: 'Created',
+      updatedDate: 'Last Updated',
+      expiryDate: 'Expires',
+      dnssec: 'DNSSEC',
+      nameServers: 'Name Servers',
+      statuses: 'Status'
     };
 
-    function whoisLookup() {
-      const domain = document.getElementById('domain').value.toLowerCase().trim();
+    async function whoisLookup() {
+      const domainInput = document.getElementById('domain');
+      const domain = domainInput.value.trim().toLowerCase();
+      const errorBox = document.getElementById('errorBox');
+      const results = document.getElementById('results');
+      const lookupBtn = document.getElementById('lookupBtn');
+
+      errorBox.style.display = 'none';
       if (!domain) return;
 
-      const data = sampleWhois[domain];
-      const resultsList = document.getElementById('resultsList');
+      lookupBtn.disabled = true;
+      lookupBtn.textContent = 'Looking up…';
 
-      if (data) {
-        let html = '';
-        for (const [key, value] of Object.entries(data)) {
-          if (Array.isArray(value)) {
-            html += `
-              <div class="info-row">
-                <div class="info-label">${key}</div>
-                <div class="info-value">${value.join(', ')}</div>
-              </div>
-            `;
-          } else {
-            html += `
-              <div class="info-row">
-                <div class="info-label">${key}</div>
-                <div class="info-value">${value}</div>
-              </div>
-            `;
-          }
+      try {
+        const res = await fetch(`/api/whois-lookup?domain=${encodeURIComponent(domain)}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorBox.textContent = data.error || 'Lookup failed. Please check the domain and try again.';
+          errorBox.style.display = 'block';
+          results.classList.remove('active');
+          return;
         }
-        resultsList.innerHTML = html;
-      } else {
-        resultsList.innerHTML = `<div style="color: #6B7A94;">No WHOIS data found (sample data only)</div>`;
+
+        renderResults(data);
+      } catch (e) {
+        errorBox.textContent = 'Network error — please try again.';
+        errorBox.style.display = 'block';
+      } finally {
+        lookupBtn.disabled = false;
+        lookupBtn.textContent = 'Lookup';
       }
+    }
+
+    function renderResults(data) {
+      const metaRow = document.getElementById('metaRow');
+      const summaryBlock = document.getElementById('summaryBlock');
+      const rawWhois = document.getElementById('rawWhois');
+      const rawToggle = document.getElementById('rawToggle');
+
+      metaRow.textContent = `Queried ${data.whoisServer} · ${data.queryTimeMs}ms`;
+
+      const summary = data.summary || {};
+      const keys = Object.keys(SUMMARY_LABELS).filter(k => summary[k] !== undefined);
+
+      if (keys.length === 0) {
+        summaryBlock.innerHTML = '';
+        const notice = document.createElement('div');
+        notice.style.color = '#6B7A94';
+        notice.style.marginBottom = '1rem';
+        notice.textContent = 'No common fields recognized in this registry\'s response — see the raw record below.';
+        summaryBlock.appendChild(notice);
+      } else {
+        summaryBlock.innerHTML = '';
+        for (const key of keys) {
+          const row = document.createElement('div');
+          row.className = 'info-row';
+
+          const label = document.createElement('div');
+          label.className = 'info-label';
+          label.textContent = SUMMARY_LABELS[key];
+
+          const value = document.createElement('div');
+          value.className = 'info-value';
+          const v = summary[key];
+          value.textContent = Array.isArray(v) ? v.join(', ') : v;
+
+          row.appendChild(label);
+          row.appendChild(value);
+          summaryBlock.appendChild(row);
+        }
+      }
+
+      rawWhois.textContent = data.raw || '(empty response)';
+      rawWhois.classList.remove('active');
+      rawToggle.textContent = 'Show raw WHOIS record';
 
       document.getElementById('results').classList.add('active');
     }
+
+    function toggleRaw() {
+      const rawWhois = document.getElementById('rawWhois');
+      const rawToggle = document.getElementById('rawToggle');
+      const showing = rawWhois.classList.toggle('active');
+      rawToggle.textContent = showing ? 'Hide raw WHOIS record' : 'Show raw WHOIS record';
+    }
+
+    document.getElementById('domain').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') whoisLookup();
+    });
   </script>
 <script src="/js/inline-handler-setup.js" defer></script>
 
@@ -223,7 +314,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "WHOIS Lookup | IT Vedas",
-  "description": "WHOIS lookup tool. Query domain WHOIS information. Educational WHOIS lookup simulator.",
+  "description": "Free real WHOIS lookup tool. Query live domain registration data straight from the registry's WHOIS server.",
   "url": "https://www.itvedas.com/tools/whois-lookup/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"
