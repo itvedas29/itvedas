@@ -35,6 +35,41 @@ dependencies.
 | Email | Resend HTTP API (optional) |
 | Admin auth | Server-side sessions + PBKDF2-SHA256 passwords |
 
+## Design system
+
+The palette is **"Trust & Authority"** — corporate navy for structure with a
+single trust-blue reserved for CTAs and interactive accents. It deliberately
+avoids the saturated indigo/violet gradients this project started with: those
+read as generic AI-startup and work against credibility for a B2B buyer who
+is deciding whether to grant admin access to their systems.
+
+Both light and dark themes are verified against WCAG AA — the CTA measures
+5.93:1 in light and 8.82:1 in dark. Dark mode needs `--on-accent` (dark text
+on the lighter sky-blue accent); white text there measures 2.14:1 and fails.
+
+**Motion** is IntersectionObserver plus CSS transitions (`js/reveal.js`), not
+an animation library. That keeps the CSP at `script-src 'self'` and avoids a
+render-blocking download. Two rules matter when editing it:
+
+- Reveal elements are **visible by default**. The hidden start state is only
+  applied once JS adds `html.js-reveal`, so a crawler or a visitor whose JS
+  failed never sees a blank page.
+- `prefers-reduced-motion: reduce` disables movement entirely.
+
+**Asset versioning:** `_headers` caches `/css/*` and `/js/*` for 24 hours, so
+every CSS/JS reference carries a `?v=<date>` query. **Bump that version when
+you change either file**, or returning visitors keep the stale copy for a day
+after deploy. It is a plain find-and-replace across `services/**/*.html`.
+
+### Interactive triage
+
+The homepage's `#triage` widget (`js/triage.js`) lets a visitor pick a symptom
+in plain English and get the likely service, an indicative starting price, and
+a deep link into the requirement form with the category pre-selected
+(`/request-it-help?category=<slug>`). It maps symptoms to a starting point and
+says so explicitly — it never claims to diagnose the actual fault. Adding a
+symptom means adding one entry to the `SYMPTOMS` array.
+
 ## Layout
 
 ```
