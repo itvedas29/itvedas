@@ -47,6 +47,25 @@ Both light and dark themes are verified against WCAG AA — the CTA measures
 5.93:1 in light and 8.82:1 in dark. Dark mode needs `--on-accent` (dark text
 on the lighter sky-blue accent); white text there measures 2.14:1 and fails.
 
+### Text colour scale
+
+Measured against the page background (`--bg`) and card background (`--bg2`):
+
+| Token | Light | Ratio | Dark | Ratio |
+| --- | --- | --- | --- | --- |
+| `--text` body & headings | `#020617` | 19.28 AAA | `#F1F5F9` | 17.09 AAA |
+| `--sub` secondary text | `#334155` | 9.90 AAA | `#CBD5E1` | 12.61 AAA |
+| `--muted` captions, meta | `#5A6B85` | 5.18 AA | `#94A8C0` | 7.69 AAA |
+| `--accent` links, eyebrows | `#0369A1` | 5.67 AA | `#38BDF8` | 8.74 AAA |
+
+`--muted` is **intentionally darker** than the `#64748B` these palettes
+usually ship with: that value measures 4.55:1 here, which passes only by
+0.05. Don't "correct" it back — the extra darkness is the entire margin.
+
+Headings use Space Grotesk, body uses Inter, matching itvedas.com. This was
+reviewed against IBM Plex Sans, Plus Jakarta Sans and Lexend/Source Sans 3
+and kept deliberately for brand cohesion with the parent site.
+
 **Motion** is IntersectionObserver plus CSS transitions (`js/reveal.js`), not
 an animation library. That keeps the CSP at `script-src 'self'` and avoids a
 render-blocking download. Two rules matter when editing it:
