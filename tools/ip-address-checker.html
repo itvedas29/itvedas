@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet — no signup required.">
+  <meta name="description" content="Free advanced IP address checker. See your public IP, reverse DNS, connection/TLS info, ISP/ASN, geolocation, and browser details — no signup required.">
 <meta property="og:title" content="IP Address Checker - What Is My IP? | IT Vedas">
-<meta property="og:description" content="Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet.">
+<meta property="og:description" content="Free advanced IP address checker. See your public IP, reverse DNS, connection/TLS info, ISP/ASN, geolocation, and browser details.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.itvedas.com/tools/ip-address-checker">
   <title>IP Address Checker - What Is My IP? | IT Vedas</title>
@@ -37,9 +37,19 @@
       font-weight: 700;
       color: #10B981;
       word-break: break-all;
+      margin-bottom: 0.5rem;
+    }
+    .ip-type-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(99,102,241,0.15);
+      color: #6366F1;
       margin-bottom: 0.75rem;
     }
-    .ip-loading { color: #6B7A94; font-size: 1rem; }
+    .button-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
     button {
       padding: 0.6rem 1.25rem;
       background: #10B981;
@@ -51,6 +61,8 @@
       font-size: 0.9rem;
     }
     button:hover { opacity: 0.9; }
+    button.secondary { background: transparent; border: 1px solid rgba(16,185,129,0.4); color: #10B981; }
+    .section-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7A94; margin: 1.75rem 0 0.75rem; }
     .details-grid {
       background: #FFFFFF;
       border: 1px solid rgba(24,34,56,0.12);
@@ -59,10 +71,10 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1.25rem;
-      margin-bottom: 2rem;
     }
     .detail-item .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7A94; margin-bottom: 0.3rem; }
-    .detail-item .value { font-weight: 600; font-size: 1rem; }
+    .detail-item .value { font-weight: 600; font-size: 1rem; word-break: break-word; }
+    .detail-item .value.mono { font-family: 'Courier New', monospace; font-size: 0.9rem; }
     .error-box {
       background: rgba(239, 68, 68, 0.1);
       border: 1px solid rgba(239, 68, 68, 0.3);
@@ -70,6 +82,7 @@
       padding: 1rem;
       border-radius: 8px;
       display: none;
+      margin-bottom: 1.5rem;
     }
     .content-section { margin-top: 2.5rem; }
     .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
@@ -103,16 +116,22 @@
     <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
 
     <h1>🌍 IP Address Checker</h1>
-    <p class="description">See your public IP address and network details exactly as the internet sees them.</p>
+    <p class="description">See your public IP address, reverse DNS, connection details, and browser info — exactly as the internet sees them.</p>
 
     <div class="ip-card">
       <div class="ip-value" id="ipValue">Loading…</div>
-      <button data-onclick="copyIP" class="handler-copyIP">📋 Copy IP</button>
+      <div><span class="ip-type-badge" id="ipTypeBadge" style="display:none;"></span></div>
+      <div class="button-row">
+        <button data-onclick="copyIP" class="handler-copyIP">📋 Copy IP</button>
+        <button data-onclick="copyReport" class="handler-copyReport secondary">📄 Copy Full Report</button>
+      </div>
     </div>
 
     <div class="error-box" id="errorBox"></div>
 
+    <div class="section-title">Network &amp; Location</div>
     <div class="details-grid" id="detailsGrid" style="display:none;">
+      <div class="detail-item"><div class="label">Reverse DNS (PTR)</div><div class="value mono" id="dPtr">—</div></div>
       <div class="detail-item"><div class="label">Country</div><div class="value" id="dCountry">—</div></div>
       <div class="detail-item"><div class="label">Region</div><div class="value" id="dRegion">—</div></div>
       <div class="detail-item"><div class="label">City</div><div class="value" id="dCity">—</div></div>
@@ -121,18 +140,39 @@
       <div class="detail-item"><div class="label">Timezone</div><div class="value" id="dTimezone">—</div></div>
     </div>
 
+    <div class="section-title">Connection</div>
+    <div class="details-grid" id="connGrid" style="display:none;">
+      <div class="detail-item"><div class="label">HTTP Protocol</div><div class="value" id="cProtocol">—</div></div>
+      <div class="detail-item"><div class="label">TLS Version</div><div class="value" id="cTls">—</div></div>
+      <div class="detail-item"><div class="label">TLS Cipher</div><div class="value mono" id="cCipher">—</div></div>
+      <div class="detail-item"><div class="label">Cloudflare Data Center</div><div class="value" id="cColo">—</div></div>
+    </div>
+
+    <div class="section-title">Your Browser</div>
+    <div class="details-grid" id="browserGrid">
+      <div class="detail-item"><div class="label">Browser</div><div class="value" id="bBrowser">—</div></div>
+      <div class="detail-item"><div class="label">Operating System</div><div class="value" id="bOs">—</div></div>
+      <div class="detail-item"><div class="label">Device Type</div><div class="value" id="bDevice">—</div></div>
+      <div class="detail-item"><div class="label">Screen Resolution</div><div class="value" id="bScreen">—</div></div>
+      <div class="detail-item"><div class="label">Language</div><div class="value" id="bLang">—</div></div>
+      <div class="detail-item"><div class="label">Cookies Enabled</div><div class="value" id="bCookies">—</div></div>
+    </div>
+
     <div class="content-section">
       <h2>Quick Answer</h2>
-      <p>Your public IP address is the address your router or device presents to the wider internet. This page shows it instantly, along with the country, region, and internet provider (ASN) Cloudflare's network sees it connecting from — no signup or third-party service required.</p>
+      <p>Your public IP address is the address your router or device presents to the wider internet. This page shows it instantly, along with reverse DNS, the country/region/ISP Cloudflare's network sees it connecting from, the TLS/connection details of this exact request, and details about your browser — no signup or third-party service required.</p>
 
       <h2>What is a public IP address?</h2>
       <p>A public IP address identifies your connection on the internet, similar to a mailing address. It's assigned by your Internet Service Provider (ISP) and is different from the private IP address (like 192.168.1.5) used inside your home or office network. Websites and services see your public IP, not your private one.</p>
 
+      <h2>What is reverse DNS?</h2>
+      <p>Reverse DNS (a PTR record) maps an IP address back to a hostname — the opposite of a normal DNS lookup. Many residential ISPs assign a generic PTR (like <code>123-45-67-89.static.example.net</code>); some IPs have no PTR record at all, in which case this field shows "Not available."</p>
+
       <h2>How this tool works</h2>
-      <p>This page makes a request to ITVEDAS's own edge servers, which read the connection details Cloudflare's network already has for your request (IP address, coarse geolocation, ASN) and return them to your browser. No external IP-lookup service is called and no data is stored.</p>
+      <p>This page makes a request to ITVEDAS's own edge servers, which read the connection details Cloudflare's network already has for your request (IP address, geolocation, ASN, TLS version) and perform a reverse DNS lookup via Cloudflare's public resolver. No external IP-lookup service is called. Browser details are read directly in your browser via JavaScript and never leave your device.</p>
 
       <h2>Privacy</h2>
-      <div class="privacy-note">Your IP and network details are read from the request itself and returned directly to you. Nothing is logged, stored, or shared with third parties.</div>
+      <div class="privacy-note">Your IP and network details are read from the request itself and returned directly to you. Browser details are read client-side only. Nothing is logged, stored, or shared with third parties.</div>
 
       <h2>FAQ</h2>
       <div class="faq-item">
@@ -141,11 +181,15 @@
       </div>
       <div class="faq-item">
         <h3>Does this show my IPv6 address too?</h3>
-        <p>It shows whichever address (IPv4 or IPv6) your device used to reach ITVEDAS. If your network supports IPv6 and prefers it, you may see an IPv6 address here.</p>
+        <p>It shows whichever address (IPv4 or IPv6) your device used to reach ITVEDAS, labeled accordingly — a browser can only reveal the one protocol it actually used for this connection, not both simultaneously.</p>
       </div>
       <div class="faq-item">
         <h3>Is my public IP the same as my location?</h3>
         <p>Not precisely — geolocation from an IP is approximate and based on ISP registration data, typically accurate to city or region level, not an exact address.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What's a TLS cipher?</h3>
+        <p>It's the specific encryption algorithm negotiated between your browser and Cloudflare's edge for this HTTPS connection — a technical detail useful for debugging compatibility issues, not something most visitors need to worry about.</p>
       </div>
 
       <h2>Related Tools</h2>
@@ -160,6 +204,7 @@
 
   <script>
     let currentIP = '';
+    let lastReport = null;
 
     async function loadIP() {
       const ipValue = document.getElementById('ipValue');
@@ -171,6 +216,16 @@
         currentIP = data.ip || 'unknown';
         ipValue.textContent = currentIP;
 
+        const badge = document.getElementById('ipTypeBadge');
+        if (currentIP.includes(':')) {
+          badge.textContent = 'IPv6';
+          badge.style.display = 'inline-block';
+        } else if (/^\d{1,3}(\.\d{1,3}){3}$/.test(currentIP)) {
+          badge.textContent = 'IPv4';
+          badge.style.display = 'inline-block';
+        }
+
+        document.getElementById('dPtr').textContent = data.reverseDns || 'Not available';
         document.getElementById('dCountry').textContent = data.country || '—';
         document.getElementById('dRegion').textContent = data.region || '—';
         document.getElementById('dCity').textContent = data.city || '—';
@@ -178,11 +233,46 @@
         document.getElementById('dAsn').textContent = data.asn ? ('AS' + data.asn) : '—';
         document.getElementById('dTimezone').textContent = data.timezone || '—';
         document.getElementById('detailsGrid').style.display = 'grid';
+
+        document.getElementById('cProtocol').textContent = data.httpProtocol || '—';
+        document.getElementById('cTls').textContent = data.tlsVersion || '—';
+        document.getElementById('cCipher').textContent = data.tlsCipher || '—';
+        document.getElementById('cColo').textContent = data.colo || '—';
+        document.getElementById('connGrid').style.display = 'grid';
+
+        lastReport = data;
       } catch (e) {
         ipValue.textContent = 'Unavailable';
         errorBox.textContent = 'Could not detect your IP address right now. Please try again.';
         errorBox.style.display = 'block';
       }
+    }
+
+    function detectBrowser() {
+      const ua = navigator.userAgent;
+      let browser = 'Unknown';
+      if (/Edg\//.test(ua)) browser = 'Microsoft Edge';
+      else if (/OPR\//.test(ua)) browser = 'Opera';
+      else if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) browser = 'Chrome';
+      else if (/Firefox\//.test(ua)) browser = 'Firefox';
+      else if (/Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari';
+
+      let os = 'Unknown';
+      if (/Windows NT/.test(ua)) os = 'Windows';
+      else if (/Mac OS X/.test(ua)) os = 'macOS';
+      else if (/Android/.test(ua)) os = 'Android';
+      else if (/iPhone|iPad|iPod/.test(ua)) os = 'iOS';
+      else if (/Linux/.test(ua)) os = 'Linux';
+
+      const device = /Mobi|Android(?!.*Tablet)|iPhone/.test(ua) ? 'Mobile'
+        : /Tablet|iPad/.test(ua) ? 'Tablet' : 'Desktop';
+
+      document.getElementById('bBrowser').textContent = browser;
+      document.getElementById('bOs').textContent = os;
+      document.getElementById('bDevice').textContent = device;
+      document.getElementById('bScreen').textContent = screen.width + '×' + screen.height;
+      document.getElementById('bLang').textContent = navigator.language || '—';
+      document.getElementById('bCookies').textContent = navigator.cookieEnabled ? 'Yes' : 'No';
     }
 
     function copyIP() {
@@ -195,6 +285,35 @@
       });
     }
 
+    function copyReport() {
+      if (!lastReport) return;
+      const lines = [
+        'IP Address: ' + lastReport.ip,
+        'Reverse DNS: ' + (lastReport.reverseDns || 'Not available'),
+        'Country: ' + (lastReport.country || '—'),
+        'Region: ' + (lastReport.region || '—'),
+        'City: ' + (lastReport.city || '—'),
+        'ISP / Network: ' + (lastReport.asOrganization || '—'),
+        'ASN: ' + (lastReport.asn ? 'AS' + lastReport.asn : '—'),
+        'Timezone: ' + (lastReport.timezone || '—'),
+        'HTTP Protocol: ' + (lastReport.httpProtocol || '—'),
+        'TLS Version: ' + (lastReport.tlsVersion || '—'),
+        'TLS Cipher: ' + (lastReport.tlsCipher || '—'),
+        'Cloudflare Data Center: ' + (lastReport.colo || '—'),
+        'Browser: ' + document.getElementById('bBrowser').textContent,
+        'OS: ' + document.getElementById('bOs').textContent,
+        'Device: ' + document.getElementById('bDevice').textContent,
+        'Screen: ' + document.getElementById('bScreen').textContent
+      ];
+      navigator.clipboard.writeText(lines.join('\n')).then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      });
+    }
+
+    detectBrowser();
     loadIP();
   </script>
 <script src="/js/inline-handler-setup.js" defer></script>
@@ -204,7 +323,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "IP Address Checker - What Is My IP? | IT Vedas",
-  "description": "Find your public IP address instantly. See your IPv4 address, ISP/ASN, country, and region as seen by the internet.",
+  "description": "Free advanced IP address checker. See your public IP, reverse DNS, connection/TLS info, ISP/ASN, geolocation, and browser details.",
   "url": "https://www.itvedas.com/tools/ip-address-checker/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"

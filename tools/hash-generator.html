@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.">
+  <meta name="description" content="Free advanced hash generator. MD5, SHA-1, SHA-256, SHA-384, SHA-512 for text and files, plus HMAC generation and hash comparison — runs natively in your browser, no external library loaded.">
 <meta property="og:title" content="Hash Generator | IT Vedas">
-<meta property="og:description" content="Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.">
+<meta property="og:description" content="Free advanced hash generator for text and files, plus HMAC and hash comparison — runs natively in your browser.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.itvedas.com/tools/hash-generator">
   <title>Hash Generator | IT Vedas</title>
@@ -21,6 +21,20 @@
     .container { max-width: 900px; margin: 0 auto; }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
     .description { color: #6B7A94; margin-bottom: 2rem; }
+    .mode-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .mode-tab {
+      padding: 0.6rem 1.1rem;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #6366F1;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .mode-tab.active { background: #6366F1; color: white; }
+    .mode-panel { display: none; }
+    .mode-panel.active { display: block; }
     .input-section {
       background: #FFFFFF;
       border: 1px solid rgba(24,34,56,0.12);
@@ -40,6 +54,29 @@
       margin-bottom: 1rem;
     }
     textarea:focus { outline: none; border-color: #10B981; }
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      color: #182238;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+    input:focus, select:focus { outline: none; border-color: #10B981; }
+    label { display: block; font-weight: 600; font-size: 0.85rem; color: #6B7A94; margin-bottom: 0.4rem; }
+    .file-drop {
+      border: 2px dashed rgba(99,102,241,0.4);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      color: #6B7A94;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    .file-drop.drag-over { background: rgba(99,102,241,0.08); border-color: #6366F1; }
+    .file-info { font-size: 0.85rem; color: #6366F1; margin-bottom: 1rem; display: none; }
     .hash-options {
       display: flex;
       gap: 1rem;
@@ -55,6 +92,7 @@
       cursor: pointer;
     }
     button:hover { opacity: 0.9; }
+    button.secondary { background: transparent; border: 1px solid rgba(16,185,129,0.4); color: #10B981; }
     .results {
       background: #FFFFFF;
       border: 1px solid rgba(24,34,56,0.12);
@@ -75,7 +113,7 @@
       padding-bottom: 0;
     }
     .hash-name {
-      min-width: 100px;
+      min-width: 90px;
       font-weight: 600;
       color: #6B7A94;
     }
@@ -88,7 +126,7 @@
       font-family: 'Courier New', monospace;
       font-size: 0.9rem;
       word-break: break-all;
-      color: #6EE7B7;
+      color: #059669;
     }
     .copy-btn {
       background: #10B981;
@@ -100,6 +138,15 @@
       font-size: 0.85rem;
     }
     .copy-btn:hover { opacity: 0.9; }
+    .compare-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: none;
+    }
+    .compare-result.match { background: rgba(16,185,129,0.15); color: #059669; display: block; }
+    .compare-result.no-match { background: rgba(239,68,68,0.15); color: #DC2626; display: block; }
     .content-section { margin-top: 2.5rem; line-height: 1.7; }
     .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
     .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
@@ -132,55 +179,85 @@
     <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
 
     <h1>🔐 Hash Generator</h1>
-    <p class="description">Generate cryptographic hashes (MD5, SHA1, SHA256, SHA512) for text and files instantly.</p>
+    <p class="description">Generate MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes for text or files, plus HMAC and hash comparison.</p>
 
-    <div class="input-section">
-      <textarea id="input" placeholder="Enter text to hash..."></textarea>
-      <div class="hash-options">
-        <button data-onclick="generateHashes" class="handler-generateHashes">Generate Hashes</button>
-        <button data-onclick="clearAll" class="handler-clearAll" style="background:transparent;border:1px solid rgba(16,185,129,0.4);color:#10B981;">Clear</button>
-      </div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-onclick="setMode" data-arg="text" class="handler-setMode">Text</button>
+      <button class="mode-tab" data-onclick="setMode" data-arg="file" class="handler-setMode">File</button>
+      <button class="mode-tab" data-onclick="setMode" data-arg="hmac" class="handler-setMode">HMAC</button>
+      <button class="mode-tab" data-onclick="setMode" data-arg="compare" class="handler-setMode">Compare</button>
     </div>
 
-    <div class="results" id="results" style="display:none;">
-      <div class="hash-item">
-        <div class="hash-name">MD5:</div>
-        <div class="hash-value" id="md5">-</div>
-        <button class="copy-btn" data-onclick="copyHash" data-arg="md5" class="handler-copyHash">Copy</button>
+    <div class="mode-panel active" id="panel-text">
+      <div class="input-section">
+        <textarea id="input" placeholder="Enter text to hash..."></textarea>
+        <div class="hash-options">
+          <button data-onclick="generateTextHashes" class="handler-generateTextHashes">Generate Hashes</button>
+          <button data-onclick="clearText" class="handler-clearText secondary">Clear</button>
+        </div>
       </div>
-      <div class="hash-item">
-        <div class="hash-name">SHA1:</div>
-        <div class="hash-value" id="sha1">-</div>
-        <button class="copy-btn" data-onclick="copyHash" data-arg="sha1" class="handler-copyHash">Copy</button>
+      <div class="results" id="textResults" style="display:none;"></div>
+    </div>
+
+    <div class="mode-panel" id="panel-file">
+      <div class="input-section">
+        <div class="file-drop" id="fileDrop">📁 Click to choose a file, or drag and drop</div>
+        <input type="file" id="fileInput" style="display:none;">
+        <div class="file-info" id="fileInfo"></div>
       </div>
-      <div class="hash-item">
-        <div class="hash-name">SHA256:</div>
-        <div class="hash-value" id="sha256">-</div>
-        <button class="copy-btn" data-onclick="copyHash" data-arg="sha256" class="handler-copyHash">Copy</button>
+      <div class="results" id="fileResults" style="display:none;"></div>
+    </div>
+
+    <div class="mode-panel" id="panel-hmac">
+      <div class="input-section">
+        <label for="hmacMessage">Message</label>
+        <textarea id="hmacMessage" style="height:100px;" placeholder="Message to authenticate..."></textarea>
+        <label for="hmacKey">Secret Key</label>
+        <input type="text" id="hmacKey" placeholder="Secret key">
+        <label for="hmacAlgo">Algorithm</label>
+        <select id="hmacAlgo">
+          <option value="SHA-256" selected>HMAC-SHA256</option>
+          <option value="SHA-1">HMAC-SHA1</option>
+          <option value="SHA-384">HMAC-SHA384</option>
+          <option value="SHA-512">HMAC-SHA512</option>
+        </select>
+        <div class="hash-options">
+          <button data-onclick="generateHmac" class="handler-generateHmac">Generate HMAC</button>
+        </div>
       </div>
-      <div class="hash-item">
-        <div class="hash-name">SHA512:</div>
-        <div class="hash-value" id="sha512">-</div>
-        <button class="copy-btn" data-onclick="copyHash" data-arg="sha512" class="handler-copyHash">Copy</button>
+      <div class="results" id="hmacResults" style="display:none;"></div>
+    </div>
+
+    <div class="mode-panel" id="panel-compare">
+      <div class="input-section">
+        <label for="compareA">Hash A</label>
+        <input type="text" id="compareA" placeholder="First hash">
+        <label for="compareB">Hash B</label>
+        <input type="text" id="compareB" placeholder="Second hash">
+        <div class="hash-options">
+          <button data-onclick="compareHashes" class="handler-compareHashes">Compare</button>
+        </div>
+        <div class="compare-result" id="compareResult"></div>
       </div>
     </div>
 
     <div class="content-section">
       <h2>Quick Answer</h2>
-      <p>A cryptographic hash function turns any input into a fixed-length string of characters — the same input always produces the same hash, and even a tiny change in input produces a completely different one. This tool generates MD5, SHA-1, SHA-256, and SHA-512 hashes of your text instantly.</p>
+      <p>A cryptographic hash function turns any input into a fixed-length string of characters — the same input always produces the same hash, and even a tiny change in input produces a completely different one. This tool generates MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or files, computes HMACs, and compares hashes — all natively in your browser using the Web Crypto API (no external library loaded).</p>
 
       <h2>What are hashes used for?</h2>
-      <p>Hashes are used to verify file integrity (comparing a downloaded file's hash to a published checksum), store password verification data without storing the password itself, detect duplicate content, and generate checksums for version control and data deduplication.</p>
+      <p>Hashes are used to verify file integrity (comparing a downloaded file's hash to a published checksum), store password verification data without storing the password itself, detect duplicate content, and generate checksums for version control and data deduplication. HMACs additionally prove a message came from someone who knows a shared secret key — used to authenticate API requests and webhooks.</p>
 
       <h2>How to use this tool</h2>
-      <ol>
-        <li>Type or paste text into the input box.</li>
-        <li>Click Generate Hashes to see MD5, SHA-1, SHA-256, and SHA-512 results.</li>
-        <li>Click Copy next to any hash to copy it to your clipboard.</li>
-      </ol>
+      <ul>
+        <li><strong>Text:</strong> type or paste text, click Generate Hashes.</li>
+        <li><strong>File:</strong> choose or drop a file — it's hashed entirely in your browser, never uploaded.</li>
+        <li><strong>HMAC:</strong> enter a message and secret key to generate a keyed hash used for authenticating requests.</li>
+        <li><strong>Compare:</strong> paste two hashes to check whether they match (case-insensitive, whitespace-trimmed).</li>
+      </ul>
 
       <h2>Privacy</h2>
-      <div class="privacy-note">Hashing runs entirely in your browser. Your input text is never sent to any server.</div>
+      <div class="privacy-note">All hashing runs locally using your browser's built-in Web Crypto API (plus a small local MD5 implementation, since Web Crypto doesn't include MD5). Files are read directly from disk into memory and never uploaded anywhere.</div>
 
       <h2>FAQ</h2>
       <div class="faq-item">
@@ -190,6 +267,10 @@
       <div class="faq-item">
         <h3>Can a hash be reversed back to the original text?</h3>
         <p>Not directly — hashing is one-way by design. Weak or predictable inputs (like common passwords) can still be reversed via lookup tables ("rainbow tables"), which is why passwords need salting, not just hashing.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What's the difference between a hash and an HMAC?</h3>
+        <p>A plain hash only proves data integrity (it hasn't changed). An HMAC additionally proves authenticity — that whoever generated it knew the secret key — which is why APIs use HMAC signatures to verify webhook payloads.</p>
       </div>
 
       <h2>Related Tools</h2>
@@ -201,31 +282,184 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/crypto-js.min.js"></script>
   <script>
-    function generateHashes() {
-      const text = document.getElementById('input').value;
-      if (!text) return;
-
-      document.getElementById('md5').textContent = CryptoJS.MD5(text).toString();
-      document.getElementById('sha1').textContent = CryptoJS.SHA1(text).toString();
-      document.getElementById('sha256').textContent = CryptoJS.SHA256(text).toString();
-      document.getElementById('sha512').textContent = CryptoJS.SHA512(text).toString();
-      document.getElementById('results').style.display = 'block';
+    function setMode(mode) {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + mode).classList.add('active');
     }
 
-    function copyHash(id) {
+    function bufferToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function sha(algo, bytes) {
+      const buf = await crypto.subtle.digest(algo, bytes);
+      return bufferToHex(buf);
+    }
+
+    // Minimal RFC 1321 MD5 implementation (Web Crypto has no native MD5).
+    function md5(bytes) {
+      function rotl(x, c) { return (x << c) | (x >>> (32 - c)); }
+      function toHexLE(n) {
+        let s = '';
+        for (let i = 0; i < 4; i++) s += ((n >>> (i * 8)) & 0xff).toString(16).padStart(2, '0');
+        return s;
+      }
+      const K = [];
+      for (let i = 0; i < 64; i++) K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) >>> 0;
+      const S = [
+        7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,
+        5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
+        4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,
+        6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21
+      ];
+
+      const origLenBits = bytes.length * 8;
+      const padLen = (56 - (bytes.length + 1) % 64 + 64) % 64;
+      const padded = new Uint8Array(bytes.length + 1 + padLen + 8);
+      padded.set(bytes);
+      padded[bytes.length] = 0x80;
+      const lenLow = origLenBits >>> 0;
+      const lenHigh = Math.floor(origLenBits / 4294967296) >>> 0;
+      const lenOffset = padded.length - 8;
+      for (let i = 0; i < 4; i++) padded[lenOffset + i] = (lenLow >>> (i * 8)) & 0xff;
+      for (let i = 0; i < 4; i++) padded[lenOffset + 4 + i] = (lenHigh >>> (i * 8)) & 0xff;
+
+      let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+
+      for (let chunkStart = 0; chunkStart < padded.length; chunkStart += 64) {
+        const M = new Array(16);
+        for (let j = 0; j < 16; j++) {
+          M[j] = (padded[chunkStart + j * 4] | (padded[chunkStart + j * 4 + 1] << 8) |
+                  (padded[chunkStart + j * 4 + 2] << 16) | (padded[chunkStart + j * 4 + 3] << 24)) >>> 0;
+        }
+        let A = a0, B = b0, C = c0, D = d0;
+        for (let i = 0; i < 64; i++) {
+          let F, g;
+          if (i < 16) { F = (B & C) | (~B & D); g = i; }
+          else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) % 16; }
+          else if (i < 48) { F = B ^ C ^ D; g = (3 * i + 5) % 16; }
+          else { F = C ^ (B | ~D); g = (7 * i) % 16; }
+          F = (F + A + K[i] + M[g]) >>> 0;
+          A = D; D = C; C = B;
+          B = (B + rotl(F, S[i])) >>> 0;
+        }
+        a0 = (a0 + A) >>> 0; b0 = (b0 + B) >>> 0; c0 = (c0 + C) >>> 0; d0 = (d0 + D) >>> 0;
+      }
+      return toHexLE(a0) + toHexLE(b0) + toHexLE(c0) + toHexLE(d0);
+    }
+
+    async function computeAllHashes(bytes) {
+      const [sha1, sha256, sha384, sha512] = await Promise.all([
+        sha('SHA-1', bytes), sha('SHA-256', bytes), sha('SHA-384', bytes), sha('SHA-512', bytes)
+      ]);
+      return { md5: md5(bytes), sha1, sha256, sha384, sha512 };
+    }
+
+    function renderHashResults(container, hashes) {
+      const labels = [['md5', 'MD5'], ['sha1', 'SHA-1'], ['sha256', 'SHA-256'], ['sha384', 'SHA-384'], ['sha512', 'SHA-512']];
+      container.innerHTML = labels.map(([key, label]) => `
+        <div class="hash-item">
+          <div class="hash-name">${label}:</div>
+          <div class="hash-value" id="hv-${key}">${hashes[key]}</div>
+          <button class="copy-btn" data-onclick="copyHashValue" data-arg="hv-${key}" class="handler-copyHashValue">Copy</button>
+        </div>
+      `).join('');
+      container.style.display = 'block';
+    }
+
+    async function generateTextHashes() {
+      const text = document.getElementById('input').value;
+      if (!text) return;
+      const bytes = new TextEncoder().encode(text);
+      const hashes = await computeAllHashes(bytes);
+      renderHashResults(document.getElementById('textResults'), hashes);
+    }
+
+    function clearText() {
+      document.getElementById('input').value = '';
+      document.getElementById('textResults').style.display = 'none';
+    }
+
+    const fileDrop = document.getElementById('fileDrop');
+    const fileInput = document.getElementById('fileInput');
+    fileDrop.addEventListener('click', () => fileInput.click());
+    fileDrop.addEventListener('dragover', (e) => { e.preventDefault(); fileDrop.classList.add('drag-over'); });
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('drag-over'));
+    fileDrop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileDrop.classList.remove('drag-over');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) handleFile(fileInput.files[0]);
+    });
+
+    async function handleFile(file) {
+      const fileInfo = document.getElementById('fileInfo');
+      fileInfo.textContent = `Hashing ${file.name} (${formatBytes(file.size)})…`;
+      fileInfo.style.display = 'block';
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      const hashes = await computeAllHashes(bytes);
+      fileInfo.textContent = `${file.name} — ${formatBytes(file.size)}`;
+      renderHashResults(document.getElementById('fileResults'), hashes);
+    }
+
+    function formatBytes(n) {
+      if (n < 1024) return n + ' B';
+      if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+      return (n / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    async function generateHmac() {
+      const message = document.getElementById('hmacMessage').value;
+      const key = document.getElementById('hmacKey').value;
+      const algo = document.getElementById('hmacAlgo').value;
+      if (!message || !key) return;
+
+      const cryptoKey = await crypto.subtle.importKey(
+        'raw', new TextEncoder().encode(key),
+        { name: 'HMAC', hash: algo }, false, ['sign']
+      );
+      const signature = await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(message));
+      const hex = bufferToHex(signature);
+
+      const container = document.getElementById('hmacResults');
+      container.innerHTML = `
+        <div class="hash-item">
+          <div class="hash-name">HMAC-${algo}:</div>
+          <div class="hash-value" id="hv-hmac">${hex}</div>
+          <button class="copy-btn" data-onclick="copyHashValue" data-arg="hv-hmac" class="handler-copyHashValue">Copy</button>
+        </div>
+      `;
+      container.style.display = 'block';
+    }
+
+    function compareHashes() {
+      const a = document.getElementById('compareA').value.trim().toLowerCase();
+      const b = document.getElementById('compareB').value.trim().toLowerCase();
+      const resultEl = document.getElementById('compareResult');
+      if (!a || !b) return;
+      if (a === b) {
+        resultEl.textContent = '✓ Hashes match';
+        resultEl.className = 'compare-result match';
+      } else {
+        resultEl.textContent = '✗ Hashes do not match';
+        resultEl.className = 'compare-result no-match';
+      }
+    }
+
+    function copyHashValue(id) {
       const text = document.getElementById(id).textContent;
       navigator.clipboard.writeText(text).then(() => {
         const btn = event.target;
+        const original = btn.textContent;
         btn.textContent = '✓ Copied';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        setTimeout(() => { btn.textContent = original; }, 2000);
       });
-    }
-
-    function clearAll() {
-      document.getElementById('input').value = '';
-      document.getElementById('results').style.display = 'none';
     }
   </script>
 <script src="/js/inline-handler-setup.js" defer></script>
@@ -235,7 +469,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Hash Generator | IT Vedas",
-  "description": "Hash generator supporting MD5, SHA1, SHA256, SHA512. Generate cryptographic hashes instantly.",
+  "description": "Free advanced hash generator for text and files, plus HMAC and hash comparison — runs natively in your browser.",
   "url": "https://www.itvedas.com/tools/hash-generator/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"

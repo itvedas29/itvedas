@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain via Cloudflare's DNS-over-HTTPS resolver.">
+  <meta name="description" content="Free advanced DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA, CAA and PTR (reverse) records, check DNSSEC validation, or look up all types at once.">
 <meta property="og:title" content="DNS Lookup | IT Vedas">
-<meta property="og:description" content="Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain.">
+<meta property="og:description" content="Free advanced DNS lookup tool. Query real records, PTR reverse lookups, DNSSEC status, or all record types at once.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.itvedas.com/tools/dns-lookup">
   <title>DNS Lookup | IT Vedas</title>
@@ -115,6 +115,10 @@
     }
     .status-noerror { background: rgba(16,185,129,0.15); color: #10B981; }
     .status-nxdomain { background: rgba(239,68,68,0.15); color: #EF4444; }
+    .status-dnssec { background: rgba(16,185,129,0.15); color: #10B981; }
+    .meta-row { color: #6B7A94; font-size: 0.82rem; margin-bottom: 1rem; }
+    .type-group { margin-bottom: 1.5rem; }
+    .type-group-title { font-weight: 700; color: #6366F1; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; }
     .info-text {
       color: #6B7A94;
       font-size: 0.9rem;
@@ -166,7 +170,7 @@
 
     <div class="search-section">
       <div class="input-group">
-        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)">
+        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com) or IP for PTR">
         <button id="lookupBtn" data-onclick="lookupDNS" class="handler-lookupDNS">Lookup</button>
       </div>
       <div class="record-type-buttons">
@@ -178,13 +182,16 @@
         <button class="record-btn" data-onclick="setRecordType" data-arg="NS" class="handler-setRecordType">NS</button>
         <button class="record-btn" data-onclick="setRecordType" data-arg="SOA" class="handler-setRecordType">SOA</button>
         <button class="record-btn" data-onclick="setRecordType" data-arg="CAA" class="handler-setRecordType">CAA</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="PTR" class="handler-setRecordType" title="Reverse lookup — enter an IP address">PTR</button>
+        <button class="record-btn" data-onclick="setRecordType" data-arg="ALL" class="handler-setRecordType" title="Look up every common record type at once">ALL TYPES</button>
       </div>
     </div>
 
     <div class="error-box" id="errorBox"></div>
 
     <div class="results" id="results">
-      <h2 style="margin-bottom: 1.5rem; color: #6366F1;" id="resultTitle"></h2>
+      <h2 style="margin-bottom: 0.5rem; color: #6366F1;" id="resultTitle"></h2>
+      <div class="meta-row" id="metaRow"></div>
       <div id="resultsList"></div>
       <div class="info-text">
         <strong>Note:</strong> Records are resolved live via Cloudflare's public DNS-over-HTTPS resolver (1.1.1.1) — this reflects what Cloudflare's global resolver currently returns, not a full propagation check across every DNS server worldwide.
@@ -200,9 +207,9 @@
 
       <h2>How to use this tool</h2>
       <ol>
-        <li>Enter a domain name (without <code>http://</code> or a trailing path).</li>
-        <li>Choose a record type — A, AAAA, CNAME, MX, TXT, NS, SOA, or CAA.</li>
-        <li>Click Lookup to query Cloudflare's resolver and see the live results.</li>
+        <li>Enter a domain name (without <code>http://</code> or a trailing path) — or an IP address if using PTR.</li>
+        <li>Choose a record type — A, AAAA, CNAME, MX, TXT, NS, SOA, CAA, PTR (reverse lookup), or ALL TYPES to query everything at once.</li>
+        <li>Click Lookup to query Cloudflare's resolver and see the live results, including query time and DNSSEC validation status.</li>
       </ol>
 
       <h2>Privacy</h2>
@@ -220,6 +227,14 @@
       <div class="faq-item">
         <h3>Can I look up subdomains?</h3>
         <p>Yes — enter the full hostname, e.g. <code>mail.example.com</code>.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What does "DNSSEC validated" mean?</h3>
+        <p>DNSSEC (DNS Security Extensions) lets a resolver cryptographically verify that a response hasn't been tampered with. "Validated" means Cloudflare's resolver confirmed the response's signature chain; "not validated" usually means the domain simply doesn't have DNSSEC configured, not that anything is wrong.</p>
+      </div>
+      <div class="faq-item">
+        <h3>How do I do a reverse lookup?</h3>
+        <p>Select PTR, then enter an IP address (IPv4 or IPv6) instead of a domain name — this looks up the hostname associated with that IP, if one exists.</p>
       </div>
 
       <h2>Related Tools</h2>
@@ -279,9 +294,42 @@
     function renderResults(data) {
       const resultsList = document.getElementById('resultsList');
       const resultTitle = document.getElementById('resultTitle');
-      const statusClass = data.status === 'NOERROR' ? 'status-noerror' : 'status-nxdomain';
+      const metaRow = document.getElementById('metaRow');
 
-      resultTitle.innerHTML = `${data.type} Records for ${escapeHtml(data.domain)} <span class="status-badge ${statusClass}">${data.status}</span>`;
+      const dnssecBadge = `<span class="status-badge ${data.dnssecValidated ? 'status-dnssec' : ''}" style="${data.dnssecValidated ? '' : 'background:rgba(107,122,148,0.15);color:#6B7A94;'}">DNSSEC ${data.dnssecValidated ? 'validated' : 'not validated'}</span>`;
+      metaRow.innerHTML = `Query time: ${data.queryTimeMs}ms &nbsp;·&nbsp; ${dnssecBadge}`;
+
+      if (data.type === 'ALL') {
+        resultTitle.innerHTML = `All Record Types for ${escapeHtml(data.domain)}`;
+        const groups = Object.entries(data.results || {});
+        if (groups.length === 0) {
+          resultsList.innerHTML = `<div style="color: #6B7A94;">No records found for this domain.</div>`;
+        } else {
+          resultsList.innerHTML = groups.map(([type, group]) => {
+            const statusClass = group.status === 'NOERROR' ? 'status-noerror' : 'status-nxdomain';
+            const items = group.records.length
+              ? group.records.map(r => `
+                  <div class="record-item">
+                    <div class="record-value">${escapeHtml(r.data)}</div>
+                    <div class="record-ttl">TTL: ${r.ttl}s</div>
+                  </div>
+                `).join('')
+              : `<div style="color:#6B7A94;font-size:0.9rem;">No ${type} records.</div>`;
+            return `
+              <div class="type-group">
+                <div class="type-group-title">${type} <span class="status-badge ${statusClass}" style="font-size:0.7rem;">${group.status}</span></div>
+                ${items}
+              </div>
+            `;
+          }).join('');
+        }
+        document.getElementById('results').classList.add('active');
+        return;
+      }
+
+      const statusClass = data.status === 'NOERROR' ? 'status-noerror' : 'status-nxdomain';
+      const label = data.isReverse ? 'PTR (Reverse)' : data.type;
+      resultTitle.innerHTML = `${label} Records for ${escapeHtml(data.domain)} <span class="status-badge ${statusClass}">${data.status}</span>`;
 
       if (data.records && data.records.length > 0) {
         resultsList.innerHTML = data.records.map(r => `
@@ -292,7 +340,7 @@
           </div>
         `).join('');
       } else {
-        resultsList.innerHTML = `<div style="color: #6B7A94;">No ${data.type} records found for this domain.</div>`;
+        resultsList.innerHTML = `<div style="color: #6B7A94;">No ${data.type} records found${data.isReverse ? ' for this IP' : ' for this domain'}.</div>`;
       }
 
       document.getElementById('results').classList.add('active');
@@ -315,7 +363,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "DNS Lookup | IT Vedas",
-  "description": "Free DNS lookup tool. Query real A, AAAA, CNAME, MX, TXT, NS, SOA and CAA records for any domain.",
+  "description": "Free advanced DNS lookup tool. Query real records, PTR reverse lookups, DNSSEC status, or all record types at once.",
   "url": "https://www.itvedas.com/tools/dns-lookup/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"

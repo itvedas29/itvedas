@@ -6,7 +6,7 @@
 // that's the actual ReDoS defense; this file just does the matching.
 
 self.onmessage = function (e) {
-  const { pattern, flags, testString } = e.data;
+  const { pattern, flags, testString, replacement } = e.data;
 
   let re;
   try {
@@ -36,5 +36,15 @@ self.onmessage = function (e) {
     if (!re.global) break;
   }
 
-  self.postMessage({ matches, truncated: matches.length >= MAX_MATCHES });
+  let replaced = null;
+  if (typeof replacement === 'string') {
+    try {
+      const replaceRe = new RegExp(pattern, flags.includes('g') ? flags : flags + 'g');
+      replaced = testString.replace(replaceRe, replacement);
+    } catch (err) {
+      replaced = null;
+    }
+  }
+
+  self.postMessage({ matches, truncated: matches.length >= MAX_MATCHES, replaced });
 };

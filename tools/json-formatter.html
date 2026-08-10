@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="JSON formatter and validator. Format, minify, and validate JSON with syntax highlighting.">
+  <meta name="description" content="Free advanced JSON formatter. Format, minify, and validate JSON with an interactive tree view, real syntax highlighting, JSONPath queries, and structure stats.">
 <meta property="og:title" content="JSON Formatter - Validate & Format JSON | IT Vedas">
-<meta property="og:description" content="JSON formatter and validator. Format, minify, and validate JSON with syntax highlighting.">
+<meta property="og:description" content="Free advanced JSON formatter with tree view, syntax highlighting, JSONPath queries, and structure stats.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.itvedas.com/tools/json-formatter">
-  <link rel="canonical" href="https://www.itvedas.com/tools/json-formatter">
   <title>JSON Formatter - Validate & Format JSON | IT Vedas</title>
+<link rel="canonical" href="https://www.itvedas.com/tools/json-formatter">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -19,14 +19,15 @@
       padding: 2rem;
       min-height: 100vh;
     }
-    .container { max-width: 1000px; margin: 0 auto; }
+    .container { max-width: 1100px; margin: 0 auto; }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
     .description { color: #6B7A94; margin-bottom: 2rem; font-size: 0.95rem; }
     .controls {
       display: flex;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       flex-wrap: wrap;
+      align-items: center;
     }
     button {
       padding: 0.75rem 1.5rem;
@@ -36,6 +37,7 @@
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     button:hover { opacity: 0.9; }
     button.secondary {
@@ -43,11 +45,27 @@
       border: 1px solid rgba(16, 185, 129, 0.4);
       color: #10B981;
     }
+    .checkbox-label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: #4A5568; cursor: pointer; }
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 8px;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: #6B7A94;
+      display: none;
+    }
+    .stats-bar.active { display: flex; }
+    .stats-bar strong { color: #182238; }
     .editor-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     .editor {
       background: #FFFFFF;
@@ -55,7 +73,19 @@
       border-radius: 12px;
       padding: 1.5rem;
     }
-    .editor-label { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; color: #6B7A94; }
+    .editor-label { font-weight: 600; margin-bottom: 0.75rem; font-size: 0.9rem; color: #6B7A94; display: flex; justify-content: space-between; align-items: center; }
+    .tabs { display: flex; gap: 0.4rem; }
+    .tab-btn {
+      padding: 0.3rem 0.7rem;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #6366F1;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn.active { background: #6366F1; color: white; }
     textarea {
       width: 100%;
       height: 400px;
@@ -69,6 +99,31 @@
       resize: vertical;
     }
     textarea:focus { outline: none; border-color: #10B981; }
+    .output-view {
+      width: 100%;
+      height: 400px;
+      background: #182238;
+      border: 1px solid rgba(24,34,56,0.15);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow: auto;
+      display: none;
+      line-height: 1.6;
+    }
+    .output-view.active { display: block; }
+    .sh-key { color: #93C5FD; }
+    .sh-string { color: #6EE7B7; }
+    .sh-number { color: #FBBF24; }
+    .sh-bool { color: #F472B6; }
+    .sh-null { color: #9CA3AF; }
+    .sh-punct { color: #6B7A94; }
+    .tv-toggle { cursor: pointer; color: #9CA3AF; display: inline-block; width: 1rem; user-select: none; }
+    .tv-children { list-style: none; padding-left: 1.25rem; }
+    .tv-children.collapsed { display: none; }
+    .tv-key { color: #93C5FD; }
+    #treeView, #treeView li { color: #E5E7EB; }
     .status {
       padding: 0.75rem 1rem;
       border-radius: 6px;
@@ -79,23 +134,57 @@
     .status.success {
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #6EE7B7;
+      color: #059669;
       display: block;
     }
     .status.error {
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #F87171;
+      color: #DC2626;
       display: block;
     }
+    .jsonpath-section {
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .jsonpath-row { display: flex; gap: 0.75rem; }
+    .jsonpath-row input {
+      flex: 1;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      color: #182238;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    .jsonpath-row input:focus { outline: none; border-color: #10B981; }
+    .jsonpath-results {
+      margin-top: 1rem;
+      background: #182238;
+      color: #6EE7B7;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      max-height: 200px;
+      overflow: auto;
+      display: none;
+    }
+    .jsonpath-results.active { display: block; }
     @media (max-width: 1024px) {
       .editor-container { grid-template-columns: 1fr; }
-      textarea { height: 300px; }
+      textarea, .output-view { height: 300px; }
     }
     .content-section { margin-top: 2.5rem; line-height: 1.7; }
     .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
     .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
     .content-section ul, .content-section ol { padding-left: 1.5rem; margin-top: 0.5rem; }
+    .content-section table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.9rem; }
+    .content-section th, .content-section td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(24,34,56,0.1); }
     .privacy-note {
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.25);
@@ -124,14 +213,17 @@
     <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
 
     <h1>{ } JSON Formatter</h1>
-    <p class="description">Format, minify, and validate JSON with instant feedback and syntax highlighting.</p>
+    <p class="description">Format, minify, and validate JSON — with an interactive tree view, syntax highlighting, and JSONPath queries.</p>
 
     <div class="controls">
       <button data-onclick="formatJSON" class="handler-formatJSON">Format</button>
-      <button data-onclick="minifyJSON" class="handler-minifyJSON" class="secondary">Minify</button>
-      <button data-onclick="copyOutput" class="handler-copyOutput" class="secondary">📋 Copy Output</button>
-      <button data-onclick="clearAll" class="handler-clearAll" class="secondary">Clear</button>
+      <button data-onclick="minifyJSON" class="handler-minifyJSON secondary">Minify</button>
+      <button data-onclick="copyOutput" class="handler-copyOutput secondary">📋 Copy Output</button>
+      <button data-onclick="clearAll" class="handler-clearAll secondary">Clear</button>
+      <label class="checkbox-label"><input type="checkbox" id="sortKeys"> Sort keys</label>
     </div>
+
+    <div class="stats-bar" id="statsBar"></div>
 
     <div class="editor-container">
       <div class="editor">
@@ -140,15 +232,32 @@
         <div class="status" id="inputStatus"></div>
       </div>
       <div class="editor">
-        <div class="editor-label">Output JSON</div>
+        <div class="editor-label">
+          <span>Output</span>
+          <div class="tabs">
+            <button class="tab-btn active" data-onclick="setView" data-arg="text" class="handler-setView">Text</button>
+            <button class="tab-btn" data-onclick="setView" data-arg="highlighted" class="handler-setView">Highlighted</button>
+            <button class="tab-btn" data-onclick="setView" data-arg="tree" class="handler-setView">Tree</button>
+          </div>
+        </div>
         <textarea id="output" readonly placeholder='Formatted JSON will appear here...'></textarea>
-        <div class="status" id="outputStatus"></div>
+        <pre class="output-view" id="highlightedView"></pre>
+        <div class="output-view" id="treeViewWrap"><div id="treeView"></div></div>
       </div>
+    </div>
+
+    <div class="jsonpath-section">
+      <div class="editor-label">JSONPath Query</div>
+      <div class="jsonpath-row">
+        <input type="text" id="jsonpathInput" placeholder="e.g. $.store.books[0].title or $..price">
+        <button data-onclick="runJsonPath" class="handler-runJsonPath">Evaluate</button>
+      </div>
+      <div class="jsonpath-results" id="jsonpathResults"></div>
     </div>
 
     <div class="content-section">
       <h2>Quick Answer</h2>
-      <p>JSON formatting adds indentation and line breaks to JSON data so it's easier for people to read and inspect. This tool validates, formats, and minifies JSON entirely in your browser, with instant feedback on syntax errors.</p>
+      <p>JSON formatting adds indentation and line breaks to JSON data so it's easier for people to read and inspect. This tool validates, formats, and minifies JSON entirely in your browser, with an interactive collapsible tree view, syntax highlighting, and a JSONPath query evaluator for pulling specific values out of nested structures.</p>
 
       <h2>What is JSON?</h2>
       <p>JSON (JavaScript Object Notation) is a lightweight, text-based data format used almost universally for APIs, configuration files, and data exchange between systems. It's built from a small set of structures — objects (<code>{}</code>), arrays (<code>[]</code>), strings, numbers, booleans, and null.</p>
@@ -156,12 +265,25 @@
       <h2>How to use this tool</h2>
       <ol>
         <li>Paste your JSON into the input box — it auto-formats as you type.</li>
-        <li>Click <strong>Format</strong> for pretty-printed, indented output, or <strong>Minify</strong> to strip all whitespace.</li>
-        <li>Click Copy Output to copy the result to your clipboard.</li>
+        <li>Click <strong>Format</strong> for pretty-printed, indented output, or <strong>Minify</strong> to strip all whitespace. Check <strong>Sort keys</strong> to alphabetize object keys.</li>
+        <li>Switch between Text, Highlighted, and Tree views of the output using the tabs.</li>
+        <li>Use the JSONPath box to query specific values, e.g. <code>$.users[0].email</code> or <code>$..id</code> for every "id" field at any depth.</li>
       </ol>
 
+      <h2>JSONPath syntax supported</h2>
+      <table>
+        <tr><th>Syntax</th><th>Meaning</th></tr>
+        <tr><td><code>$</code></td><td>The root value</td></tr>
+        <tr><td><code>.key</code></td><td>Access an object property</td></tr>
+        <tr><td><code>['key']</code></td><td>Access a property (bracket notation)</td></tr>
+        <tr><td><code>[0]</code></td><td>Access an array index</td></tr>
+        <tr><td><code>[*]</code></td><td>All elements of an array or all values of an object</td></tr>
+        <tr><td><code>..key</code></td><td>Recursive descent — find "key" at any depth</td></tr>
+      </table>
+      <p>This covers the common cases; it doesn't implement the full JSONPath specification (e.g. filter expressions like <code>[?(@.price&lt;10)]</code> aren't supported).</p>
+
       <h2>Privacy</h2>
-      <div class="privacy-note">Parsing, formatting, and validation all happen locally using your browser's built-in JSON engine. Nothing is uploaded or stored.</div>
+      <div class="privacy-note">Parsing, formatting, tree rendering, and JSONPath evaluation all happen locally in your browser. Nothing is uploaded or stored.</div>
 
       <h2>FAQ</h2>
       <div class="faq-item">
@@ -171,6 +293,10 @@
       <div class="faq-item">
         <h3>What's the difference between formatting and minifying?</h3>
         <p>Formatting adds indentation for readability; minifying removes all unnecessary whitespace to reduce file size — useful before sending JSON over a network.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What do the stats mean?</h3>
+        <p>Keys counts every object property across the whole structure; depth is the deepest level of nesting; size compares the input and formatted output byte size.</p>
       </div>
 
       <h2>Related Tools</h2>
@@ -184,19 +310,28 @@
   </div>
 
   <script>
+    let currentView = 'text';
+    let parsedValue = undefined;
+
     function formatJSON() {
       const input = document.getElementById('input').value;
       const inputStatus = document.getElementById('inputStatus');
 
       try {
-        const parsed = JSON.parse(input);
+        let parsed = JSON.parse(input);
+        if (document.getElementById('sortKeys').checked) parsed = sortKeysDeep(parsed);
+        parsedValue = parsed;
         const formatted = JSON.stringify(parsed, null, 2);
         document.getElementById('output').value = formatted;
         inputStatus.textContent = '✓ Valid JSON';
         inputStatus.className = 'status success';
+        renderStats(input, formatted, parsed);
+        renderActiveView(parsed, formatted);
       } catch (e) {
+        parsedValue = undefined;
         inputStatus.textContent = '✗ Invalid JSON: ' + e.message;
         inputStatus.className = 'status error';
+        document.getElementById('statsBar').classList.remove('active');
       }
     }
 
@@ -205,14 +340,189 @@
       const inputStatus = document.getElementById('inputStatus');
 
       try {
-        const parsed = JSON.parse(input);
+        let parsed = JSON.parse(input);
+        if (document.getElementById('sortKeys').checked) parsed = sortKeysDeep(parsed);
+        parsedValue = parsed;
         const minified = JSON.stringify(parsed);
         document.getElementById('output').value = minified;
         inputStatus.textContent = '✓ Valid JSON (minified)';
         inputStatus.className = 'status success';
+        renderStats(input, minified, parsed);
+        renderActiveView(parsed, JSON.stringify(parsed, null, 2));
       } catch (e) {
+        parsedValue = undefined;
         inputStatus.textContent = '✗ Invalid JSON: ' + e.message;
         inputStatus.className = 'status error';
+        document.getElementById('statsBar').classList.remove('active');
+      }
+    }
+
+    function sortKeysDeep(value) {
+      if (Array.isArray(value)) return value.map(sortKeysDeep);
+      if (value !== null && typeof value === 'object') {
+        const out = {};
+        Object.keys(value).sort().forEach(k => { out[k] = sortKeysDeep(value[k]); });
+        return out;
+      }
+      return value;
+    }
+
+    function renderStats(inputText, outputText, parsed) {
+      const { keys, depth } = analyzeStructure(parsed);
+      const inBytes = new Blob([inputText]).size;
+      const outBytes = new Blob([outputText]).size;
+      document.getElementById('statsBar').innerHTML = `
+        <span>Keys: <strong>${keys}</strong></span>
+        <span>Max depth: <strong>${depth}</strong></span>
+        <span>Input size: <strong>${inBytes} bytes</strong></span>
+        <span>Output size: <strong>${outBytes} bytes</strong></span>
+      `;
+      document.getElementById('statsBar').classList.add('active');
+    }
+
+    function analyzeStructure(value, depth = 1) {
+      let keys = 0, maxDepth = depth;
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const r = analyzeStructure(item, depth + 1);
+          keys += r.keys;
+          maxDepth = Math.max(maxDepth, r.depth);
+        }
+      } else if (value !== null && typeof value === 'object') {
+        for (const k of Object.keys(value)) {
+          keys++;
+          const r = analyzeStructure(value[k], depth + 1);
+          keys += r.keys;
+          maxDepth = Math.max(maxDepth, r.depth);
+        }
+      }
+      return { keys, depth: maxDepth };
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('output').style.display = view === 'text' ? 'block' : 'none';
+      document.getElementById('highlightedView').classList.toggle('active', view === 'highlighted');
+      document.getElementById('treeViewWrap').classList.toggle('active', view === 'tree');
+      if (parsedValue !== undefined) {
+        renderActiveView(parsedValue, document.getElementById('output').value || JSON.stringify(parsedValue, null, 2));
+      }
+    }
+
+    function renderActiveView(parsed, formattedText) {
+      if (currentView === 'highlighted') {
+        document.getElementById('highlightedView').innerHTML = highlightJson(formattedText);
+      } else if (currentView === 'tree') {
+        document.getElementById('treeView').innerHTML = renderTreeNode(parsed, true);
+      }
+    }
+
+    function highlightJson(text) {
+      const escaped = escapeHtml(text);
+      return escaped.replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(\.\d+)?([eE][+-]?\d+)?)/g,
+        (match) => {
+          if (/^"/.test(match)) {
+            return /:$/.test(match) ? `<span class="sh-key">${match}</span>` : `<span class="sh-string">${match}</span>`;
+          }
+          if (/true|false/.test(match)) return `<span class="sh-bool">${match}</span>`;
+          if (match === 'null') return `<span class="sh-null">${match}</span>`;
+          return `<span class="sh-number">${match}</span>`;
+        }
+      );
+    }
+
+    function renderTreeNode(value, expanded) {
+      if (value === null) return '<span class="sh-null">null</span>';
+      if (typeof value === 'string') return `<span class="sh-string">"${escapeHtml(value)}"</span>`;
+      if (typeof value === 'number') return `<span class="sh-number">${value}</span>`;
+      if (typeof value === 'boolean') return `<span class="sh-bool">${value}</span>`;
+
+      const isArray = Array.isArray(value);
+      const entries = isArray ? value.map((v, i) => [i, v]) : Object.entries(value);
+      if (entries.length === 0) return isArray ? '[]' : '{}';
+
+      const items = entries.map(([k, v]) => `
+        <li><span class="tv-key">${isArray ? '' : `"${escapeHtml(String(k))}": `}</span>${renderTreeNode(v, false)}</li>
+      `).join('');
+
+      const toggleChar = expanded ? '▾' : '▸';
+      const collapsedClass = expanded ? '' : 'collapsed';
+      return `<span class="tv-toggle">${toggleChar}</span>${isArray ? `[${entries.length}]` : `{${entries.length}}`}<ul class="tv-children ${collapsedClass}">${items}</ul>`;
+    }
+
+    document.getElementById('treeView').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('tv-toggle')) return;
+      const childUl = e.target.nextElementSibling;
+      if (childUl && childUl.classList.contains('tv-children')) {
+        childUl.classList.toggle('collapsed');
+        e.target.textContent = childUl.classList.contains('collapsed') ? '▸' : '▾';
+      }
+    });
+
+    function runJsonPath() {
+      const path = document.getElementById('jsonpathInput').value.trim();
+      const resultsEl = document.getElementById('jsonpathResults');
+      if (!path) return;
+
+      if (parsedValue === undefined) {
+        resultsEl.textContent = 'Format valid JSON first.';
+        resultsEl.classList.add('active');
+        return;
+      }
+
+      try {
+        const results = evalJsonPath(parsedValue, path);
+        resultsEl.textContent = results.length
+          ? JSON.stringify(results, null, 2)
+          : 'No matches.';
+        resultsEl.classList.add('active');
+      } catch (e) {
+        resultsEl.textContent = 'Error: ' + e.message;
+        resultsEl.classList.add('active');
+      }
+    }
+
+    function evalJsonPath(root, path) {
+      if (!path.startsWith('$')) throw new Error('Path must start with $');
+      const rest = path.slice(1);
+      const tokenRe = /\.\.(\w+)|\.(\w+)|\[(\d+)\]|\['([^']+)'\]|\[\*\]/g;
+      let match, current = [root];
+
+      while ((match = tokenRe.exec(rest)) !== null) {
+        const [, recKey, dotKey, idx, bracketKey] = match;
+        const next = [];
+        for (const item of current) {
+          if (item === undefined || item === null) continue;
+          if (recKey !== undefined) {
+            collectRecursive(item, recKey, next);
+          } else if (dotKey !== undefined) {
+            if (typeof item === 'object' && dotKey in item) next.push(item[dotKey]);
+          } else if (bracketKey !== undefined) {
+            if (typeof item === 'object' && bracketKey in item) next.push(item[bracketKey]);
+          } else if (idx !== undefined) {
+            if (Array.isArray(item) && item[Number(idx)] !== undefined) next.push(item[Number(idx)]);
+          } else {
+            if (Array.isArray(item)) next.push(...item);
+            else if (typeof item === 'object') next.push(...Object.values(item));
+          }
+        }
+        current = next;
+      }
+      return current;
+    }
+
+    function collectRecursive(obj, key, results) {
+      if (obj === null || typeof obj !== 'object') return;
+      if (Array.isArray(obj)) {
+        for (const item of obj) collectRecursive(item, key, results);
+        return;
+      }
+      for (const [k, v] of Object.entries(obj)) {
+        if (k === key) results.push(v);
+        collectRecursive(v, key, results);
       }
     }
 
@@ -221,8 +531,9 @@
       if (!output) return;
       navigator.clipboard.writeText(output).then(() => {
         const btn = event.target;
+        const original = btn.textContent;
         btn.textContent = '✓ Copied!';
-        setTimeout(() => { btn.textContent = '📋 Copy Output'; }, 2000);
+        setTimeout(() => { btn.textContent = original; }, 2000);
       });
     }
 
@@ -230,11 +541,18 @@
       document.getElementById('input').value = '';
       document.getElementById('output').value = '';
       document.getElementById('inputStatus').className = 'status';
+      document.getElementById('statsBar').classList.remove('active');
+      document.getElementById('jsonpathResults').classList.remove('active');
+      parsedValue = undefined;
     }
 
-    // Auto-format on input
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
     document.getElementById('input').addEventListener('input', () => {
-      // Debounce
       clearTimeout(window.formatTimeout);
       window.formatTimeout = setTimeout(formatJSON, 500);
     });
@@ -246,7 +564,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "JSON Formatter - Validate & Format JSON | IT Vedas",
-  "description": "JSON formatter and validator. Format, minify, and validate JSON with syntax highlighting.",
+  "description": "Free advanced JSON formatter with tree view, syntax highlighting, JSONPath queries, and structure stats.",
   "url": "https://www.itvedas.com/tools/json-formatter/",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web"

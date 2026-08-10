@@ -97,6 +97,65 @@
       font-family: 'Courier New', monospace;
       font-size: 0.85rem;
     }
+    .pattern-lib { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .pattern-chip {
+      padding: 0.4rem 0.8rem;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: #059669;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pattern-chip:hover { background: rgba(16,185,129,0.2); }
+    .replace-row { display: flex; gap: 0.75rem; align-items: center; margin-top: 1rem; }
+    .replace-row label { font-size: 0.85rem; color: #6B7A94; white-space: nowrap; }
+    .replace-row input {
+      flex: 1;
+      background: #EEF3FC;
+      border: 1px solid rgba(24,34,56,0.15);
+      color: #182238;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    .replace-output {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      background: #182238;
+      color: #6EE7B7;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+      min-height: 50px;
+      display: none;
+    }
+    .replace-output.active { display: block; }
+    .cheat-sheet-toggle {
+      background: transparent;
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #6366F1;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .cheat-sheet {
+      display: none;
+      margin-top: 1rem;
+      background: #EEF3FC;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .cheat-sheet.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.5rem; }
+    .cheat-sheet code { color: #6366F1; font-weight: 700; margin-right: 0.4rem; }
+    .cheat-sheet span { font-size: 0.82rem; color: #4A5568; }
     .content-section { margin-top: 2.5rem; }
     .content-section h2 { font-size: 1.35rem; margin-bottom: 0.75rem; margin-top: 2rem; }
     .content-section p, .content-section li { color: #4A5568; font-size: 0.95rem; }
@@ -132,6 +191,15 @@
     <p class="description">Test JavaScript regular expressions against sample text, with live highlighting and match details.</p>
 
     <div class="panel">
+      <div class="pattern-lib" id="patternLib">
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="email" class="handler-insertPattern">Email</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="url" class="handler-insertPattern">URL</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="ipv4" class="handler-insertPattern">IPv4</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="phoneUs" class="handler-insertPattern">US Phone</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="hexColor" class="handler-insertPattern">Hex Color</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="isoDate" class="handler-insertPattern">ISO Date</span>
+        <span class="pattern-chip" data-onclick="insertPattern" data-arg="htmlTag" class="handler-insertPattern">HTML Tag</span>
+      </div>
       <div class="pattern-row">
         <span class="slash">/</span>
         <input type="text" id="pattern" placeholder="Enter regex pattern, e.g. \b\w+@\w+\.\w+\b">
@@ -148,6 +216,31 @@
       <div class="status-line" id="statusLine"></div>
       <div class="highlighted" id="highlighted"></div>
       <div class="match-list" id="matchList"></div>
+
+      <div class="replace-row">
+        <label for="replacement">Replace with:</label>
+        <input type="text" id="replacement" placeholder="e.g. [EMAIL] or $1-$2">
+      </div>
+      <div class="replace-output" id="replaceOutput"></div>
+
+      <button class="cheat-sheet-toggle" data-onclick="toggleCheatSheet" class="handler-toggleCheatSheet">📖 Regex Cheat Sheet</button>
+      <div class="cheat-sheet" id="cheatSheet">
+        <div><code>.</code><span>Any character except newline</span></div>
+        <div><code>\d \w \s</code><span>Digit, word char, whitespace</span></div>
+        <div><code>\D \W \S</code><span>Negated versions of above</span></div>
+        <div><code>^ $</code><span>Start / end of string (or line with m)</span></div>
+        <div><code>*  +  ?</code><span>0+, 1+, 0-or-1 repetitions</span></div>
+        <div><code>{n,m}</code><span>Between n and m repetitions</span></div>
+        <div><code>[abc]</code><span>Character class</span></div>
+        <div><code>[^abc]</code><span>Negated character class</span></div>
+        <div><code>(...)</code><span>Capturing group</span></div>
+        <div><code>(?:...)</code><span>Non-capturing group</span></div>
+        <div><code>(?&lt;name&gt;...)</code><span>Named capturing group</span></div>
+        <div><code>a|b</code><span>Alternation (a or b)</span></div>
+        <div><code>\b</code><span>Word boundary</span></div>
+        <div><code>(?=...)</code><span>Positive lookahead</span></div>
+        <div><code>(?!...)</code><span>Negative lookahead</span></div>
+      </div>
     </div>
 
     <div class="content-section">
@@ -156,9 +249,11 @@
 
       <h2>How to use this tool</h2>
       <ol>
-        <li>Type a pattern between the slashes — no need to add the slashes yourself.</li>
+        <li>Type a pattern between the slashes, or click a chip above (Email, URL, IPv4, etc.) to insert a ready-made pattern.</li>
         <li>Toggle flags: <code>g</code> (all matches), <code>i</code> (case-insensitive), <code>m</code> (multiline), <code>s</code> (dot matches newline), <code>u</code> (unicode).</li>
         <li>Edit the test text — matches highlight and update live.</li>
+        <li>Optionally type a replacement string (supports <code>$1</code>, <code>$2</code>… for capture groups) to preview a find-and-replace.</li>
+        <li>Open the Regex Cheat Sheet for a quick reference of common syntax.</li>
       </ol>
 
       <h2>Example</h2>
@@ -199,6 +294,27 @@
       return worker;
     }
 
+    const PATTERN_LIBRARY = {
+      email: '\\b[\\w.+-]+@[\\w-]+\\.[\\w.-]+\\b',
+      url: 'https?:\\/\\/[\\w.-]+\\.[a-zA-Z]{2,}(\\/\\S*)?',
+      ipv4: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b',
+      phoneUs: '\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}',
+      hexColor: '#[0-9a-fA-F]{3,8}\\b',
+      isoDate: '\\d{4}-\\d{2}-\\d{2}',
+      htmlTag: '<\\/?[a-zA-Z][^>]*>'
+    };
+
+    function insertPattern(key) {
+      const pattern = PATTERN_LIBRARY[key];
+      if (!pattern) return;
+      document.getElementById('pattern').value = pattern;
+      runMatch();
+    }
+
+    function toggleCheatSheet() {
+      document.getElementById('cheatSheet').classList.toggle('active');
+    }
+
     function toggleFlag(flag) {
       const btn = event.target;
       if (activeFlags.has(flag)) {
@@ -234,6 +350,7 @@
       }
 
       const flags = Array.from(activeFlags).join('');
+      const replacement = document.getElementById('replacement').value;
       const w = createWorker();
 
       clearTimeout(workerTimeout);
@@ -245,22 +362,24 @@
         setStatus('Pattern took too long to run — likely catastrophic backtracking. Try simplifying it.', 'warn');
       }, 2000);
 
-      w.postMessage({ pattern, flags, testString });
+      w.postMessage({ pattern, flags, testString, replacement });
     }
 
     function handleWorkerResult(e) {
       clearTimeout(workerTimeout);
-      const { error, matches, truncated } = e.data;
+      const { error, matches, truncated, replaced } = e.data;
       const highlighted = document.getElementById('highlighted');
       const matchList = document.getElementById('matchList');
       const testString = document.getElementById('testString').value;
       const patternInput = document.getElementById('pattern');
+      const replaceOutput = document.getElementById('replaceOutput');
 
       if (error) {
         patternInput.classList.add('invalid');
         setStatus('Invalid pattern: ' + error, 'error');
         highlighted.textContent = '';
         matchList.innerHTML = '';
+        replaceOutput.classList.remove('active');
         return;
       }
 
@@ -272,6 +391,14 @@
           ${m.groups.length ? '<br>Groups: ' + m.groups.map(g => escapeHtml(g === undefined ? '(undefined)' : g)).join(', ') : ''}
         </div>
       `).join('');
+
+      const replacementValue = document.getElementById('replacement').value;
+      if (replacementValue !== '' && replaced !== null && replaced !== undefined) {
+        replaceOutput.textContent = replaced;
+        replaceOutput.classList.add('active');
+      } else {
+        replaceOutput.classList.remove('active');
+      }
     }
 
     function buildHighlight(text, matches) {
@@ -295,6 +422,7 @@
 
     document.getElementById('pattern').addEventListener('input', debounce(runMatch, 300));
     document.getElementById('testString').addEventListener('input', debounce(runMatch, 300));
+    document.getElementById('replacement').addEventListener('input', debounce(runMatch, 300));
 
     function debounce(fn, ms) {
       let t;
