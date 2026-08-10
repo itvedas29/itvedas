@@ -1,0 +1,33 @@
+# Security/response headers for services.itvedas.com (Cloudflare Pages).
+#
+# CSP is deliberately tighter than the parent itvedas.com site: this project
+# loads no third-party scripts at all, so script-src stays 'self' with no
+# 'unsafe-inline'. Adding an analytics provider later means adding it here
+# explicitly rather than loosening the policy wholesale.
+#
+# style-src needs 'unsafe-inline' because pages carry per-page <style> blocks
+# and a few inline style attributes; fonts.googleapis.com serves the font CSS.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://itvedas.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# The admin UI and every API response must never be cached by a shared cache —
+# these carry customer PII.
+/admin/*
+  Cache-Control: private, no-store, must-revalidate
+  X-Robots-Tag: noindex, nofollow
+
+/api/*
+  Cache-Control: no-store
+
+/css/*
+  Cache-Control: public, max-age=86400
+
+/js/*
+  Cache-Control: public, max-age=86400

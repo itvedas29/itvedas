@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Your IT Requirement | ITVedas Services</title>
+<meta name="description" content="Tell us your IT problem in plain English. Describe what's happening, your environment and your budget — we'll review it and come back with practical next steps.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://services.itvedas.com/request-it-help">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ITVedas Services">
+<meta property="og:title" content="Post Your IT Requirement | ITVedas Services">
+<meta property="og:description" content="Tell us your IT problem in plain English. We'll review it and come back with practical next steps.">
+<meta property="og:url" content="https://services.itvedas.com/request-it-help">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="https://itvedas.com/assets/logo-mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.wizard-wrap{max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + 3rem) 1.5rem 4rem;}
+.progress-bar{display:flex;gap:0.35rem;margin-bottom:0.75rem;}
+.progress-bar span{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .25s;}
+.progress-bar span.done{background:var(--accent);}
+.progress-label{display:flex;justify-content:space-between;font-size:0.82rem;color:var(--muted);margin-bottom:2rem;}
+.step{display:none;}
+.step.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.step h2{font-size:1.5rem;margin-bottom:0.5rem;}
+.step .step-lead{color:var(--muted);font-size:0.95rem;margin-bottom:1.75rem;}
+.wizard-actions{display:flex;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.75rem;border-top:1px solid var(--border);}
+.examples{background:var(--bg3);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:1.25rem;}
+.examples p{font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;font-weight:600;}
+.examples ul{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+.examples li{font-size:0.87rem;color:var(--sub);font-style:italic;}
+.optional-tag{font-weight:400;color:var(--muted);font-size:0.8rem;}
+/* Honeypot: hidden from humans, visible to naive bots. Not display:none —
+   some bots skip those. */
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+.file-list{margin-top:0.75rem;display:flex;flex-direction:column;gap:0.4rem;}
+.file-list li{font-size:0.85rem;color:var(--sub);display:flex;justify-content:space-between;background:var(--bg3);padding:0.5rem 0.75rem;border-radius:6px;}
+.review-box{background:var(--bg3);border-radius:var(--radius-sm);padding:1.25rem;font-size:0.9rem;}
+.review-box dt{font-weight:600;font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-top:0.9rem;}
+.review-box dt:first-child{margin-top:0;}
+.review-box dd{color:var(--sub);white-space:pre-wrap;}
+.success-panel{text-align:center;padding:2rem 0;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:rgba(14,159,110,0.14);color:var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;}
+.ref-display{font-family:var(--fd);font-size:1.75rem;font-weight:700;color:var(--accent);background:var(--accent-light);padding:1rem 2rem;border-radius:var(--radius-sm);display:inline-block;margin:1rem 0 1.5rem;letter-spacing:0.04em;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<nav class="site-nav">
+  <div class="container">
+    <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">IT</span><span>ITVedas Services<small>Part of ITVedas</small></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/pricing">Pricing</a></li>
+      <li><a href="/how-it-works">How It Works</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/faq">FAQ</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://itvedas.com" class="btn btn-ghost btn-sm">ITVedas Home</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<main id="main">
+<div class="wizard-wrap">
+
+  <div id="formArea">
+    <span class="eyebrow">Post your IT requirement</span>
+    <h1 style="font-size:clamp(1.7rem,3.6vw,2.3rem);margin-bottom:0.75rem;">Tell Us What You Need</h1>
+    <p style="color:var(--muted);margin-bottom:2rem;">No technical jargon required. Describe what's happening and we'll work out the rest. Submitting is free and there's no commitment.</p>
+
+    <div class="progress-bar" role="presentation">
+      <span class="done"></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="progress-label">
+      <span id="stepName">Problem</span>
+      <span>Step <span id="stepNum">1</span> of 7</span>
+    </div>
+
+    <form id="reqForm" novalidate>
+      <!-- Step 1: categories -->
+      <section class="step active" data-step="1" data-name="Problem">
+        <h2>What do you need help with?</h2>
+        <p class="step-lead">Select all that apply. If nothing fits, choose "Other".</p>
+        <div class="choice-grid" id="categoryGrid">
+          <div class="choice"><input type="checkbox" name="categories" value="microsoft-365" id="cat-m365"><label for="cat-m365">Microsoft 365</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="google-workspace" id="cat-gw"><label for="cat-gw">Google Workspace</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="windows-support" id="cat-win"><label for="cat-win">Windows</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="macos-jamf" id="cat-mac"><label for="cat-mac">macOS</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="endpoint-management" id="cat-epm"><label for="cat-epm">Endpoint Management</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="cybersecurity" id="cat-sec"><label for="cat-sec">Cybersecurity</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="active-directory" id="cat-ad"><label for="cat-ad">Active Directory</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="patch-management" id="cat-patch"><label for="cat-patch">Patch Management</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="it-migration" id="cat-mig"><label for="cat-mig">IT Migration</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="remote-it-support" id="cat-rem"><label for="cat-rem">Remote IT Support</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="it-asset-management" id="cat-asset"><label for="cat-asset">IT Asset Management</label></div>
+          <div class="choice"><input type="checkbox" name="categories" value="other" id="cat-other"><label for="cat-other">Other</label></div>
+        </div>
+        <p class="error-text" id="err-categories" style="margin-top:0.75rem;">Please select at least one category.</p>
+      </section>
+
+      <!-- Step 2: description -->
+      <section class="step" data-step="2" data-name="Description">
+        <h2>Describe your IT problem or requirement</h2>
+        <p class="step-lead">Plain English is perfect. The more context, the faster we can help.</p>
+        <div class="examples">
+          <p>For example:</p>
+          <ul>
+            <li>"We have 30 laptops and Microsoft 365. Some users aren't receiving emails and we don't have an IT person."</li>
+            <li>"An employee left last week and we need to make sure their access is fully removed."</li>
+            <li>"We need to manage 50 devices remotely but don't know where to start."</li>
+          </ul>
+        </div>
+        <div class="field" id="field-description">
+          <label for="description">Your requirement</label>
+          <textarea id="description" name="description" rows="8" maxlength="5000" placeholder="Tell us what's happening..." aria-describedby="err-description"></textarea>
+          <p class="hint"><span id="descCount">0</span> / 5000 characters</p>
+          <p class="error-text" id="err-description">Please describe your requirement in at least 20 characters.</p>
+        </div>
+      </section>
+
+      <!-- Step 3: environment -->
+      <section class="step" data-step="3" data-name="Environment">
+        <h2>Your environment <span class="optional-tag">— all optional</span></h2>
+        <p class="step-lead">Rough numbers are fine. Skip anything you're not sure about.</p>
+        <div class="field-row">
+          <div class="field"><label for="users_count">Number of users</label><input type="text" id="users_count" name="users_count" inputmode="numeric" placeholder="e.g. 25" maxlength="30"></div>
+          <div class="field"><label for="devices_count">Number of devices</label><input type="text" id="devices_count" name="devices_count" inputmode="numeric" placeholder="e.g. 30" maxlength="30"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="windows_devices">Windows devices</label><input type="text" id="windows_devices" name="windows_devices" inputmode="numeric" placeholder="e.g. 20" maxlength="30"></div>
+          <div class="field"><label for="mac_devices">Mac devices</label><input type="text" id="mac_devices" name="mac_devices" inputmode="numeric" placeholder="e.g. 10" maxlength="30"></div>
+        </div>
+        <div class="field">
+          <label for="productivity_suite">Email / productivity platform</label>
+          <select id="productivity_suite" name="productivity_suite">
+            <option value="">Not sure / prefer not to say</option>
+            <option value="microsoft-365">Microsoft 365</option>
+            <option value="google-workspace">Google Workspace</option>
+            <option value="both">Both</option>
+            <option value="other">Something else</option>
+            <option value="none">Neither</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="endpoint_solution">Current endpoint management solution</label>
+          <input type="text" id="endpoint_solution" name="endpoint_solution" placeholder="e.g. Intune, JumpCloud, Jamf, none" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="other_technology">Other relevant technology</label>
+          <input type="text" id="other_technology" name="other_technology" placeholder="e.g. VMware, on-prem AD, CrowdStrike" maxlength="300">
+        </div>
+      </section>
+
+      <!-- Step 4: budget -->
+      <section class="step" data-step="4" data-name="Budget">
+        <h2>What's your budget for this?</h2>
+        <p class="step-lead">This helps us recommend something realistic rather than over-scoping. "Not sure" is a valid answer.</p>
+        <div class="choice-grid">
+          <div class="choice"><input type="radio" name="budget" value="under-50" id="b1"><label for="b1">Under $50</label></div>
+          <div class="choice"><input type="radio" name="budget" value="50-100" id="b2"><label for="b2">$50 – $100</label></div>
+          <div class="choice"><input type="radio" name="budget" value="100-250" id="b3"><label for="b3">$100 – $250</label></div>
+          <div class="choice"><input type="radio" name="budget" value="250-500" id="b4"><label for="b4">$250 – $500</label></div>
+          <div class="choice"><input type="radio" name="budget" value="500-1000" id="b5"><label for="b5">$500 – $1,000</label></div>
+          <div class="choice"><input type="radio" name="budget" value="1000-plus" id="b6"><label for="b6">$1,000+</label></div>
+          <div class="choice"><input type="radio" name="budget" value="not-sure" id="b7"><label for="b7">Not sure yet</label></div>
+        </div>
+      </section>
+
+      <!-- Step 5: urgency -->
+      <section class="step" data-step="5" data-name="Urgency">
+        <h2>How urgent is this?</h2>
+        <p class="step-lead">We prioritize by urgency, but please note we don't operate a 24/7 service.</p>
+        <div class="choice-grid">
+          <div class="choice"><input type="radio" name="urgency" value="normal" id="u1" checked><label for="u1">Normal</label></div>
+          <div class="choice"><input type="radio" name="urgency" value="soon" id="u2"><label for="u2">Soon</label></div>
+          <div class="choice"><input type="radio" name="urgency" value="urgent" id="u3"><label for="u3">Urgent</label></div>
+          <div class="choice"><input type="radio" name="urgency" value="critical" id="u4"><label for="u4">Critical</label></div>
+        </div>
+      </section>
+
+      <!-- Step 6: contact -->
+      <section class="step" data-step="6" data-name="Contact">
+        <h2>How can we reach you?</h2>
+        <p class="step-lead">We only use these details to respond to your requirement.</p>
+        <div class="field-row">
+          <div class="field" id="field-name">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" maxlength="120" aria-describedby="err-name">
+            <p class="error-text" id="err-name">Please enter your name.</p>
+          </div>
+          <div class="field"><label for="company">Company <span class="optional-tag">(optional)</span></label><input type="text" id="company" name="company" autocomplete="organization" maxlength="160"></div>
+        </div>
+        <div class="field-row">
+          <div class="field" id="field-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="254" aria-describedby="err-email">
+            <p class="error-text" id="err-email">Please enter a valid email address.</p>
+          </div>
+          <div class="field"><label for="country">Country <span class="optional-tag">(optional)</span></label><input type="text" id="country" name="country" autocomplete="country-name" maxlength="80"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="preferred_contact">Preferred contact method</label>
+            <select id="preferred_contact" name="preferred_contact">
+              <option value="email">Email</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="phone">Phone call</option>
+            </select>
+          </div>
+          <div class="field"><label for="phone">Phone / WhatsApp <span class="optional-tag">(optional)</span></label><input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="40"></div>
+        </div>
+        <div class="field">
+          <label for="extra_message">Anything else we should know? <span class="optional-tag">(optional)</span></label>
+          <textarea id="extra_message" name="extra_message" rows="3" maxlength="2000" style="min-height:90px;"></textarea>
+        </div>
+        <div class="hp-field" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+      </section>
+
+      <!-- Step 7: attachments + review -->
+      <section class="step" data-step="7" data-name="Attachments">
+        <h2>Attachments &amp; review</h2>
+        <p class="step-lead">Screenshots or documents help, but they're entirely optional.</p>
+        <div class="field">
+          <label for="attachments">Attach files <span class="optional-tag">(optional)</span></label>
+          <input type="file" id="attachments" name="attachments" multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf,text/plain,text/csv">
+          <p class="hint">Up to 3 files, 5 MB each. Accepted: PNG, JPG, GIF, WebP, PDF, TXT, CSV. Executable files are not accepted.</p>
+          <p class="error-text" id="err-attachments"></p>
+          <ul class="file-list" id="fileList"></ul>
+        </div>
+        <div class="field">
+          <label>Review your requirement</label>
+          <dl class="review-box" id="reviewBox"></dl>
+        </div>
+        <p class="hint">By submitting, you agree to our <a href="/terms-of-service" style="color:var(--accent);">Terms of Service</a> and <a href="/privacy-policy" style="color:var(--accent);">Privacy Policy</a>. We use your details only to respond to this requirement.</p>
+        <div id="submitError" class="alert alert-error" style="display:none;margin-top:1.25rem;"></div>
+      </section>
+
+      <div class="wizard-actions">
+        <button type="button" class="btn btn-secondary" id="backBtn" style="visibility:hidden;">Back</button>
+        <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Submit Requirement</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Confirmation -->
+  <div id="successArea" style="display:none;">
+    <div class="success-panel">
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <h2 style="font-family:var(--fd);font-size:clamp(1.7rem,3.6vw,2.3rem);margin-bottom:0.75rem;" tabindex="-1" id="successHeading">Requirement Received</h2>
+      <p style="color:var(--muted);">Thanks. We've received your IT requirement.</p>
+      <div class="ref-display" id="refDisplay">ITV-XXXXXX</div>
+      <p style="color:var(--sub);max-width:520px;margin:0 auto 2rem;">We'll review your requirement and contact you with the next steps. Please keep your reference number handy — quote it in any follow-up email and we'll find your request straight away.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+        <a href="https://itvedas.com/tools/" class="btn btn-ghost">Explore Free IT Tools</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0;">
+      <span>&copy; 2026 ITVedas Services. Remote-first IT support.</span>
+      <span><a href="/privacy-policy" style="color:var(--muted);text-decoration:none;">Privacy</a> · <a href="/terms-of-service" style="color:var(--muted);text-decoration:none;">Terms</a></span>
+    </div>
+  </div>
+</footer>
+<script src="/js/nav.js"></script>
+<script src="/js/request-wizard.js"></script>
+</body>
+</html>

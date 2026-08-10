@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | ITVedas Services</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="https://itvedas.com/assets/logo-mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+body{background:var(--bg3);}
+.admin-nav{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;position:sticky;top:0;z-index:50;}
+.admin-nav .container{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1360px;}
+.admin-wrap{max-width:1360px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.login-wrap{max-width:400px;margin:0 auto;padding:5rem 1.5rem;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.85rem;margin-bottom:2rem;}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.1rem;cursor:pointer;text-align:left;font-family:inherit;transition:border-color .15s;}
+.stat:hover,.stat.active{border-color:var(--accent);}
+.stat .n{font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--text);line-height:1.1;}
+.stat .l{font-size:0.78rem;color:var(--muted);margin-top:0.2rem;}
+.toolbar{display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.toolbar input[type="search"]{max-width:280px;}
+table{width:100%;border-collapse:collapse;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;font-size:0.88rem;}
+th{text-align:left;padding:0.8rem 1rem;font-size:0.74rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{cursor:pointer;}
+tbody tr:hover{background:var(--bg3);}
+.table-scroll{overflow-x:auto;}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.85rem;}
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-md);}
+.detail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1.5rem;align-items:start;}
+@media (max-width:1000px){.detail-grid{grid-template-columns:1fr;}}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.25rem;}
+.panel h3{font-size:0.95rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:0.5rem 1.25rem;font-size:0.88rem;}
+.kv dt{color:var(--muted);white-space:nowrap;}
+.kv dd{color:var(--text);word-break:break-word;}
+.desc-block{white-space:pre-wrap;background:var(--bg3);border-radius:var(--radius-sm);padding:1rem;font-size:0.9rem;line-height:1.65;color:var(--sub);}
+.note{background:var(--bg3);border-radius:var(--radius-sm);padding:0.85rem 1rem;margin-bottom:0.6rem;font-size:0.88rem;}
+.note .meta{font-size:0.75rem;color:var(--muted);margin-top:0.4rem;}
+.timeline li{font-size:0.82rem;color:var(--muted);padding:0.45rem 0;border-bottom:1px solid var(--border);list-style:none;}
+.timeline li:last-child{border-bottom:none;}
+.hidden{display:none !important;}
+.inline-form{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:flex-end;}
+.spinner{text-align:center;padding:3rem;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- Login view -->
+<div id="loginView">
+  <div class="login-wrap">
+    <div class="text-center" style="margin-bottom:2rem;">
+      <a href="/" class="brand" style="justify-content:center;"><span class="brand-mark" aria-hidden="true">IT</span><span>ITVedas Services</span></a>
+      <p style="color:var(--muted);font-size:0.9rem;margin-top:0.75rem;">Admin sign in</p>
+    </div>
+    <form id="loginForm" class="panel">
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </div>
+      <div id="loginError" class="alert alert-error" style="display:none;margin-bottom:1rem;"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<!-- Dashboard view -->
+<div id="dashView" class="hidden">
+  <nav class="admin-nav">
+    <div class="container">
+      <a href="/admin/" class="brand" style="font-size:1rem;"><span class="brand-mark" aria-hidden="true">IT</span><span>Admin</span></a>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <span id="whoami" style="font-size:0.85rem;color:var(--muted);"></span>
+        <button class="btn btn-secondary btn-sm" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-wrap">
+    <!-- List -->
+    <div id="listView">
+      <h1 style="font-size:1.5rem;margin-bottom:1.5rem;">Enquiries</h1>
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="toolbar">
+        <input type="search" id="searchInput" placeholder="Search reference, name, email, company…" aria-label="Search enquiries">
+        <button class="btn btn-secondary btn-sm" id="searchBtn">Search</button>
+        <button class="btn btn-ghost btn-sm" id="clearFilterBtn">Clear filters</button>
+        <span id="listMeta" style="margin-left:auto;font-size:0.82rem;color:var(--muted);"></span>
+      </div>
+      <div id="listBody"><div class="spinner">Loading…</div></div>
+    </div>
+
+    <!-- Detail -->
+    <div id="detailView" class="hidden">
+      <button class="btn btn-ghost btn-sm" id="backToList" style="margin-bottom:1rem;">← Back to enquiries</button>
+      <div id="detailBody"><div class="spinner">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

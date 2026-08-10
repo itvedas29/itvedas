@@ -1,0 +1,41 @@
+# Cloudflare Pages config for the ITVedas Services project.
+#
+# This is a SEPARATE Pages project from the parent itvedas.com site (which
+# deploys the repo root). Without this file, `wrangler pages dev services`
+# walks up and picks up the root wrangler.toml — which points at the parent's
+# functions/ directory, so none of the /api routes below resolve. Always pass
+# `-c services/wrangler.toml` when running dev from the repo root.
+#
+# The site is static HTML with no build step, so the build output directory
+# is this directory itself.
+
+name = "itvedas-services"
+pages_build_output_dir = "."
+compatibility_date = "2026-08-01"
+
+[observability]
+enabled = true
+
+# --- bindings --------------------------------------------------------------
+# database_id / id values below are placeholders. Replace them with the real
+# IDs printed by `wrangler d1 create` / `kv namespace create` before the first
+# production deploy, or set the same bindings in the Pages dashboard instead.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "itvedas-services"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[[r2_buckets]]
+binding = "ATTACHMENTS"
+bucket_name = "itvedas-services-attachments"
+
+# Secrets (RESEND_API_KEY, ADMIN_BOOTSTRAP_TOKEN) are NOT set here — they are
+# set with `wrangler pages secret put` or in the dashboard. Non-secret vars:
+[vars]
+EMAIL_FROM = ""
+ADMIN_NOTIFY_EMAIL = ""
