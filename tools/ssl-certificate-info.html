@@ -175,20 +175,26 @@
 
         const subject = x509.getSubjectString();
         const issuer = x509.getIssuerString();
-        const notBefore = x509.getNotBefore();
-        const notAfter = x509.getNotAfter();
+        const notBeforeRaw = x509.getNotBefore();
+        const notAfterRaw = x509.getNotAfter();
         const serialNum = x509.getSerialNumberHex();
 
+        // jsrsasign returns raw ASN.1 UTCTime/GeneralizedTime strings
+        // (e.g. "260914172155Z"), which `new Date()` can't parse -- it
+        // silently returns Invalid Date, so expiry math must go through
+        // the library's own zulutodate() instead.
+        const notBefore = zulutodate(notBeforeRaw);
+        const notAfter = zulutodate(notAfterRaw);
+
         const now = new Date();
-        const expireDate = new Date(notAfter);
         let status = 'valid';
         let statusClass = 'badge-valid';
 
-        if (expireDate < now) {
+        if (notAfter < now) {
           status = 'EXPIRED';
           statusClass = 'badge-expired';
         } else {
-          const daysUntilExpire = Math.floor((expireDate - now) / (1000 * 60 * 60 * 24));
+          const daysUntilExpire = Math.floor((notAfter - now) / (1000 * 60 * 60 * 24));
           if (daysUntilExpire < 30) {
             status = `EXPIRING SOON (${daysUntilExpire} days)`;
             statusClass = 'badge-expiring';
@@ -200,36 +206,42 @@
         const info = `
           <div class="info-row">
             <div class="info-label">Status</div>
-            <div class="info-value"><span class="status-badge ${statusClass}">${status}</span></div>
+            <div class="info-value"><span class="status-badge ${statusClass}">${escapeHtml(status)}</span></div>
           </div>
           <div class="info-row">
             <div class="info-label">Subject</div>
-            <div class="info-value">${subject}</div>
+            <div class="info-value">${escapeHtml(subject)}</div>
           </div>
           <div class="info-row">
             <div class="info-label">Issuer</div>
-            <div class="info-value">${issuer}</div>
+            <div class="info-value">${escapeHtml(issuer)}</div>
           </div>
           <div class="info-row">
             <div class="info-label">Serial Number</div>
-            <div class="info-value">${serialNum}</div>
+            <div class="info-value">${escapeHtml(serialNum)}</div>
           </div>
           <div class="info-row">
             <div class="info-label">Valid From</div>
-            <div class="info-value">${notBefore}</div>
+            <div class="info-value">${escapeHtml(notBefore.toUTCString())}</div>
           </div>
           <div class="info-row">
             <div class="info-label">Valid Until</div>
-            <div class="info-value">${notAfter}</div>
+            <div class="info-value">${escapeHtml(notAfter.toUTCString())}</div>
           </div>
         `;
 
         document.getElementById('certInfo').innerHTML = info;
         document.getElementById('results').classList.add('active');
       } catch (e) {
-        document.getElementById('certInfo').innerHTML = `<div style="color: #F87171;">Error parsing certificate: ${e.message}</div>`;
+        document.getElementById('certInfo').innerHTML = `<div style="color: #F87171;">Error parsing certificate: ${escapeHtml(e.message)}</div>`;
         document.getElementById('results').classList.add('active');
       }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
   </script>
 <script src="/js/inline-handler-setup.js" defer></script>
