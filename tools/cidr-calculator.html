@@ -180,25 +180,37 @@
 
       const [ip, prefix] = cidr.split('/');
       const ipParts = ip.split('.').map(Number);
-      const prefixLen = parseInt(prefix);
+      const prefixLen = parseInt(prefix, 10);
 
-      if (ipParts.length !== 4 || ipParts.some(p => p > 255) || prefixLen < 0 || prefixLen > 32) {
+      const validIp = ipParts.length === 4 && ipParts.every(p => Number.isInteger(p) && p >= 0 && p <= 255);
+      const validPrefix = Number.isInteger(prefixLen) && prefixLen >= 0 && prefixLen <= 32;
+      if (!validIp || !validPrefix) {
         alert('Invalid IP or prefix length');
         return;
       }
 
-      const mask = (0xffffffff << (32 - prefixLen)) >>> 0;
+      // 32 - 0 === 32, and JS's << only honors the shift amount mod 32,
+      // so "<< 32" silently becomes "<< 0" instead of zeroing the mask -- /0 needs its own case.
+      const mask = prefixLen === 0 ? 0 : (0xffffffff << (32 - prefixLen)) >>> 0;
       const network = ipParts.reduce((a, b, i) => a + (b << (24 - i * 8)), 0) >>> 0;
       const networkAddr = network & mask;
       const broadcast = networkAddr | (~mask >>> 0);
-      const hostCount = Math.pow(2, 32 - prefixLen) - 2;
 
       document.getElementById('network').textContent = toIPString(networkAddr);
       document.getElementById('broadcast').textContent = toIPString(broadcast);
       document.getElementById('mask').textContent = toIPString(mask);
-      document.getElementById('first').textContent = toIPString(networkAddr + 1);
-      document.getElementById('last').textContent = toIPString(broadcast - 1);
-      document.getElementById('hosts').textContent = Math.max(0, hostCount).toString();
+
+      if (prefixLen >= 31) {
+        // /31 (RFC 3021 point-to-point) and /32 (single host) reserve no
+        // network/broadcast address -- every address in the range is usable.
+        document.getElementById('first').textContent = toIPString(networkAddr);
+        document.getElementById('last').textContent = toIPString(broadcast);
+        document.getElementById('hosts').textContent = (broadcast - networkAddr + 1).toString();
+      } else {
+        document.getElementById('first').textContent = toIPString(networkAddr + 1);
+        document.getElementById('last').textContent = toIPString(broadcast - 1);
+        document.getElementById('hosts').textContent = (Math.pow(2, 32 - prefixLen) - 2).toString();
+      }
       document.getElementById('result').classList.add('active');
     }
 
