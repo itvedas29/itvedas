@@ -145,7 +145,7 @@
     <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
 
     <h1>🔍 WHOIS Lookup</h1>
-    <p style="color:#6B7A94; margin-bottom: 1.5rem; font-size: 0.95rem;">Real, live domain registration data — queried directly from the registry's WHOIS server, not sample data.</p>
+    <p style="color:#6B7A94; margin-bottom: 1.5rem; font-size: 0.95rem;">Real, live domain registration data — queried directly from the registry, not sample data.</p>
 
     <div class="search-section">
       <div class="input-group">
@@ -160,7 +160,7 @@
       <h2 style="margin-bottom: 0.5rem; color: #6366F1;">WHOIS Information</h2>
       <div class="meta-row" id="metaRow"></div>
       <div class="summary-block" id="summaryBlock"></div>
-      <button class="raw-toggle handler-toggleRaw" id="rawToggle" data-onclick="toggleRaw">Show raw WHOIS record</button>
+      <button class="raw-toggle handler-toggleRaw" id="rawToggle" data-onclick="toggleRaw">Show raw RDAP record (JSON)</button>
       <pre class="raw-whois" id="rawWhois"></pre>
     </div>
 
@@ -172,10 +172,10 @@
       <p>Every registered domain has a WHOIS record maintained by its registry and registrar, showing who registered it, when, and which name servers it uses. Since GDPR and similar privacy regulations, many registrars now redact personal registrant details by default — this is normal and doesn't mean the lookup failed.</p>
 
       <h2>How this tool works</h2>
-      <p>ITVEDAS's own edge server asks IANA's root WHOIS server which registry runs your domain's TLD, queries that registry over the WHOIS protocol (port 43), and — for TLDs like <code>.com</code>/<code>.net</code> that use a "thin" registry model — follows the referral to the registrar's own WHOIS server for the full record. It never connects anywhere except official WHOIS servers discovered through that chain.</p>
+      <p>ITVEDAS's own edge server looks up which RDAP server is authoritative for your domain's TLD via IANA's official RDAP bootstrap registry, then queries that server directly. RDAP is the modern, HTTP/JSON-based successor to the classic WHOIS protocol — ICANN has required all gTLD registries and registrars to support it since 2023 — so results come back as structured data rather than free-text scraped from a registry-specific format.</p>
 
       <h2>Privacy</h2>
-      <div class="privacy-note">Your query goes to ITVEDAS's own server, which relays it to the relevant WHOIS servers on your behalf — your browser never connects to them directly. Nothing you search is logged or stored.</div>
+      <div class="privacy-note">Your query goes to ITVEDAS's own server, which relays it to the relevant RDAP server on your behalf — your browser never connects to it directly. Nothing you search is logged or stored.</div>
 
       <h2>FAQ</h2>
       <div class="faq-item">
@@ -192,7 +192,7 @@
       </div>
       <div class="faq-item">
         <h3>Why did the lookup fail for my TLD?</h3>
-        <p>A handful of TLDs don't run a classic WHOIS service (some rely on RDAP only, or restrict access). If that happens, try <a href="https://lookup.icann.org" rel="nofollow noopener" target="_blank">ICANN Lookup</a> instead.</p>
+        <p>A handful of smaller or newer TLDs haven't registered an RDAP server with IANA yet. If that happens, try <a href="https://lookup.icann.org" rel="nofollow noopener" target="_blank">ICANN Lookup</a> instead.</p>
       </div>
 
       <h2>Related Tools</h2>
@@ -256,42 +256,50 @@
       const rawWhois = document.getElementById('rawWhois');
       const rawToggle = document.getElementById('rawToggle');
 
-      metaRow.textContent = `Queried ${data.whoisServer} · ${data.queryTimeMs}ms`;
+      metaRow.textContent = `Queried ${data.rdapServer} · ${data.queryTimeMs}ms`;
 
-      const summary = data.summary || {};
-      const keys = Object.keys(SUMMARY_LABELS).filter(k => summary[k] !== undefined);
+      summaryBlock.innerHTML = '';
 
-      if (keys.length === 0) {
-        summaryBlock.innerHTML = '';
+      if (data.notFound) {
         const notice = document.createElement('div');
         notice.style.color = '#6B7A94';
         notice.style.marginBottom = '1rem';
-        notice.textContent = 'No common fields recognized in this registry\'s response — see the raw record below.';
+        notice.textContent = 'No match found for this domain in the registry — it may be unregistered, or you entered a subdomain instead of the registered domain.';
         summaryBlock.appendChild(notice);
       } else {
-        summaryBlock.innerHTML = '';
-        for (const key of keys) {
-          const row = document.createElement('div');
-          row.className = 'info-row';
+        const summary = data.summary || {};
+        const keys = Object.keys(SUMMARY_LABELS).filter(k => summary[k] !== undefined);
 
-          const label = document.createElement('div');
-          label.className = 'info-label';
-          label.textContent = SUMMARY_LABELS[key];
+        if (keys.length === 0) {
+          const notice = document.createElement('div');
+          notice.style.color = '#6B7A94';
+          notice.style.marginBottom = '1rem';
+          notice.textContent = 'No common fields recognized in this registry\'s response — see the raw record below.';
+          summaryBlock.appendChild(notice);
+        } else {
+          for (const key of keys) {
+            const row = document.createElement('div');
+            row.className = 'info-row';
 
-          const value = document.createElement('div');
-          value.className = 'info-value';
-          const v = summary[key];
-          value.textContent = Array.isArray(v) ? v.join(', ') : v;
+            const label = document.createElement('div');
+            label.className = 'info-label';
+            label.textContent = SUMMARY_LABELS[key];
 
-          row.appendChild(label);
-          row.appendChild(value);
-          summaryBlock.appendChild(row);
+            const value = document.createElement('div');
+            value.className = 'info-value';
+            const v = summary[key];
+            value.textContent = Array.isArray(v) ? v.join(', ') : v;
+
+            row.appendChild(label);
+            row.appendChild(value);
+            summaryBlock.appendChild(row);
+          }
         }
       }
 
       rawWhois.textContent = data.raw || '(empty response)';
       rawWhois.classList.remove('active');
-      rawToggle.textContent = 'Show raw WHOIS record';
+      rawToggle.textContent = 'Show raw RDAP record (JSON)';
 
       document.getElementById('results').classList.add('active');
     }
@@ -300,7 +308,7 @@
       const rawWhois = document.getElementById('rawWhois');
       const rawToggle = document.getElementById('rawToggle');
       const showing = rawWhois.classList.toggle('active');
-      rawToggle.textContent = showing ? 'Hide raw WHOIS record' : 'Show raw WHOIS record';
+      rawToggle.textContent = showing ? 'Hide raw RDAP record' : 'Show raw RDAP record (JSON)';
     }
 
     document.getElementById('domain').addEventListener('keydown', (e) => {

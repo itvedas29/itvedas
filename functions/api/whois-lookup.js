@@ -1,45 +1,31 @@
 // functions/api/whois-lookup.js
 //
-// Cloudflare Pages Function — real WHOIS lookups over raw TCP (port 43),
-// using the Workers TCP Sockets API. WHOIS has no HTTP API, so this can't
-// reuse the DoH pattern from dns-lookup.js; it speaks the WHOIS protocol
-// directly.
+// Cloudflare Pages Function — real domain registration lookups via RDAP
+// (RFC 9083), the HTTP/JSON, IETF-standardized successor to WHOIS that
+// ICANN has required all gTLD registries/registrars to support since 2023.
 //
-// Flow: ask IANA's root WHOIS server which registry server owns the
-// domain's TLD, query that registry, and if the registry response refers
-// to a more specific server (the common "thin WHOIS" model for .com/.net,
-// where the registry only stores which registrar holds the domain) follow
-// that referral once more. Every hostname involved -- the input domain and
-// every referral target -- is validated against the same strict hostname
-// shape before it's ever written to a socket or connected to, so nothing
-// user- or registry-supplied can inject extra WHOIS commands or steer a
-// connection somewhere unexpected.
-
-import { connect } from "cloudflare:sockets";
+// This intentionally does NOT speak raw WHOIS (TCP port 43): an earlier
+// version of this file used the Workers TCP Sockets API (`cloudflare:
+// sockets`) and worked in local `wrangler pages dev`, but production
+// Cloudflare Pages Functions returned a bare 502 for every request --
+// Pages Functions don't support that API the way standalone Workers do.
+// RDAP is plain HTTP, so it works the same way dns-lookup.js and
+// my-ip.js's own fetch-based lookups do, and as a bonus returns
+// structured JSON instead of registry-specific free-text formats that
+// need per-registry regex scraping.
+//
+// Flow: fetch IANA's official RDAP bootstrap registry to find which RDAP
+// server is authoritative for the domain's TLD, then query that server
+// directly. No second-hop referral is needed (unlike thin WHOIS) since
+// ICANN's RDAP profile requires registries to return full registrar and
+// contact data in one response.
 
 // RFC 1035 hostname shape: dot-separated labels of letters/digits/hyphens,
 // 1-63 chars per label, no leading/trailing hyphen, <=253 chars overall.
 const HOSTNAME_RE = /^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*$/;
 
-const IANA_WHOIS = "whois.iana.org";
-const MAX_RESPONSE_BYTES = 200_000;
-const HOP_TIMEOUT_MS = 6000;
-
-// whois.iana.org is a single shared root server every lookup would
-// otherwise hit first -- under repeated/concurrent traffic it intermittently
-// rate-limits and returns an empty referral (confirmed while testing this
-// tool: identical queries succeeded, then failed, then succeeded again
-// within a couple minutes with no change on our end). For .com/.net/.org --
-// which cover the large majority of real lookups -- short-circuiting IANA
-// with their long-standing, essentially static registry hostnames removes
-// that shared bottleneck entirely. Every other TLD still asks IANA
-// dynamically (with a retry below) rather than risking a hand-maintained
-// map going stale for less-common TLDs.
-const KNOWN_REGISTRY_SERVERS = {
-  com: "whois.verisign-grs.com",
-  net: "whois.verisign-grs.com",
-  org: "whois.publicinterestregistry.org"
-};
+const RDAP_BOOTSTRAP_URL = "https://data.iana.org/rdap/dns.json";
+const FETCH_TIMEOUT_MS = 6000;
 
 export async function onRequestGet(context) {
   const { request } = context;
@@ -57,60 +43,45 @@ export async function onRequestGet(context) {
   const started = Date.now();
 
   try {
-    let registryHost = KNOWN_REGISTRY_SERVERS[tld];
-    if (!registryHost) {
-      registryHost = extractReferral(await queryWhois(IANA_WHOIS, tld));
-      if (!registryHost) {
-        // whois.iana.org occasionally returns an empty/referral-less
-        // response under light repeated load rather than a hard error --
-        // one retry after a short pause reliably recovers from that.
-        await new Promise(r => setTimeout(r, 1200));
-        registryHost = extractReferral(await queryWhois(IANA_WHOIS, tld));
-      }
-    }
-    if (!registryHost) {
+    const rdapBase = await getRdapBase(tld);
+    if (!rdapBase) {
       return jsonResponse({
-        error: `No public WHOIS server is registered for .${tld}. Try ICANN Lookup (lookup.icann.org) or your registry's RDAP service instead.`
+        error: `No RDAP/WHOIS service is registered for .${tld}. Try ICANN Lookup (lookup.icann.org) instead.`
       }, 404);
     }
 
-    const registryText = await queryWhois(registryHost, domain);
-    if (!registryText.trim()) {
+    const domainUrl = `${rdapBase}domain/${encodeURIComponent(domain)}`;
+    const { status, ok, text } = await fetchRdapDomainWithRetry(domainUrl);
+
+    if (status === 404) {
       return jsonResponse({
-        error: `${registryHost} didn't return any data (it may be rate-limiting or temporarily unavailable). Please try again in a moment.`
-      }, 502);
+        domain,
+        rdapServer: rdapBase,
+        queryTimeMs: Date.now() - started,
+        notFound: true,
+        summary: {},
+        raw: text ? prettyJson(text) : "(registry sent no response body for this 404)"
+      });
     }
-
-    let whoisServer = registryHost;
-    let raw = registryText;
-
-    const registrarHost = extractReferral(registryText);
-    if (registrarHost && registrarHost !== registryHost) {
-      try {
-        const registrarText = await queryWhois(registrarHost, domain);
-        if (registrarText.trim()) {
-          raw = registrarText;
-          whoisServer = registrarHost;
-        }
-      } catch {
-        // Registrar-level server refused/timed out -- the registry-level
-        // response we already have is still a valid, useful answer.
-      }
+    if (!ok) {
+      return jsonResponse({
+        error: `The registry's RDAP server returned an error (HTTP ${status}). Please try again.`
+      }, 502);
     }
 
     return jsonResponse({
       domain,
-      whoisServer,
+      rdapServer: rdapBase,
       queryTimeMs: Date.now() - started,
-      summary: extractSummary(raw),
-      raw
+      summary: extractSummary(JSON.parse(text)),
+      raw: prettyJson(text)
     });
   } catch (err) {
-    if (err.message === "TIMEOUT") {
-      return jsonResponse({ error: "WHOIS server did not respond in time. Please try again." }, 504);
+    if (err.name === "AbortError") {
+      return jsonResponse({ error: "Lookup timed out. Please try again." }, 504);
     }
     console.error("whois-lookup error:", err);
-    return jsonResponse({ error: "Unexpected error while querying WHOIS." }, 500);
+    return jsonResponse({ error: "Unexpected error while querying the registry." }, 500);
   }
 }
 
@@ -118,80 +89,112 @@ export async function onRequestPost() {
   return jsonResponse({ error: "Use GET" }, 405);
 }
 
-async function queryWhois(host, query, timeoutMs = HOP_TIMEOUT_MS) {
-  const socket = connect({ hostname: host, port: 43 });
-  let timedOut = false;
-  const timer = setTimeout(() => {
-    timedOut = true;
-    socket.close().catch(() => {});
-  }, timeoutMs);
+async function getRdapBase(tld) {
+  const res = await fetchWithTimeout(RDAP_BOOTSTRAP_URL, {
+    cf: { cacheTtl: 3600, cacheEverything: true }
+  });
+  if (!res.ok) return null;
 
-  try {
-    const writer = socket.writable.getWriter();
-    await writer.write(new TextEncoder().encode(query + "\r\n"));
-    await writer.close();
-
-    const reader = socket.readable.getReader();
-    const decoder = new TextDecoder();
-    let result = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      result += decoder.decode(value, { stream: true });
-      if (result.length > MAX_RESPONSE_BYTES) break;
+  const data = await res.json();
+  for (const [tlds, urls] of data.services || []) {
+    if (Array.isArray(tlds) && tlds.some(t => t.toLowerCase() === tld) && urls && urls.length) {
+      return urls[0].endsWith("/") ? urls[0] : urls[0] + "/";
     }
-
-    if (timedOut) throw new Error("TIMEOUT");
-    return result;
-  } finally {
-    clearTimeout(timer);
-    socket.close().catch(() => {});
-  }
-}
-
-function extractReferral(text) {
-  const patterns = [
-    /^\s*whois\s*:\s*(\S+)/im,
-    /^\s*refer\s*:\s*(\S+)/im,
-    /^\s*registrar whois server\s*:\s*(?:whois:\/\/)?(\S+)/im,
-    /^\s*referralserver\s*:\s*whois:\/\/(\S+)/im
-  ];
-  for (const re of patterns) {
-    const m = text.match(re);
-    const candidate = m && m[1] ? m[1].toLowerCase().replace(/\/$/, "") : null;
-    if (candidate && HOSTNAME_RE.test(candidate) && candidate.includes(".")) return candidate;
   }
   return null;
 }
 
-// Registry-level responses (e.g. Verisign's whois.verisign-grs.com) indent
-// every line with leading spaces; registrar-level responses often don't --
-// "^\s*" before each field name handles both.
-const SUMMARY_FIELDS = [
-  ["registrar", /^\s*registrar:\s*(.+)$/im],
-  ["registrarUrl", /^\s*registrar url:\s*(.+)$/im],
-  ["createdDate", /^\s*(?:creation date|created(?: on)?|domain registration date)\s*:\s*(.+)$/im],
-  ["updatedDate", /^\s*(?:updated date|last updated(?: on)?|domain last updated date)\s*:\s*(.+)$/im],
-  ["expiryDate", /^\s*(?:registry expiry date|registrar registration expiration date|expiration date|expiry date|paid-till)\s*:\s*(.+)$/im],
-  ["dnssec", /^\s*dnssec:\s*(.+)$/im]
-];
+async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
-function extractSummary(text) {
+async function fetchRdapDomain(url) {
+  const res = await fetchWithTimeout(url, { headers: { accept: "application/rdap+json" } });
+  const status = res.status;
+  const ok = res.ok;
+
+  try {
+    return { status, ok, text: await res.text() };
+  } catch (bodyErr) {
+    // Confirmed against rdap.verisign.com: it sends 404s with no
+    // Content-Length/chunked framing and closes the TLS connection
+    // without a clean close_notify, so strict HTTP clients (this
+    // includes Cloudflare's own fetch, not just local dev) fail to read
+    // the body even though the status arrived fine. The status code
+    // alone is a complete answer for a non-2xx result, so degrade to an
+    // empty body instead of failing the whole lookup. A 2xx response we
+    // can't read at all has no data to give back, so that's a real
+    // failure worth retrying/surfacing.
+    if (!ok) return { status, ok, text: "" };
+    throw bodyErr;
+  }
+}
+
+async function fetchRdapDomainWithRetry(url, attempts = 2) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fetchRdapDomain(url);
+    } catch (err) {
+      lastErr = err;
+      if (err.name === "AbortError") throw err;
+    }
+  }
+  throw lastErr;
+}
+
+function prettyJson(text) {
+  try {
+    return JSON.stringify(JSON.parse(text), null, 2);
+  } catch {
+    return text;
+  }
+}
+
+function vcardField(vcardArray, field) {
+  if (!Array.isArray(vcardArray) || !Array.isArray(vcardArray[1])) return null;
+  const entry = vcardArray[1].find(e => Array.isArray(e) && e[0] === field);
+  return entry && entry.length > 3 ? entry[3] : null;
+}
+
+function extractSummary(data) {
   const summary = {};
-  for (const [key, re] of SUMMARY_FIELDS) {
-    const m = text.match(re);
-    if (m) summary[key] = m[1].trim();
+
+  const registrar = (data.entities || []).find(e => (e.roles || []).includes("registrar"));
+  if (registrar) {
+    const name = vcardField(registrar.vcardArray, "fn");
+    if (name) summary.registrar = name;
+    const urlEntry = (registrar.links || []).find(l => l.type === "text/html") || (registrar.links || [])[0];
+    if (urlEntry && urlEntry.href) summary.registrarUrl = urlEntry.href;
   }
 
-  const nameServers = [...text.matchAll(/^\s*name server:\s*(.+)$/gim)]
-    .map(m => m[1].trim().toLowerCase())
-    .filter((v, i, arr) => v && arr.indexOf(v) === i);
-  if (nameServers.length) summary.nameServers = nameServers;
+  const events = data.events || [];
+  const eventDate = action => events.find(e => e.eventAction === action)?.eventDate;
+  const created = eventDate("registration");
+  const updated = eventDate("last changed");
+  const expiry = eventDate("expiration");
+  if (created) summary.createdDate = created;
+  if (updated) summary.updatedDate = updated;
+  if (expiry) summary.expiryDate = expiry;
 
-  const statuses = [...text.matchAll(/^\s*domain status:\s*(.+)$/gim)]
-    .map(m => m[1].trim())
-    .filter((v, i, arr) => v && arr.indexOf(v) === i);
-  if (statuses.length) summary.statuses = statuses;
+  if (data.secureDNS) {
+    summary.dnssec = data.secureDNS.delegationSigned ? "signed" : "unsigned";
+  }
+
+  if (Array.isArray(data.nameservers) && data.nameservers.length) {
+    const names = data.nameservers.map(ns => (ns.ldhName || "").toLowerCase()).filter(Boolean);
+    if (names.length) summary.nameServers = names;
+  }
+
+  if (Array.isArray(data.status) && data.status.length) {
+    summary.statuses = data.status;
+  }
 
   return summary;
 }
