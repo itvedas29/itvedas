@@ -9,7 +9,7 @@ echo "=== ITVedas Security Check ==="
 # documentation/examples so normal words such as "token" do not fail CI.
 echo "Checking for hardcoded secrets..."
 secret_hits=$(grep -RniE --include='*.html' --include='*.js' --include='*.py' \
-  '(password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)[[:space:]]*[:=][[:space:]]*["'"']?[A-Za-z0-9_./+=-]{12,}' \
+  "(password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)[[:space:]]*[:=][[:space:]]*[\"']?[A-Za-z0-9_./+=-]{12,}" \
   . 2>/dev/null \
   | grep -vE '(^|/)(node_modules|\.git)(/|$)|\.env\.example|security-check\.sh' \
   || true)
