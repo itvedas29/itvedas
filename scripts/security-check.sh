@@ -11,7 +11,7 @@ import re, sys
 # Detect credentials that have recognizable provider formats, plus quoted
 # credential assignments in executable/config files. Documentation is allowed
 # to contain intentionally fake examples, while recognizable live-token formats
-# remain blocked everywhere.
+# remain blocked everywhere unless they are an explicit documented placeholder.
 provider_patterns = [
     re.compile(r'\b(?:sk-[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{20,})\b'),
     re.compile(r'\b(?:AIza[0-9A-Za-z_-]{30,}|ya29\.[0-9A-Za-z_-]{30,})\b'),
@@ -25,6 +25,7 @@ ignore_fragments = (
     'example', 'placeholder', 'changeme', 'test_', 'dummy_',
     'password-generator', 'your_client_id', 'your_client_secret',
     'your_access_token', 'your_refresh_token',
+    'ghu_16C7e42F292c6912E7710c838347Ae178B4a',
 )
 hits = []
 for p in Path('.').rglob('*'):
