@@ -1,18 +1,14 @@
 name: Validate static site
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -43,17 +39,10 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          page=Path('tools/markdown-preview.html').read_text(encoding='utf-8')
-          sanitizer=Path('js/html-sanitizer.js').read_text(encoding='utf-8')
-          checks=[
-            '/js/html-sanitizer.js' in page,
-            'HTMLSanitizer.setInnerHTML(preview, rendered)' in page,
-            'preview.innerHTML = marked.parse' not in page,
-            "['http:', 'https:'].includes(url.protocol)" in sanitizer,
-            'noopener noreferrer' in sanitizer,
-          ]
+          page=Path('tools/markdown-preview.html').read_text(encoding='utf-8'); sanitizer=Path('js/html-sanitizer.js').read_text(encoding='utf-8')
+          checks=['/js/html-sanitizer.js' in page,'HTMLSanitizer.setInnerHTML(preview, rendered)' in page,'preview.innerHTML = marked.parse' not in page,"['http:', 'https:'].includes(url.protocol)" in sanitizer,'noopener noreferrer' in sanitizer]
           if not all(checks): raise SystemExit('Markdown sanitizer regression detected')
-          print('OK: Markdown preview sanitizer regression checks passed')
+          print('OK: Markdown sanitizer regression checks passed')
           PY
       - name: Verify GA4 script hygiene
         run: |
@@ -63,21 +52,21 @@ jobs:
           bad=[]
           for p in Path('.').rglob('*.html'):
             if '.git' in p.parts: continue
-            t=p.read_text(encoding='utf-8',errors='ignore')
-            for tag in re.findall(r'<script\b[^>]*googletagmanager\.com/gtag/js[^>]*>',t,re.I):
+            for tag in re.findall(r'<script\b[^>]*googletagmanager\.com/gtag/js[^>]*>',p.read_text(encoding='utf-8',errors='ignore'),re.I):
               if re.search(r'\bintegrity\s*=',tag,re.I): bad.append(str(p))
           if bad: raise SystemExit('GA4 mutable SRI remains: '+', '.join(sorted(set(bad))))
           print('OK: GA4 has no mutable SRI hashes')
           PY
       - name: Run news quality analysis
         run: python3 scripts/news-quality-gate.py
+      - name: Rebuild sitemap after news quality gate
+        run: python3 scripts/generate-sitemap.py
       - name: Validate sitemap excludes noindex pages
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
-          bad=[]
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8'); bad=[]
           for p in Path('news').rglob('*.html'):
             t=p.read_text(encoding='utf-8',errors='ignore')
             if re.search(r'<meta[^>]+name=["\']robots["\'][^>]+noindex',t,re.I):
@@ -91,9 +80,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import glob
-          quiz=Path('quiz.html').read_text(encoding='utf-8'); index=Path('index.html').read_text(encoding='utf-8')
-          leaked=[f for f in glob.glob('articles/**/*.html',recursive=True) if '```' in Path(f).read_text(encoding='utf-8',errors='ignore')]
-          if leaked or 'YOUR_PUBLIC_KEY' in quiz or "fetch('/search-index.json')" not in index:
-            raise SystemExit('Generated content cleanup validation failed: '+str(leaked))
+          quiz=Path('quiz.html').read_text(encoding='utf-8'); index=Path('index.html').read_text(encoding='utf-8'); leaked=[f for f in glob.glob('articles/**/*.html',recursive=True) if '```' in Path(f).read_text(encoding='utf-8',errors='ignore')]
+          if leaked or 'YOUR_PUBLIC_KEY' in quiz or "fetch('/search-index.json')" not in index: raise SystemExit('Generated content cleanup failed: '+str(leaked))
           print('OK: generated content cleanup checks passed')
           PY
