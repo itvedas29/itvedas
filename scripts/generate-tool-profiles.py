@@ -89,7 +89,7 @@ def generate_tool_profile_html(tool, category_name, category_slug):
     <meta property="og:title" content="{title}">
     <meta property="og:description" content="{description}">
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://itvedas.com/ai-tools/tools/{category_slug}/{tool['slug']}/"/>
+    <meta property="og:url" content="https://www.itvedas.com/ai-tools/tools/{category_slug}/{tool['slug']}/"/>
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -97,7 +97,7 @@ def generate_tool_profile_html(tool, category_name, category_slug):
     <meta name="twitter:description" content="{description}">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://itvedas.com/ai-tools/tools/{category_slug}/{tool['slug']}/"/>
+    <link rel="canonical" href="https://www.itvedas.com/ai-tools/tools/{category_slug}/{tool['slug']}/"/>
 
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -258,7 +258,7 @@ def generate_category_landing_page(category_name, category_slug, tools):
     <meta property="og:title" content="{category_name} — AI Tools">
     <meta property="og:description" content="Comprehensive guide to {category_name.lower()}.">
     <meta property="og:type" content="article">
-    <link rel="canonical" href="https://itvedas.com/ai-tools/tools/{category_slug}/"/>
+    <link rel="canonical" href="https://www.itvedas.com/ai-tools/tools/{category_slug}/"/>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f9f9f9; }}

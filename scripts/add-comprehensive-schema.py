@@ -14,7 +14,7 @@ import re
 from datetime import datetime
 
 ROOT = pathlib.Path(".")
-SITE_URL = "https://itvedas.com"
+SITE_URL = "https://www.itvedas.com"
 
 def get_page_info(file_path, content):
     """Extract page information for schema."""
@@ -125,7 +125,7 @@ def add_article_schema(file_path, content):
             "name": "ITVedas",
             "logo": {
                 "@type": "ImageObject",
-                "url": f"{SITE_URL}/assets/logo.svg"
+                "url": f"{SITE_URL}/assets/brand/itvedas-logo.svg"
             }
         }
     }
@@ -154,7 +154,7 @@ def add_organization_schema(file_path, content):
         "@type": "Organization",
         "name": "ITVedas",
         "url": SITE_URL,
-        "logo": f"{SITE_URL}/assets/logo.svg",
+        "logo": f"{SITE_URL}/assets/brand/itvedas-logo.svg",
         "description": "The complete IT knowledge hub covering networking, cloud, security, DevOps, databases, Linux, hardware, and compliance",
         "sameAs": [
             "https://github.com/itvedas29/itvedas"

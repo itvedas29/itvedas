@@ -90,8 +90,9 @@ TEMPLATE = """<!DOCTYPE html>
 <meta property="og:title" content="FAQ — ITVedas">
 <meta property="og:description" content="Quick answers to common IT questions across networking, cloud, security, DevOps, databases, Linux and hardware.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://itvedas.com/faq.html">
-<link rel="canonical" href="https://itvedas.com/faq.html">
+<meta property="og:url" content="https://www.itvedas.com/faq">
+<link rel="canonical" href="https://www.itvedas.com/faq">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
 <title>FAQ — ITVedas</title>
 <script type="application/ld+json">
 {schema_json}
@@ -144,7 +145,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem 2rem;text-align:cen
 </head>
 <body>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
     <li><a href="/news.html">📰 News</a></li>

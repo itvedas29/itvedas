@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="description" content="Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="How Docker Works: Architecture &amp; Containers | ITVedas">
@@ -13,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-07-03">
-<link rel="canonical" href="https://www.itvedas.com/articles/devops/docker-works-architecture-containers">
+<link rel="canonical" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers">
     <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers">
     <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers">
     <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers">
@@ -23,13 +27,13 @@
     <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers">
     
 <title>How Docker Works: Architecture &amp; Containers | ITVedas</title>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture & Containers","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner's guide to containerization technology.","datePublished":"2026-07-03","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com"},"url":"https://www.itvedas.com/articles/devops/docker-works-architecture-containers","image":"https://www.itvedas.com/assets/og-default.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture & Containers","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner's guide to containerization technology.","datePublished":"2026-07-03","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com"},"url":"https://www.itvedas.com/articles/devops/2026-07-03-docker-works-architecture-containers","image":"https://www.itvedas.com/assets/og-default.png"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What&#x27;s the difference between a Docker image and a Docker container?", "acceptedAnswer": {"@type": "Answer", "text": "A Docker image is a read-only blueprint or template\u2014like a recipe. A Docker container is a running instance of that image\u2014like a cake made from the recipe. You build one image and create hundreds of containers from it. Images are immutable; containers are temporary and can be modified while running."}}, {"@type": "Question", "name": "Why is Docker faster than virtual machines?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containers share the host&#x27;s operating system kernel, using only ~5-15MB RAM and starting in ~50ms. Virtual machines emulate an entire OS, consuming 2GB+ RAM and taking 3-5 minutes to boot. Containers achieve isolation through namespaces and cgroups, not full OS emulation, making them dramatically faster and more efficient."}}, {"@type": "Question", "name": "What are Docker layers and why do they matter?", "acceptedAnswer": {"@type": "Answer", "text": "Each instruction in a Dockerfile creates an immutable layer. Docker caches layers, so rebuilding an image reuses unchanged layers instantly. If only your code changed, Docker rebuilds only that layer instead of re-running all previous steps, saving minutes of build time on large projects."}}, {"@type": "Question", "name": "How do containers on the same host communicate with each other?", "acceptedAnswer": {"@type": "Answer", "text": "Docker creates a bridge network where each container gets an internal IP. Containers reach each other by service name (e.g., a web app container can call &#x27;postgres:5432&#x27; to reach a database container). The Docker daemon handles name resolution automatically, so you never need to know IPs."}}, {"@type": "Question", "name": "Can I run Docker on Windows or Mac?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Docker Desktop for Windows and Mac includes a lightweight Linux VM that runs the Docker Engine. On Windows 10/11, you can also use WSL 2 (Windows Subsystem for Linux 2) for native Linux integration. On Linux, Docker runs directly without a VM, making it slightly faster."}}, {"@type": "Question", "name": "What&#x27;s the difference between Docker and Kubernetes?", "acceptedAnswer": {"@type": "Answer", "text": "Docker containerizes single applications; Kubernetes orchestrates hundreds of containers across multiple servers. Docker is about packaging, Kubernetes is about managing at scale. Most teams use Docker containers inside Kubernetes clusters, so they complement each other."}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.itvedas.com"}, {"@type": "ListItem", "position": 2, "name": "DevOps", "item": "https://www.itvedas.com/articles/devops/"}, {"@type": "ListItem", "position": 3, "name": "How Docker Works: Architecture & Containers", "item": "https://www.itvedas.com/articles/devops/docker-works-architecture-containers"}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#1A1A28;
@@ -41,7 +45,7 @@ html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
 #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
 .logo span{color:#FF6B35;}
 .nav-links{display:flex;gap:1.5rem;}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
@@ -51,7 +55,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
 .breadcrumb a:hover{color:var(--accent);}
 .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+.hero h1{font-family:'Lexend',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
 .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
 .pub-date{color:var(--sub);font-weight:500;}
 .new-badge{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2em .55em;border-radius:4px;line-height:1;}
@@ -59,13 +63,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
 .art{min-width:0;}
 .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;}
-.toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+.toc h3{font-family:'Lexend',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
 .toc ol{padding-left:1.1rem;}
 .toc li{margin-bottom:.4rem;}
 .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
 .toc a:hover{color:var(--accent);}
-.art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
-.art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+.art h2{font-family:'Lexend',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+.art h3{font-family:'Lexend',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
 .art p{color:var(--sub);margin-bottom:1.25rem;}
 .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
 .art li{margin-bottom:.4rem;}
@@ -76,19 +80,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
 .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
 .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
-.fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+.fact-box strong{display:block;font-family:'Lexend',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
 .fact-box ul{margin:0;padding-left:1.25rem;}
 .fact-box li{color:var(--sub);font-size:.9rem;margin-bottom:.3rem;}
 .takeaways{background:var(--bg3);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
-.takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+.takeaways h2{font-size:1rem;font-family:'Lexend',sans-serif;margin:0 0 .75rem;color:var(--text);}
 .takeaways ul{margin:0;padding-left:1.25rem;}
 .takeaways li{color:var(--sub);font-size:.9rem;}
 .faq{margin-top:.75rem;}
 .faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.85rem;transition:border-color .2s;}
 .faq-item:hover{border-color:var(--accent);}
-.faq-item h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.faq-item h3{font-family:'Lexend',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
 .faq-item p{margin:0;font-size:.9rem;color:var(--sub);}
-.related h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:2.5rem 0 1rem;color:var(--text);}
+.related h2{font-family:'Lexend',sans-serif;font-size:1.2rem;margin:2.5rem 0 1rem;color:var(--text);}
 .rel-grid{display:flex;flex-direction:column;gap:.6rem;}
 .rel-card{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;text-decoration:none;color:var(--sub);font-size:.875rem;transition:border-color .2s,color .2s;}
 .rel-card:hover{border-color:var(--accent);color:var(--text);}
@@ -97,7 +101,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-art a:hover{border-color:var(--accent);}
 .nav-art .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
-.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+.fl{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
 .fl span{color:#FF6B35;}
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
@@ -111,12 +115,12 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Docker Works: Architecture &amp; Containers | ITVedas","description":"Learn how Docker containers work, from kernel namespaces to image layers. Complete beginner&#x27;s guide to containerization technology.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-03","dateModified":"2026-07-03","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script></head>
 <body>
 <div id="prog"></div>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   <div class="nav-links">
     <a href="/">Home</a><a href="/news">News</a>
     <a href="/articles/devops/">⚙️ DevOps</a>
@@ -136,7 +140,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 <li>/</li>
 <li><a href="/articles/devops/">Devops</a></li>
 <li>/</li>
-<li>2026 07 03 Docker Works Architecture Containers</li>
+<li>How Docker Works: Architecture &amp;amp; Containers</li>
 </ol>
 </nav>
 

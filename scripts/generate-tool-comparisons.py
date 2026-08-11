@@ -112,7 +112,7 @@ def generate_comparison_page(comp):
     <meta property="og:title" content="{title}">
     <meta property="og:description" content="{comp['description']}">
     <meta property="og:type" content="article">
-    <link rel="canonical" href="https://itvedas.com/ai-tools/comparisons/{slug}/"/>
+    <link rel="canonical" href="https://www.itvedas.com/ai-tools/comparisons/{slug}/"/>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f9f9f9; }}

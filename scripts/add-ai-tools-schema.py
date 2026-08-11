@@ -28,10 +28,10 @@ def add_ai_tools_collection_schema():
             "@type": "CollectionPage",
             "name": "AI Tools & Frameworks Index",
             "description": "Comprehensive index of AI tools, machine learning frameworks, and data engineering platforms",
-            "url": "https://itvedas.com/ai-tools/",
+            "url": "https://www.itvedas.com/ai-tools/",
             "isPartOf": {
                 "@type": "Website",
-                "@id": "https://itvedas.com/"
+                "@id": "https://www.itvedas.com/"
             }
         }
 

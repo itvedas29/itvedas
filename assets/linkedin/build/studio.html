@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ITVedas LinkedIn Asset Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{background:#333;color:#fff;font-family:sans-serif;padding:20px;}
+  .item{margin-bottom:24px;}
+  canvas{border:1px solid #555;max-width:420px;display:block;margin:8px 0;}
+  button{padding:8px 14px;font-size:14px;cursor:pointer;}
+  #status{position:fixed;top:8px;right:8px;background:#000;padding:6px 10px;font-size:12px;}
+</style>
+</head>
+<body>
+<div id="status">loading fonts...</div>
+<div id="items"></div>
+
+<script>
+const NAVY = '#0B2750';
+const NAVY2 = '#1E3A8A';
+const ORANGE = '#FF7A00';
+const SLATE = '#68748D';
+const WHITE = '#FFFFFF';
+const LIGHT = '#F5F7FA';
+
+function rr(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+// --- simple line-icon library (draws centered in a box of size s at x,y = top-left) ---
+function iconNetwork(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=s*0.05; ctx.lineCap='round';
+  const pts=[[x+s*0.5,y+s*0.12],[x+s*0.12,y+s*0.75],[x+s*0.88,y+s*0.75]];
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); ctx.lineTo(pts[1][0],pts[1][1]); ctx.moveTo(pts[0][0],pts[0][1]); ctx.lineTo(pts[2][0],pts[2][1]); ctx.moveTo(pts[1][0],pts[1][1]); ctx.lineTo(pts[2][0],pts[2][1]); ctx.stroke();
+  pts.forEach(p=>{ctx.beginPath(); ctx.arc(p[0],p[1],s*0.09,0,7); ctx.fill();});
+}
+function iconShield(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.lineWidth=s*0.06; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.moveTo(x+s*0.5,y+s*0.08);
+  ctx.lineTo(x+s*0.85,y+s*0.22);
+  ctx.lineTo(x+s*0.85,y+s*0.5);
+  ctx.bezierCurveTo(x+s*0.85,y+s*0.78,x+s*0.68,y+s*0.92,x+s*0.5,y+s*0.95);
+  ctx.bezierCurveTo(x+s*0.32,y+s*0.92,x+s*0.15,y+s*0.78,x+s*0.15,y+s*0.5);
+  ctx.lineTo(x+s*0.15,y+s*0.22);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+s*0.36,y+s*0.5); ctx.lineTo(x+s*0.46,y+s*0.6); ctx.lineTo(x+s*0.66,y+s*0.36); ctx.stroke();
+}
+function iconCloud(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.lineWidth=s*0.055; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.arc(x+s*0.35,y+s*0.55,s*0.2,Math.PI*0.5,Math.PI*1.55);
+  ctx.arc(x+s*0.52,y+s*0.35,s*0.22,Math.PI*1.1,Math.PI*1.95);
+  ctx.arc(x+s*0.68,y+s*0.55,s*0.18,Math.PI*1.35,Math.PI*0.35);
+  ctx.lineTo(x+s*0.35,y+s*0.75);
+  ctx.closePath();
+  ctx.stroke();
+}
+function iconDev(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.lineWidth=s*0.07; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.beginPath();
+  ctx.moveTo(x+s*0.38,y+s*0.22); ctx.lineTo(x+s*0.14,y+s*0.5); ctx.lineTo(x+s*0.38,y+s*0.78);
+  ctx.moveTo(x+s*0.62,y+s*0.22); ctx.lineTo(x+s*0.86,y+s*0.5); ctx.lineTo(x+s*0.62,y+s*0.78);
+  ctx.stroke();
+}
+function iconDevOps(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.lineWidth=s*0.07; ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.arc(x+s*0.35,y+s*0.5,s*0.22,Math.PI*0.4,Math.PI*2.1);
+  ctx.arc(x+s*0.65,y+s*0.5,s*0.22,Math.PI*1.4,Math.PI*1.1);
+  ctx.stroke();
+  ctx.save(); ctx.translate(x+s*0.35+Math.cos(Math.PI*0.4)*s*0.22, y+s*0.5+Math.sin(Math.PI*0.4)*s*0.22);
+  ctx.rotate(Math.PI*0.4); ctx.beginPath(); ctx.moveTo(-s*0.06,-s*0.06); ctx.lineTo(s*0.07,0); ctx.lineTo(-s*0.06,s*0.06); ctx.closePath(); ctx.fillStyle=color; ctx.fill(); ctx.restore();
+}
+function iconServer(ctx,x,y,s,color){
+  ctx.strokeStyle=color; ctx.lineWidth=s*0.055; ctx.fillStyle=color;
+  [0,0.36].forEach(off=>{ rr(ctx,x+s*0.14,y+s*0.16+s*off,s*0.72,s*0.28,s*0.04); ctx.stroke(); ctx.beginPath(); ctx.arc(x+s*0.24,y+s*0.30+s*off,s*0.025,0,7); ctx.fill(); });
+}
+function iconCheck(ctx,cx,cy,r,color){
+  ctx.strokeStyle=color; ctx.lineWidth=r*0.22; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx-r*0.45,cy); ctx.lineTo(cx-r*0.1,cy+r*0.4); ctx.lineTo(cx+r*0.5,cy-r*0.4); ctx.stroke();
+}
+// bars + growth arrow mark, drawn fresh at box (x,y,s) matching the approved geometry
+function drawMark(ctx,x,y,s,barColor,arrowColor){
+  const baseY = y+s*0.86;
+  const bars=[[0.08,0.28,0.72],[0.34,0.30,0.56],[0.60,0.30,0.34]]; // [xFrac,wFrac,topFrac]
+  ctx.fillStyle=barColor;
+  bars.forEach(b=>{
+    const bx=x+s*b[0], bw=s*b[1], by=y+s*b[2];
+    rr(ctx,bx,by,bw,baseY-by,s*0.03); ctx.fill();
+  });
+  ctx.strokeStyle=arrowColor; ctx.lineWidth=s*0.07; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.beginPath();
+  ctx.moveTo(x+s*0.02,y+s*0.72);
+  ctx.bezierCurveTo(x+s*0.25,y+s*0.95,x+s*0.62,y+s*0.90,x+s*0.90,y+s*0.34);
+  ctx.stroke();
+  ctx.save();
+  ctx.translate(x+s*0.90,y+s*0.34);
+  ctx.rotate(-1.15);
+  ctx.fillStyle=arrowColor;
+  ctx.beginPath(); ctx.moveTo(0,-s*0.14); ctx.lineTo(s*0.20,0); ctx.lineTo(0,s*0.14); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function wrapText(ctx,text,x,y,maxWidth,lineHeight,align){
+  const words=text.split(' ');
+  let line=''; const lines=[];
+  for(const w of words){
+    const test=line?line+' '+w:w;
+    if(ctx.measureText(test).width>maxWidth && line){ lines.push(line); line=w; } else line=test;
+  }
+  if(line) lines.push(line);
+  lines.forEach((l,i)=>{ ctx.textAlign=align||'left'; ctx.fillText(l,x,y+i*lineHeight); });
+  return lines.length;
+}
+
+function panelBg(ctx,W,H){
+  ctx.fillStyle=NAVY; ctx.fillRect(0,0,W,H);
+  ctx.save();
+  ctx.globalAlpha=0.5;
+  ctx.fillStyle=NAVY2;
+  ctx.beginPath();
+  ctx.moveTo(W*0.62,0); ctx.lineTo(W,0); ctx.lineTo(W,H*0.55); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function footer(ctx,W,H,logoSize){
+  drawMark(ctx, W*0.045, H-logoSize-H*0.055, logoSize, WHITE, ORANGE);
+  ctx.fillStyle=WHITE; ctx.font='700 '+Math.round(logoSize*0.5)+'px Lexend';
+  ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.fillText('IT', W*0.045+logoSize*1.15, H-logoSize*0.5-H*0.055);
+  const w1=ctx.measureText('IT').width;
+  ctx.fillStyle=ORANGE;
+  ctx.fillText('Vedas', W*0.045+logoSize*1.15+w1, H-logoSize*0.5-H*0.055);
+  ctx.font='500 '+Math.round(logoSize*0.32)+'px Lexend';
+  ctx.fillStyle='rgba(255,255,255,0.75)';
+  ctx.textAlign='right';
+  ctx.fillText('itvedas.com', W*0.955, H-logoSize*0.5-H*0.055);
+}
+
+const assets = [];
+
+// 1 & 2: profile logo squares (direct resize of the approved source lockup)
+function makeLogo(size, filename){
+  assets.push({filename, w:size, h:size, draw:(ctx,W,H)=>new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{ ctx.drawImage(img,0,0,W,H); res(); };
+    img.src='/assets/linkedin/source/profile-photo-800.jpg';
+  })});
+}
+makeLogo(300,'company-profile-logo.png');
+makeLogo(600,'company-profile-logo@2x.png');
+
+// 3: company banner 1584x396
+assets.push({filename:'company-banner.png', w:1584, h:396, draw:(ctx,W,H)=>{
+  panelBg(ctx,W,H);
+  drawMark(ctx, W*0.045, H*0.08, H*0.28, WHITE, ORANGE);
+  ctx.fillStyle=WHITE; ctx.textBaseline='alphabetic';
+  ctx.font='800 50px Lexend'; ctx.textAlign='left';
+  ctx.fillText('IT KNOWLEDGE.', W*0.045, H*0.46);
+  ctx.fillText('PRACTICAL TOOLS.', W*0.045, H*0.46+54);
+  ctx.fillStyle=ORANGE;
+  ctx.fillText('REAL GROWTH.', W*0.045, H*0.46+108);
+  ctx.font='600 22px Lexend'; ctx.fillStyle='rgba(255,255,255,0.75)';
+  ctx.fillText('Learn IT.  |  Solve IT.  |  Grow IT.', W*0.045, H*0.46+146);
+
+  const icons=[iconNetwork,iconShield,iconCloud,iconDev,iconDevOps,iconServer];
+  const iconSize=58, gap=90, startX=W*0.63, startY=H*0.28;
+  icons.forEach((fn,i)=>{
+    const cx = startX + (i%3)*gap*1.6;
+    const cy = startY + Math.floor(i/3)*gap*1.6;
+    ctx.globalAlpha=0.6;
+    fn(ctx,cx,cy,iconSize, i%2? ORANGE: 'rgba(255,255,255,0.55)');
+    ctx.globalAlpha=1;
+  });
+}});
+
+// 4: personal banner 1584x396 (no name/photo, subtle mark)
+assets.push({filename:'personal-banner.png', w:1584, h:396, draw:(ctx,W,H)=>{
+  ctx.fillStyle=NAVY; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.globalAlpha=0.08;
+  for(let i=0;i<6;i++){ ctx.strokeStyle=WHITE; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(W*0.5+i*70,0); ctx.lineTo(W*0.5+i*70-160,H); ctx.stroke(); }
+  ctx.restore();
+  drawMark(ctx, W*0.045, H*0.30, H*0.34, WHITE, ORANGE);
+  ctx.fillStyle=WHITE; ctx.font='800 40px Lexend'; ctx.textAlign='left';
+  ctx.fillText('IT KNOWLEDGE.  PRACTICAL TOOLS.', W*0.045, H*0.86);
+  ctx.fillStyle=ORANGE;
+  ctx.font='700 26px Lexend';
+  ctx.fillText('Learn IT.  |  Solve IT.  |  Grow IT.', W*0.045, H*0.94+8);
+}});
+
+// posts 1080x1080
+function postBase(ctx,W,H){ panelBg(ctx,W,H); }
+
+assets.push({filename:'post-01-launch.png', w:1080, h:1080, draw:(ctx,W,H)=>new Promise(res=>{
+  postBase(ctx,W,H);
+  const img=new Image();
+  img.onload=()=>{
+    const s=W*0.34;
+    ctx.drawImage(img, W/2-s/2, H*0.16, s, s);
+    ctx.fillStyle=WHITE; ctx.textAlign='center'; ctx.font='800 56px Lexend';
+    ctx.fillText('INTRODUCING', W/2, H*0.62);
+    ctx.fillStyle=ORANGE;
+    ctx.fillText('ITVedas', W/2, H*0.62+66);
+    ctx.font='600 28px Lexend'; ctx.fillStyle='rgba(255,255,255,0.75)';
+    wrapText(ctx,'Practical IT tools, guides and resources — all in one place.', W/2, H*0.62+120, W*0.7, 36, 'center');
+    res();
+  };
+  img.src='/assets/linkedin/source/profile-photo-800.jpg';
+})});
+
+assets.push({filename:'post-02-ip-address.png', w:1080, h:1080, draw:(ctx,W,H)=>{
+  postBase(ctx,W,H);
+  ctx.fillStyle=WHITE; ctx.textAlign='center'; ctx.font='800 46px Lexend';
+  wrapText(ctx,'YOUR DEVICE HAS AN ADDRESS.', W/2, H*0.10, W*0.85, 54, 'center');
+  ctx.fillStyle=ORANGE; ctx.font='600 28px Lexend';
+  ctx.fillText('DO YOU KNOW WHAT IT IS?', W/2, H*0.205);
+
+  ctx.fillStyle=WHITE; ctx.font='800 54px Lexend';
+  ctx.fillText('IP ADDRESS', W/2, H*0.30);
+  ctx.fillStyle=ORANGE; ctx.font='800 54px Lexend';
+  ctx.fillText('EXPLAINED', W/2, H*0.30+58);
+
+  // vertical flow: Device -> IP Address -> Network -> Internet
+  const steps=[['Device','rgba(255,255,255,0.55)',false],['IP Address',ORANGE,true],['Network','rgba(255,255,255,0.55)',false],['Internet','rgba(255,255,255,0.55)',false]];
+  const boxW=340, boxH=70, gap=26, startY=H*0.42;
+  steps.forEach((s,i)=>{
+    const y=startY+i*(boxH+gap);
+    const x=W/2-boxW/2;
+    ctx.lineWidth=3;
+    if(s[2]){ ctx.fillStyle=s[1]; rr(ctx,x,y,boxW,boxH,14); ctx.fill(); ctx.fillStyle=NAVY; }
+    else { ctx.strokeStyle=s[1]; rr(ctx,x,y,boxW,boxH,14); ctx.stroke(); ctx.fillStyle=WHITE; }
+    ctx.font='700 26px Lexend'; ctx.textAlign='center';
+    ctx.fillText(s[0], W/2, y+boxH/2+9);
+    if(i<steps.length-1){
+      const ax=W/2, ay1=y+boxH, ay2=y+boxH+gap;
+      ctx.strokeStyle=ORANGE; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(ax,ay1); ctx.lineTo(ax,ay2-2); ctx.stroke();
+      ctx.fillStyle=ORANGE; ctx.beginPath(); ctx.moveTo(ax-9,ay2-12); ctx.lineTo(ax,ay2+2); ctx.lineTo(ax+9,ay2-12); ctx.closePath(); ctx.fill();
+    }
+  });
+
+  const supportY = startY + steps.length*(boxH+gap) + 6;
+  ctx.font='500 22px Lexend'; ctx.fillStyle='rgba(255,255,255,0.75)'; ctx.textAlign='center';
+  wrapText(ctx,'Your IP helps networks know where to send data.', W/2, supportY, W*0.78, 28, 'center');
+
+  const ctaY = supportY + 54;
+  ctx.font='800 24px Lexend'; ctx.fillStyle=WHITE; ctx.textAlign='center';
+  ctx.fillText('CHECK YOUR IP', W/2, ctaY);
+  ctx.font='700 26px Lexend'; ctx.fillStyle=ORANGE;
+  ctx.fillText('itvedas.com/tools/ip-address-checker', W/2, ctaY+34);
+
+  // footer: mark + ITVedas + full tagline (per spec, overrides the shared footer())
+  const fy = H*0.955;
+  drawMark(ctx, W*0.045, fy-40, 34, WHITE, ORANGE);
+  ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.font='700 20px Lexend'; ctx.fillStyle=WHITE;
+  ctx.fillText('IT', W*0.045+44, fy-23);
+  const fw1=ctx.measureText('IT').width;
+  ctx.fillStyle=ORANGE;
+  ctx.fillText('Vedas', W*0.045+44+fw1, fy-23);
+  ctx.font='500 15px Lexend'; ctx.fillStyle='rgba(255,255,255,0.75)';
+  ctx.fillText('Learn IT.  |  Solve IT.  |  Grow IT.', W*0.045, fy+2);
+}});
+
+assets.push({filename:'post-03-free-it-tools.png', w:1080, h:1080, draw:(ctx,W,H)=>{
+  postBase(ctx,W,H);
+  ctx.fillStyle=ORANGE; ctx.textAlign='center'; ctx.font='800 140px Lexend';
+  ctx.fillText('10', W/2, H*0.30);
+  ctx.fillStyle=WHITE; ctx.font='800 44px Lexend';
+  wrapText(ctx,'FREE IT TOOLS YOU CAN USE TODAY', W/2, H*0.38, W*0.8, 50, 'center');
+
+  const icons=[iconNetwork,iconShield,iconCloud,iconDev,iconServer,iconDevOps];
+  const cols=3, size=90, gapX=W*0.26, gapY=170, startX=W*0.24, startY=H*0.56;
+  icons.forEach((fn,i)=>{
+    const cx=startX+(i%cols)*gapX, cy=startY+Math.floor(i/cols)*gapY;
+    ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.beginPath(); ctx.arc(cx,cy,size*0.62,0,7); ctx.fill();
+    fn(ctx,cx-size*0.4,cy-size*0.4,size*0.8,'rgba(255,255,255,0.75)');
+  });
+}});
+
+assets.push({filename:'post-04-cybersecurity.png', w:1080, h:1080, draw:(ctx,W,H)=>{
+  postBase(ctx,W,H);
+  ctx.fillStyle=WHITE; ctx.textAlign='center'; ctx.font='800 42px Lexend';
+  wrapText(ctx,'7 CYBERSECURITY CHECKS EVERYONE SHOULD KNOW', W/2, H*0.13, W*0.8, 50, 'center');
+
+  const items=['Turn on multi-factor authentication','Keep software & OS updated','Use a password manager','Back up important data regularly','Verify links before clicking'];
+  const startY=H*0.36, lineH=88;
+  items.forEach((t,i)=>{
+    const y=startY+i*lineH;
+    iconCheck(ctx, W*0.14, y, 22, ORANGE);
+    ctx.fillStyle=WHITE; ctx.font='600 28px Lexend'; ctx.textAlign='left';
+    ctx.fillText(t, W*0.21, y+9);
+  });
+}});
+
+assets.push({filename:'post-05-dns.png', w:1080, h:1080, draw:(ctx,W,H)=>{
+  postBase(ctx,W,H);
+  ctx.fillStyle=WHITE; ctx.textAlign='center'; ctx.font='800 48px Lexend';
+  ctx.fillText('DNS EXPLAINED', W/2, H*0.16);
+  ctx.fillStyle=ORANGE; ctx.font='600 28px Lexend';
+  ctx.fillText('in simple terms', W/2, H*0.22);
+
+  const steps=[['yourwebsite.com','rgba(255,255,255,0.55)'],['DNS Server','rgba(255,255,255,0.55)'],['192.0.2.1',ORANGE]];
+  const y=H*0.5, boxW=260, boxH=90, gap=40;
+  let totalW = boxW*3+gap*2, startX=W/2-totalW/2;
+  steps.forEach((s,i)=>{
+    const x=startX+i*(boxW+gap);
+    ctx.strokeStyle=s[1]; ctx.lineWidth=3; ctx.fillStyle= i===2? ORANGE : 'rgba(255,255,255,0.04)';
+    rr(ctx,x,y,boxW,boxH,14); ctx.fill(); ctx.stroke();
+    ctx.fillStyle= i===2? NAVY : WHITE; ctx.font='700 24px Lexend'; ctx.textAlign='center';
+    ctx.fillText(s[0], x+boxW/2, y+boxH/2+8);
+    if(i<2){
+      ctx.strokeStyle=ORANGE; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(x+boxW,y+boxH/2); ctx.lineTo(x+boxW+gap,y+boxH/2); ctx.stroke();
+      ctx.fillStyle=ORANGE; ctx.beginPath(); ctx.moveTo(x+boxW+gap-10,y+boxH/2-9); ctx.lineTo(x+boxW+gap+4,y+boxH/2); ctx.lineTo(x+boxW+gap-10,y+boxH/2+9); ctx.closePath(); ctx.fill();
+    }
+  });
+  ctx.font='500 26px Lexend'; ctx.fillStyle='rgba(255,255,255,0.75)'; ctx.textAlign='center';
+  wrapText(ctx,'DNS turns the names we type into the numbers computers use.', W/2, H*0.68, W*0.75, 34, 'center');
+}});
+
+async function run(){
+  await document.fonts.load('800 56px Lexend');
+  await document.fonts.load('700 26px Lexend');
+  await document.fonts.load('600 28px Lexend');
+  await document.fonts.ready;
+  const container = document.getElementById('items');
+  for(const a of assets){
+    const div = document.createElement('div'); div.className='item';
+    const label = document.createElement('div'); label.textContent = a.filename+' ('+a.w+'x'+a.h+')';
+    const canvas = document.createElement('canvas'); canvas.width=a.w; canvas.height=a.h;
+    canvas.style.width = Math.min(420,a.w)+'px';
+    const btn = document.createElement('button'); btn.textContent='Download '+a.filename; btn.id='dl-'+a.filename;
+    const ctx = canvas.getContext('2d');
+    if(!a.footer===false){}
+    await a.draw(ctx,a.w,a.h);
+    if(a.filename.startsWith('post-') || a.filename.includes('banner')){
+      // footer branding already drawn inside banner draws; posts get a small footer mark too
+    }
+    if(a.filename.startsWith('post-0') && a.filename!=='post-02-ip-address.png'){
+      footer(ctx,a.w,a.h,44);
+    }
+    btn.onclick=()=>{
+      canvas.toBlob(blob=>{
+        const url=URL.createObjectURL(blob);
+        const link=document.createElement('a');
+        link.href=url; link.download=a.filename;
+        document.body.appendChild(link); link.click(); link.remove();
+      },'image/png');
+    };
+    div.appendChild(label); div.appendChild(canvas); div.appendChild(btn);
+    container.appendChild(div);
+  }
+  document.getElementById('status').textContent='ready: '+assets.length+' assets';
+}
+run();
+</script>
+</body>
+</html>

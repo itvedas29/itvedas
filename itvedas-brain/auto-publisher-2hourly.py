@@ -212,13 +212,13 @@ Article category: {topic['category']}
 <title>{keyword.title()} - Complete Guide 2026 | ITVedas</title>
 <meta name="description" content="Learn {keyword} in plain English. Step-by-step guide with examples, best practices, and real-world applications. Updated {timestamp}.">
 <meta name="keywords" content="{keyword}, IT education, {topic['category']}, beginner guide">
-<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
-<link rel="canonical" href="https://itvedas.com/articles/auto-generated/{slug}.html">
-<link rel="alternate" hreflang="x-default" href="https://itvedas.com/articles/auto-generated/{slug}.html">
-<link rel="alternate" hreflang="en-US" href="https://itvedas.com/articles/auto-generated/{slug}.html">
-<link rel="alternate" hreflang="en-GB" href="https://itvedas.com/articles/auto-generated/{slug}.html">
-<link rel="alternate" hreflang="en-IN" href="https://itvedas.com/articles/auto-generated/{slug}.html">
-<link rel="alternate" hreflang="en" href="https://itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="canonical" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+<link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
 <style>
 :root{{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--accent:#FF6B35;}}
 *{{box-sizing:border-box;margin:0;padding:0;}}

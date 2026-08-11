@@ -80,7 +80,7 @@ def add_schema_to_file(file_path, is_news=False):
             "headline": title,
             "description": description,
             "url": url,
-            "image": "https://www.itvedas.com/logo.png",
+            "image": "https://www.itvedas.com/assets/brand/itvedas-logo.svg",
             "author": {
                 "@type": "Organization",
                 "name": "ITVedas"
@@ -90,7 +90,7 @@ def add_schema_to_file(file_path, is_news=False):
                 "name": "ITVedas",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.itvedas.com/logo.png"
+                    "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
                 }
             },
             "datePublished": "2026-07-17T00:00:00Z",
@@ -113,7 +113,7 @@ def add_schema_to_file(file_path, is_news=False):
                 "name": "ITVedas",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.itvedas.com/logo.png"
+                    "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
                 }
             },
             "datePublished": "2026-07-17T00:00:00Z",

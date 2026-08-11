@@ -209,6 +209,7 @@ def render_page(items, page_num, total_pages):
 <meta name="description" content="Full archive of ITVedas original IT and cybersecurity news coverage, page {page_num} of {total_pages}.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{canonical}">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
 <title>News Archive — Page {page_num} | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -218,7 +219,7 @@ def render_page(items, page_num, total_pages):
 </head>
 <body>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   {NAV_MEGA_HTML}
 </nav>
 <div class="main">

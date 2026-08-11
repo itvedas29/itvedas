@@ -12,7 +12,7 @@ import re
 from html.parser import HTMLParser
 
 ROOT = pathlib.Path(".")
-SITE_URL = "https://itvedas.com"
+SITE_URL = "https://www.itvedas.com"
 
 def truncate_description(desc, max_len=160, min_len=100):
     """Truncate description to optimal length."""

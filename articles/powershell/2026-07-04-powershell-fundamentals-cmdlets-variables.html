@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
   <meta name="description" content="Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.">
   <meta name="robots" content="index,follow">
   <meta property="og:title" content="PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas">
   <meta property="og:description" content="Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.">
   <meta property="og:type" content="article">
   <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://www.itvedas.com/articles/powershell/powershell-fundamentals-cmdlets-variables"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/articles/powershell/2026-07-04-powershell-fundamentals-cmdlets-variables"><meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">>
@@ -25,24 +29,24 @@
   <title>PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas</title>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "PowerShell Fundamentals: Cmdlets, Variables & Piping", "description": "Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types.", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#EEF3FC;--bg2:#FFFFFF;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#6366F1;--border:rgba(24,34,56,0.12);--r:12px;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+    .logo{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
     .nav-links{display:flex;gap:1.5rem;}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
     .hero{padding:8rem 2rem 2.5rem;max-width:860px;margin:0 auto;}
     .breadcrumb{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;}
     .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
-    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero h1{font-family:'Lexend',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
     .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
     .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;}
-    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;}
-    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art h2{font-family:'Lexend',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;}
+    .art h3{font-family:'Lexend',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
     .art p{color:var(--sub);margin-bottom:1.25rem;}
     .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
     .art li{margin-bottom:.4rem;}
@@ -71,10 +75,10 @@
     @media(max-width:768px){nav{padding:0 1.25rem;}.nav-links{display:none;}.hero{padding-left:1.25rem;padding-right:1.25rem;}.wrap{padding-left:1.25rem;padding-right:1.25rem;}}
   </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Powershell","item":"https://www.itvedas.com/articles/powershell/"},{"position":3,"@type":"ListItem","name":"2026 07 04 Powershell Fundamentals Cmdlets Variables","item":"https://www.itvedas.com/articles/powershell/2026-07-04-powershell-fundamentals-cmdlets-variables"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Powershell","item":"https://www.itvedas.com/articles/powershell/"},{"position":3,"@type":"ListItem","name":"PowerShell Fundamentals: Cmdlets, Variables & Piping","item":"https://www.itvedas.com/articles/powershell/2026-07-04-powershell-fundamentals-cmdlets-variables"}]}</script>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas","description":"Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas","description":"Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas","description":"Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PowerShell Fundamentals: Cmdlets, Variables & Piping | IT Vedas","description":"Master PowerShell fundamentals. Learn cmdlets, variables, piping, and data types. Essential foundation for Windows Server automation.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 </head>
 <body>
@@ -99,7 +103,7 @@
 <li>/</li>
 <li><a href="/articles/powershell/">Powershell</a></li>
 <li>/</li>
-<li>2026 07 04 Powershell Fundamentals Cmdlets Variables</li>
+<li>PowerShell Fundamentals: Cmdlets, Variables &amp; Piping</li>
 </ol>
 </nav>
 
@@ -268,7 +272,7 @@ Get-Command *service*</code></pre>
 </div>
 
 <footer>
-  <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;">IT<span style="color:#FF6B35;">Vedas</span></div>
+  <div style="font-family:'Lexend',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;">IT<span style="color:#FF6B35;">Vedas</span></div>
   <div style="display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;">
     <a href="/articles/powershell/" style="color:var(--muted);text-decoration:none;">PowerShell Hub</a>
     <a href="/#chapters" style="color:var(--muted);text-decoration:none;">All Chapters</a>
