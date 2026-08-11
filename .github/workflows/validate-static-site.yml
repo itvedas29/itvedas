@@ -27,10 +27,11 @@ jobs:
         run: python3 scripts/generate-sitemap.py
       - name: Regenerate search index
         run: python3 scripts/generate-search-index.py
-      - name: Validate JSON files
+      - name: Validate JSON and CVE schema
         run: |
           python -m json.tool search-index.json > /tmp/search-index.json
           python -m json.tool cve-database-full.json > /tmp/cve.json
+          python3 scripts/validate-cve-schema.py
       - name: Run security checks
         run: bash scripts/security-check.sh
       - name: Check JavaScript syntax
