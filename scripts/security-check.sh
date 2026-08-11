@@ -1,46 +1,58 @@
 #!/bin/bash
-# Security validation for ITVedas
-# Run this as part of CI/CD to catch actionable security issues.
+# Security validation for ITVedas.
 set -euo pipefail
 
 echo "=== ITVedas Security Check ==="
 
-# Check for hardcoded secrets. Match assignment-like patterns and ignore
-# documentation/examples so normal words such as "token" do not fail CI.
-echo "Checking for hardcoded secrets..."
-secret_hits=$(grep -RniE --include='*.html' --include='*.js' --include='*.py' \
-  "(password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)[[:space:]]*[:=][[:space:]]*[\"']?[A-Za-z0-9_./+=-]{12,}" \
-  . 2>/dev/null \
-  | grep -vE '(^|/)(node_modules|\.git)(/|$)|\.env\.example|security-check\.sh' \
-  || true)
+python3 - <<'PY'
+from pathlib import Path
+import re, sys
 
-if [ -n "$secret_hits" ]; then
-    echo "Potential hardcoded secrets found:"
-    echo "$secret_hits"
-    exit 1
+secret_pattern = re.compile(r"(?:password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token)\s*[:=]\s*['\"]?([A-Za-z0-9_./+=-]{12,})", re.I)
+files=[]
+for root in (Path('.'),):
+    for p in root.rglob('*'):
+        if not p.is_file() or '.git' in p.parts or 'node_modules' in p.parts:
+            continue
+        if p.suffix.lower() in {'.html','.js','.py','.json','.yml','.yaml','.toml','.sh'}:
+            files.append(p)
+hits=[]
+for p in files:
+    try: text=p.read_text(encoding='utf-8',errors='ignore')
+    except Exception: continue
+    if p.name == 'security-check.sh' or p.name.endswith('.example'): continue
+    for line_no,line in enumerate(text.splitlines(),1):
+        if secret_pattern.search(line) and not any(x in line.lower() for x in ('your_api_key','example','placeholder','changeme')):
+            hits.append(f'{p}:{line_no}')
+if hits:
+    print('Potential hardcoded secrets found:')
+    print('\n'.join(hits[:50]))
+    sys.exit(1)
+print('✓ No hardcoded secrets detected')
+PY
+
+echo "Checking dangerous DOM/eval patterns..."
+python3 - <<'PY'
+from pathlib import Path
+import re
+patterns=re.compile(r'innerHTML|outerHTML|document\.write|eval\(',re.I)
+hits=[]
+for p in Path('.').rglob('*'):
+    if p.is_file() and p.suffix.lower() in {'.html','.js'} and '.git' not in p.parts:
+        try:
+            for n,line in enumerate(p.read_text(encoding='utf-8',errors='ignore').splitlines(),1):
+                if patterns.search(line): hits.append(f'{p}:{n}')
+        except Exception: pass
+if hits:
+    print('⚠️ Potentially dangerous patterns require review:')
+    print('\n'.join(hits[:100]))
+else:
+    print('✓ No dangerous DOM/eval patterns detected')
+PY
+
+if [ -f package.json ]; then
+  echo "Checking dependencies..."
+  npm audit --omit=dev
 fi
 
-echo "✓ No hardcoded secrets detected"
-
-# Report dangerous DOM/eval patterns for review, but do not fail merely because
-# a safe, reviewed sanitizer or compatibility path legitimately uses them.
-echo "Checking for dangerous patterns in HTML/JS..."
-dangerous_hits=$(grep -RniE --include='*.js' --include='*.html' '(innerHTML|outerHTML|document\.write|eval\()' . 2>/dev/null \
-  | grep -vE '(^|/)(node_modules|\.git)(/|$)' \
-  || true)
-
-if [ -n "$dangerous_hits" ]; then
-    echo "⚠️  Potentially dangerous patterns require review:"
-    echo "$dangerous_hits"
-else
-    echo "✓ No dangerous DOM/eval patterns detected"
-fi
-
-# Check dependency versions if package.json exists.
-if [ -f "package.json" ]; then
-    echo "Checking dependencies..."
-    npm audit --omit=dev
-fi
-
-echo ""
 echo "✓ Security check complete"
