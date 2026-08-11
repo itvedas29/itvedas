@@ -49,43 +49,21 @@
   --ease-out:cubic-bezier(0.22,1,0.36,1);
 }
 
-:root[data-theme="dark"]{
-  --navy:#020617;
-  --bg:#0B1220;
-  --bg2:#111C2E;
-  --bg3:#16233A;
-  --text:#F1F5F9;
-  --muted:#94A8C0;
-  --sub:#CBD5E1;
-  --accent:#38BDF8;
-  --accent2:#0EA5E9;
-  --accent-light:rgba(56,189,248,0.14);
-  --on-accent:#04121F;
-  --success:#34D399;
-  --warning:#FBBF24;
-  --border:rgba(226,232,240,0.14);
-  --border-strong:rgba(226,232,240,0.24);
-}
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --navy:#020617;
-    --bg:#0B1220;
-    --bg2:#111C2E;
-    --bg3:#16233A;
-    --text:#F1F5F9;
-    --muted:#94A8C0;
-    --sub:#CBD5E1;
-    --accent:#38BDF8;
-    --accent2:#0EA5E9;
-    --accent-light:rgba(56,189,248,0.14);
-    --on-accent:#04121F;
-    --success:#34D399;
-    --warning:#FBBF24;
-    --border:rgba(226,232,240,0.14);
-    --border-strong:rgba(226,232,240,0.24);
-  }
-}
+/* Light-only, deliberately: the site has no theme toggle anywhere, so the
+   previous @media (prefers-color-scheme: dark) block wasn't a real dark
+   MODE — it was an invisible, uncontrollable override that silently swapped
+   every visitor with a dark OS/browser preference onto a navy background,
+   with no on-page way to tell that was happening or switch back. On the
+   pages.dev deployment this made the pure-white change above appear not to
+   have taken effect at all: real Chrome, tested with computer-use rather
+   than the emulated pane, showed the old navy/blue theme purely because the
+   browser's OS-level preference was dark — confirmed via
+   matchMedia('(prefers-color-scheme: dark)').matches === true on that tab,
+   with the CSS file itself already serving the updated, cache-busted white
+   tokens. Removed rather than gated behind a toggle: a toggle is a real
+   feature to design and build, not a one-line fix, and nothing here asked
+   for one. If dark mode is wanted later, reintroduce it deliberately with a
+   visible switch, not as a silent OS-driven override. */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -121,7 +99,6 @@ section{padding:5rem 0;}
 .site-nav .container{display:flex;align-items:center;justify-content:space-between;width:100%;}
 .brand{display:flex;align-items:center;gap:0.55rem;text-decoration:none;font-family:var(--fd);font-weight:700;font-size:1.15rem;color:var(--text);}
 .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.85rem;font-weight:700;flex-shrink:0;}
-:root[data-theme="dark"] .brand-mark{background:var(--accent);color:var(--navy);}
 .brand small{display:block;font-family:var(--fb);font-weight:500;font-size:0.62rem;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;}
 .nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none;}
 .nav-links a{text-decoration:none;color:var(--sub);font-size:0.92rem;font-weight:500;transition:color .15s;}
