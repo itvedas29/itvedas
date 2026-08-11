@@ -74,7 +74,27 @@ export function randomToken() {
 
 // --- password hashing (PBKDF2-SHA256, WebCrypto only — no deps) ------------
 
-const PBKDF2_ITERATIONS = 210000;
+// 100,000 is the HARD CEILING imposed by the Cloudflare Workers runtime, not a
+// tuning choice. This was 210,000; every login and the admin bootstrap threw
+//
+//   NotSupportedError: Pbkdf2 failed: iteration counts above 100000 are not
+//   supported (requested 210000)
+//
+// and returned HTTP 500. Local `wrangler dev` does NOT enforce the cap, so it
+// only surfaced against real infrastructure. Do not raise this value — it will
+// break authentication in production while continuing to pass locally.
+//
+// 100k is below OWASP's current PBKDF2-SHA256 guidance (600k). Since the
+// platform forbids reaching that, the compensating controls are: login is rate
+// limited to 10 attempts per 15 minutes per IP, accounts are few and operator-
+// created, and passwords are long random strings rather than user-chosen. If
+// stronger stretching is ever needed, chain several deriveBits passes (each
+// under the cap) rather than raising this constant.
+//
+// verifyPassword reads the iteration count out of the stored hash, so existing
+// hashes at any count keep verifying and a future change stays backward
+// compatible.
+const PBKDF2_ITERATIONS = 100000;
 
 function b64encode(buf) {
   return btoa(String.fromCharCode(...new Uint8Array(buf)));
@@ -82,6 +102,25 @@ function b64encode(buf) {
 function b64decode(str) {
   return Uint8Array.from(atob(str), c => c.charCodeAt(0));
 }
+
+// A syntactically-valid hash that verifyPassword will run a real PBKDF2
+// comparison against and correctly reject, used as the comparison target for
+// logins against an email that doesn't exist — so "wrong password" and
+// "no such user" cost the same CPU time and return the same response,
+// closing the timing side-channel that would otherwise let an attacker
+// enumerate valid admin emails.
+//
+// Built from PBKDF2_ITERATIONS rather than a hand-written literal: a hand-
+// written copy is exactly what went stale here before. This constant was
+// hardcoded at 210000 in login.js while PBKDF2_ITERATIONS was corrected to
+// 100000 elsewhere, so it kept exceeding the Workers PBKDF2 cap — meaning
+// every login attempt against an unregistered email threw NotSupportedError
+// and returned 500 instead of 401. Confirmed in production: 6 consecutive
+// failed logins against a nonexistent address returned 500 before the rate
+// limiter's 429 ever engaged. Deriving it from the constant makes that class
+// of drift impossible.
+export const DUMMY_PASSWORD_HASH =
+  `pbkdf2$${PBKDF2_ITERATIONS}$AAAAAAAAAAAAAAAAAAAAAA==$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=`;
 
 export async function hashPassword(password, saltBytes) {
   const salt = saltBytes || crypto.getRandomValues(new Uint8Array(16));

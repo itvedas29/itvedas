@@ -1,6 +1,6 @@
 // POST /api/admin/login — admin authentication.
 
-import { json, clean, isValidEmail, verifyPassword, checkRateLimit, clientIp } from '../../_lib.js';
+import { json, clean, isValidEmail, verifyPassword, checkRateLimit, clientIp, DUMMY_PASSWORD_HASH } from '../../_lib.js';
 import { createSession, sessionCookie } from '../../_auth.js';
 
 export async function onRequestPost(context) {
@@ -40,8 +40,7 @@ export async function onRequestPost(context) {
   // Same generic message and a real hash comparison either way — a fast
   // "no such user" path would let an attacker enumerate valid admin emails
   // by response timing.
-  const storedHash = user?.password_hash
-    || 'pbkdf2$210000$AAAAAAAAAAAAAAAAAAAAAA==$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+  const storedHash = user?.password_hash || DUMMY_PASSWORD_HASH;
   const passwordOk = await verifyPassword(password, storedHash);
 
   if (!user || !user.is_active || !passwordOk) {

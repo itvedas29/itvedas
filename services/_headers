@@ -8,6 +8,14 @@
 # style-src needs 'unsafe-inline' because pages carry per-page <style> blocks
 # and a few inline style attributes; fonts.googleapis.com serves the font CSS.
 
+# Cloudflare Pages COMBINES the headers from every matching rule rather than
+# letting the most specific one win, and joins duplicate names with a comma.
+# So a Cache-Control here on /* is not overridden by /admin/* — the admin UI
+# was served `public, max-age=3600, must-revalidate, private, no-store,
+# must-revalidate`, i.e. "public" and "no-store" in the same header, on pages
+# carrying customer PII. Cache-Control is therefore set ONLY in the specific
+# path rules below, never on /*.
+
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://itvedas.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -15,7 +23,6 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
-  Cache-Control: public, max-age=3600, must-revalidate
 
 # The admin UI and every API response must never be cached by a shared cache —
 # these carry customer PII.
@@ -31,3 +38,14 @@
 
 /js/*
   Cache-Control: public, max-age=86400
+
+# HTML pages. Listed individually rather than on /* so that the rule above
+# stays the only Cache-Control an /admin or /api request can match.
+/
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/services/*
+  Cache-Control: public, max-age=3600, must-revalidate

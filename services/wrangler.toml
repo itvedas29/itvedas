@@ -17,25 +17,35 @@ compatibility_date = "2026-08-01"
 enabled = true
 
 # --- bindings --------------------------------------------------------------
-# database_id / id values below are placeholders. Replace them with the real
-# IDs printed by `wrangler d1 create` / `kv namespace create` before the first
-# production deploy, or set the same bindings in the Pages dashboard instead.
+# Real resource IDs, created 2026-08-10 in the "IT Vedas" Cloudflare account.
+# These IDs are account-scoped identifiers, not secrets — they are safe in git.
+# The binding NAMES must stay as they are: the Functions code reads env.DB,
+# env.RATE_LIMIT and env.ATTACHMENTS, not the names wrangler suggests on
+# creation (which derive from the resource name).
 
 [[d1_databases]]
 binding = "DB"
 database_name = "itvedas-services"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "2a99624b-d574-440c-a575-03cb7dbb8d83"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "c17e478324984ce4a95d167ceef47e70"
 
 [[r2_buckets]]
 binding = "ATTACHMENTS"
 bucket_name = "itvedas-services-attachments"
 
-# Secrets (RESEND_API_KEY, ADMIN_BOOTSTRAP_TOKEN) are NOT set here — they are
-# set with `wrangler pages secret put` or in the dashboard. Non-secret vars:
-[vars]
-EMAIL_FROM = ""
-ADMIN_NOTIFY_EMAIL = ""
+# Runtime configuration is set entirely with `wrangler pages secret put`, not
+# here:
+#
+#   RESEND_API_KEY         email provider key
+#   EMAIL_FROM             verified sender address
+#   ADMIN_NOTIFY_EMAIL     inbox for new-requirement alerts
+#   ADMIN_BOOTSTRAP_TOKEN  temporary, removed after the first admin exists
+#
+# There is deliberately no [vars] block. A name declared here AND set as a
+# secret is a duplicate binding, and the deploy fails with "Binding name
+# already in use" — which is exactly what happened on the first attempt.
+# Keeping all four in one place (secrets) also keeps the notification address
+# out of a public repository.
