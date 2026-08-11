@@ -24,11 +24,13 @@ const CHAPTER_LABELS = {
   compliance: "IT Compliance & Risk"
 };
 
+const RATE_LIMIT_WINDOW_SECONDS = 600;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  // Basic origin check — not a security boundary, just reduces casual abuse
-  // from random hotlinking. Update this to your actual domain.
+  // Basic origin check — not a security boundary, but useful against casual hotlinking.
   const origin = request.headers.get("Origin") || "";
   const allowedOrigins = [
     "https://itvedas.com",
@@ -43,6 +45,20 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Origin not allowed" }, 403);
   }
 
+  // Best-effort edge rate limiting. Configure RATE_LIMIT_KV as a KV namespace
+  // binding for durable enforcement. Without the binding, request validation
+  // still applies, but the function intentionally remains fail-open for local
+  // development and deployments that have not yet added the binding.
+  const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (env.RATE_LIMIT_KV && clientIp !== "unknown") {
+    const allowed = await checkRateLimit(env.RATE_LIMIT_KV, clientIp);
+    if (!allowed) {
+      return jsonResponse({ error: "Too many requests. Please try again later." }, 429, {
+        "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS)
+      });
+    }
+  }
+
   let body;
   try {
     body = await request.json();
@@ -51,15 +67,19 @@ export async function onRequestPost(context) {
   }
 
   const answers = body && typeof body === "object" ? body.answers : undefined;
-  if (!Array.isArray(answers) || answers.length === 0) {
-    return jsonResponse({ error: "Missing answers array" }, 400);
+  if (!Array.isArray(answers) || answers.length === 0 || answers.length > 20) {
+    return jsonResponse({ error: "Invalid answers array" }, 400);
   }
   if (answers.some(a => !a || typeof a !== "object")) {
     return jsonResponse({ error: "Invalid answers array" }, 400);
   }
 
-  // Cap input size defensively — prevents abuse via huge payloads driving up cost
-  const totalChars = answers.reduce((sum, a) => sum + (a.question?.length || 0) + (a.answer?.length || 0), 0);
+  // Cap input size defensively — prevents abuse via huge payloads driving up cost.
+  const totalChars = answers.reduce((sum, a) => {
+    const question = typeof a.question === "string" ? a.question : "";
+    const answer = typeof a.answer === "string" ? a.answer : "";
+    return sum + question.length + answer.length;
+  }, 0);
   if (totalChars > 6000) {
     return jsonResponse({ error: "Answers payload too large" }, 400);
   }
@@ -70,7 +90,7 @@ export async function onRequestPost(context) {
   }
 
   const formattedQA = answers
-    .map((a, i) => `Q${i + 1}: ${a.question}\nA${i + 1}: ${a.answer}`)
+    .map((a, i) => `Q${i + 1}: ${String(a.question || "").slice(0, 500)}\nA${i + 1}: ${String(a.answer || "").slice(0, 1000)}`)
     .join("\n\n");
 
   const systemPrompt = `You are the Career Navigator for ITVedas.com, a beginner-friendly IT education website. A visitor has answered a short quiz about their interests and work style. Your job is to recommend exactly ONE of these eight IT career paths based on their answers:
@@ -150,9 +170,33 @@ export async function onRequestGet() {
   return jsonResponse({ error: "Use POST" }, 405);
 }
 
-function jsonResponse(obj, status = 200) {
+async function checkRateLimit(kv, ip) {
+  const key = `career-rate:${ip}`;
+  const now = Math.floor(Date.now() / 1000);
+  const current = await kv.get(key, "json");
+
+  if (!current || typeof current !== "object" || current.resetAt <= now) {
+    await kv.put(key, JSON.stringify({ count: 1, resetAt: now + RATE_LIMIT_WINDOW_SECONDS }), {
+      expirationTtl: RATE_LIMIT_WINDOW_SECONDS
+    });
+    return true;
+  }
+
+  if (current.count >= RATE_LIMIT_MAX_REQUESTS) return false;
+
+  await kv.put(key, JSON.stringify({ count: current.count + 1, resetAt: current.resetAt }), {
+    expirationTtl: Math.max(1, current.resetAt - now)
+  });
+  return true;
+}
+
+function jsonResponse(obj, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { "Content-Type": "application/json" }
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+      ...extraHeaders
+    }
   });
 }

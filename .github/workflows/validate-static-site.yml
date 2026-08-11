@@ -3,10 +3,12 @@ name: Validate static site
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -29,6 +31,42 @@ jobs:
       - name: Validate JSON files
         run: |
           python -m json.tool search-index.json > /tmp/search-index.json
+
+      - name: Run security checks
+        run: bash scripts/security-check.sh
+
+      - name: Check JavaScript syntax
+        run: |
+          set -e
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find . -type f -name '*.js' -not -path './.git/*' -not -path './node_modules/*' -print0)
+
+      - name: Verify Markdown preview sanitizes rendered HTML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          page = Path('tools/markdown-preview.html').read_text(encoding='utf-8')
+          sanitizer = Path('js/html-sanitizer.js').read_text(encoding='utf-8')
+
+          checks = [
+              ('markdown preview loads the shared sanitizer', '/js/html-sanitizer.js' in page),
+              ('markdown preview uses the shared sanitizer for DOM insertion', 'HTMLSanitizer.setInnerHTML(preview, rendered)' in page),
+              ('markdown preview has no direct marked-to-innerHTML assignment', 'preview.innerHTML = marked.parse' not in page),
+              ('sanitizer validates link protocols', "['http:', 'https:'].includes(url.protocol)" in sanitizer),
+              ('sanitizer handles new-window links safely', 'noopener noreferrer' in sanitizer),
+          ]
+
+          failed = [name for name, ok in checks if not ok]
+          if failed:
+              for name in failed:
+                  print(f'FAILED: {name}')
+              raise SystemExit(1)
+
+          for name, _ in checks:
+              print(f'OK: {name}')
+          PY
 
       - name: Check generated article cleanup
         run: |
