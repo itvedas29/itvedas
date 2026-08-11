@@ -25,3 +25,4 @@
 - News passes the quality gate before sitemap generation.
 - Noindex pages remain accessible to users but are excluded from XML sitemap discovery.
 - CVE data is generated from the single unified pipeline.
+- Traffic recovery prioritizes people-first content quality over publishing volume.
