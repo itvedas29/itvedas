@@ -10,9 +10,16 @@
 
 :root{
   --navy:#0F172A;
-  --bg:#F8FAFC;
+  /* Page background is pure white, not the F8FAFC blue-tinted off-white this
+     started as. --bg and --bg2 are therefore identical now — cards no longer
+     get a free tonal separation from the page, so they lean on --border and
+     --shadow-sm instead (both already existed; this just makes them load-
+     bearing rather than decorative). --bg3 keeps a warm neutral gray rather
+     than a blue-gray, both so it doesn't itself read as "not quite white",
+     and to visually distinguish it from --border, which is close in value. */
+  --bg:#FFFFFF;
   --bg2:#FFFFFF;
-  --bg3:#F1F5F9;
+  --bg3:#F7F7F8;
   --text:#020617;
   --muted:#5A6B85;
   --sub:#334155;
@@ -25,9 +32,13 @@
   --danger:#DC2626;
   --border:#E2E8F0;
   --border-strong:#CBD5E1;
-  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
-  --shadow-md:0 8px 24px rgba(15,23,42,0.08);
-  --shadow-lg:0 20px 48px rgba(15,23,42,0.14);
+  /* Slightly heavier than before: on a tinted background a shadow reads
+     against the tint too, doing part of the separation work for free. On
+     pure white the shadow is the only signal, so it needs a touch more
+     presence to still register at a glance. */
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.08);
+  --shadow-md:0 10px 28px rgba(15,23,42,0.10);
+  --shadow-lg:0 22px 52px rgba(15,23,42,0.16);
   --radius-sm:8px;
   --radius-md:14px;
   --radius-lg:20px;
