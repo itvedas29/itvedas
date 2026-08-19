@@ -40,7 +40,7 @@ export async function onRequestPost(context) {
     // reduction rather than a hard global quota.
     const clientIp = request.headers.get("CF-Connecting-IP") || "";
     if (clientIp) {
-      const rateKey = `subscribe-rate:${clientIp}`;
+      const rateKey = `subscribe-rate:${await anonymizedRateKey(clientIp)}`;
       if (await env.SUBSCRIBERS.get(rateKey)) {
         return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
       }
@@ -69,6 +69,12 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet() {
   return jsonResponse({ success: false, message: "Use POST" }, 405);
+}
+
+async function anonymizedRateKey(value) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
 function jsonResponse(obj, status = 200) {
