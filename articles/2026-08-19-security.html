@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn what ransomware is and practical steps to protect your devices from attacks. Simple guide for complete beginners.">
+<meta name="keywords" content="what is ransomware and how to protect yourself, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="What is Ransomware and How to Protect Yourself: A Complete Beginner&#x27;s Guide | ITVedas">
+<meta property="og:description" content="Learn what ransomware is and practical steps to protect your devices from attacks. Simple guide for complete beginners.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-08-19-security">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-08-19-security">
+<title>What is Ransomware and How to Protect Yourself: A Complete Beginner&#x27;s Guide | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "What is Ransomware and How to Protect Yourself: A Complete Beginner's Guide", "description": "Learn what ransomware is and practical steps to protect your devices from attacks. Simple guide for complete beginners.", "keywords": "what is ransomware and how to protect yourself", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-08-19", "dateModified": "2026-08-19", "articleSection": "Security", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-08-19</span>
+    
+    <span class="badge-info">⏱ 8 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>What is Ransomware and How to Protect Yourself: A Complete Beginner&#x27;s Guide</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-ransomware">What is Ransomware?</a></li><li><a href="#how-does-ransomware-work">How Does Ransomware Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-how-an-attack-happens">A Real-World Example: How an Attack Happens</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#how-to-protect-yourself-practical-steps">How to Protect Yourself: Practical Steps</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#what-to-do-if-you-get-ransomware">What to Do If You Get Ransomware</a></li><li><a href="#conclusion-you-re-more-protected-than-you-think">Conclusion: You're More Protected Than You Think</a></li></ul></div>
+    <h1>What is Ransomware and How to Protect Yourself: A Complete Beginner's Guide</h1>
+
+<p>Imagine coming home to find your front door locked—but you locked it. Someone else changed the locks and left a note demanding money to give you access back. That's ransomware. It's a type of digital attack that locks you out of your own files and demands payment.</p>
+
+<p>This isn't just happening to big companies. Regular people like you lose access to family photos, important documents, and precious memories every single day. The good news? You can stop it with a few simple steps.</p>
+
+<h2 id="what-is-ransomware">What is Ransomware?</h2>
+
+<p><strong>Ransomware</strong> is malicious software that criminals use to lock your files. They encrypt your data—turning it into unreadable gibberish—then demand money (<strong>ransom</strong>) to unlock it again.</p>
+
+<blockquote>
+Think of it like this: Your files are boxes with locks. Normal software has regular keys. Ransomware changes the locks so badly that even you can't open them. Criminals hold the only key and want payment to return it.
+</blockquote>
+
+<p>In simple terms: Ransomware is software that locks your files. You can't open them. Criminals demand money to unlock them.</p>
+
+<p>Criminals use ransomware because it's profitable. Some victims pay thousands of dollars. Even worse, paying doesn't guarantee your files return safely.</p>
+
+<h2 id="how-does-ransomware-work">How Does Ransomware Work?</h2>
+
+<p>Ransomware attacks follow a pattern. Here's what happens:</p>
+
+<ol>
+  <li><strong>You get infected.</strong> You click a suspicious email link, download infected software, or visit a hacked website. Ransomware enters your device silently.</li>
+  <li><strong>It spreads quietly.</strong> The software copies itself to your hard drive and network drives. It stays hidden while it explores your system.</li>
+  <li><strong>Files get locked.</strong> Ransomware finds important files (photos, documents, videos) and encrypts them using unbreakable codes.</li>
+  <li><strong>The demand appears.</strong> You see a pop-up or message demanding payment. It claims your data is locked forever unless you pay.</li>
+  <li><strong>Your files stay locked.</strong> Even if you pay, criminals often don't unlock files. Your money is gone, and your files remain locked.</li>
+</ol>
+
+<p>In simple terms: Ransomware sneaks in, finds your files, locks them, then asks for money.</p>
+
+<div class="callout">
+  <div class="callout-title">Pro Tip</div>
+  <p>Most ransomware enters through email. If an email seems odd—even from someone you know—don't click links or download attachments. Call the person instead.</p>
+</div>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p>Ransomware doesn't just affect businesses. It affects real people doing normal things.</p>
+
+<p><strong>Your personal impact:</strong> Imagine losing all your photos from your child's first day of school. Or your medical documents. Or years of personal writing. That's what ransomware victims experience.</p>
+
+<p>Real examples include:</p>
+
+<ul>
+  <li>A mother lost 10 years of family photos when ransomware hit her laptop.</li>
+  <li>A freelancer lost client contracts and couldn't work for weeks after an attack.</li>
+  <li>A small business had to close temporarily when their accounting files were locked.</li>
+</ul>
+
+<p>Ransomware attacks are growing. In 2023, attacks increased 37% worldwide. That means statistically, you're more likely to encounter it than five years ago.</p>
+
+<h2 id="a-real-world-example-how-an-attack-happens">A Real-World Example: How an Attack Happens</h2>
+
+<p>Let's walk through a realistic scenario:</p>
+
+<p><strong>Sarah's Tuesday morning:</strong></p>
+
+<ol>
+  <li>Sarah receives an email that looks like it's from her bank. The subject says "Urgent: Verify Your Account."</li>
+  <li>The email has a official-looking logo and professional language. Sarah doesn't notice it's fake.</li>
+  <li>She clicks the link to "verify her account." The link takes her to a website that looks identical to her real bank.</li>
+  <li>She doesn't enter her password (she's cautious), but a malicious file downloaded quietly in the background.</li>
+  <li>That night, Sarah's computer starts acting slow. Random pop-ups appear.</li>
+  <li>The next morning, her screen shows a message: "Your files are encrypted. Pay $500 in Bitcoin to unlock them."</li>
+  <li>Sarah panics. She lost photos from her wedding, her thesis document, and all her work files.</li>
+</ol>
+
+<p>Sarah didn't do anything obviously wrong—she just clicked a link in an email. But that one click infected her entire system.</p>
+
+<p>The tragic part? Sarah paid the ransom. The criminals took her money but never sent the unlock key. Her files remained locked forever.</p>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<p>Most ransomware victims made one of these three mistakes:</p>
+
+<h3>Mistake #1: Opening email attachments from unknown senders</h3>
+
+<p><strong>The problem:</strong> Ransomware travels through email attachments. A PDF that looks innocent might contain malicious code.</p>
+
+<p><strong>The fix:</strong> Never open attachments from people you don't know. Even emails from known people can be faked. If an attachment seems unusual, call the person and ask before opening it.</p>
+
+<h3>Mistake #2: Not backing up your files</h3>
+
+<p><strong>The problem:</strong> If your files exist only on your computer, ransomware locks the only copy. You lose everything.</p>
+
+<p><strong>The fix:</strong> Keep backup copies of important files. Use cloud services like Google Drive, OneDrive, or Dropbox. Store backups on external hard drives too. If ransomware hits, you still have copies.</p>
+
+<h3>Mistake #3: Using weak passwords and no antivirus software</h3>
+
+<p><strong>The problem:</strong> Weak passwords make it easy for criminals to access your accounts. No antivirus means nothing stops ransomware from installing.</p>
+
+<p><strong>The fix:</strong> Use strong passwords (uppercase, numbers, symbols—at least 12 characters). Install reputable antivirus software like Windows Defender (free with Windows) or Bitdefender. Keep your software updated.</p>
+
+<h2 id="how-to-protect-yourself-practical-steps">How to Protect Yourself: Practical Steps</h2>
+
+<p>You can dramatically reduce your ransomware risk with these actions:</p>
+
+<h3>1. Back up your files regularly</h3>
+
+<p>This is your safety net. If ransomware attacks, you lose nothing.</p>
+
+<ol>
+  <li>Use cloud storage: Upload important files to Google Drive, OneDrive, or Dropbox daily.</li>
+  <li>Use external backup: Connect an external hard drive weekly and copy important files.</li>
+  <li>Use both methods: The safest approach combines cloud and external backups.</li>
+</ol>
+
+<p>Cost: Cloud storage is often free (Google Drive gives 15GB free). External hard drives cost $50-100.</p>
+
+<h3>2. Keep software updated</h3>
+
+<p>Software updates patch security holes. Ransomware exploits old, unpatched software.</p>
+
+<ol>
+  <li>Enable automatic updates on Windows, Mac, and your phone.</li>
+  <li>Update your browser (Chrome, Firefox, Safari) monthly.</li>
+  <li>Update third-party software like Adobe, Java, and media players.</li>
+</ol>
+
+<p>This takes 10 minutes per month and prevents most attacks.</p>
+
+<h3>3. Install antivirus software</h3>
+
+<p>Antivirus software detects and blocks ransomware before it runs.</p>
+
+<ul>
+  <li><strong>Windows:</strong> Windows Defender (built-in, free) is solid.</li>
+  <li><strong>Mac:</strong> Bitdefender Free or built-in XProtect.</li>
+  <li><strong>Phone:</strong> iOS and Android have built-in protection; avoid side-loading apps.</li>
+</ul>
+
+<p>Run a full system scan monthly. This takes 30-60 minutes.</p>
+
+<h3>4. Be suspicious of emails</h3>
+
+<p>Most ransomware enters through email. Stay alert:</p>
+
+<ul>
+  <li>Check the sender's email address carefully (criminals use fake similar addresses).</li>
+  <li>Look for spelling and grammar errors (real companies proofread).</li>
+  <li>Don't open attachments from unknown people.</li>
+  <li>Hover over links before clicking (see the real URL).</li>
+  <li>Be suspicious of urgent language: "Act now!" or "Your account will be closed!"</li>
+</ul>
+
+<h3>5. Use strong, unique passwords</h3>
+
+<p>Strong passwords prevent criminals from accessing your accounts.</p>
+
+<ul>
+  <li>Use at least 12 characters.</li>
+  <li>Mix uppercase, lowercase, numbers, and symbols.</li>
+  <li>Use different passwords for different accounts.</li>
+  <li>Use a password manager like Bitwarden or 1Password to remember them.</li>
+</ul>
+
+<h3>6. Enable two-factor authentication (2FA)</h3>
+
+<p><code>Two-factor authentication</code> requires a second verification step when logging in (like a code from your phone).</p>
+
+<p>Even if someone gets your password, they can't access your account without the second code. Enable 2FA on:</p>
+
+<ul>
+  <li>Your email account (Gmail, Outlook)</li>
+  <li>Banking apps</li>
+  <li>Cloud storage (Google Drive, OneDrive)</li>
+  <li>Social media (Facebook, Instagram)</li>
+</ul>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Q: Should I pay the ransom if I get ransomware?</h3>
+
+<p><strong>A:</strong> No. Never pay. Here's why:</p>
+
+<ul>
+  <li>Most criminals don't send unlock keys even after payment.</li>
+  <li>Your money funds more attacks against other people.</li>
+  <li>Some countries now fine people who pay ransoms.</li>
+  <li>Paying encourages more attacks (criminals see your willingness to pay).</li>
+</ul>
+
+<p>Instead, disconnect from the internet immediately, run antivirus software, and restore from your backups.</p>
+
+<h3>Q: If I get ransomware, can I decrypt my files without paying?</h3>
+
+<p><strong>A:</strong> Sometimes. Organizations like <code>nomoreransom.org</code> offer free decryption tools for certain ransomware types. Here's what to do:</p>
+
+<ol>
+  <li>Visit nomoreransom.org</li>
+  <li>Identify your ransomware type (the pop-up message often tells you)</li>
+  <li>Download the free decryption tool if available</li>
+  <li>Use it to unlock your files</li>
+</ol>
+
+<p>This works for older, "broken" ransomware. For new attacks, it usually doesn't work—another reason backups matter.</p>
+
+<h3>Q: Can my phone get ransomware?</h3>
+
+<p><strong>A:</strong> Yes, but it's rare. Here's how to protect your phone:</p>
+
+<ul>
+  <li>Only download apps from official app stores (Google Play, Apple App Store).</li>
+  <li>Never enable "Install from Unknown Sources" on Android.</li>
+  <li>Keep your phone's operating system updated.</li>
+  <li>Back up important phone data to cloud storage.</li>
+</ul>
+
+<p>iPhones are less vulnerable because Apple controls what apps can do. Android phones have more risk, but official app store apps are generally safe.</p>
+
+<h2 id="what-to-do-if-you-get-ransomware">What to Do If You Get Ransomware</h2>
+
+<p>If ransomware hits despite your precautions, follow these steps immediately:</p>
+
+<ol>
+  <li><strong>Disconnect from the internet.</strong> Unplug your ethernet cable or turn off WiFi. This stops the ransomware from spreading.</li>
+  <li><strong>Don't restart your computer.</strong> Restarting might trigger ransomware to encrypt more files.</li>
+  <li><strong>Take a screenshot</strong> of the ransom message (helps identify the ransomware type).</li>
+  <li><strong>Run antivirus software</strong> in safe mode to remove the infection.</li>
+  <li><strong>Restore from backups</strong> if antivirus doesn't work completely.</li>
+  <li><strong>Report it</strong> to your country's cyber crime agency and your bank (if banking data was accessed).</li>
+</ol>
+
+<div class="callout">
+  <div class="callout-title">Pro Tip</div>
+  <p>Create a recovery plan now: Write down where your backups are stored and how to access them. Keep this written plan somewhere safe (not on your computer). You'll need it in an emergency.</p>
+</div>
+
+<h2 id="conclusion-you-re-more-protected-than-you-think">Conclusion: You're More Protected Than You Think</h2>
+
+<p>Ransomware sounds scary, but you're not helpless. Most attacks succeed because people don't know the basics. Now you do.</p>
+
+<p>Start today: Back up one important file to Google Drive. Enable two-factor authentication on one account. Update your software. These small actions reduce your risk dramatically.</p>
+
+<p>You don't need to be a computer expert to stay safe. You just need to be careful, prepared, and aware. Every day you follow these steps is a day you're protected. Your digital life—and your peace of mind—is worth that small effort.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-ransomware">What is Ransomware?</a></li><li><a href="#how-does-ransomware-work">How Does Ransomware Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-how-an-attack-happens">A Real-World Example: How an Attack Happens</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#how-to-protect-yourself-practical-steps">How to Protect Yourself: Practical Steps</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#what-to-do-if-you-get-ransomware">What to Do If You Get Ransomware</a></li><li><a href="#conclusion-you-re-more-protected-than-you-think">Conclusion: You're More Protected Than You Think</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
