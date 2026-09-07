@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn what serverless computing is, how it works, and its pros and cons. Perfect for beginners wanting to understand modern cloud technology.">
+<meta name="keywords" content="what is serverless computing pros and cons explained, Cloud guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Serverless Computing: Pros and Cons Explained for Beginners | ITVedas">
+<meta property="og:description" content="Learn what serverless computing is, how it works, and its pros and cons. Perfect for beginners wanting to understand modern cloud technology.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-09-07-cloud">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-09-07-cloud">
+<title>Serverless Computing: Pros and Cons Explained for Beginners | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Serverless Computing: Pros and Cons Explained for Beginners", "description": "Learn what serverless computing is, how it works, and its pros and cons. Perfect for beginners wanting to understand modern cloud technology.", "keywords": "what is serverless computing pros and cons explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-09-07", "dateModified": "2026-09-07", "articleSection": "Cloud", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#3B82F6;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#3B82F61f;border:1px solid #3B82F644;color:#3B82F6;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#3B82F610,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#3B82F614,#8B5CF610);border:1px solid #3B82F633;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#3B82F614,#8B5CF614);border:1px solid #3B82F633;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/cloud/" class="nav-back">← Cloud</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/cloud/">Cloud</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Cloud</span>
+    <span class="badge-info">📅 2026-09-07</span>
+    
+    <span class="badge-info">⏱ 8 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>Serverless Computing: Pros and Cons Explained for Beginners</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-serverless-computing">What is Serverless Computing?</a></li><li><a href="#how-does-serverless-computing-work">How Does Serverless Computing Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-whatsapp-image-processing">A Real-World Example: WhatsApp Image Processing</a></li><li><a href="#serverless-computing-the-pros-advantages">Serverless Computing: The Pros (Advantages)</a></li><li><a href="#serverless-computing-the-cons-disadvantages">Serverless Computing: The Cons (Disadvantages)</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#serverless-vs-traditional-cloud-quick-comparison">Serverless vs. Traditional Cloud: Quick Comparison</a></li><li><a href="#conclusion-should-you-learn-serverless">Conclusion: Should You Learn Serverless?</a></li></ul></div>
+    <h1>Serverless Computing: Pros and Cons Explained for Beginners</h1>
+
+<p>You've probably heard the term "serverless computing" thrown around, and thought it sounded complicated. Here's the truth: it's actually simpler than traditional cloud computing once you understand the basics. Serverless means you don't manage servers yourself—someone else handles all the boring infrastructure work.</p>
+
+<p>Why should you care? Because serverless computing is changing how apps get built and deployed. If you're learning about cloud technology or wondering how Netflix, Uber, and countless startups run their apps, understanding serverless will give you a massive advantage. Let's break it down together.</p>
+
+<h2 id="what-is-serverless-computing">What is Serverless Computing?</h2>
+
+<p>Serverless computing is a cloud service model where you write code without managing any servers. You upload your code, and the cloud provider runs it automatically whenever needed.</p>
+
+<blockquote>
+<strong>Serverless computing is like renting a taxi instead of owning a car.</strong> You don't buy the vehicle, maintain it, or pay for gas when you're not using it. You only pay when you actually take a trip. Similarly, with serverless, you only pay when your code runs—not for idle server time. The taxi company (cloud provider) handles all maintenance.
+</blockquote>
+
+<p><strong>Traditional cloud computing</strong> is different. With traditional cloud (like renting a virtual machine), you rent a server and pay monthly—even if nobody uses your app. You must manage updates, security, and scaling yourself. It's like renting an apartment: you pay rent whether you're home or not.</p>
+
+<p>With <strong>serverless</strong>, the cloud provider (like Amazon Web Services, Google Cloud, or Microsoft Azure) manages everything behind the scenes. You focus only on writing code. The infrastructure scales automatically. You pay only for what you use.</p>
+
+<p>In simple terms: Serverless = write code, upload it, let someone else worry about servers.</p>
+
+<h2 id="how-does-serverless-computing-work">How Does Serverless Computing Work?</h2>
+
+<p>Let's walk through what happens when you deploy a serverless application:</p>
+
+<ol>
+<li><strong>You write your code</strong> — Maybe a function that sends an email when someone signs up. Could be 10 lines of code.</li>
+<li><strong>You upload it to a serverless platform</strong> — Services like AWS Lambda, Google Cloud Functions, or Azure Functions accept your code.</li>
+<li><strong>The platform packages your code</strong> — Your code gets prepared to run instantly.</li>
+<li><strong>An event triggers your code</strong> — Someone submits a form, a scheduled time arrives, or an API request comes in.</li>
+<li><strong>The platform runs your code instantly</strong> — Your function executes, completes, and stops.</li>
+<li><strong>You get billed for execution time only</strong> — Maybe you're charged $0.0000002 per execution.</li>
+<li><strong>No idle time, no server sitting around</strong> — When nobody triggers your code, nothing runs and nothing costs.</li>
+</ol>
+
+<p>In simple terms: Upload code → Event happens → Code runs → You pay for those seconds → Done.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Serverless functions typically execute in <strong>seconds or milliseconds</strong>. They're perfect for tasks that don't run constantly, like processing image uploads or sending notifications.</p>
+</div>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p><strong>For beginners learning to code:</strong> Serverless removes the complexity of server management. You focus on writing good code instead of wrestling with infrastructure. This speeds up learning dramatically.</p>
+
+<p><strong>For startups:</strong> Serverless is incredibly cost-effective. A new startup doesn't waste money on idle servers. You pay only when customers use your app. Netflix, when it was smaller, used serverless architecture to scale without hiring a large ops team.</p>
+
+<p><strong>For existing apps:</strong> You might use serverless for specific tasks. YouTube creators uploading videos? That upload triggers serverless code that converts video formats, creates thumbnails, and stores files. The cloud provider scales automatically—whether it's one upload or one million simultaneous uploads.</p>
+
+<p><strong>For your career:</strong> Cloud skills are in massive demand. Understanding serverless makes you more valuable to employers. Tech companies absolutely need people who understand modern cloud architecture.</p>
+
+<h2 id="a-real-world-example-whatsapp-image-processing">A Real-World Example: WhatsApp Image Processing</h2>
+
+<p>Imagine you're WhatsApp and millions of users upload photos every second. Here's how serverless makes this work:</p>
+
+<ol>
+<li><strong>User opens WhatsApp on their phone</strong> — Selects a photo and hits send.</li>
+<li><strong>The app uploads your photo</strong> — File gets sent to WhatsApp's cloud storage (like AWS S3).</li>
+<li><strong>Upload completion triggers serverless code</strong> — AWS Lambda automatically starts running.</li>
+<li><strong>The function processes your image</strong> — Compresses it, creates a thumbnail, scans for inappropriate content.</li>
+<li><strong>Processing completes in 2 seconds</strong> — Your friend receives the photo.</li>
+<li><strong>The function stops completely</strong> — Zero cost until the next image arrives.</li>
+<li><strong>Next image arrives? New function runs instantly</strong> — Automatic scaling means millions of images process simultaneously without delays.</li>
+<li><strong>WhatsApp pays only for actual processing time</strong> — Not for servers sitting idle.</li>
+</ol>
+
+<p>With traditional servers, WhatsApp would need to guess how many servers to rent. Buy too few? App crashes during peak hours. Buy too many? Waste money 90% of the time. Serverless eliminates this guessing game entirely.</p>
+
+<p>In simple terms: WhatsApp uploads photo → serverless code runs → photo processes → function stops → WhatsApp pays pennies.</p>
+
+<h2 id="serverless-computing-the-pros-advantages">Serverless Computing: The Pros (Advantages)</h2>
+
+<p><strong>Pro #1: You only pay for what you use</strong></p>
+<p>No server sitting around costing money. You get billed for actual compute time—sometimes measured in milliseconds. A startup using serverless might pay $10/month. The same startup renting a traditional server pays $50-200/month minimum, even with zero traffic.</p>
+
+<p><strong>Pro #2: Automatic scaling</strong></p>
+<p>Your code automatically handles 1 user or 1 million users. The cloud provider spins up new instances instantly. During Black Friday, Amazon's serverless systems handle thousands of simultaneous orders without any manual intervention. During quiet hours, they scale down automatically.</p>
+
+<p><strong>Pro #3: Zero server management</strong></p>
+<p>You never update operating systems, patch security holes, or install software. The cloud provider handles all of it. You focus purely on writing code. This is massive for small teams.</p>
+
+<p><strong>Pro #4: Fast deployment</strong></p>
+<p>Deploy code in minutes, not hours. No server provisioning, no waiting for infrastructure setup. Upload code and it's live.</p>
+
+<p><strong>Pro #5: High reliability</strong></p>
+<p>Cloud providers run serverless on redundant systems. If one server fails, your code runs on another automatically. Major providers like AWS have 99.99% uptime guarantees.</p>
+
+<h2 id="serverless-computing-the-cons-disadvantages">Serverless Computing: The Cons (Disadvantages)</h2>
+
+<p><strong>Con #1: Cold starts</strong></p>
+<p>When your function hasn't run recently, it takes extra time to start—maybe 1-3 seconds. This is called a <strong>cold start</strong>. For real-time applications, this delay matters. It's like calling a taxi—if no taxi is nearby, you wait longer. If one's already in your area, response is instant. This doesn't work well for low-latency applications like online games.</p>
+
+<p><strong>Con #2: Vendor lock-in</strong></p>
+<p>Your serverless code works with one provider's system (AWS Lambda, Google Cloud Functions, Azure Functions). Switching providers requires rewriting code. It's like being locked into one taxi company's app. This creates risk if the provider raises prices or shuts down services.</p>
+
+<p><strong>Con #3: Limited execution time</strong></p>
+<p>Most serverless functions must complete within 15 minutes (AWS Lambda's limit). Long-running tasks don't work. If your task needs 2 hours to process, serverless fails. It's like a taxi ride with a maximum distance—great for short trips, useless for cross-country journeys.</p>
+
+<p><strong>Con #4: Harder to debug</strong></p>
+<p>Testing serverless code locally is tricky. You can't easily replicate the cloud environment on your laptop. Debugging requires different tools and experience.</p>
+
+<p><strong>Con #5: Can get expensive at scale</strong></p>
+<p>For apps running constantly (24/7), serverless becomes pricier than traditional servers. If your code runs continuously, a $50/month server beats paying per-execution. Think of it like taxis again—daily commuters should buy a car, not call taxis every day.</p>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<p><strong>Mistake #1: Using serverless for always-running apps</strong></p>
+<p><em>The problem:</em> Your app handles constant traffic 24/7. Serverless charges per execution, so costs spiral.</p>
+<p><em>The fix:</em> Use traditional servers or containers for constant workloads. Use serverless only for bursty, unpredictable traffic.</p>
+
+<p><strong>Mistake #2: Ignoring cold starts in production</strong></p>
+<p><em>The problem:</em> Your app works fine in testing, but users complain about 2-second delays. Those are cold starts.</p>
+<p><em>The fix:</em> Use "provisioned concurrency" (keeps functions warm and ready) for customer-facing apps. Accept cold starts for background tasks.</p>
+
+<p><strong>Mistake #3: Not monitoring costs**</p>
+<p><em>The problem:</em> A buggy function runs millions of times accidentally, creating a surprise $5,000 bill.</p>
+<p><em>The fix:</em> Set up cost alerts and monitoring from day one. Cloud providers offer dashboards showing real-time spending.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<p><strong>Q: Is serverless actually serverless? Where does the code run?</strong></p>
+<p>A: No, there are definitely servers. But they're the cloud provider's responsibility, not yours. Think of it like streaming on Netflix—content lives on servers, but you don't manage them. You just press play. The term "serverless" means "you don't manage servers," not "no servers exist."</p>
+
+<p><strong>Q: Can I use serverless for a website?</strong></p>
+<p>A: Partially. Static websites (HTML, CSS, JavaScript) work great with serverless. Dynamic websites that need constant processing are better on traditional servers. Most real websites use a mix: serverless for API functions, traditional servers for core app logic.</p>
+
+<p><strong>Q: Which serverless platform should I choose?</strong></p>
+<p>A: AWS Lambda dominates the market (industry standard). Google Cloud Functions and Azure Functions are solid alternatives. For learning, pick whichever platform your tutorial uses. The concepts transfer between platforms. It's like learning to drive—once you know one car, switching cars is easier.</p>
+
+<h2 id="serverless-vs-traditional-cloud-quick-comparison">Serverless vs. Traditional Cloud: Quick Comparison</h2>
+
+<table border="1" cellpadding="10" cellspacing="0">
+<tr>
+<th>Feature</th>
+<th>Serverless</th>
+<th>Traditional Cloud Server</th>
+</tr>
+<tr>
+<td><strong>Cost Model</strong></td>
+<td>Pay per execution</td>
+<td>Pay monthly flat rate</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Automatic, instant</td>
+<td>Manual or configured rules</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>Unpredictable, bursty workloads</td>
+<td>Consistent, continuous traffic</td>
+</tr>
+<tr>
+<td><strong>Management</strong></td>
+<td>Minimal (just code)</td>
+<td>Extensive (OS, updates, security)</td>
+</tr>
+<tr>
+<td><strong>Speed to Deploy</strong></td>
+<td>Minutes</td>
+<td>Hours to days</td>
+</tr>
+<tr>
+<td><strong>Cold Start Issue</strong></td>
+<td>Yes (1-3 seconds)</td>
+<td>No</td>
+</tr>
+</table>
+
+<h2 id="conclusion-should-you-learn-serverless">Conclusion: Should You Learn Serverless?</h2>
+
+<p><strong>Absolutely yes.</strong> Serverless computing is the future of cloud development. It's how modern apps scale, how startups minimize costs, and how enterprises handle unpredictable demand. Understanding serverless gives you a competitive advantage in tech careers.</p>
+
+<p>You don't need to choose between serverless and traditional servers—most companies use both. Start by learning serverless concepts. Build a small project on AWS Lambda or Google Cloud Functions. You'll see why it's revolutionary. The learning curve is gentle, and the skills stick with you forever. Your future self in five years will be grateful you took time to understand this today.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-serverless-computing">What is Serverless Computing?</a></li><li><a href="#how-does-serverless-computing-work">How Does Serverless Computing Work?</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-whatsapp-image-processing">A Real-World Example: WhatsApp Image Processing</a></li><li><a href="#serverless-computing-the-pros-advantages">Serverless Computing: The Pros (Advantages)</a></li><li><a href="#serverless-computing-the-cons-disadvantages">Serverless Computing: The Cons (Disadvantages)</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#serverless-vs-traditional-cloud-quick-comparison">Serverless vs. Traditional Cloud: Quick Comparison</a></li><li><a href="#conclusion-should-you-learn-serverless">Conclusion: Should You Learn Serverless?</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>
