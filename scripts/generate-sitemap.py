@@ -6,8 +6,10 @@ SITE_URL='https://www.itvedas.com'; ROOT=pathlib.Path('.')
 def indexable(path):
     try: raw=path.read_text(encoding='utf-8',errors='ignore')
     except Exception: return True
-    m=re.search(r'<meta[^>]+name=["\']robots["\'][^>]+content=["\']([^"\']+)',raw,re.I)
-    return not (m and 'noindex' in m.group(1).lower())
+    if re.search(r'<meta[^>]+name=[\"\']robots[\"\'][^>]+content=[\"\'][^\"\']*noindex',raw,re.I): return False
+    if re.search(r'<meta[^>]+content=[\"\'][^\"\']*noindex[^\"\']*[\"\'][^>]+name=[\"\']robots',raw,re.I): return False
+    if re.search(r'<meta[^>]+name=[\"\']robots[\"\'][^>]+noindex',raw,re.I): return False
+    return True
 
 def get_html_files():
     files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[]}
@@ -35,7 +37,9 @@ def url(f):
     elif r.endswith('/index.html'): r=r[:-10]
     elif r.endswith('.html'): r=r[:-5]
     return f'{SITE_URL}/{r}'
+
 def modified(f): return datetime.datetime.fromtimestamp(f.stat().st_mtime).date().isoformat()
+
 def build():
     files=get_html_files(); today=datetime.date.today().isoformat(); root=ET.Element('urlset',{'xmlns':'http://www.sitemaps.org/schemas/sitemap/0.9'})
     def add(f,freq,prio):
@@ -51,6 +55,7 @@ def build():
     print(f'Sitemap generated: {total} indexable URLs (noindex pages excluded)')
     for k,v in files.items(): print(f'  - {k}: {len(v)}')
     return total
+
 if __name__=='__main__':
     try: build()
     except Exception as e: print(f'Error generating sitemap: {e}'); raise
