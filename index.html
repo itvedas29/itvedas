@@ -1,784 +1,763 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
-<link rel="manifest" href="/site.webmanifest">
-<meta name="color-scheme" content="light">
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6244522471042879"
-     crossorigin="anonymous"></script>
-<meta name="description" content="ITVedas — the complete IT knowledge hub. Master Networking, Cloud, Security, DevOps, Databases, Linux & Hardware with free, in-depth, beginner-friendly guides.">
-<meta name="keywords" content="IT knowledge hub, networking tutorials, cloud computing, cybersecurity, DevOps, Linux, databases, compliance, GDPR">
-<meta property="og:title" content="ITVedas — The Complete IT Knowledge Hub">
-<meta property="og:description" content="Master every layer of IT — from hardware to cloud security. Free guides and interactive demos.">
-<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://www.itvedas.com">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ITVedas — The Complete IT Knowledge Hub">
-<link rel="canonical" href="https://www.itvedas.com">
-<title>ITVedas — The Complete IT Knowledge Hub</title>
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"ITVedas",
-  "url":"https://www.itvedas.com",
-  "description":"The complete IT knowledge hub — networking, cloud, security, DevOps, databases, Linux, hardware, compliance."
-}
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-/* ============ UNIFIED DESIGN TOKENS ============ */
-:root{
-  color-scheme:light;
-  --bg:#EEF3FC; --bg2:#FFFFFF; --bg3:#F7F9FD;
-  --text:#182238; --sub:#4A5568; --muted:#6B7A94;
-  --accent:#FF6B35; --accent2:#8B5CF6; --cyan:#06B6D4; --green:#10B981;
-  --border:rgba(24,34,56,0.12); --border-hi:rgba(255,107,53,0.35);
-  --radius:16px;
-  --font-display:'Lexend',sans-serif; --font-body:'Inter',sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-a{cursor:pointer;}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+  <link rel="manifest" href="/site.webmanifest">
 
-.mesh{position:fixed;inset:0;z-index:-2;background:
-  radial-gradient(ellipse 800px 500px at 15% -5%, rgba(255,107,53,0.13), transparent 60%),
-  radial-gradient(ellipse 700px 500px at 90% 10%, rgba(139,92,246,0.11), transparent 60%),
-  radial-gradient(ellipse 900px 600px at 50% 110%, rgba(6,182,212,0.07), transparent 60%);}
-.grain{position:fixed;inset:0;z-index:-1;opacity:0.5;background-image:radial-gradient(rgba(24,34,56,0.035) 1px, transparent 1px);background-size:22px 22px;}
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP" integrity="sha384-qNMB2F0d3S6aW1K9CzqGNfvhCNYPqc2J8t0F7bD2U3z8N4E3s1k6q5t6u7v8w9x"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 
-/* ============ NAV ============ */
-nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:1.5rem;
-  padding:0.7rem 1.6rem;border-radius:100px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);
-  border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.45);width:min(94%,920px);justify-content:space-between;}
-.logo{font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
-.logo span{color:var(--accent);}
-.nav-links{display:flex;gap:1.25rem;align-items:center;}
-.nav-links>a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color .2s;}
-.nav-links>a:hover{color:var(--text);}
-.nav-cta{background:var(--accent);color:#fff !important;padding:0.45rem 1.1rem;border-radius:100px;font-weight:600;transition:box-shadow .2s;}
-.nav-cta:hover{box-shadow:0 4px 20px rgba(255,107,53,0.45);}
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6244522471042879" crossorigin="anonymous"></script>
 
-/* ============ HERO ============ */
-.hero{padding:9.5rem 2rem 4rem;max-width:1100px;margin:0 auto;text-align:center;position:relative;}
-.float{position:absolute;z-index:1;animation:float 7s ease-in-out infinite;display:block;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;}
-.float:hover{transform:scale(1.05);box-shadow:0 24px 60px rgba(255,107,53,0.25);}
-@keyframes float{0%,100%{transform:translateY(0) rotate(var(--rot,0deg));}50%{transform:translateY(-14px) rotate(var(--rot,0deg));}}
-.f-term{left:-70px;top:11rem;--rot:-5deg;width:250px;background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);
-  border:1px solid var(--border);border-radius:14px;padding:0;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.5);text-align:left;}
-.f-term .tbar{display:flex;gap:6px;padding:0.6rem 0.9rem;background:var(--bg3);border-bottom:1px solid var(--border);}
-.f-term .tbar i{width:9px;height:9px;border-radius:50%;display:block;}
-.f-term .tbar i:nth-child(1){background:#F87171;}.f-term .tbar i:nth-child(2){background:#FBBF24;}.f-term .tbar i:nth-child(3){background:#34D399;}
-.f-term pre{padding:0.9rem 1rem;font-family:monospace;font-size:0.7rem;line-height:1.75;color:#9FE1CB;margin:0;}
-.f-term pre .c{color:var(--muted);}
-.f-term pre .g{color:var(--green);}
-.f-cve{right:-58px;top:10rem;--rot:4deg;animation-delay:1.2s;width:225px;background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);
-  border:1px solid rgba(239,68,68,0.3);border-radius:14px;padding:1rem 1.15rem;box-shadow:0 20px 50px rgba(0,0,0,0.5);text-align:left;}
-.f-cve .fc-badge{font-size:0.62rem;font-weight:700;color:#F87171;background:rgba(239,68,68,0.14);border-radius:100px;padding:0.16rem 0.6rem;letter-spacing:0.06em;}
-.f-cve b{font-family:var(--font-display);font-size:0.82rem;display:block;margin:0.5rem 0 0.3rem;}
-.f-cve span{font-size:0.7rem;color:var(--muted);line-height:1.5;display:block;}
-.f-cve .bar{margin-top:0.65rem;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;}
-.f-cve .bar i{display:block;height:100%;width:98%;border-radius:3px;background:linear-gradient(90deg,#F87171,#EF4444);}
-.f-chip{background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:100px;
-  padding:0.5rem 1.05rem;font-size:0.76rem;font-weight:600;color:var(--sub);box-shadow:0 12px 32px rgba(0,0,0,0.45);white-space:nowrap;}
-.f-chip1{left:0px;top:24rem;--rot:-3deg;animation-delay:0.6s;}
-.f-chip2{right:6px;top:23.5rem;--rot:3deg;animation-delay:1.8s;}
-.f-chip3{right:-30px;top:6.5rem;--rot:2deg;animation-delay:2.4s;}
-.f-chip .up{color:var(--green);}
-@media(max-width:1180px){.float{display:none;}}
+  <meta name="description" content="Master IT skills with 100+ comprehensive, practical guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI. No jargon, no paywall.">
+  <meta name="keywords" content="IT tutorials, networking guides, cybersecurity learning, cloud computing AWS Azure, Linux sysadmin, DevOps docker kubernetes, CVE database, ITVedas">
+  <meta name="robots" content="index,follow">
 
-.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
-  color:var(--green);padding:0.35rem 1rem;border-radius:100px;font-size:0.78rem;font-weight:600;margin-bottom:1.75rem;}
-.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.8);}}
-.hero h1{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4.2rem);font-weight:700;letter-spacing:-0.03em;line-height:1.06;margin-bottom:1.4rem;}
-.grad{background:linear-gradient(100deg,var(--accent) 10%,var(--accent2) 55%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.hero>p{font-size:1.12rem;color:var(--sub);max-width:620px;margin:0 auto 2.2rem;line-height:1.75;}
-.search-wrap{max-width:560px;margin:0 auto 2.5rem;position:relative;z-index:20;}
-.search-wrap input{width:100%;padding:1.05rem 1.4rem 1.05rem 3.1rem;border-radius:14px;background:var(--bg2);
-  border:1px solid var(--border);color:var(--text);font-size:0.95rem;font-family:var(--font-body);transition:border-color .2s,box-shadow .2s;}
-.search-wrap input:focus{outline:none;border-color:var(--border-hi);box-shadow:0 0 0 4px rgba(255,107,53,0.12);}
-.search-wrap svg{position:absolute;left:1.1rem;top:1.15rem;width:18px;height:18px;stroke:var(--muted);}
-.search-wrap kbd{position:absolute;right:1rem;top:1rem;font-size:0.7rem;color:var(--muted);
-  background:var(--bg3);border:1px solid var(--border);padding:0.15rem 0.5rem;border-radius:6px;font-family:var(--font-body);}
-.search-results{position:absolute;top:110%;left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  box-shadow:0 24px 64px rgba(0,0,0,0.6);max-height:340px;overflow-y:auto;display:none;text-align:left;}
-.search-results.show{display:block;}
-.sr-item{display:flex;align-items:center;gap:0.8rem;padding:0.8rem 1.1rem;text-decoration:none;color:var(--sub);border-bottom:1px solid var(--border);transition:background .15s;}
-.sr-item:last-child{border-bottom:none;}
-.sr-item:hover{background:var(--bg3);}
-.sr-item .sr-icon{font-size:1.1rem;flex-shrink:0;}
-.sr-item .sr-title{font-size:0.88rem;color:var(--text);font-weight:500;line-height:1.4;}
-.sr-item .sr-topic{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
-.sr-empty{padding:1rem 1.2rem;color:var(--muted);font-size:0.85rem;}
-.stats{display:flex;gap:2.75rem;justify-content:center;flex-wrap:wrap;}
-.stat{text-align:center;}
-.stat b{font-family:var(--font-display);font-size:1.7rem;font-weight:700;display:block;letter-spacing:-0.02em;}
-.stat span{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="ITVedas — Enterprise IT, Cloud & Cybersecurity Knowledge Hub">
+  <meta property="og:description" content="100+ practical, vendor-neutral engineering guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI. Forever free.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.itvedas.com/">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ITVedas — Enterprise IT, Cloud & Cybersecurity Knowledge Hub">
+  <meta name="twitter:description" content="100+ practical, vendor-neutral engineering guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI.">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/">
 
-/* continue learning */
-.wrap{max-width:1100px;margin:0 auto;padding:0 2rem;}
-.continue{margin:2rem auto 0;display:none;align-items:center;gap:1.25rem;background:linear-gradient(120deg,rgba(255,107,53,0.09),rgba(139,92,246,0.08));
-  border:1px solid var(--border-hi);border-radius:var(--radius);padding:1.1rem 1.5rem;max-width:640px;text-align:left;}
-.continue.show{display:flex;}
-.continue .ring{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
-  background:conic-gradient(var(--accent) 0 100%, var(--bg3) 0);position:relative;font-size:1.1rem;}
-.continue .ring::before{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--bg2);}
-.continue .ring b{position:relative;}
-.continue-info{flex:1;min-width:0;}
-.continue-info small{color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.09em;font-weight:700;}
-.continue-info div{font-family:var(--font-display);font-weight:600;font-size:0.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.continue a{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap;}
+  <title>ITVedas — The Complete IT, Cloud & Cybersecurity Knowledge Hub</title>
 
-/* ============ SECTIONS ============ */
-.sec{padding:4.5rem 0 1rem;}
-.sec-label{font-size:0.74rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;}
-.sec h2{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;}
-.sec p.lead{color:var(--muted);max-width:560px;margin-bottom:2.25rem;}
+  <!-- Structured Data: WebSite & Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ITVedas",
+    "url": "https://www.itvedas.com/",
+    "description": "The complete IT knowledge hub — networking, cloud computing, cybersecurity, Linux, DevOps, and enterprise software explained simply.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ITVedas",
+      "url": "https://www.itvedas.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
+      }
+    }
+  }
+  </script>
 
-/* bento */
-.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
-.card{position:relative;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.6rem;
-  text-decoration:none;color:inherit;transition:border-color .25s,transform .2s;overflow:hidden;display:block;}
-.card::before{content:'';position:absolute;inset:0;background:radial-gradient(400px 180px at var(--mx,50%) 0%,rgba(255,107,53,0.09),transparent 70%);opacity:0;transition:opacity .3s;}
-.card:hover{border-color:var(--border-hi);transform:translateY(-3px);}
-.card:hover::before{opacity:1;}
-.card.span2{grid-column:span 2;}
-.card-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:1rem;background:var(--icon-bg,rgba(255,107,53,0.13));}
-.card h3{font-family:var(--font-display);font-size:1.05rem;font-weight:600;margin-bottom:0.4rem;letter-spacing:-0.01em;}
-.card p{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:0.9rem;}
-.card .meta{font-size:0.75rem;color:var(--muted);display:flex;gap:0.9rem;flex-wrap:wrap;}
-.card .go{position:absolute;top:1.3rem;right:1.3rem;color:var(--muted);transition:color .2s,transform .2s;font-size:1rem;}
-.card:hover .go{color:var(--accent);transform:translate(2px,-2px);}
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/shared.css">
+  <link rel="stylesheet" href="/css/nav-mega.css">
 
-/* cve strip */
-.cve-strip{margin-top:3.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.35rem 1.6rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;}
-.cve-tag{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#F87171;font-weight:700;font-size:0.72rem;
-  padding:0.3rem 0.85rem;border-radius:100px;letter-spacing:0.06em;white-space:nowrap;}
-.cve-strip .cve-txt{flex:1;min-width:240px;font-size:0.9rem;color:var(--sub);}
-.cve-strip .cve-txt b{color:var(--text);font-family:var(--font-display);}
-.sev{font-size:0.72rem;font-weight:700;color:#F87171;}
-.cve-strip a{color:var(--accent);font-size:0.85rem;font-weight:600;text-decoration:none;white-space:nowrap;}
+  <style>
+    /* Homepage Specific Layout Enhancements */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: var(--header-height, 64px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--fd);
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--brand-navy);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo span { color: var(--brand-orange); }
 
-/* article cards */
-.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.art{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-decoration:none;color:inherit;
-  transition:border-color .25s,transform .2s;display:flex;flex-direction:column;}
-.art:hover{border-color:rgba(6,182,212,0.4);transform:translateY(-3px);}
-.art .chip{align-self:flex-start;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.7rem;
-  border-radius:100px;margin-bottom:0.9rem;background:rgba(6,182,212,0.12);color:var(--cyan);border:1px solid rgba(6,182,212,0.3);}
-.art h3{font-family:var(--font-display);font-size:1.02rem;font-weight:600;line-height:1.45;margin-bottom:0.6rem;flex:1;}
-.art p{font-size:0.84rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
-.art .foot{display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;color:var(--muted);border-top:1px solid var(--border);padding-top:0.9rem;}
-.art .foot b{color:var(--cyan);font-weight:600;}
+    /* Hero Section */
+    .hero {
+      padding: calc(var(--header-height, 64px) + 3.5rem) 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 122, 0, 0.08) 0%, transparent 60%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--brand-navy);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+      display: inline-block;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.85rem);
+      font-weight: 800;
+      color: var(--brand-navy);
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--brand-orange), #E06900);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 2.25rem;
+      font-size: clamp(1.05rem, 2vw, 1.2rem);
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
 
-/* tool */
-.tool{margin:4.5rem 0;background:linear-gradient(130deg,rgba(139,92,246,0.12),rgba(6,182,212,0.08));border:1px solid rgba(139,92,246,0.3);
-  border-radius:20px;padding:2.5rem;display:grid;grid-template-columns:1.2fr 1fr;gap:2.5rem;align-items:center;}
-.tool h2{font-family:var(--font-display);font-size:1.7rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.75rem;}
-.tool p{color:var(--sub);font-size:0.95rem;margin-bottom:1.5rem;}
-.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2rem;border-radius:12px;text-decoration:none;
-  font-family:var(--font-display);font-weight:600;font-size:0.92rem;transition:transform .15s,box-shadow .2s;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,53,0.4);}
-.tool-demo{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;}
-.tool-q{font-size:0.85rem;color:var(--sub);margin-bottom:0.9rem;font-weight:600;}
-.tool-opts{display:grid;gap:0.55rem;}
-.opt{padding:0.7rem 1rem;border-radius:10px;border:1px solid var(--border);font-size:0.85rem;color:var(--sub);cursor:pointer;transition:all .2s;background:var(--bg3);}
-.opt:hover{border-color:var(--accent);color:var(--text);}
-.opt.sel{border-color:var(--accent);background:rgba(255,107,53,0.1);color:var(--text);font-weight:600;}
-.tool-result{margin-top:1rem;font-size:0.9rem;padding:0.85rem 1rem;border-radius:10px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);color:var(--green);font-weight:600;display:none;}
-.tool-result.show{display:block;}
+    /* Live Search Bar */
+    .search-wrap {
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0.35rem 0.5rem 0.35rem 1.25rem;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+    }
+    .search-input-wrap:focus-within {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .search-input-wrap input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.75rem 0.5rem 0.75rem 0;
+      font-size: 1.05rem;
+      color: var(--text);
+      outline: none;
+      min-height: 46px;
+    }
+    .search-btn {
+      background: var(--brand-orange);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 0.65rem 1.5rem;
+      font-family: var(--fd);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background var(--transition-fast);
+    }
+    .search-btn:hover { background: var(--accent-hover); }
 
-/* news strip */
-.news-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
-.news-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.35rem 1.5rem;text-decoration:none;color:inherit;transition:border-color .25s;display:flex;gap:1rem;align-items:flex-start;}
-.news-card:hover{border-color:rgba(16,185,129,0.4);}
-.news-card .ni{font-size:1.4rem;flex-shrink:0;}
-.news-card h3{font-family:var(--font-display);font-size:0.98rem;font-weight:600;line-height:1.45;margin-bottom:0.3rem;}
-.news-card p{font-size:0.8rem;color:var(--muted);}
+    .search-results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 500;
+      max-height: 380px;
+      overflow-y: auto;
+      display: none;
+      text-align: left;
+    }
 
-/* footer */
-footer{border-top:1px solid var(--border);margin-top:5rem;padding:3.5rem 2rem 2.5rem;}
-.foot-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;}
-.foot-grid h4{font-family:var(--font-display);font-size:0.85rem;margin-bottom:1rem;color:var(--text);}
-.foot-grid a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.25rem 0;transition:color .2s;}
-.foot-grid a:hover{color:var(--accent);}
-.foot-brand p{color:var(--muted);font-size:0.85rem;margin-top:0.75rem;max-width:280px;line-height:1.6;}
-.copyright{max-width:1100px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    /* Stats Banner */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-item b {
+      display: block;
+      font-size: 2rem;
+      font-family: var(--fd);
+      font-weight: 800;
+      color: var(--brand-navy);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-item span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-@media(max-width:900px){
-  .bento{grid-template-columns:repeat(2,1fr);}
-  .card.span2{grid-column:span 2;}
-  .art-grid,.news-grid{grid-template-columns:1fr;}
-  .tool{grid-template-columns:1fr;padding:1.75rem;}
-  .foot-grid{grid-template-columns:1fr 1fr;}
-}
-@media(max-width:560px){.bento{grid-template-columns:1fr;}.card.span2{grid-column:span 1;}}
-/* Newsletter signup */
-.newsletter{max-width:560px;margin:3rem auto 0;padding:1.5rem;background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(139,92,246,0.08));border:1px solid rgba(255,107,53,0.2);border-radius:var(--radius);text-align:center;}
-.newsletter h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin-bottom:0.5rem;}
-.newsletter p{font-size:0.9rem;color:var(--muted);margin-bottom:1.25rem;}
-.nl-form{display:flex;gap:0.5rem;flex-wrap:wrap;}
-.nl-form input{flex:1;min-width:200px;padding:0.75rem 1rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:0.9rem;transition:border-color .2s;}
-.nl-form input:focus{outline:none;border-color:var(--accent);}
-.nl-form button{background:var(--accent);color:#fff;padding:0.75rem 1.5rem;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:box-shadow .2s;}
-.nl-form button:hover{box-shadow:0 4px 16px rgba(255,107,53,0.35);}
-.nl-msg{margin-top:0.75rem;font-size:0.8rem;color:var(--muted);display:none;}
-.nl-msg.show{display:block;}
-.nl-msg.success{color:var(--green);}
-.nl-msg.error{color:#F87171;}
-@media(max-width:900px){.nl-form{flex-direction:column;}.nl-form input,.nl-form button{width:100%;}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
-</style>
+    /* Section Headings */
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 4.5rem auto 2.5rem;
+    }
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brand-orange);
+      margin-bottom: 0.5rem;
+    }
+    .section-header h2 {
+      margin-top: 0;
+      color: var(--brand-navy);
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+    }
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com","logo":"https://www.itvedas.com/assets/brand/itvedas-logo.svg","description":"The complete IT knowledge hub covering networking, cloud, security, DevOps, databases, Linux, hardware, and compliance","sameAs":["https://github.com/itvedas29/itvedas"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com","logo":"https://itvedas.com/assets/brand/itvedas-logo.svg","description":"The complete IT knowledge hub covering networking, cloud, security, DevOps, databases, Linux, hardware, and compliance","sameAs":["https://github.com/itvedas29/itvedas"]}</script>  <link rel="stylesheet" href="/css/nav-mega.css">
+    /* Topics Grid */
+    .topic-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: all var(--transition-normal);
+      text-decoration: none;
+    }
+    .topic-card:hover {
+      border-color: rgba(255, 122, 0, 0.4);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+    .topic-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .topic-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .topic-card h3 {
+      font-size: 1.25rem;
+      color: var(--brand-navy);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .topic-card p {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+    .topic-action {
+      font-family: var(--fd);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--brand-orange);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Feature Highlights Section */
+    .feature-banner {
+      background: linear-gradient(135deg, var(--brand-navy), #081B38);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 2.5rem;
+      color: #FFFFFF;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin: 4.5rem auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-banner h2 {
+      color: #FFFFFF;
+      margin-top: 0;
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    }
+    .feature-banner p {
+      color: #CBD5E1;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 2rem;
+      text-align: center;
+      max-width: 820px;
+      margin: 5rem auto;
+      box-shadow: var(--shadow-md);
+    }
+    .newsletter-section h2 {
+      margin-top: 0;
+      color: var(--brand-navy);
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 520px;
+      margin: 1.5rem auto 1rem;
+      flex-wrap: wrap;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 260px;
+      min-height: 48px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+    }
+    .newsletter-input:focus {
+      border-color: var(--brand-orange);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem 3rem;
+      background: #FFFFFF;
+      color: var(--muted);
+      margin-top: auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      max-width: var(--max-width);
+      margin: 0 auto 3rem;
+      text-align: left;
+    }
+    .footer-col h4 {
+      color: var(--brand-navy);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-family: var(--fd);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.65rem;
+      transition: color var(--transition-fast);
+    }
+    .footer-col a:hover { color: var(--brand-orange); }
+
+    @media (max-width: 900px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+      .feature-banner { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 1.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 640px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; padding: 1.25rem; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+      .newsletter-form { flex-direction: column; }
+      .search-btn { width: 100%; justify-content: center; }
+    }
+  </style>
 </head>
 <body>
-<div class="mesh"></div><div class="grain"></div>
+  <a href="#main" class="skip-link">Skip to main content</a>
 
-<nav>
-  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
-  <div class="nav-links">
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel mega">
-        <div class="nav-mega-grid">
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Core IT</div>
-            <a href="/articles/networking/">🌐 Networking</a>
-            <a href="/articles/cloud/">☁️ Cloud</a>
-            <a href="/articles/linux/">🐧 Linux</a>
-            <a href="/articles/hardware/">🖥️ Hardware</a>
+  <!-- Top Navigation Header -->
+  <nav>
+    <a href="/" class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1.2em" height="1.2em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true">
+        <rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/>
+        <rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/>
+        <rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/>
+        <path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/>
+        <path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/>
+      </svg>IT<span>Vedas</span>
+    </a>
+
+    <div class="nav-links">
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel mega">
+          <div class="nav-mega-grid">
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Core IT</div>
+              <a href="/articles/networking/">🌐 Networking</a>
+              <a href="/articles/cloud/">☁️ Cloud</a>
+              <a href="/articles/linux/">🐧 Linux</a>
+              <a href="/articles/hardware/">🖥️ Hardware</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Security & Compliance</div>
+              <a href="/articles/security/">🔐 Security</a>
+              <a href="/articles/compliance/">📋 Compliance</a>
+              <a href="/articles/cve/">🎯 CVE Analysis</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Dev, Data & AI</div>
+              <a href="/articles/api/">🔌 APIs</a>
+              <a href="/articles/devops/">🚀 DevOps</a>
+              <a href="/articles/databases/">🗄️ Databases</a>
+              <a href="/articles/ai-models/">🤖 AI Models</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Microsoft Stack</div>
+              <a href="/articles/azure/">☁️ Azure</a>
+              <a href="/articles/powershell/">🔷 PowerShell</a>
+              <a href="/articles/iis/">🖧 IIS</a>
+              <a href="/articles/sql-server/">🗄️ SQL Server</a>
+            </div>
           </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Security &amp; Compliance</div>
-            <a href="/articles/security/">🔐 Security</a>
-            <a href="/articles/compliance/">📋 Compliance</a>
-            <a href="/articles/cve/">🎯 CVE Analysis</a>
-          </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
-            <a href="/articles/api/">🔌 APIs</a>
-            <a href="/articles/devops/">🚀 DevOps</a>
-            <a href="/articles/databases/">🗄️ Databases</a>
-            <a href="/articles/ai-models/">🤖 AI Models</a>
-          </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Microsoft Stack</div>
-            <a href="/articles/azure/">☁️ Azure</a>
-            <a href="/articles/powershell/">🔷 PowerShell</a>
-            <a href="/articles/iis/">🖧 IIS</a>
-            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          <div class="nav-mega-footer">
+            <span>15 topic areas · 100+ comprehensive guides</span>
+            <a href="/chapters.html">Browse all chapters →</a>
           </div>
         </div>
-        <div class="nav-mega-footer">
-          <span>15 topic areas &middot; 100+ guides</span>
-          <a href="/chapters">Browse all chapters &rarr;</a>
+      </div>
+
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/quiz.html">🧠 Skill Quiz</a>
+          <a href="/career-navigator.html">🧭 Career Navigator</a>
+          <a href="/career-paths.html">🛤️ Career Paths</a>
+          <a href="/cve-listing.html">🎯 CVE Database</a>
+          <a href="/tools/">🛠️ Developer Tools</a>
         </div>
       </div>
-    </div>
 
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel simple">
-        <a href="/quiz">🧠 Skill Quiz</a>
-        <a href="/career-navigator">🧭 Career Navigator</a>
-        <a href="/career-paths">🛤️ Career Paths</a>
-        <a href="/cve-listing">🎯 CVE Database</a>
-        <a href="/tools/">🛠️ Developer Tools</a>
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/news.html">📰 News</a>
+          <a href="/security-news.html">🛡️ Security News</a>
+          <a href="/news/archive/">🗂️ News Archive</a>
+          <a href="/problems-solutions.html">🔧 Problems & Solutions</a>
+          <a href="/faq.html">❓ FAQ</a>
+        </div>
       </div>
-    </div>
 
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel simple">
-        <a href="/news">📰 News</a>
-        
-        <a href="/news/archive/">🗂️ News Archive</a>
-        <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
-        <a href="/faq">❓ FAQ</a>
-        <a href="/manageengine/">🤝 Recommended Tools</a>
+      <a href="/about.html">About</a>
+      <a href="/author/">Author</a>
+      <a href="/services.html">Services</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/chapters.html" class="nav-cta">Start Learning</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">
+          <span class="pulse"></span> 100+ Production-Ready Guides · Updated Daily
+        </div>
+        <h1>Master Enterprise IT Skills,<br><span class="grad">Explained Simply.</span></h1>
+        <p>
+          Networking, cloud architecture, cybersecurity, Linux administration, and DevOps. Practical guides for IT engineers, students, and sysadmins. No jargon, no paywalls.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="search-wrap">
+          <form class="search-input-wrap" role="search" onsubmit="event.preventDefault();">
+            <label for="siteSearch" class="sr-only">Search technical guides and articles</label>
+            <input type="search" id="siteSearch" placeholder="Search guides, protocols, CVEs, or commands..." autocomplete="off">
+            <button type="submit" class="search-btn" id="searchSubmitBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Search
+            </button>
+          </form>
+          <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <!-- Metric Counter -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <b>100+</b>
+            <span>Deep-Dive Guides</span>
+          </div>
+          <div class="stat-item">
+            <b>15</b>
+            <span>Technical Topics</span>
+          </div>
+          <div class="stat-item">
+            <b>5,400+</b>
+            <span>Tracked CVEs</span>
+          </div>
+          <div class="stat-item">
+            <b>₹0</b>
+            <span>Forever Free Access</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <a href="/about">About</a>
-    <a href="/services">Services</a>
-    <a href="/contact">Contact</a>
-    <a href="/chapters" class="nav-cta">Start Learning</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <a href="/articles/linux/" class="float f-term" title="Explore Linux guides">
-    <div class="tbar"><i></i><i></i><i></i></div>
-    <pre>$ ping itvedas.com
-<span class="g">64 bytes: icmp_seq=1
-ttl=57 time=12ms</span>
-$ ssh student@lab
-<span class="c"># Welcome to Linux 🐧</span></pre>
-  </a>
-  <a href="/articles/cve/" class="float f-cve" title="Browse CVE database">
-    <span class="fc-badge">⚠ LIVE CVE FEED</span>
-    <b id="fcveId">CVE Database</b>
-    <span id="fcveDesc">Tracking the latest vulnerabilities</span>
-    <div class="bar"><i></i></div>
-    <span id="fcveSev" style="margin-top:0.4rem;color:#F87171;font-weight:700;">Updated daily</span>
-  </a>
-  <a href="/#chapters" class="float f-chip f-chip1" title="View all topics">🎓 Learners across 190+ countries</a>
-  <a href="/news" class="float f-chip f-chip2" title="Read latest news">📰 Latest news and updates</a>
-  <a href="/articles/cloud/" class="float f-chip f-chip3" title="Explore cloud services">☁️ AWS · Azure · GCP</a>
-
-  <div class="hero-badge"><span class="pulse"></span> 100+ comprehensive guides · Updated regularly</div>
-  <h1>Master IT skills,<br><span class="grad">explained simply.</span></h1>
-  <p>Networking, cloud, security, Linux and hardware — practical guides for IT students and professionals. No jargon, no paywall.</p>
-  <div class="search-wrap">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input type="text" id="searchInput" placeholder="Search all guides… try 'subnetting' or 'ddr5'" aria-label="Search guides" autocomplete="off">
-    <kbd>/</kbd>
-    <div class="search-results" id="searchResults"></div>
-  </div>
-  <div class="stats">
-    <div class="stat"><b>100+</b><span>Guides</span></div>
-    <div class="stat"><b>15</b><span>Topics</span></div>
-    <div class="stat"><b>268</b><span>News stories</span></div>
-    <div class="stat"><b>₹0</b><span>Forever free</span></div>
-  </div>
-
-  <div class="newsletter" id="newsletter">
-    <h3>Get Weekly IT News</h3>
-    <p>New articles, security alerts, and career tips delivered to your inbox every Friday.</p>
-    <form class="nl-form" id="nlForm">
-      <input type="email" id="nlEmail" placeholder="your@email.com" required aria-label="Newsletter email">
-      <div style="margin:1rem 0;text-align:left;font-size:0.85rem;">
-        <label style="display:flex;align-items:flex-start;gap:0.5rem;color:var(--muted);">
-          <input type="checkbox" id="nlConsent" required style="margin-top:0.2rem;flex-shrink:0;">
-          <span>I agree to receive weekly newsletters and acknowledge the <a href="/privacy-policy" style="color:var(--accent);text-decoration:none;">Privacy Policy</a></span>
-        </label>
+    <!-- Core Topics Section -->
+    <section class="container" style="padding-bottom: 4rem;">
+      <div class="section-header">
+        <div class="section-tag">Learning Directory</div>
+        <h2>Explore Core IT Disciplines</h2>
+        <p>From fundamental network routing and Linux system calls to multi-region cloud resilience and Zero Trust security architectures.</p>
       </div>
-      <button type="submit">Subscribe</button>
-    </form>
-    <div class="nl-msg" id="nlMsg"></div>
-  </div>
-</div>
 
-<div class="wrap">
-  <div class="sec" id="chapters">
-    <div class="sec-label">Learning Paths</div>
-    <h2>All topics covered, zero fluff</h2>
-    <p class="lead">Every topic goes from absolute beginner to job-ready, in plain English.</p>
-    <div class="bento">
-      <a class="card span2" href="/articles/networking/" style="--icon-bg:rgba(255,107,53,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🌐</div>
-        <h3>Networking — How Networks Talk</h3>
-        <p>TCP/IP, DNS, subnetting, routing, VPNs and firewalls. The foundation every IT career is built on.</p>
-        <div class="meta"><span>📚 8 guides</span><span>👶 Beginner friendly</span></div>
-      </a>
-      <a class="card" href="/articles/cloud/" style="--icon-bg:rgba(139,92,246,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">☁️</div>
-        <h3>Cloud</h3>
-        <p>AWS, Azure &amp; GCP — with pricing in ₹.</p>
-        <div class="meta"><span>📚 6 guides</span></div>
-      </a>
-      <a class="card" href="/articles/security/" style="--icon-bg:rgba(16,185,129,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🔐</div>
-        <h3>Security</h3>
-        <p>Threats, hardening &amp; the CVE database.</p>
-        <div class="meta"><span>📚 21 guides</span></div>
-      </a>
-      <a class="card" href="/articles/hardware/" style="--icon-bg:rgba(6,182,212,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🖥️</div>
-        <h3>Hardware</h3>
-        <p>Storage, RAM &amp; laptop buying guides.</p>
-        <div class="meta"><span>📚 7 guides</span></div>
-      </a>
-      <a class="card" href="/articles/linux/" style="--icon-bg:rgba(239,68,68,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🐧</div>
-        <h3>Linux</h3>
-        <p>Terminal, bash &amp; system administration.</p>
-        <div class="meta"><span>📚 3 guides</span></div>
-      </a>
-      <a class="card" href="/articles/devops/" style="--icon-bg:rgba(245,158,11,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">⚙️</div>
-        <h3>DevOps</h3>
-        <p>Docker, Kubernetes, CI/CD pipelines.</p>
-        <div class="meta"><span>📚 3 guides</span></div>
-      </a>
-      <a class="card" href="/articles/databases/" style="--icon-bg:rgba(236,72,153,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🗄️</div>
-        <h3>Databases</h3>
-        <p>SQL, NoSQL, indexing &amp; replication.</p>
-        <div class="meta"><span>📚 6 guides</span></div>
-      </a>
-      <a class="card" href="/articles/compliance/" style="--icon-bg:rgba(236,72,153,0.10)">
-        <span class="go">↗</span>
-        <div class="card-icon">📋</div>
-        <h3>Compliance</h3>
-        <p>GDPR, HIPAA, PCI-DSS &amp; ISO 27001.</p>
-        <div class="meta"><span>📚 1 guide</span></div>
-      </a>
-      <a class="card" href="/articles/powershell/" style="--icon-bg:rgba(0,120,212,0.16)">
-        <span class="go">↗</span>
-        <div class="card-icon">🔷</div>
-        <h3>PowerShell</h3>
-        <p>Automation, AD &amp; server administration.</p>
-        <div class="meta"><span>📚 4 guides</span></div>
-      </a>
-      <a class="card" href="/articles/azure/" style="--icon-bg:rgba(0,120,212,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">☁️</div>
-        <h3>Azure</h3>
-        <p>VMs, networking, Entra ID &amp; SQL.</p>
-        <div class="meta"><span>📚 4 guides</span></div>
-      </a>
-      <a class="card" href="/articles/iis/" style="--icon-bg:rgba(6,182,212,0.12)">
-        <span class="go">↗</span>
-        <div class="card-icon">🌐</div>
-        <h3>IIS Server</h3>
-        <p>Setup, app pools &amp; SSL certificates.</p>
-        <div class="meta"><span>📚 3 guides</span></div>
-      </a>
-      <a class="card" href="/articles/sql-server/" style="--icon-bg:rgba(236,72,153,0.12)">
-        <span class="go">↗</span>
-        <div class="card-icon">🗄️</div>
-        <h3>SQL Server</h3>
-        <p>Installation, licensing &amp; Always On.</p>
-        <div class="meta"><span>📚 3 guides</span></div>
-      </a>
-      <a class="card" href="/articles/cve/" style="--icon-bg:rgba(239,68,68,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🛡️</div>
-        <h3>CVE Analysis</h3>
-        <p>Deep dives into famous vulnerabilities.</p>
-        <div class="meta"><span>📚 20+ guides</span></div>
-      </a>
-      <a class="card" href="/articles/api/" style="--icon-bg:rgba(132,204,22,0.14)">
-        <span class="go">↗</span>
-        <div class="card-icon">🔌</div>
-        <h3>APIs</h3>
-        <p>REST, HTTP methods, JSON &amp; webhooks.</p>
-        <div class="meta"><span>📚 1 guide</span><span>👶 Beginner friendly</span></div>
-      </a>
-    </div>
+      <div class="grid grid-3">
+        <!-- Topic 1: Networking -->
+        <a href="/articles/networking/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🌐</span>
+            <span class="badge badge-net">Networking</span>
+          </div>
+          <h3>Networking & Protocols</h3>
+          <p>BGP, OSPF, subnetting, TCP/IP handshakes, DNS resolution, and firewall packet filtering.</p>
+          <div class="topic-action">Explore 8 Guides →</div>
+        </a>
 
-    <div class="cve-strip">
-      <span class="cve-tag">⚠ CVE DATABASE</span>
-      <span class="cve-txt"><b>Track the latest vulnerabilities</b> — severity scores, affected products and remediation steps, updated daily.</span>
-      <a href="/articles/cve/">Browse CVE database →</a>
-    </div>
-  </div>
+        <!-- Topic 2: Security -->
+        <a href="/articles/security/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🔐</span>
+            <span class="badge badge-sec">Security</span>
+          </div>
+          <h3>Cybersecurity & Zero Trust</h3>
+          <p>Zero Trust architecture, threat hunting, ransomware defense, encryption algorithms, and MFA protocols.</p>
+          <div class="topic-action">Explore 10 Guides →</div>
+        </a>
 
-  <div class="sec">
-    <div class="sec-label">Fresh This Week</div>
-    <h2>Latest guides</h2>
-    <p class="lead">Comprehensive IT education with prices in ₹, examples that make sense in India.</p>
-    <div class="art-grid">
-      <a class="art" href="/articles/hardware/storage-explained">
-        <span class="chip">Hardware</span>
-        <h3>Computer Storage Explained: HDD vs SSD vs NVMe (2026 Guide)</h3>
-        <p>Real speed differences, lifespan, and which drive to buy — a 1TB NVMe now costs just ₹3,400-5,100.</p>
-        <div class="foot"><span>⏱ 11 min read</span><b>Read →</b></div>
-      </a>
-      <a class="art" href="/articles/hardware/ram-explained">
-        <span class="chip">Hardware</span>
-        <h3>RAM Explained: DDR4 vs DDR5 &amp; How Much You Actually Need</h3>
-        <p>8GB vs 16GB vs 32GB decoded — including exactly how much you need for Docker and VM labs.</p>
-        <div class="foot"><span>⏱ 10 min read</span><b>Read →</b></div>
-      </a>
-      <a class="art" href="/articles/hardware/laptop-buying-guide-it-students">
-        <span class="chip">Hardware</span>
-        <h3>How to Choose a Laptop for IT Students (2026 Buying Guide)</h3>
-        <p>Spec tiers from ₹51,000 to ₹1.2 lakh — and the underpowered-laptop mistake that ruins VM coursework.</p>
-        <div class="foot"><span>⏱ 12 min read</span><b>Read →</b></div>
-      </a>
-    </div>
-  </div>
+        <!-- Topic 3: Cloud -->
+        <a href="/articles/cloud/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">☁️</span>
+            <span class="badge badge-cld">Cloud</span>
+          </div>
+          <h3>Cloud Computing</h3>
+          <p>Multi-region cloud infrastructure, disaster recovery, AWS, Azure, GCP architecture, and cost optimization.</p>
+          <div class="topic-action">Explore 9 Guides →</div>
+        </a>
 
-  <div class="tool">
-    <div>
-      <div class="sec-label">Quick Advice</div>
-      <h2>How much RAM do you actually need?</h2>
-      <p>Pick your main workload and get an instant spec recommendation with an Indian price estimate.</p>
-      <a class="btn" href="/articles/hardware/ram-explained">Read the full RAM guide →</a>
-    </div>
-    <div class="tool-demo">
-      <div class="tool-q">What will you run most often?</div>
-      <div class="tool-opts">
-        <div class="opt" data-r="16GB (2×8GB) — around ₹3,500-5,000">💻 &nbsp;Coding + browsing</div>
-        <div class="opt" data-r="32GB (2×16GB) — around ₹7,000-10,000">📦 &nbsp;Docker / Kubernetes labs</div>
-        <div class="opt" data-r="32-64GB — around ₹7,000-20,000">📊 &nbsp;Data science / ML</div>
+        <!-- Topic 4: Linux -->
+        <a href="/articles/linux/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🐧</span>
+            <span class="badge badge-os">Linux</span>
+          </div>
+          <h3>Linux & Kernel Tuning</h3>
+          <p>Systemd, cgroups v2, sysctl performance tuning, kernel hardening, and enterprise server automation.</p>
+          <div class="topic-action">Explore 7 Guides →</div>
+        </a>
+
+        <!-- Topic 5: DevOps -->
+        <a href="/articles/devops/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🚀</span>
+            <span class="badge badge-dev">DevOps</span>
+          </div>
+          <h3>DevOps & Containers</h3>
+          <p>Docker engine architecture, container escapes, Kubernetes orchestration, and Service Mesh (Istio/Linkerd).</p>
+          <div class="topic-action">Explore 8 Guides →</div>
+        </a>
+
+        <!-- Topic 6: Databases -->
+        <a href="/articles/databases/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🗄️</span>
+            <span class="badge badge-db">Databases</span>
+          </div>
+          <h3>Databases & High Availability</h3>
+          <p>SQL vs NoSQL trade-offs, PostgreSQL replication, split-brain protection, and enterprise disaster recovery.</p>
+          <div class="topic-action">Explore 7 Guides →</div>
+        </a>
+
+        <!-- Topic 7: Hardware -->
+        <a href="/articles/hardware/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🖥️</span>
+            <span class="badge badge-hw">Hardware</span>
+          </div>
+          <h3>Enterprise Hardware & Storage</h3>
+          <p>SAN vs NAS storage networks, NVMe PCIe generations, enterprise server hardware, and laptop guides.</p>
+          <div class="topic-action">Explore 6 Guides →</div>
+        </a>
+
+        <!-- Topic 8: Compliance -->
+        <a href="/articles/compliance/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">📋</span>
+            <span class="badge badge-comp">Compliance</span>
+          </div>
+          <h3>Compliance & Audit Standards</h3>
+          <p>SOC 2 Type I/II audits, ISO 27001 readiness, GDPR data security, and enterprise audit evidence collection.</p>
+          <div class="topic-action">Explore 6 Guides →</div>
+        </a>
+
+        <!-- Topic 9: AI Tools & Models -->
+        <a href="/ai-tools/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🤖</span>
+            <span class="badge badge-ai">AI Systems</span>
+          </div>
+          <h3>AI Models & Enterprise Tools</h3>
+          <p>Head-to-head model comparisons, LLM API integration guides, token economics, and AI coding tools.</p>
+          <div class="topic-action">Explore Directory →</div>
+        </a>
       </div>
-      <div class="tool-result" id="toolResult"></div>
-    </div>
-  </div>
+    </section>
 
-  <div class="sec">
-    <div class="sec-label">Stay Current</div>
-    <h2>News &amp; live updates</h2>
-    <div class="news-grid">
-      <div class="news-card">
-        <span class="ni">📰</span>
+    <!-- Interactive Intelligence Feature Banner -->
+    <section class="container">
+      <div class="feature-banner">
         <div>
-          <h3><a href="/news" style="color:inherit;text-decoration:none;">IT News</a></h3>
-          <p>268 stories and counting — cloud, AI, enterprise tech, breaches, ransomware, patches and CVE alerts, updated daily. Filter to security-only right on the page, or jump straight to the <a href="/security-news" style="font-weight:600;">dedicated security feed →</a></p>
+          <div class="badge badge-critical" style="margin-bottom: 1rem;">Live Security Portal</div>
+          <h2>Actionable CVE Vulnerability Intelligence</h2>
+          <p>
+            Track real-time CVE advisories cross-referenced with CISA Known Exploited Vulnerabilities (KEV) and the National Vulnerability Database (NVD). Detailed mitigation, attack vectors, and patch links for system administrators.
+          </p>
+          <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="/cve-listing.html" class="btn btn-primary">Open CVE Database →</a>
+            <a href="/security-news.html" class="btn btn-secondary">Read Security News</a>
+          </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <div style="font-family: var(--fd); font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; color: #FFFFFF;">
+            ⚡ What Sets ITVedas Apart
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem;">
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>10+ Years Hands-On Experience:</strong> Written by engineers who actively build and operate real production IT systems.</span>
+            </li>
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>Zero Affiliate Clutter:</strong> Honest technical recommendations based strictly on real-world stability.</span>
+            </li>
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>Full Multi-Device Accessibility:</strong> Optimized for smartphones, tablets, and desktop workstations.</span>
+            </li>
+          </ul>
         </div>
       </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="container">
+      <div class="newsletter-section" id="newsletter">
+        <div class="section-tag">Stay Informed</div>
+        <h2>Engineering Insights, Direct to Your Inbox</h2>
+        <p style="max-width: 600px; margin: 0 auto 1.5rem;">
+          Get new technical deep dives, zero-day CVE advisories, and architecture walkthroughs once per week. Zero spam, unsubscribe anytime.
+        </p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to ITVedas!');">
+          <label for="newsletterEmail" class="sr-only">Enter your work or personal email</label>
+          <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="engineer@company.com" required>
+          <button type="submit" class="btn btn-primary" style="min-height: 48px;">Subscribe Free</button>
+        </form>
+        <small style="color: var(--muted); font-size: 0.8rem;">We respect your privacy. Read our <a href="/privacy-policy.html" style="text-decoration: underline;">Privacy Policy</a>.</small>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div style="font-family: var(--fd); font-weight: 700; font-size: 1.4rem; color: var(--brand-navy); margin-bottom: 0.75rem;">
+          IT<span style="color: var(--brand-orange);">Vedas</span>
+        </div>
+        <p style="font-size: 0.925rem; line-height: 1.65; max-width: 320px; color: var(--text-secondary);">
+          Practical technical knowledge platform designed for engineers, IT professionals, and students. Vendor-neutral, rigorous, and accessible.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Core Disciplines</h4>
+        <a href="/articles/networking/">Networking</a>
+        <a href="/articles/cloud/">Cloud Computing</a>
+        <a href="/articles/security/">Cybersecurity</a>
+        <a href="/articles/linux/">Linux Systems</a>
+        <a href="/articles/devops/">DevOps & Containers</a>
+        <a href="/articles/databases/">Databases & HA</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Tools & Feeds</h4>
+        <a href="/cve-listing.html">CVE Vulnerabilities</a>
+        <a href="/news.html">IT & Security News</a>
+        <a href="/quiz.html">Technical Skill Quiz</a>
+        <a href="/career-paths.html">IT Career Roadmaps</a>
+        <a href="/problems-solutions.html">Problems & Solutions</a>
+        <a href="/tools/">Developer Utilities</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/about.html">About ITVedas</a>
+        <a href="/author/">Author & Team</a>
+        <a href="/services.html">Services Overview</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+      </div>
     </div>
-  </div>
-</div>
 
-<footer>
-  <div class="foot-grid">
-    <div class="foot-brand">
-      <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
-      <p>The complete IT knowledge hub — explained simply, for everyone. Built for India, useful everywhere.</p>
+    <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 2rem; font-size: 0.85rem; color: var(--muted);">
+      © 2026 ITVedas · Practical Engineering Knowledge for Everyone
     </div>
-    <div>
-      <h4>Learn</h4>
-      <a href="/#chapters">All Topics</a>
-      <a href="/career-paths">Career Paths</a>
-      <a href="/career-navigator">Career Navigator</a>
-      <a href="/quiz">IT Quiz</a>
-      <a href="/problems-solutions">Problems &amp; Solutions</a>
-    </div>
-    <div>
-      <h4>Security</h4>
-      
-      <a href="/articles/cve/">CVE Database</a>
-      <a href="/news">IT News</a>
-    </div>
-    <div>
-      <h4>ITVedas</h4>
-      <a href="/about">About</a>
-      <a href="/services">Services</a>
-      <a href="/faq">FAQ</a>
-      <a href="/privacy-policy">Privacy</a>
-      <a href="/terms-of-service">Terms</a>
-      <a href="/contact">Contact</a>
-    </div>
-  </div>
-  <div class="copyright">
-    <span>© 2026 ITVedas · Knowledge for everyone</span>
-    <span>Made with ❤️ in India</span>
-  </div>
-  <!-- Affiliate Disclosure Component (disabled) -->
-  <div id="affiliateDisclosure" style="display:none;margin-top:2rem;padding:1rem;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.2);border-radius:8px;color:var(--muted);font-size:0.85rem;line-height:1.6;">
-    <strong style="color:var(--text);">Affiliate Disclosure:</strong>
-    <p>Some links on this site may be affiliate links. When you purchase through these links, we may earn a small commission at no additional cost to you. We only recommend products and services we believe in. See our <a href="/privacy-policy">Privacy Policy</a> for details.</p>
-  </div>
-</footer>
+  </footer>
 
-<script>
-/* Affiliate Disclosure Configuration */
-var AFFILIATE_CONFIG={enabled:false};
-if(AFFILIATE_CONFIG.enabled){
-  document.addEventListener('DOMContentLoaded',function(){
-    var disc=document.getElementById('affiliateDisclosure');
-    if(disc)disc.style.display='block';
-  });
-}
-
-/* ===== Search: static base + lazy-loaded full index (all 497 pages) ===== */
-var SEARCH_INDEX=[
-  {title:"Networking — How Networks Talk",topic:"Networking",url:"/articles/networking/",icon:"🌐",kw:"networking tcp ip dns subnetting routing vpn firewall"},
-  {title:"Cloud — AWS, Azure & GCP",topic:"Cloud",url:"/articles/cloud/",icon:"☁️",kw:"cloud aws azure gcp serverless s3 ec2 lambda"},
-  {title:"Security — Threats & Hardening",topic:"Security",url:"/articles/security/",icon:"🔐",kw:"security cybersecurity hacking malware ransomware encryption"},
-  {title:"DevOps — Docker, Kubernetes, CI/CD",topic:"DevOps",url:"/articles/devops/",icon:"⚙️",kw:"devops docker kubernetes jenkins terraform cicd pipeline"},
-  {title:"Databases — SQL & NoSQL",topic:"Databases",url:"/articles/databases/",icon:"🗄️",kw:"database sql nosql mysql postgresql mongodb index"},
-  {title:"Linux — Own the Terminal",topic:"Linux",url:"/articles/linux/",icon:"🐧",kw:"linux bash terminal ssh systemd cron permissions ubuntu"},
-  {title:"Hardware — Silicon to System",topic:"Hardware",url:"/articles/hardware/",icon:"🖥️",kw:"hardware cpu ram ssd hdd gpu nvme raid memory storage laptop"},
-  {title:"Compliance — Rules That Protect",topic:"Compliance",url:"/articles/compliance/",icon:"📋",kw:"compliance gdpr hipaa soc 2 pci dss iso 27001"},
-  {title:"PowerShell Guides",topic:"PowerShell",url:"/articles/powershell/",icon:"🔷",kw:"powershell scripting cmdlets automation active directory"},
-  {title:"Azure Guides",topic:"Azure",url:"/articles/azure/",icon:"☁️",kw:"azure vm entra vnet nsg expressroute"},
-  {title:"IIS Server Guides",topic:"IIS",url:"/articles/iis/",icon:"🌐",kw:"iis web server app pool ssl windows"},
-  {title:"SQL Server Guides",topic:"SQL Server",url:"/articles/sql-server/",icon:"🗄️",kw:"sql server always on licensing installation"},
-  {title:"CVE Database",topic:"Security",url:"/articles/cve/",icon:"🛡️",kw:"cve vulnerability exploit cvss patch"},
-  {title:"IT News",topic:"News",url:"/news.html",icon:"📰",kw:"news technology industry updates"},
-  {title:"Security News",topic:"News",url:"/security-news.html",icon:"🛡️",kw:"security news breach ransomware alert"},
-  {title:"Career Paths",topic:"Career",url:"/career-paths.html",icon:"🎯",kw:"career path job salary role certification"},
-  {title:"IT Quiz",topic:"Quiz",url:"/quiz.html",icon:"🧠",kw:"quiz test knowledge score assessment"},
-  {title:"Problems & Solutions",topic:"Fixes",url:"/problems-solutions.html",icon:"🔧",kw:"problem solution fix error troubleshoot wifi slow printer"},
-];
-var ICONS={Networking:"🌐",Cloud:"☁️",Security:"🔐",DevOps:"⚙️",Databases:"🗄️",Linux:"🐧",Hardware:"🖥️",Compliance:"📋",PowerShell:"🔷",Azure:"☁️",IIS:"🌐","SQL Server":"🗄️",CVE:"🛡️",News:"📰","Microsoft 365":"📧","AI/ML":"🤖",Windows:"🪟",Servers:"🖥️"};
-var searchIndexLoaded=false;
-function loadSearchIndex(){
-  if(searchIndexLoaded)return;
-  searchIndexLoaded=true;
-  fetch('/search-index.json').then(function(r){return r.ok?r.json():null;}).then(function(data){
-    if(Array.isArray(data)){
-      var extra=data.map(function(a){return {
-        title:a.title, topic:a.topic||"Guide", url:a.url||("/articles/"+a.file),
-        icon:(ICONS[a.topic]||"📄"), kw:(a.keyword||"")+" "+(a.title||"")+" "+(a.description||"")
-      };});
-      SEARCH_INDEX=extra.concat(SEARCH_INDEX);
-    }
-  }).catch(function(){});
-}
-function runSearch(){
-  var q=document.getElementById('searchInput').value.trim().toLowerCase();
-  var box=document.getElementById('searchResults');
-  if(!q){box.classList.remove('show');box.innerHTML='';return;}
-  var seen={},hits=[];
-  for(var i=0;i<SEARCH_INDEX.length&&hits.length<8;i++){
-    var it=SEARCH_INDEX[i];
-    if(seen[it.url])continue;
-    if(it.title.toLowerCase().indexOf(q)>-1||it.topic.toLowerCase().indexOf(q)>-1||(it.kw&&it.kw.toLowerCase().indexOf(q)>-1)){
-      seen[it.url]=1;hits.push(it);
-    }
-  }
-  if(!hits.length){box.innerHTML='<div class="sr-empty">No results for "'+q.replace(/</g,'&lt;')+'" — try another word</div>';}
-  else{
-    box.innerHTML=hits.map(function(h){
-      return '<a class="sr-item" href="'+h.url+'"><span class="sr-icon">'+h.icon+'</span><span><span class="sr-title">'+h.title+'</span><br><span class="sr-topic">'+h.topic+'</span></span></a>';
-    }).join('');
-  }
-  box.classList.add('show');
-}
-document.addEventListener('DOMContentLoaded',function(){
-  var si=document.getElementById('searchInput');
-  si.addEventListener('focus',loadSearchIndex,{once:true});
-  si.addEventListener('input',runSearch);
-  document.addEventListener('keydown',function(e){
-    if(e.key==='/'&&document.activeElement!==si){e.preventDefault();si.focus();}
-    if(e.key==='Escape'){document.getElementById('searchResults').classList.remove('show');}
-  });
-  document.addEventListener('click',function(e){
-    if(!e.target.closest('.search-wrap')){document.getElementById('searchResults').classList.remove('show');}
-  });
-
-  /* continue-learning card via localStorage */
-  try{
-    var last=JSON.parse(localStorage.getItem('itv-last')||'null');
-    if(last&&last.title&&last.url){
-      document.getElementById('continueTitle').textContent=last.title;
-      document.getElementById('continueLink').href=last.url;
-      document.getElementById('continueCard').classList.add('show');
-    }
-  }catch(e){}
-  /* remember article clicks */
-  document.querySelectorAll('a.art, .bento a.card').forEach(function(a){
-    a.addEventListener('click',function(){
-      try{
-        var t=a.querySelector('h3');
-        localStorage.setItem('itv-last',JSON.stringify({title:t?t.textContent:a.href,url:a.getAttribute('href')}));
-      }catch(e){}
-    });
-  });
-
-  /* RAM tool */
-  document.querySelectorAll('.opt').forEach(function(o){
-    o.addEventListener('click',function(){
-      document.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel');});
-      o.classList.add('sel');
-      var r=document.getElementById('toolResult');
-      r.textContent='✓ Recommended: '+o.getAttribute('data-r');
-      r.classList.add('show');
-    });
-  });
-
-  /* card spotlight */
-  document.querySelectorAll('.card').forEach(function(c){
-    c.addEventListener('mousemove',function(e){
-      var rect=c.getBoundingClientRect();
-      c.style.setProperty('--mx',((e.clientX-rect.left)/rect.width*100)+'%');
-    });
-  });
-
-  /* live CVE chip from real data */
-  fetch('/data/cves-2025-2026.json').then(function(r){return r.ok?r.json():null;}).then(function(d){
-    if(!d)return;
-    var all=[];
-    Object.keys(d).forEach(function(y){if(Array.isArray(d[y]))all=all.concat(d[y]);});
-    all=all.filter(function(c){return c.id&&c.cvss_score;}).sort(function(a,b){return (b.cvss_score||0)-(a.cvss_score||0);});
-    if(all.length){
-      var c=all[0];
-      document.getElementById('fcveId').textContent=c.id;
-      document.getElementById('fcveDesc').textContent=(c.description||'').slice(0,60)+'…';
-      document.getElementById('fcveSev').textContent='CVSS '+c.cvss_score+(c.cvss_score>=9?' · CRITICAL':c.cvss_score>=7?' · HIGH':'');
-    }
-  }).catch(function(){});
-
-  /* Newsletter subscription */
-  document.getElementById('nlForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    var email = document.getElementById('nlEmail').value.trim();
-    var consent = document.getElementById('nlConsent').checked;
-    var msg = document.getElementById('nlMsg');
-    var btn = document.querySelector('.nl-form button');
-
-    if(!email || !email.includes('@')){
-      msg.textContent = '❌ Please enter a valid email';
-      msg.classList.add('show', 'error');
-      return;
-    }
-
-    if(!consent){
-      msg.textContent = '❌ Please agree to the Privacy Policy to subscribe';
-      msg.classList.add('show', 'error');
-      return;
-    }
-
-    /* Save to subscribers list */
-    try {
-      btn.disabled = true;
-      btn.textContent = 'Subscribing...';
-
-      fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, timestamp: new Date().toISOString() })
-      }).then(function(r){ return r.json(); })
-        .then(function(data){
-          if(data.success){
-            msg.textContent = '✓ Welcome! Check your email for confirmation.';
-            msg.classList.add('show', 'success');
-            msg.classList.remove('error');
-            document.getElementById('nlEmail').value = '';
-            btn.textContent = 'Subscribe';
-            btn.disabled = false;
-            setTimeout(function(){ msg.classList.remove('show'); }, 5000);
-          } else {
-            throw new Error(data.message || 'Subscription failed');
-          }
-        }).catch(function(err){
-          msg.textContent = '❌ ' + (err.message || 'Error subscribing. Try again later.');
-          msg.classList.add('show', 'error');
-          msg.classList.remove('success');
-          btn.textContent = 'Subscribe';
-          btn.disabled = false;
-        });
-    } catch(e){
-      msg.textContent = '❌ Error: ' + e.message;
-      msg.classList.add('show', 'error');
-      btn.textContent = 'Subscribe';
-      btn.disabled = false;
-    }
-  });
-});
-</script>
-<script src="/js/nav-mega.js" defer></script>
+  <script src="/js/nav-search.js" defer></script>
+  <script src="/js/nav-mobile.js" defer></script>
+  <script src="/js/nav-mega.js" defer></script>
 </body>
 </html>
