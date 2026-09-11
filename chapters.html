@@ -1,584 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
-<link rel="manifest" href="/site.webmanifest">
-<meta name="color-scheme" content="light">
-<meta name="description" content="Explore all ITVedas chapters. Choose your learning path: structured progression, problem-first guidance, or contextual discovery.">
-<title>Chapters — ITVedas</title>
-<link rel="canonical" href="https://www.itvedas.com/chapters">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  color-scheme:light;
-  --bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;
-  --text:#182238;--sub:#4A5568;--muted:#6B7A94;
-  --accent:#FF6B35;--accent2:#8B5CF6;--cyan:#06B6D4;--green:#10B981;
-  --border:rgba(24,34,56,0.12);--border-hi:rgba(255,107,53,0.35);
-  --radius:16px;
-  --font-display:'Lexend',sans-serif;--font-body:'Inter',sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-a{cursor:pointer;}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
-.mesh{position:fixed;inset:0;z-index:-2;background:
-  radial-gradient(ellipse 800px 500px at 15% -5%, rgba(255,107,53,0.13), transparent 60%),
-  radial-gradient(ellipse 700px 500px at 90% 10%, rgba(139,92,246,0.11), transparent 60%),
-  radial-gradient(ellipse 900px 600px at 50% 110%, rgba(6,182,212,0.07), transparent 60%);}
-.grain{position:fixed;inset:0;z-index:-1;opacity:0.5;background-image:radial-gradient(rgba(24,34,56,0.035) 1px, transparent 1px);background-size:22px 22px;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+  <link rel="manifest" href="/site.webmanifest">
 
-/* ============ NAV ============ */
-nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:1.5rem;
-  padding:0.7rem 1.6rem;border-radius:100px;background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);
-  border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.45);width:min(94%,920px);justify-content:space-between;}
-.logo{font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
-.logo span{color:var(--accent);}
-.nav-links{display:flex;gap:1.25rem;align-items:center;}
-.nav-links>a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color .2s;}
-.nav-links>a:hover,.nav-links>a.active{color:var(--text);}
-.nav-cta{background:var(--accent);color:#fff !important;padding:0.45rem 1.1rem;border-radius:100px;font-weight:600;transition:box-shadow .2s;}
-.nav-cta:hover{box-shadow:0 4px 20px rgba(255,107,53,0.45);}
-
-/* ============ HERO ============ */
-.hero{padding:8rem 2rem 4rem;max-width:1100px;margin:0 auto;text-align:center;}
-.hero h1{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4.2rem);font-weight:700;letter-spacing:-0.03em;line-height:1.06;margin-bottom:1rem;}
-.grad{background:linear-gradient(100deg,var(--accent) 10%,var(--accent2) 55%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.hero>p{font-size:1rem;color:var(--sub);max-width:620px;margin:0 auto 2rem;line-height:1.75;}
-
-/* ============ VIEW TOGGLE ============ */
-.view-toggle{display:flex;gap:0.5rem;justify-content:center;margin:3rem 0;flex-wrap:wrap;}
-.toggle-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.7rem 1.5rem;
-  border-radius:10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem;font-family:var(--font-body);}
-.toggle-btn:hover{border-color:var(--accent);color:var(--text);}
-.toggle-btn.active{background:rgba(255,107,53,0.15);border-color:var(--accent);color:var(--text);}
-
-/* ============ SECTIONS ============ */
-.sec{max-width:1100px;margin:0 auto;padding:0 2rem 4rem;}
-.sec-label{font-size:0.74rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;}
-.sec h2{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;}
-.sec p{color:var(--muted);max-width:560px;margin-bottom:2rem;}
-
-/* ============ GRIDS ============ */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem;}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;
-  text-decoration:none;color:inherit;transition:border-color .25s,transform .2s;cursor:pointer;display:flex;flex-direction:column;}
-.card:hover{border-color:rgba(255,107,53,0.4);transform:translateY(-4px);}
-.card.hidden{display:none;}
-
-/* Approach 1: Paths */
-.path-badge{display:inline-block;background:rgba(139,92,246,0.15);color:#D8B4FE;padding:0.4rem 0.9rem;
-  border-radius:6px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
-  margin-bottom:1rem;align-self:flex-start;}
-.path-name{font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);}
-.path-desc{color:var(--sub);font-size:0.95rem;line-height:1.6;margin-bottom:1.2rem;flex:1;}
-.path-topics{display:flex;flex-wrap:wrap;gap:0.5rem;}
-.path-chip{background:rgba(255,107,53,0.15);color:var(--accent);padding:0.3rem 0.7rem;
-  border-radius:100px;font-size:0.75rem;font-weight:600;}
-
-/* Approach 2: Problems */
-.problem-icon{font-size:2rem;margin-bottom:0.5rem;}
-.problem-q{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;}
-.problem-topics{color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;flex:1;}
-.problem-link{color:var(--accent);font-weight:600;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:gap .2s;}
-.problem-link:hover{gap:0.8rem;}
-.problem-link::after{content:'→';font-size:1.2rem;}
-
-/* Approach 3: Context */
-.context-icon{font-size:2rem;margin-bottom:0.5rem;}
-.context-name{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
-.context-tagline{color:var(--muted);font-size:0.9rem;font-style:italic;margin-bottom:1rem;flex:1;}
-.context-meta{border-top:1px solid var(--border);padding-top:1rem;font-size:0.85rem;display:grid;gap:0.5rem;}
-.context-meta-line{color:var(--muted);display:flex;gap:0.5rem;}
-.context-meta-label{color:var(--accent);font-weight:700;}
-
-/* ============ RESPONSIVE ============ */
-@media(max-width:900px){
-  .grid{grid-template-columns:repeat(2,1fr);}
-  .nav-links>a:not(.nav-cta){display:none;}
-}
-@media(max-width:560px){
-  .grid{grid-template-columns:1fr;}
-  nav{width:calc(100% - 1rem);left:calc(50% + 0.5rem);}
-  .hero{padding:7rem 1rem 2rem;}
-  .view-toggle{gap:0.5rem;}
-  .toggle-btn{padding:0.6rem 1rem;font-size:0.85rem;}
-}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
-</style>
-  <link rel="stylesheet" href="/css/nav-mega.css">
+  <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+
+  <meta name="description" content="Explore 125+ structured IT chapters and curriculum paths across Networking, Cloud Computing, Security, Linux, DevOps, Databases, Hardware and Compliance.">
+  <meta name="keywords" content="IT chapters, IT learning paths, networking curriculum, cloud computing course, cybersecurity roadmap, ITVedas chapters">
+  <meta name="robots" content="index,follow">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="Technical Chapters & Learning Paths | ITVedas">
+  <meta property="og:description" content="Structured progression across 15 enterprise IT domains: Networking, Cloud, Security, DevOps, Linux, Databases, and AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.itvedas.com/chapters">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Technical Chapters & Learning Paths | ITVedas">
+  <meta name="twitter:description" content="Structured progression across 15 enterprise IT domains: Networking, Cloud, Security, DevOps, Linux, Databases, and AI.">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/chapters">
+
+  <title>Chapters & IT Learning Paths — Complete Curriculum | ITVedas</title>
+
+  <!-- Structured Data: CollectionPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "ITVedas Technical Chapters",
+    "description": "Comprehensive curriculum of 125+ guides structured across enterprise IT domains.",
+    "url": "https://www.itvedas.com/chapters",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ITVedas",
+      "url": "https://www.itvedas.com"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/shared.css">
+  <link rel="stylesheet" href="/css/nav-mega.css">
+
+  <style>
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: var(--header-height, 64px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--fd);
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--brand-navy);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo span { color: var(--brand-orange); }
+
+    .chapters-hero {
+      padding: calc(var(--header-height, 64px) + 3rem) 1.5rem 3rem;
+      text-align: center;
+      background: radial-gradient(circle at 50% 20%, rgba(11, 39, 80, 0.05) 0%, transparent 70%);
+    }
+    .chapters-hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.25rem);
+      color: var(--brand-navy);
+      margin-bottom: 1rem;
+    }
+    .chapters-hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Learning Tracks Grid */
+    .track-section {
+      margin-bottom: 4rem;
+    }
+    .track-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .track-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--brand-navy);
+    }
+    .track-badge {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .chapter-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      transition: all var(--transition-normal);
+    }
+    .chapter-card:hover {
+      border-color: rgba(255, 122, 0, 0.5);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+    .chapter-card h3 {
+      font-size: 1.15rem;
+      color: var(--brand-navy);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .chapter-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .chapter-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.825rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.75rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      background: #FFFFFF;
+      text-align: center;
+      color: var(--muted);
+      margin-top: auto;
+    }
+    .flinks {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .flinks a { color: var(--text-secondary); font-size: 0.9rem; }
+    .flinks a:hover { color: var(--brand-orange); }
+  </style>
 </head>
 <body>
-<div class="mesh"></div><div class="grain"></div>
+  <a href="#main" class="skip-link">Skip to main content</a>
 
-<nav>
-  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
-  <div class="nav-links">
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel mega">
-        <div class="nav-mega-grid">
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Core IT</div>
-            <a href="/articles/networking/">🌐 Networking</a>
-            <a href="/articles/cloud/">☁️ Cloud</a>
-            <a href="/articles/linux/">🐧 Linux</a>
-            <a href="/articles/hardware/">🖥️ Hardware</a>
+  <!-- Header Navigation -->
+  <nav>
+    <a href="/" class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1.2em" height="1.2em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true">
+        <rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/>
+        <rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/>
+        <rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/>
+        <path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/>
+        <path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/>
+      </svg>IT<span>Vedas</span>
+    </a>
+
+    <div class="nav-links">
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel mega">
+          <div class="nav-mega-grid">
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Core IT</div>
+              <a href="/articles/networking/">🌐 Networking</a>
+              <a href="/articles/cloud/">☁️ Cloud</a>
+              <a href="/articles/linux/">🐧 Linux</a>
+              <a href="/articles/hardware/">🖥️ Hardware</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Security & Compliance</div>
+              <a href="/articles/security/">🔐 Security</a>
+              <a href="/articles/compliance/">📋 Compliance</a>
+              <a href="/articles/cve/">🎯 CVE Analysis</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Dev, Data & AI</div>
+              <a href="/articles/api/">🔌 APIs</a>
+              <a href="/articles/devops/">🚀 DevOps</a>
+              <a href="/articles/databases/">🗄️ Databases</a>
+              <a href="/articles/ai-models/">🤖 AI Models</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Microsoft Stack</div>
+              <a href="/articles/azure/">☁️ Azure</a>
+              <a href="/articles/powershell/">🔷 PowerShell</a>
+              <a href="/articles/iis/">🖧 IIS</a>
+              <a href="/articles/sql-server/">🗄️ SQL Server</a>
+            </div>
           </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Security &amp; Compliance</div>
-            <a href="/articles/security/">🔐 Security</a>
-            <a href="/articles/compliance/">📋 Compliance</a>
-            <a href="/articles/cve/">🎯 CVE Analysis</a>
-          </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Dev, Data &amp; AI</div>
-            <a href="/articles/api/">🔌 APIs</a>
-            <a href="/articles/devops/">🚀 DevOps</a>
-            <a href="/articles/databases/">🗄️ Databases</a>
-            <a href="/articles/ai-models/">🤖 AI Models</a>
-          </div>
-          <div class="nav-mega-col">
-            <div class="nav-mega-col-title">Microsoft Stack</div>
-            <a href="/articles/azure/">☁️ Azure</a>
-            <a href="/articles/powershell/">🔷 PowerShell</a>
-            <a href="/articles/iis/">🖧 IIS</a>
-            <a href="/articles/sql-server/">🗄️ SQL Server</a>
+          <div class="nav-mega-footer">
+            <span>15 topic areas · 100+ comprehensive guides</span>
+            <a href="/chapters.html">Browse all chapters →</a>
           </div>
         </div>
-        <div class="nav-mega-footer">
-          <span>15 topic areas &middot; 100+ guides</span>
-          <a href="/chapters">Browse all chapters &rarr;</a>
+      </div>
+
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/quiz.html">🧠 Skill Quiz</a>
+          <a href="/career-navigator.html">🧭 Career Navigator</a>
+          <a href="/career-paths.html">🛤️ Career Paths</a>
+          <a href="/cve-listing.html">🎯 CVE Database</a>
+          <a href="/tools/">🛠️ Developer Tools</a>
         </div>
       </div>
+
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/news.html">📰 News</a>
+          <a href="/security-news.html">🛡️ Security News</a>
+          <a href="/news/archive/">🗂️ News Archive</a>
+          <a href="/problems-solutions.html">🔧 Problems & Solutions</a>
+          <a href="/faq.html">❓ FAQ</a>
+        </div>
+      </div>
+
+      <a href="/about.html">About</a>
+      <a href="/author/">Author</a>
+      <a href="/services.html">Services</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/chapters.html" class="nav-cta">Start Learning</a>
     </div>
+  </nav>
 
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel simple">
-        <a href="/quiz">🧠 Skill Quiz</a>
-        <a href="/career-navigator">🧭 Career Navigator</a>
-        <a href="/career-paths">🛤️ Career Paths</a>
-        <a href="/cve-listing">🎯 CVE Database</a>
-        <a href="/tools/">🛠️ Developer Tools</a>
+  <main id="main">
+    <section class="chapters-hero">
+      <div class="container">
+        <h1>Complete Technical Curriculum</h1>
+        <p>125+ structured guide chapters organized across 15 enterprise IT tracks. Master technologies step-by-step from foundations to advanced architecture.</p>
       </div>
+    </section>
+
+    <div class="container">
+      <!-- Track 1: Core Networking -->
+      <section class="track-section">
+        <div class="track-header">
+          <span style="font-size: 1.75rem;">🌐</span>
+          <h2>Networking & Protocols</h2>
+          <span class="track-badge badge-net">Core IT</span>
+        </div>
+        <div class="grid grid-3">
+          <a href="/articles/networking/" class="chapter-card">
+            <h3>Networking Master Hub</h3>
+            <p>Complete guide to TCP/IP stack, routing protocols, switches, routers, and enterprise packet analysis.</p>
+            <div class="chapter-meta"><span>Foundation to Expert</span><span>8 Guides</span></div>
+          </a>
+          <a href="/articles/2026-07-21-networking-advanced-bgp-ospf-routing.html" class="chapter-card">
+            <h3>BGP & OSPF Routing Architecture</h3>
+            <p>Autonomous systems, path attributes, route reflectors, MPLS, and SD-WAN failover strategies.</p>
+            <div class="chapter-meta"><span>Advanced Tier</span><span>12 min read</span></div>
+          </a>
+          <a href="/chapters/networking/" class="chapter-card">
+            <h3>Networking Chapter Progression</h3>
+            <p>Subnetting mastery, VLAN segmentation, DHCP/DNS infrastructure, and Wireshark diagnostics.</p>
+            <div class="chapter-meta"><span>Structured Path</span><span>12 Modules</span></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Track 2: Cybersecurity & Intelligence -->
+      <section class="track-section">
+        <div class="track-header">
+          <span style="font-size: 1.75rem;">🔐</span>
+          <h2>Cybersecurity & Vulnerability Intelligence</h2>
+          <span class="track-badge badge-sec">Security</span>
+        </div>
+        <div class="grid grid-3">
+          <a href="/articles/security/" class="chapter-card">
+            <h3>Security Architecture Hub</h3>
+            <p>Zero Trust implementation, endpoint defense, firewall rulesets, and multi-factor authentication protocols.</p>
+            <div class="chapter-meta"><span>Core Security</span><span>10 Guides</span></div>
+          </a>
+          <a href="/cve-listing.html" class="chapter-card">
+            <h3>Live CVE Vulnerability Database</h3>
+            <p>Automated tracker with NVD, CISA KEV, and GitHub advisories. Search 5,400+ known vulnerabilities.</p>
+            <div class="chapter-meta"><span>Active Intelligence</span><span>5,400+ CVEs</span></div>
+          </a>
+          <a href="/articles/2026-07-21-security-threat-hunting-digital-forensics.html" class="chapter-card">
+            <h3>Threat Hunting & Forensics</h3>
+            <p>MITRE ATT&CK framework mapping, memory dump forensics, log analysis, and incident containment.</p>
+            <div class="chapter-meta"><span>Expert Tier</span><span>14 min read</span></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Track 3: Cloud & Multi-Region Resilience -->
+      <section class="track-section">
+        <div class="track-header">
+          <span style="font-size: 1.75rem;">☁️</span>
+          <h2>Cloud Computing & Enterprise Architecture</h2>
+          <span class="track-badge badge-cld">Cloud</span>
+        </div>
+        <div class="grid grid-3">
+          <a href="/articles/cloud/" class="chapter-card">
+            <h3>Cloud Computing Hub</h3>
+            <p>IaaS, PaaS, serverless, storage tiers, VPC peering, and cost control across AWS, Azure, and GCP.</p>
+            <div class="chapter-meta"><span>Multi-Cloud</span><span>9 Guides</span></div>
+          </a>
+          <a href="/articles/2026-07-21-cloud-multi-region-architecture.html" class="chapter-card">
+            <h3>Multi-Region DR Architecture</h3>
+            <p>Active-active failover, global traffic routing, cross-region replication, and RPO/RTO optimization.</p>
+            <div class="chapter-meta"><span>Advanced Tier</span><span>11 min read</span></div>
+          </a>
+          <a href="/articles/azure/" class="chapter-card">
+            <h3>Microsoft Azure Administration</h3>
+            <p>Microsoft Entra ID, Azure VMs, virtual network gateways, and governance landing zones.</p>
+            <div class="chapter-meta"><span>Microsoft Stack</span><span>8 Guides</span></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Track 4: Linux & DevOps Engineering -->
+      <section class="track-section">
+        <div class="track-header">
+          <span style="font-size: 1.75rem;">🐧</span>
+          <h2>Linux Systems & DevOps Automation</h2>
+          <span class="track-badge badge-dev">DevOps</span>
+        </div>
+        <div class="grid grid-3">
+          <a href="/articles/linux/" class="chapter-card">
+            <h3>Linux Systems Administration</h3>
+            <p>File systems, systemd service management, bash automation, and user access permissions.</p>
+            <div class="chapter-meta"><span>Operating Systems</span><span>7 Guides</span></div>
+          </a>
+          <a href="/articles/2026-07-21-linux-kernel-tuning-performance.html" class="chapter-card">
+            <h3>Kernel Tuning & Performance</h3>
+            <p>Sysctl kernel parameters, cgroups v2 resource limits, I/O schedulers, and network stack optimization.</p>
+            <div class="chapter-meta"><span>Advanced Tier</span><span>13 min read</span></div>
+          </a>
+          <a href="/articles/devops/" class="chapter-card">
+            <h3>DevOps & Container Orchestration</h3>
+            <p>Docker engine internals, Kubernetes pods and services, CI/CD pipelines, and Service Mesh patterns.</p>
+            <div class="chapter-meta"><span>Cloud Native</span><span>8 Guides</span></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Track 5: Databases, Hardware & Enterprise Software -->
+      <section class="track-section">
+        <div class="track-header">
+          <span style="font-size: 1.75rem;">🗄️</span>
+          <h2>Databases, Hardware & Enterprise Software</h2>
+          <span class="track-badge badge-db">Enterprise</span>
+        </div>
+        <div class="grid grid-3">
+          <a href="/articles/databases/" class="chapter-card">
+            <h3>Database High Availability</h3>
+            <p>Relational SQL architecture, replication topologies, failover clusters, and split-brain recovery.</p>
+            <div class="chapter-meta"><span>Data Systems</span><span>7 Guides</span></div>
+          </a>
+          <a href="/articles/hardware/" class="chapter-card">
+            <h3>Enterprise Storage (SAN vs NAS)</h3>
+            <p>Fibre Channel, iSCSI, NVMe-oF, RAID levels, enterprise servers, and storage network design.</p>
+            <div class="chapter-meta"><span>Infrastructure</span><span>6 Guides</span></div>
+          </a>
+          <a href="/manageengine/" class="chapter-card">
+            <h3>ManageEngine Enterprise Catalog</h3>
+            <p>Practical reviews, deployment blueprints, and architecture guides across 51 ManageEngine IT management tools.</p>
+            <div class="chapter-meta"><span>IT Management</span><span>51 Products</span></div>
+          </a>
+        </div>
+      </section>
     </div>
+  </main>
 
-    <div class="nav-drop">
-      <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
-      <div class="nav-drop-panel simple">
-        <a href="/news">📰 News</a>
-        
-        <a href="/news/archive/">🗂️ News Archive</a>
-        <a href="/problems-solutions">🔧 Problems &amp; Solutions</a>
-        <a href="/faq">❓ FAQ</a>
-        <a href="/manageengine/">🤝 Recommended Tools</a>
-      </div>
+  <!-- Global Footer -->
+  <footer>
+    <div style="font-family: var(--fd); font-weight: 700; font-size: 1.3rem; color: var(--brand-navy); margin-bottom: 0.5rem;">
+      IT<span style="color: var(--brand-orange);">Vedas</span>
     </div>
+    <p style="font-size: 0.95rem; color: var(--muted); max-width: 600px; margin: 0 auto 1rem;">
+      Practical engineering and infrastructure guides — explained simply, vendor-neutral, and forever free.
+    </p>
+    <div class="flinks">
+      <a href="/">Home</a>
+      <a href="/chapters.html">Chapters</a>
+      <a href="/cve-listing.html">CVE Database</a>
+      <a href="/news.html">IT News</a>
+      <a href="/about.html">About</a>
+      <a href="/author/">Author</a>
+      <a href="/services.html">Services</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <p style="margin-top:1.5rem; font-size: 0.85rem; color: var(--muted);">© 2026 ITVedas · Engineering Knowledge for Everyone</p>
+  </footer>
 
-    <a href="/about">About</a>
-    <a href="/services">Services</a>
-    <a href="/contact">Contact</a>
-    <a href="/chapters" class="nav-cta">Start Learning</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <h1>Choose Your <span class="grad">Learning Path</span></h1>
-  <p>Three ways to discover chapters based on how you learn best — structured progression, real-world problems, or rich context.</p>
-</div>
-
-<div class="view-toggle">
-  <button class="toggle-btn active" data-view="paths">🌱 Learning Paths</button>
-  <button class="toggle-btn" data-view="problems">🎯 Problem-First</button>
-  <button class="toggle-btn" data-view="context">🔗 Contextual Discovery</button>
-</div>
-
-<div class="sec" id="paths-view">
-  <div class="sec-label">Approach 1: Learning Paths</div>
-  <h2>Structured progression with prerequisites</h2>
-  <p>Master IT topics in the right order. See what skills unlock next. Clear, professional navigation pattern trusted by learners worldwide.</p>
-
-  <div class="grid">
-    <a href="/articles/networking/" class="card">
-      <div class="path-badge">🌱 Foundation</div>
-      <div class="path-name">Networking Fundamentals</div>
-      <div class="path-desc">Start here. Understand TCP/IP, DNS, routing, subnetting before everything else.</div>
-      <div class="path-topics">
-        <span class="path-chip">TCP/IP</span>
-        <span class="path-chip">DNS</span>
-        <span class="path-chip">Routing</span>
-        <span class="path-chip">Subnetting</span>
-      </div>
-    </a>
-
-    <a href="/articles/linux/" class="card">
-      <div class="path-badge">🌱 Foundation</div>
-      <div class="path-name">Linux Essentials</div>
-      <div class="path-desc">Terminal, bash scripting, and system administration fundamentals.</div>
-      <div class="path-topics">
-        <span class="path-chip">Terminal</span>
-        <span class="path-chip">Bash</span>
-        <span class="path-chip">File System</span>
-      </div>
-    </a>
-
-    <a href="/articles/hardware/" class="card">
-      <div class="path-badge">🌱 Foundation</div>
-      <div class="path-name">Hardware Basics</div>
-      <div class="path-desc">CPU, RAM, storage, motherboards. Know your machine inside out.</div>
-      <div class="path-topics">
-        <span class="path-chip">CPU</span>
-        <span class="path-chip">RAM</span>
-        <span class="path-chip">Storage</span>
-      </div>
-    </a>
-
-    <a href="/articles/cloud/" class="card">
-      <div class="path-badge">🔧 Intermediate</div>
-      <div class="path-name">Cloud Computing</div>
-      <div class="path-desc">Build after: Networking & Linux. AWS, Azure, GCP—with ₹ pricing.</div>
-      <div class="path-topics">
-        <span class="path-chip">AWS</span>
-        <span class="path-chip">Azure</span>
-        <span class="path-chip">GCP</span>
-      </div>
-    </a>
-
-    <a href="/articles/devops/" class="card">
-      <div class="path-badge">🔧 Intermediate</div>
-      <div class="path-name">DevOps & Deployment</div>
-      <div class="path-desc">Build after: Linux & Cloud. Docker, Kubernetes, CI/CD pipelines.</div>
-      <div class="path-topics">
-        <span class="path-chip">Docker</span>
-        <span class="path-chip">Kubernetes</span>
-        <span class="path-chip">CI/CD</span>
-      </div>
-    </a>
-
-    <a href="/articles/databases/" class="card">
-      <div class="path-badge">🔧 Intermediate</div>
-      <div class="path-name">Databases</div>
-      <div class="path-desc">Build after: Fundamentals. SQL, NoSQL, optimization, and scaling.</div>
-      <div class="path-topics">
-        <span class="path-chip">SQL</span>
-        <span class="path-chip">NoSQL</span>
-        <span class="path-chip">Scaling</span>
-      </div>
-    </a>
-
-    <a href="/articles/api/" class="card">
-      <div class="path-badge">🔧 Intermediate</div>
-      <div class="path-name">APIs</div>
-      <div class="path-desc">Build after: Networking. How software talks — REST, JSON, auth, webhooks.</div>
-      <div class="path-topics">
-        <span class="path-chip">REST</span>
-        <span class="path-chip">JSON</span>
-        <span class="path-chip">OAuth</span>
-      </div>
-    </a>
-
-    <a href="/articles/security/" class="card">
-      <div class="path-badge">🔐 Advanced</div>
-      <div class="path-name">Cybersecurity</div>
-      <div class="path-desc">Capstone. Threats, hardening, penetration testing, CVEs explained.</div>
-      <div class="path-topics">
-        <span class="path-chip">Threats</span>
-        <span class="path-chip">Hardening</span>
-        <span class="path-chip">Pen Testing</span>
-      </div>
-    </a>
-
-    <a href="/articles/powershell/" class="card">
-      <div class="path-badge">🔐 Advanced</div>
-      <div class="path-name">PowerShell Automation</div>
-      <div class="path-desc">Capstone. Scripting, automation, system administration at scale.</div>
-      <div class="path-topics">
-        <span class="path-chip">Scripting</span>
-        <span class="path-chip">Automation</span>
-        <span class="path-chip">AD Mgmt</span>
-      </div>
-    </a>
-
-    <a href="/articles/azure/" class="card">
-      <div class="path-badge">🔐 Advanced</div>
-      <div class="path-name">Azure Deep Dive</div>
-      <div class="path-desc">Capstone. Enterprise cloud, compliance, cost optimization, security.</div>
-      <div class="path-topics">
-        <span class="path-chip">Azure</span>
-        <span class="path-chip">AzureAD</span>
-        <span class="path-chip">Compliance</span>
-      </div>
-    </a>
-  </div>
-</div>
-
-<div class="sec" id="problems-view" style="display:none;">
-  <div class="sec-label">Approach 2: Problem-First</div>
-  <h2>Learn by solving real challenges</h2>
-  <p>What's your goal? Select a challenge and we'll show you exactly which chapters to study. Designed for people who learn best by starting with the problem.</p>
-
-  <div class="grid">
-    <a href="/articles/networking/" class="card">
-      <div class="problem-icon">🌐</div>
-      <div class="problem-q">How do networks actually work?</div>
-      <div class="problem-topics">Understand TCP/IP, DNS, routing, VPNs. The foundation everything builds on.</div>
-      <div class="problem-link">Explore Networking</div>
-    </a>
-
-    <a href="/articles/linux/" class="card">
-      <div class="problem-icon">🐧</div>
-      <div class="problem-q">How do I manage servers?</div>
-      <div class="problem-topics">Master terminal, bash, file permissions, users, services. Run systems like a pro.</div>
-      <div class="problem-link">Learn Linux Administration</div>
-    </a>
-
-    <a href="/articles/security/" class="card">
-      <div class="problem-icon">🔐</div>
-      <div class="problem-q">How do I protect systems?</div>
-      <div class="problem-topics">Threats, firewalls, encryption, vulnerability management, incident response.</div>
-      <div class="problem-link">Master Security</div>
-    </a>
-
-    <a href="/articles/cloud/" class="card">
-      <div class="problem-icon">☁️</div>
-      <div class="problem-q">How do I scale infrastructure?</div>
-      <div class="problem-topics">Deploy on AWS, Azure, GCP. Serverless, containers, databases in the cloud.</div>
-      <div class="problem-link">Learn Cloud Computing</div>
-    </a>
-
-    <a href="/articles/devops/" class="card">
-      <div class="problem-icon">⚙️</div>
-      <div class="problem-q">How do I automate deployments?</div>
-      <div class="problem-topics">Docker, Kubernetes, CI/CD pipelines, monitoring, infrastructure as code.</div>
-      <div class="problem-link">Study DevOps</div>
-    </a>
-
-    <a href="/articles/databases/" class="card">
-      <div class="problem-icon">🗄️</div>
-      <div class="problem-q">How do I handle data at scale?</div>
-      <div class="problem-topics">SQL, NoSQL, replication, backups, optimization, query tuning.</div>
-      <div class="problem-link">Learn Databases</div>
-    </a>
-
-    <a href="/articles/api/" class="card">
-      <div class="problem-icon">🔌</div>
-      <div class="problem-q">How do apps talk to each other?</div>
-      <div class="problem-topics">REST APIs, HTTP methods, JSON, status codes, API keys, webhooks.</div>
-      <div class="problem-link">Understand APIs</div>
-    </a>
-
-    <a href="/articles/hardware/" class="card">
-      <div class="problem-icon">🖥️</div>
-      <div class="problem-q">How do hardware components work?</div>
-      <div class="problem-topics">CPU, RAM, storage, cooling, power. Buy the right gear confidently.</div>
-      <div class="problem-link">Understand Hardware</div>
-    </a>
-
-    <a href="/articles/powershell/" class="card">
-      <div class="problem-icon">🔷</div>
-      <div class="problem-q">How do I automate Windows?</div>
-      <div class="problem-topics">PowerShell scripting, Active Directory, GPOs, system administration automation.</div>
-      <div class="problem-link">Learn PowerShell</div>
-    </a>
-
-    <a href="/articles/azure/" class="card">
-      <div class="problem-icon">☁️</div>
-      <div class="problem-q">How do I manage enterprise Azure?</div>
-      <div class="problem-topics">Azure infrastructure, compliance, cost management, security, migrations.</div>
-      <div class="problem-link">Explore Azure Guides</div>
-    </a>
-  </div>
-</div>
-
-<div class="sec" id="context-view" style="display:none;">
-  <div class="sec-label">Approach 3: Contextual Discovery</div>
-  <h2>Discover through rich connections</h2>
-  <p>Explore chapters with full context. See what you'll learn, what builds on it, prerequisites, and which topics pair well together.</p>
-
-  <div class="grid">
-    <a href="/articles/networking/" class="card">
-      <div class="context-icon">🌐</div>
-      <div class="context-name">Networking</div>
-      <div class="context-tagline">"How data travels across systems and the internet"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>TCP/IP, DNS, routing, VPNs, firewalls</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Linux, Security, Cloud</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Prerequisite for:</span> <span>All advanced topics</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/linux/" class="card">
-      <div class="context-icon">🐧</div>
-      <div class="context-name">Linux</div>
-      <div class="context-tagline">"The operating system powering 96% of servers"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>Terminal, bash, system admin, services</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>DevOps, Security, Cloud, Databases</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Build after:</span> <span>Networking fundamentals</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/security/" class="card">
-      <div class="context-icon">🔐</div>
-      <div class="context-name">Security</div>
-      <div class="context-tagline">"Protect systems from threats and vulnerabilities"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>Threats, encryption, penetration testing, CVEs</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Networking, Linux, Cloud, Databases</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Networking, Linux</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/cloud/" class="card">
-      <div class="context-icon">☁️</div>
-      <div class="context-name">Cloud Computing</div>
-      <div class="context-tagline">"Scale applications globally on AWS, Azure, GCP"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>AWS, Azure, GCP, serverless, VPCs</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>DevOps, Databases, Security, Networking</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Networking, Linux</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/devops/" class="card">
-      <div class="context-icon">⚙️</div>
-      <div class="context-name">DevOps</div>
-      <div class="context-tagline">"Automate everything: deploy, monitor, scale"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>Docker, Kubernetes, CI/CD, infrastructure as code</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Linux, Cloud, Databases, Security</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Linux, Cloud</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/databases/" class="card">
-      <div class="context-icon">🗄️</div>
-      <div class="context-name">Databases</div>
-      <div class="context-tagline">"Store and query data reliably at any scale"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>SQL, NoSQL, optimization, replication, backups</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Cloud, DevOps, Security, Linux</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Fundamentals (any)</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/api/" class="card">
-      <div class="context-icon">🔌</div>
-      <div class="context-name">APIs</div>
-      <div class="context-tagline">"How software talks to software"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>REST, HTTP methods, JSON, status codes, OAuth, webhooks</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Networking, Databases, Security, DevOps</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Networking basics</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/hardware/" class="card">
-      <div class="context-icon">🖥️</div>
-      <div class="context-name">Hardware</div>
-      <div class="context-tagline">"Understand CPUs, RAM, storage, and architecture"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>CPU, RAM, storage, motherboards, power</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Linux, Security, Cloud (for sizing)</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Great first topic</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/powershell/" class="card">
-      <div class="context-icon">🔷</div>
-      <div class="context-name">PowerShell</div>
-      <div class="context-tagline">"Automate Windows and Active Directory"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>Scripting, AD management, system automation</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>Azure, Security, Networking</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Windows fundamentals</span></div>
-      </div>
-    </a>
-
-    <a href="/articles/azure/" class="card">
-      <div class="context-icon">☁️</div>
-      <div class="context-name">Azure</div>
-      <div class="context-tagline">"Enterprise Microsoft cloud platform"</div>
-      <div class="context-meta">
-        <div class="context-meta-line"><span class="context-meta-label">Learn:</span> <span>Azure infrastructure, compliance, AD, migrations</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Pairs with:</span> <span>PowerShell, Security, Networking, DevOps</span></div>
-        <div class="context-meta-line"><span class="context-meta-label">Foundation:</span> <span>Cloud computing basics</span></div>
-      </div>
-    </a>
-  </div>
-</div>
-
-<script>
-document.querySelectorAll('.toggle-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const view = btn.dataset.view;
-
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    document.getElementById('paths-view').style.display = view === 'paths' ? 'block' : 'none';
-    document.getElementById('problems-view').style.display = view === 'problems' ? 'block' : 'none';
-    document.getElementById('context-view').style.display = view === 'context' ? 'block' : 'none';
-  });
-});
-</script>
-
-<script src="/js/nav-search.js" defer></script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Chapters \u2014 ITVedas",
-  "description": "Explore all ITVedas chapters. Choose your learning path: structured progression, problem-first guidance, or contextual discovery.",
-  "url": "https://www.itvedas.com/chapters",
-  "author": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "url": "https://www.itvedas.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "ITVedas",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
-    }
-  },
-  "datePublished": "2026-07-17T00:00:00Z",
-  "dateModified": "2026-07-17T04:44:33.036705"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.itvedas.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Chapters \u2014 ITVedas",
-      "item": "https://www.itvedas.com/chapters"
-    }
-  ]
-}
-</script>
-<script src="/js/nav-mega.js" defer></script>
+  <script src="/js/nav-search.js" defer></script>
+  <script src="/js/nav-mobile.js" defer></script>
+  <script src="/js/nav-mega.js" defer></script>
 </body>
 </html>
