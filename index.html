@@ -10,7 +10,7 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP" integrity="sha384-qNMB2F0d3S6aW1K9CzqGNfvhCNYPqc2J8t0F7bD2U3z8N4E3s1k6q5t6u7v8w9x"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 
   <!-- Google AdSense -->
@@ -759,5 +759,21 @@
   <script src="/js/nav-search.js" defer></script>
   <script src="/js/nav-mobile.js" defer></script>
   <script src="/js/nav-mega.js" defer></script>
+
+<script>
+let searchIndex = null;
+async function getSearchIndex() {
+  if (!searchIndex) {
+    try {
+      const res = await fetch('/search-index.json');
+      searchIndex = await res.json();
+    } catch (e) {
+      console.warn('Search index load failed', e);
+    }
+  }
+  return searchIndex;
+}
+document.getElementById('siteSearch')?.addEventListener('focus', () => { getSearchIndex(); });
+</script>
 </body>
 </html>
