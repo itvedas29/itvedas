@@ -1,102 +1,86 @@
 name: Validate static site
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Generate complete sitemap
+      - name: Normalize mutable GA4 script tags
+        run: python3 scripts/normalize-ga4-tags.py
+      - name: Generate sitemap
         run: python3 scripts/generate-sitemap.py
-
       - name: Regenerate search index
         run: python3 scripts/generate-search-index.py
-
-      - name: Validate JSON files
+      - name: Validate JSON and CVE schema
         run: |
           python -m json.tool search-index.json > /tmp/search-index.json
-
+          python -m json.tool cve-database-full.json > /tmp/cve.json
+          python3 scripts/validate-cve-schema.py
       - name: Run security checks
         run: bash scripts/security-check.sh
-
       - name: Check JavaScript syntax
         run: |
-          set -e
-          while IFS= read -r -d '' file; do
-            node --check "$file"
-          done < <(find . -type f -name '*.js' -not -path './.git/*' -not -path './node_modules/*' -print0)
-
+          while IFS= read -r -d '' file; do node --check "$file"; done < <(find . -type f -name '*.js' -not -path './.git/*' -not -path './node_modules/*' -print0)
       - name: Verify Markdown preview sanitizes rendered HTML
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          page = Path('tools/markdown-preview.html').read_text(encoding='utf-8')
-          sanitizer = Path('js/html-sanitizer.js').read_text(encoding='utf-8')
-
-          checks = [
-              ('markdown preview loads the shared sanitizer', '/js/html-sanitizer.js' in page),
-              ('markdown preview uses the shared sanitizer for DOM insertion', 'HTMLSanitizer.setInnerHTML(preview, rendered)' in page),
-              ('markdown preview has no direct marked-to-innerHTML assignment', 'preview.innerHTML = marked.parse' not in page),
-              ('sanitizer validates link protocols', "['http:', 'https:'].includes(url.protocol)" in sanitizer),
-              ('sanitizer handles new-window links safely', 'noopener noreferrer' in sanitizer),
-          ]
-
-          failed = [name for name, ok in checks if not ok]
-          if failed:
-              for name in failed:
-                  print(f'FAILED: {name}')
-              raise SystemExit(1)
-
-          for name, _ in checks:
-              print(f'OK: {name}')
+          page=Path('tools/markdown-preview.html').read_text(encoding='utf-8'); sanitizer=Path('js/html-sanitizer.js').read_text(encoding='utf-8')
+          checks=['/js/html-sanitizer.js' in page,'HTMLSanitizer.setInnerHTML(preview, rendered)' in page,'preview.innerHTML = marked.parse' not in page,"['http:', 'https:'].includes(url.protocol)" in sanitizer,'noopener noreferrer' in sanitizer]
+          if not all(checks): raise SystemExit('Markdown sanitizer regression detected')
+          print('OK: Markdown sanitizer regression checks passed')
           PY
-
+      - name: Verify GA4 script hygiene
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          bad=[]
+          for p in Path('.').rglob('*.html'):
+            if '.git' in p.parts: continue
+            for tag in re.findall(r'<script\b[^>]*googletagmanager\.com/gtag/js[^>]*>',p.read_text(encoding='utf-8',errors='ignore'),re.I):
+              if re.search(r'\bintegrity\s*=',tag,re.I): bad.append(str(p))
+          if bad: raise SystemExit('GA4 mutable SRI remains: '+', '.join(sorted(set(bad))))
+          print('OK: GA4 has no mutable SRI hashes')
+          PY
+      - name: Run news quality analysis
+        run: python3 scripts/news-quality-gate.py
+      - name: Rebuild sitemap after news quality gate
+        run: python3 scripts/generate-sitemap.py
+      - name: Validate sitemap excludes noindex pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8'); bad=[]
+          for p in Path('news').rglob('*.html'):
+            t=p.read_text(encoding='utf-8',errors='ignore')
+            if re.search(r'<meta[^>]+name=["\']robots["\'][^>]+noindex',t,re.I):
+              url='https://www.itvedas.com/'+str(p.relative_to('.')).replace('index.html','').replace('.html','')
+              if url.rstrip('/') in sitemap: bad.append(str(p))
+          if bad: raise SystemExit('Noindex pages in sitemap: '+str(bad))
+          print('OK: noindex pages excluded from sitemap')
+          PY
       - name: Check generated article cleanup
         run: |
           python - <<'PY'
           from pathlib import Path
           import glob
-
-          quiz = Path('quiz.html').read_text(encoding='utf-8')
-          index = Path('index.html').read_text(encoding='utf-8')
-
-          leaked_fences = []
-          for f in glob.glob('articles/**/*.html', recursive=True):
-              text = Path(f).read_text(encoding='utf-8', errors='ignore')
-              if '```' in text:
-                  leaked_fences.append(f)
-
-          checks = [
-              ('no article has a leaked markdown code fence', len(leaked_fences) == 0),
-              ('quiz does not include placeholder EmailJS config', 'YOUR_PUBLIC_KEY' not in quiz),
-              ('home loads article search index', "fetch('/search-index.json')" in index),
-          ]
-
-          failed = [name for name, ok in checks if not ok]
-          if failed:
-              for name in failed:
-                  print(f'FAILED: {name}')
-              if leaked_fences:
-                  print('Files with leaked code fences:', leaked_fences)
-              raise SystemExit(1)
-
-          for name, _ in checks:
-              print(f'OK: {name}')
+          quiz=Path('quiz.html').read_text(encoding='utf-8'); index=Path('index.html').read_text(encoding='utf-8'); leaked=[f for f in glob.glob('articles/**/*.html',recursive=True) if '```' in Path(f).read_text(encoding='utf-8',errors='ignore')]
+          if leaked or 'YOUR_PUBLIC_KEY' in quiz or "fetch('/search-index.json')" not in index: raise SystemExit('Generated content cleanup failed: '+str(leaked))
+          print('OK: generated content cleanup checks passed')
           PY

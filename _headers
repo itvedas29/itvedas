@@ -1,36 +1,16 @@
 # Cloudflare Pages security/response headers.
-# Restores the CSP/HSTS config that was previously set via netlify.toml
-# (deleted in ad2d82dd when the site moved to Cloudflare Pages) — that
-# deletion silently dropped these headers since wrangler.toml has no
-# header config of its own.
-#
-# script-src additionally allowlists cdnjs.cloudflare.com and
-# cdn.jsdelivr.net because several /tools/ pages load a library from
-# one of those CDNs (crypto-js, jsrsasign, js-yaml, marked) — without
-# them the CSP silently breaks those tools (script never loads, button
-# clicks do nothing, no visible error to the user). Also allowlists
-# static.cloudflareinsights.com, Cloudflare Pages' own auto-injected
-# analytics beacon, which this CSP was otherwise blocking too.
+# Third-party origins are explicitly allowlisted instead of using a broad
+# `default-src https:` fallback. connect-src remains broad because the public
+# IT tools call multiple HTTPS APIs (RDAP, DNS-over-HTTPS, CVE sources, etc.).
 
 /*
-  Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-src 'self' https://*.googlesyndication.com https://*.google.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
   Cache-Control: public, max-age=3600, must-revalidate
-
-# Cloudflare Pages combines headers from every matching rule rather than
-# letting the more specific one win, and joins duplicate header values
-# with a comma -- so Cache-Control must only be set once per request.
-# Real page traffic hits clean extensionless URLs (e.g. /about), which
-# never matches a /*.html pattern -- that pattern only matches a literal
-# *.html request, i.e. the redirect Cloudflare 308s away from before
-# reaching real content. So the HTML cache policy lives on /* above,
-# where it actually applies to every page. /assets/* and /*.json are
-# requested by their literal path/extension and so match correctly here.
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
