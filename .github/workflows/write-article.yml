@@ -1,40 +1,27 @@
 name: ITVedas Autopilot
 
-# ──────────────────────────────────────────────────────────────
-#  Schedules (times in UTC; IST = UTC + 5:30)
-#    Deep articles : Mon, Wed, Fri  9:00 AM IST
-#    News refresh  : once daily, 08:47 IST
-#
-#    CADENCE NOTE (2026-08-06): news used to run hourly (24x/day). A
-#    site audit found 77% of the sitemap (1,143 of 1,478 URLs) is
-#    autopilot-published /news/ pages, GSC showing only 46 pages
-#    indexed vs. 861 "Discovered - currently not indexed" and 81
-#    "Crawled - currently not indexed" - strong signal the publish
-#    volume was outrunning Google's ability to crawl/trust the site.
-#    Dropped to once/day so indexing can catch up; see also
-#    MAX_NEW_ARTICLES_PER_RUN in itvedas-brain/news-agent.py, which
-#    was cut 25 -> 8 for the same reason. Re-evaluate once GSC's
-#    "indexed" count is climbing and Discovered/Crawled-not-indexed
-#    are trending down.
-#  Manual run: Actions tab → Run workflow → choose what to run
-# ──────────────────────────────────────────────────────────────
+# Traffic-recovery policy:
+# - Deep articles: Mon/Wed/Fri at 09:00 IST.
+# - News is NOT scheduled while search inventory is being recovered.
+# - News can be run manually for curated releases only.
+# - Generated changes are submitted as PRs so validation runs before merge.
+# - Do not push generated content directly to main.
 on:
   schedule:
-    - cron: '30 3 * * 1,3,5'   # 09:00 IST  Mon/Wed/Fri  → article
-    - cron: '17 3 * * *'       # 08:47 IST  daily        → news
+    - cron: '30 3 * * 1,3,5'
   workflow_dispatch:
     inputs:
       run_type:
         description: 'What to run'
         required: true
-        default: 'both'
+        default: 'article_only'
         type: choice
-        options: [both, article_only, news_only]
+        options: [article_only, news_only]
 
 permissions:
   contents: write
+  pull-requests: write
 
-# Use the newer Node runtime (silences the deprecation warning)
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -56,14 +43,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Install Python dependencies
         run: pip install pytrends "urllib3<2"
 
-      # ── Deep article: Mon/Wed/Fri schedule, or manual both/article_only ──
       - name: Run Brain (deep article)
-        if: >-
-          (github.event_name == 'schedule' && github.event.schedule == '30 3 * * 1,3,5') ||
-          (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'article_only'))
+        if: github.event_name == 'schedule' || inputs.run_type == 'article_only'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
@@ -73,32 +58,43 @@ jobs:
           SMTP_PASS:         ${{ secrets.SMTP_PASS }}
         run: python3 itvedas-brain/content-writer.py
 
-      # ── News: hourly schedule, or manual both/news_only ──
-      - name: Run News Agent
-        if: >-
-          (github.event_name == 'schedule' && github.event.schedule != '30 3 * * 1,3,5') ||
-          (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'news_only'))
+      - name: Run News Agent (manual only)
+        if: github.event_name == 'workflow_dispatch' && inputs.run_type == 'news_only'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GA4_ID:            ${{ secrets.GA4_ID }}
         run: python3 itvedas-brain/news-agent.py
 
-      # ── Rebuild the news archive (paginated index of every news/*.html
-      #    post) so newly-published stories get an on-site link pointing
-      #    to them once they age out of news.html/security-news.html's
-      #    "latest ~40" window ──
       - name: Rebuild news archive
         env:
           GA4_ID: ${{ secrets.GA4_ID }}
         run: python3 scripts/generate-news-archive.py
 
-      # ── Commit & push everything the agents produced ──
-      - name: Commit and push
+      - name: Prepare pull request
+        id: changes
         run: |
-          git config user.name  "ITVedas Bot"
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BRANCH="autopilot/${GITHUB_RUN_ID}"
+          git switch -c "$BRANCH"
+          git config user.name "ITVedas Bot"
           git config user.email "bot@itvedas.com"
           git add -A
-          git pull --rebase --autostash origin main
-          git add -A
-          git diff --staged --quiet || git commit -m "Autopilot update $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push origin main
+          git commit -m "chore: autopilot update ${GITHUB_RUN_ID}"
+          git push --set-upstream origin "$BRANCH"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "${{ steps.changes.outputs.branch }}" \
+            --title "Autopilot update ${{ github.run_id }}" \
+            --body "Automated ITVedas content update. This PR must pass the repository validation workflow before merge."
