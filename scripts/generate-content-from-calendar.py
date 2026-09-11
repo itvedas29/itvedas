@@ -14,16 +14,16 @@ TEMPLATE = '''<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
   <meta name="description" content="{description}">
   <meta name="robots" content="index,follow">
   <meta property="og:title" content="{title} | IT Vedas">
   <meta property="og:description" content="{description}">
   <meta property="og:type" content="article">
   <meta property="article:published_time" content="2026-07-04">
-  <link rel="canonical" href="https://itvedas.com{path}">
+  <link rel="canonical" href="https://www.itvedas.com{path}">
   <title>{title} | IT Vedas</title>
-  <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{description}", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {{"@type": "Organization", "name": "ITVedas", "url": "https://itvedas.com"}}}}</script>
+  <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{description}", "datePublished": "2026-07-04", "dateModified": "2026-07-04", "publisher": {{"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>

@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="description" content="What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes,...">
 <meta name="keywords" content="what is an API, API explained for beginners, REST API tutorial, HTTP methods explained, JSON basics, API status codes">
 <meta name="robots" content="index,follow">
@@ -42,7 +46,7 @@
 ]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--subtle:#4A5568;--accent:#84CC16;--border:rgba(24,34,56,0.12);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -51,7 +55,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:transparent;}
 .pb{height:100%;background:linear-gradient(90deg,var(--accent),#06B6D4);width:0%;transition:width 0.1s;}
 nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
+.logo{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;letter-spacing:-0.02em;}
 .logo span{color:#FF6B35;}
 .nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;}
 .nav-back:hover{color:var(--text);border-color:rgba(24,34,56,0.22);}
@@ -62,7 +66,7 @@ nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:c
 .badges{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;}
 .badge-topic{background:rgba(132,204,22,0.12);border:1px solid rgba(132,204,22,0.25);color:var(--accent);padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;}
 .badge-info{color:var(--muted);font-size:0.82rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.75rem;border-radius:100px;}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.hero h1{font-family:'Lexend',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
 .layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
 article{min-width:0;}
 .toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
@@ -71,9 +75,9 @@ article{min-width:0;}
 .toc li{margin-bottom:0.15rem;}
 .toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all 0.2s;}
 .toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
-article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
+article h2{font-family:'Lexend',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;color:var(--text);display:flex;align-items:center;gap:0.75rem;}
 article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
-article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;color:var(--text);}
+article h3{font-family:'Lexend',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;color:var(--text);}
 article p{margin-bottom:1.35rem;color:var(--subtle);}
 article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--subtle);}
 article li{margin-bottom:0.65rem;line-height:1.7;}
@@ -87,11 +91,11 @@ article pre code{background:none;border:none;padding:0;font-size:0.84rem;color:#
 .callout{background:linear-gradient(135deg,rgba(132,204,22,0.08),rgba(6,182,212,0.06));border:1px solid rgba(132,204,22,0.2);border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
 .callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
 .comparison-table{width:100%;border-collapse:collapse;margin:2rem 0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.comparison-table th{background:rgba(132,204,22,0.1);padding:1rem;text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--accent);}
+.comparison-table th{background:rgba(132,204,22,0.1);padding:1rem;text-align:left;font-family:'Lexend',sans-serif;font-weight:600;color:var(--accent);}
 .comparison-table td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);color:var(--subtle);}
 .comparison-table tr:last-child td{border-bottom:none;}
 .takeaway{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:3rem 0;}
-.takeaway h3{font-family:'Space Grotesk',sans-serif;color:var(--accent);font-size:1.05rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.takeaway h3{font-family:'Lexend',sans-serif;color:var(--accent);font-size:1.05rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
 .takeaway ul{list-style:none;padding:0;margin:0;}
 .takeaway li{padding:0.65rem 0;border-bottom:1px solid var(--border);color:var(--subtle);font-size:0.95rem;display:flex;gap:0.75rem;align-items:flex-start;line-height:1.5;}
 .takeaway li:last-child{border:none;}
@@ -110,7 +114,7 @@ aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
 .related-articles a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;border-bottom:none;transition:color 0.2s;}
 .related-articles a:hover{color:var(--accent);}
 footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
-.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
 .fl span{color:#FF6B35;}
 .flinks{display:flex;gap:2rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
@@ -123,14 +127,14 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Api","item":"https://www.itvedas.com/articles/api/"},{"position":3,"@type":"ListItem","name":"What Is An Api","item":"https://www.itvedas.com/articles/api/what-is-an-api"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"position":1,"@type":"ListItem","name":"Home","item":"https://www.itvedas.com"},{"position":2,"@type":"ListItem","name":"Api","item":"https://www.itvedas.com/articles/api/"},{"position":3,"@type":"ListItem","name":"What is an API? REST, HTTP Methods and JSON Explained (2026)","item":"https://www.itvedas.com/articles/api/what-is-an-api"}]}</script>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas","description":"What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes,...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-13T09:47:42.579678","dateModified":"2026-07-13T09:47:42.579678","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas","description":"What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes,...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-17T05:48:27.274428","dateModified":"2026-07-17T05:48:27.274428","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas","description":"What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes,...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-13T09:47:42.579678","dateModified":"2026-07-13T09:47:42.579678","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What is an API? REST, HTTP Methods and JSON Explained (2026) | ITVedas","description":"What is an API? Plain-English explanation with the restaurant analogy, a real request walkthrough, HTTP methods (GET, POST, PUT, DELETE), JSON, status codes,...","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-17T05:48:27.274428","dateModified":"2026-07-17T05:48:27.274428","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script></head>
 <body>
 <div class="progress"><div class="pb" id="pb"></div></div>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   <a href="/articles/api/" class="nav-back">← API Guides</a>
 </nav>
 
@@ -157,7 +161,7 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;co
 <li>/</li>
 <li><a href="/articles/api/">Api</a></li>
 <li>/</li>
-<li>What Is An Api</li>
+<li>What is an API? REST, HTTP Methods and JSON Explained (2026)</li>
 </ol>
 </nav>
 

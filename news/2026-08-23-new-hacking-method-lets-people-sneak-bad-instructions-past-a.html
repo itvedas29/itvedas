@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Security researchers discovered a technique that hides harmful requests from AI systems until they&#x27;re already processing them.">
+<meta name="keywords" content="AI news, IT news, New Hacking Method Lets People Sneak Bad Instructi">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="New Hacking Method Lets People Sneak Bad Instructions Past AI Safety Filters | ITVedas News">
+<meta property="og:description" content="Security researchers discovered a technique that hides harmful requests from AI systems until they&#x27;re already processing them.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://www.itvedas.com/news/2026-08-23-new-hacking-method-lets-people-sneak-bad-instructions-past-a">
+<title>New Hacking Method Lets People Sneak Bad Instructions Past AI Safety Filters | ITVedas News</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "New Hacking Method Lets People Sneak Bad Instructions Past AI Safety Filters", "description": "Security researchers discovered a technique that hides harmful requests from AI systems until they're already processing them.", "datePublished": "2026-08-23", "dateModified": "2026-08-23", "author": {"@type": "Organization", "name": "ITVedas"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#F97316;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F9731622,#F9731608);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#F9731618,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #F9731644);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#F973161f;border:1px solid #F9731644;color:#F97316;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#F9731614,#8B5CF614);border:1px solid #F9731633;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/news" class="nav-back">← All News</a>
+</nav>
+<div class="hero-visual"><div class="hero-emoji">🤖</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news">News</a> › AI</div>
+  <div class="badges">
+    <span class="badge">AI</span>
+    <span class="badge-info">📅 2026-08-23 · 03:58 AM IST</span>
+    <span class="badge-info">⏱ 3 min read</span>
+  </div>
+  <h1>New Hacking Method Lets People Sneak Bad Instructions Past AI Safety Filters</h1>
+  <p class="summary">Security researchers discovered a technique that hides harmful requests from AI systems until they&#x27;re already processing them.</p>
+</div>
+<div class="article">
+  <h2 id="a-new-vulnerability-in-popular-ai-systems">A New Vulnerability in Popular AI Systems</h2>
+
+<p>Security researchers have identified a concerning weakness in major artificial intelligence platforms, including Grok and Google's Gemini. The problem involves a method that disguises harmful instructions in encrypted code, allowing them to slip past the safety protections that these AI systems normally use to refuse dangerous requests.</p>
+
+<p>Think of it like this: imagine a security guard at a building entrance who checks all visitors. This new technique is like giving someone a locked box that the guard cannot see inside. Once the person is past the guard and inside a secure room where they can open the box, the contents become visible. In this case, the "secure room" is called a trusted execution environment, which is a special protected area within a computer where sensitive operations happen.</p>
+
+<h2 id="how-this-attack-works">How This Attack Works</h2>
+
+<p>The technique being discussed here, researchers call it "Cryptographic Context Injection," works by wrapping dangerous instructions in layers of encryption. The AI system receives what looks like harmless data and processes it normally. However, once the instructions reach a certain part of the system designed to be extra secure, the encryption gets unlocked. At that point, the harmful content can be exposed and acted upon before safety filters can catch it.</p>
+
+<p>This is particularly serious because Grok and Gemini are designed with multiple layers of protection. These safeguards are supposed to prevent the AI from helping with illegal activities, creating harmful content, or producing biased results. When researchers tested this new vulnerability, they found it could potentially bypass these protections.</p>
+
+<h2 id="why-you-should-care">Why You Should Care</h2>
+
+<p>If you use these AI systems for work, school, or personal projects, this matters to you. These platforms are increasingly used for important tasks like writing, coding, research, and decision-making. The safety features exist to keep the AI helpful and honest.</p>
+
+<ul>
+<li><strong>Trust concerns:</strong> If someone can sneak around safety measures, the AI might provide harmful information that users rely on</li>
+<li><strong>Security risks:</strong> Bad actors could use this technique to generate malware code, instructions for harmful activities, or manipulative content</li>
+<li><strong>Accountability issues:</strong> Companies are responsible for controlling what their AI systems produce, but these gaps make that harder</li>
+</ul>
+
+<p>For businesses using these AI tools, this vulnerability could expose them to legal liability and reputational damage if the systems are tricked into doing something harmful.</p>
+
+<h2 id="what-you-can-do">What You Can Do</h2>
+
+<p>For most everyday users, direct action options are limited, but you're not helpless:</p>
+
+<ul>
+<li><strong>Stay informed:</strong> Keep watching for security updates from Anthropic (Grok's creator) and Google about how they're fixing this</li>
+<li><strong>Report issues:</strong> If you notice unusual behavior from these AI systems, report it to the companies</li>
+<li><strong>Be skeptical:</strong> Remember that AI systems can make mistakes or be manipulated, so don't treat their outputs as completely reliable</li>
+<li><strong>Limit sensitive tasks:</strong> For highly confidential work, consider whether AI assistance is necessary or if human review is essential</li>
+</ul>
+
+<p>For organizations, work with your security teams to understand the risks and implement additional verification steps for critical AI-generated content.</p>
+
+<p>The companies behind these systems will likely release patches soon, but this discovery highlights an ongoing challenge: keeping increasingly sophisticated AI systems secure requires constant vigilance.</p>
+  <div class="source-box">
+    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="https://www.securityweek.com/encrypted-prompts-bypass-ai-safety-guardrails-in-grok-and-gemini/" target="_blank" rel="noopener nofollow">source</a>. Visit the source for their original reporting.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news">News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+</body>
+</html>

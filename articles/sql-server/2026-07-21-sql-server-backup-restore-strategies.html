@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
   <meta name="description" content="How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.">
   <meta name="robots" content="index,follow">
   <meta property="og:title" content="SQL Server Backup &amp; Restore Strategies | IT Vedas">
@@ -19,7 +23,7 @@
   <title>SQL Server Backup &amp; Restore Strategies | IT Vedas</title>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SQL Server Backup &amp; Restore Strategies", "description": "How recovery models set your RPO ceiling, why differentials reset from the last full (not the last diff), and how to sequence a real point-in-time restore.", "datePublished": "2026-07-21", "dateModified": "2026-07-21", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "url": "https://www.itvedas.com/articles/sql-server/2026-07-21-sql-server-backup-restore-strategies"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#EEF3FC;--bg2:#FFFFFF;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#6366F1;--border:rgba(24,34,56,0.12);--r:12px;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -27,7 +31,7 @@
     body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
     #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+    .logo{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
     .logo span{color:#FF6B35;}
     .nav-links{display:flex;gap:1.5rem;}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
@@ -37,19 +41,19 @@
     .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
     .breadcrumb a:hover{color:var(--accent);}
     .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
-    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+    .hero h1{font-family:'Lexend',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
     .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
     .pub-date{color:var(--sub);font-weight:500;}
     .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
     .art{min-width:0;}
     .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;max-height:80vh;overflow-y:auto;}
-    .toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+    .toc h3{font-family:'Lexend',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
     .toc ol{padding-left:1.1rem;}
     .toc li{margin-bottom:.4rem;}
     .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
     .toc a:hover{color:var(--accent);}
-    .art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
-    .art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+    .art h2{font-family:'Lexend',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+    .art h3{font-family:'Lexend',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
     .art p{color:var(--sub);margin-bottom:1.25rem;}
     .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
     .art li{margin-bottom:.4rem;}
@@ -60,13 +64,13 @@
     .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;position:relative;}
     .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
     .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
-    .fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+    .fact-box strong{display:block;font-family:'Lexend',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
     .takeaways{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
-    .takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+    .takeaways h2{font-size:1rem;font-family:'Lexend',sans-serif;margin:0 0 .75rem;color:var(--text);}
     .takeaways ul{margin:0;padding-left:1.25rem;}
     .takeaways li{color:var(--sub);font-size:.9rem;}
     footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
-    .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+    .fl{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
     .fl span{color:#FF6B35;}
     .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
     .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
@@ -89,7 +93,7 @@
 <body>
 <div id="prog"></div>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   <div class="nav-links">
     <a href="/">Home</a><a href="/news">News</a>
     <a href="/#chapters">All Chapters</a>

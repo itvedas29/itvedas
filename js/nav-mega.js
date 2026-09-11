@@ -6,6 +6,14 @@
    same flag closes the panel it was meant to keep open. Closing is via
    mouseleave, an outside click, or Escape - never the open button itself. */
 (function () {
+  // Load the shared event layer. It uses the existing GA4 tag only and is a no-op
+  // on pages that do not expose gtag(), so this never creates a second tag.
+  if (!document.querySelector('script[src="/js/itvedas-events.js"]')) {
+    var analytics = document.createElement('script');
+    analytics.src = '/js/itvedas-events.js';
+    analytics.async = true;
+    document.head.appendChild(analytics);
+  }
   function closeAll(except) {
     document.querySelectorAll('.nav-drop[data-open="true"]').forEach(function (d) {
       if (d !== except) {

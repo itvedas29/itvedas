@@ -44,7 +44,7 @@ def add_article_schema(html_content, file_path, title, description):
             "name": "ITVedas",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://www.itvedas.com/logo.png"
+                "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
             }
         },
         "datePublished": datetime.now().isoformat(),
@@ -95,7 +95,7 @@ def add_news_article_schema(html_content, file_path, title, description, news_da
         "headline": title,
         "description": description,
         "url": url,
-        "image": "https://www.itvedas.com/logo.png",
+        "image": "https://www.itvedas.com/assets/brand/itvedas-logo.svg",
         "author": {
             "@type": "Organization",
             "name": "ITVedas"
@@ -105,7 +105,7 @@ def add_news_article_schema(html_content, file_path, title, description, news_da
             "name": "ITVedas",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://www.itvedas.com/logo.png"
+                "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
             }
         },
         "datePublished": news_date or datetime.now().isoformat(),
@@ -127,7 +127,7 @@ def add_organization_schema(html_content):
         "@type": "Organization",
         "name": "ITVedas",
         "url": "https://www.itvedas.com",
-        "logo": "https://www.itvedas.com/logo.png",
+        "logo": "https://www.itvedas.com/assets/brand/itvedas-logo.svg",
         "description": "Complete IT knowledge base with tutorials, CVE database, career guidance, and problem solutions",
         "sameAs": [
             "https://github.com/itvedas29/itvedas"

@@ -16,7 +16,8 @@ def get_page_title(content):
     """Extract page title."""
     match = re.search(r'<title>([^<]+)</title>', content, re.IGNORECASE)
     if match:
-        title = match.group(1).replace(' — ITVedas', '').strip()
+        title = match.group(1)
+        title = re.sub(r'\s*[|—-]\s*IT ?Vedas\s*$', '', title, flags=re.IGNORECASE).strip()
         return title
     return "Untitled"
 
@@ -34,7 +35,7 @@ def enhance_breadcrumb_navigation(content, file_path):
     if len(parts) >= 3:
         root_section = parts[0]  # articles, chapters, news
         category = parts[1]  # cloud, networking, etc.
-        page_name = parts[2].replace('.html', '').replace('-', ' ').title()
+        page_name = get_page_title(content)
 
         # Generate breadcrumb navigation
         breadcrumb = f"""<!-- Breadcrumb Navigation -->

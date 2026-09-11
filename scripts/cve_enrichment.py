@@ -238,7 +238,7 @@ class CVEEnricher:
                 'primary_keyword': cve_id,
                 'meta_title': f"{cve_id}: {cve.get('name', 'Vulnerability')} | ITVedas",
                 'meta_description': f"{severity} vulnerability: {cve.get('short_summary', cve.get('description', '')[:100])}",
-                'canonical': f"https://itvedas.com/cve/{cve_id.lower()}/",
+                'canonical': f"https://www.itvedas.com/cve/{cve_id.lower()}/",
                 'og_title': f"{cve_id}: {cve.get('name', 'Vulnerability')}",
                 'og_description': cve.get('description', '')[:155],
                 'twitter_card': 'summary_large_image'

@@ -9,13 +9,24 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(".")
-SITE_URL = "https://itvedas.com"
+SITE_URL = "https://www.itvedas.com"
 
-def get_breadcrumbs(file_path):
+def get_page_title(content):
+    """Extract a human-readable page title, stripping the site suffix."""
+    match = re.search(r'<title>([^<]+)</title>', content, re.IGNORECASE)
+    if match:
+        title = match.group(1)
+        title = re.sub(r'\s*[|—-]\s*IT ?Vedas\s*$', '', title, flags=re.IGNORECASE).strip()
+        if title:
+            return title
+    return None
+
+def get_breadcrumbs(file_path, content=""):
     """Generate breadcrumb structure for a given file path."""
     # Determine file type and location
     rel_path = file_path.relative_to(ROOT)
     parts = rel_path.parts
+    page_title = get_page_title(content)
 
     breadcrumbs = []
 
@@ -39,7 +50,7 @@ def get_breadcrumbs(file_path):
             breadcrumbs.append({
                 "position": 3,
                 "@type": "ListItem",
-                "name": parts[2].replace(".html", "").replace("-", " ").title(),
+                "name": page_title or parts[2].replace(".html", "").replace("-", " ").title(),
                 "item": f"{SITE_URL}/articles/{parts[1]}/{parts[2]}"
             })
     elif parts[0] == "chapters":
@@ -55,7 +66,7 @@ def get_breadcrumbs(file_path):
                 breadcrumbs.append({
                     "position": len(breadcrumbs) + 1,
                     "@type": "ListItem",
-                    "name": parts[2].replace("-", " ").title(),
+                    "name": page_title or parts[2].replace("-", " ").title(),
                     "item": f"{SITE_URL}/chapters/{parts[1]}/{parts[2]}/"
                 })
 
@@ -70,7 +81,7 @@ def add_breadcrumb_schema(file_path):
         if '"@type":"BreadcrumbList"' in content or 'BreadcrumbList' in content:
             return False
 
-        breadcrumbs = get_breadcrumbs(file_path)
+        breadcrumbs = get_breadcrumbs(file_path, content)
         if not breadcrumbs:
             return False
 

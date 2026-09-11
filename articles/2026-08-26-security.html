@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Learn the OWASP Top 10 security risks explained simply. Protect your data from common web vulnerabilities today.">
+<meta name="keywords" content="what is OWASP top 10 security risks explained, Security guide, ITVedas, IT knowledge">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="OWASP Top 10 Security Risks Explained: Protect Your Data Today | ITVedas">
+<meta property="og:description" content="Learn the OWASP Top 10 security risks explained simply. Protect your data from common web vulnerabilities today.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/articles/2026-08-26-security">
+<meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+<link rel="canonical" href="https://www.itvedas.com/articles/2026-08-26-security">
+<title>OWASP Top 10 Security Risks Explained: Protect Your Data Today | ITVedas</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "OWASP Top 10 Security Risks Explained: Protect Your Data Today", "description": "Learn the OWASP Top 10 security risks explained simply. Protect your data from common web vulnerabilities today.", "keywords": "what is OWASP top 10 security risks explained", "author": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}, "datePublished": "2026-08-26", "dateModified": "2026-08-26", "articleSection": "Security", "educationalLevel": "Beginner"}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#10B981;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;}
+.pb{height:100%;background:linear-gradient(90deg,var(--accent),#8B5CF6);width:0%;}
+nav{position:fixed;top:3px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:7.5rem 2rem 3rem;max-width:860px;margin:0 auto;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#10B9811f;border:1px solid #10B98144;color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.25rem;}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;max-width:1140px;margin:0 auto;padding:0 2rem 6rem;align-items:start;}
+article{min-width:0;}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:0 0 2.5rem;}
+.toc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.toc ul{list-style:none;}
+.toc a{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.3rem 0.6rem;display:block;border-radius:6px;border-left:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--text);background:rgba(24,34,56,0.05);border-left-color:var(--accent);padding-left:0.9rem;}
+article h2{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;margin:3rem 0 1rem;display:flex;align-items:center;gap:0.75rem;}
+article h2::before{content:'';width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0;}
+article h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:2rem 0 0.6rem;}
+article p{margin-bottom:1.35rem;color:var(--sub);}
+article ul,article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+article li{margin-bottom:0.65rem;}
+article strong{color:var(--text);}
+article blockquote{background:linear-gradient(135deg,#10B98110,#8B5CF610);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.25rem 1.5rem;margin:2rem 0;color:var(--sub);font-style:italic;}
+article code{background:var(--bg2);border:1px solid var(--border);padding:0.15rem 0.45rem;border-radius:5px;font-family:monospace;font-size:0.875rem;color:#10B981;}
+article pre{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0;overflow-x:auto;}
+article pre code{background:none;border:none;padding:0;color:#9FE1CB;}
+.callout{background:linear-gradient(135deg,#10B98114,#8B5CF610);border:1px solid #10B98133;border-radius:12px;padding:1.25rem 1.5rem;margin:2rem 0;}
+.callout-title{font-weight:700;color:var(--accent);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,#10B98114,#8B5CF614);border:1px solid #10B98133;border-radius:20px;text-align:center;}
+.cta h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.75rem;}
+.cta p{color:var(--muted);margin-bottom:1.5rem;}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.85rem 2.25rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+aside{position:sticky;top:87px;display:flex;flex-direction:column;gap:1rem;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sc ul{list-style:none;}
+.sc a{color:var(--muted);text-decoration:none;font-size:0.84rem;padding:0.3rem 0;display:block;transition:color .2s;}
+.sc a:hover{color:var(--accent);}
+.chapter-list a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.4rem 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.chapter-list a:last-child{border:none;}
+.chapter-list a:hover{color:var(--accent);}
+.nl-sc{background:linear-gradient(135deg,#FF6B3514,#8B5CF614);border:1px solid #FF6B3533;border-radius:14px;padding:1.25rem;}
+.nl-sc p{font-size:0.84rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.75rem;justify-content:center;margin:0.75rem 0;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}aside{display:none;}.hero,.layout{padding-left:1.25rem;padding-right:1.25rem;}nav{padding:0 1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="progress"><div class="pb" id="pb"></div></div>
+<nav>
+  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/articles/security/" class="nav-back">← Security</a>
+</nav>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/articles/security/">Security</a> › Article</div>
+  <div class="badges">
+    <span class="badge">Security</span>
+    <span class="badge-info">📅 2026-08-26</span>
+    
+    <span class="badge-info">⏱ 8 min read</span>
+    <span class="badge-info">👶 Beginner friendly</span>
+  </div>
+  <h1>OWASP Top 10 Security Risks Explained: Protect Your Data Today</h1>
+</div>
+<div class="layout">
+  <article>
+    <div class="toc"><div class="toc-label">In this article</div><ul><li><a href="#what-is-owasp-top-10">What is OWASP Top 10?</a></li><li><a href="#how-does-owasp-top-10-work">How Does OWASP Top 10 Work?</a></li><li><a href="#the-10-security-risks-explained-simply">The 10 Security Risks (Explained Simply)</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-how-netflix-faces-these-risks">A Real-World Example: How Netflix Faces These Risks</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    <h1>OWASP Top 10 Security Risks Explained: Protect Your Data Today</h1>
+
+<p>Ever worried your passwords or bank details could be stolen online? You're not alone. Hackers target websites and apps every single second. The <strong>OWASP Top 10</strong> is a list of the most dangerous security problems your favorite apps face. Think of it as a "wanted poster" for the worst cyber criminals.</p>
+
+<p>This guide breaks down each risk in plain English. No jargon. No confusion. By the end, you'll understand how websites like Netflix, Amazon, and Google protect your data. More importantly, you'll know what to watch out for yourself.</p>
+
+<h2 id="what-is-owasp-top-10">What is OWASP Top 10?</h2>
+
+<p><strong>OWASP</strong> stands for Open Worldwide Application Security Project. It's an organization of security experts who study how websites and apps get hacked. Every few years, they publish a "Top 10" list—the ten most dangerous security weaknesses found in real applications.</p>
+
+<blockquote>
+<p>Think of OWASP Top 10 like a restaurant health inspection checklist. Inspectors find the dirtiest, most dangerous problems. They publish the list so all restaurants improve. Similarly, OWASP finds the worst security problems and publishes them so developers fix their apps.</p>
+</blockquote>
+
+<p>This list helps developers build safer apps. It helps you understand what risks you face online. Knowing these ten risks is the foundation of digital safety.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Major companies like Google and Microsoft use the OWASP Top 10 as their security blueprint. If they care, you should too.</p>
+</div>
+
+<h2 id="how-does-owasp-top-10-work">How Does OWASP Top 10 Work?</h2>
+
+<p>OWASP researchers analyze thousands of real-world hacking incidents. They identify patterns. They count which weaknesses get exploited most. Then they rank the ten most dangerous ones.</p>
+
+<p>Here's how the process works:</p>
+
+<ol>
+<li>Security experts scan hundreds of thousands of websites.</li>
+<li>They identify vulnerabilities (weak spots hackers can exploit).</li>
+<li>They rank vulnerabilities by frequency and severity.</li>
+<li>They publish the Top 10 list and recommendations.</li>
+<li>Developers use this list to fix their applications.</li>
+</ol>
+
+<p>In simple terms: OWASP is like a crime statistics agency for the internet. They tell you the most common crimes and how to prevent them.</p>
+
+<h2 id="the-10-security-risks-explained-simply">The 10 Security Risks (Explained Simply)</h2>
+
+<h3>1. Broken Access Control</h3>
+
+<p><strong>What it is:</strong> An app doesn't properly check who you are. Like a bouncer who doesn't check your ID.</p>
+
+<p><strong>The risk:</strong> You could see someone else's private messages, bank account, or photos.</p>
+
+<p><strong>Real example:</strong> You log into your Amazon account. But through a URL trick, you access another customer's order history without permission.</p>
+
+<h3>2. Cryptographic Failures</h3>
+
+<p><strong>What it is:</strong> Passwords and personal data aren't properly encrypted (scrambled).</p>
+
+<p><strong>The risk:</strong> Hackers steal your data and read it like an open book.</p>
+
+<p>In simple terms: Imagine mailing a postcard (unencrypted) instead of a sealed letter (encrypted). Anyone handling it can read it.</p>
+
+<h3>3. Injection Attacks</h3>
+
+<p><strong>What it is:</strong> A hacker inserts malicious code into an app's search box or login form.</p>
+
+<p><strong>The risk:</strong> The app runs the hacker's code instead of yours.</p>
+
+<p><strong>Real example:</strong> You search Google for "best pizza restaurants." A hacker searches for <code>'; DROP TABLE users; --</code> which deletes the entire user database.</p>
+
+<h3>4. Insecure Design</h3>
+
+<p><strong>What it is:</strong> The app was built without security in mind from day one.</p>
+
+<p><strong>The risk:</strong> Hackers find it easy to break in because security wasn't planned.</p>
+
+<p>In simple terms: It's like building a house without locks. You can add them later, but it's harder than planning them from the start.</p>
+
+<h3>5. Security Misconfiguration</h3>
+
+<p><strong>What it is:</strong> The app is set up incorrectly. Default passwords aren't changed. Unnecessary features are left on.</p>
+
+<p><strong>The risk:</strong> Hackers use the obvious weak spots everyone knows about.</p>
+
+<p><strong>Real example:</strong> A company leaves the admin password as <code>admin123</code> in production. A hacker finds it and takes control.</p>
+
+<h3>6. Vulnerable and Outdated Components</h3>
+
+<p><strong>What it is:</strong> Apps use old, buggy software libraries and tools.</p>
+
+<p><strong>The risk:</strong> Hackers exploit known bugs in old software.</p>
+
+<p>In simple terms: Using Windows XP in 2024. Microsoft doesn't fix new bugs. Hackers exploit old vulnerabilities.</p>
+
+<h3>7. Authentication and Session Management Failures</h3>
+
+<p><strong>What it is:</strong> Your login session (proof you're you) isn't properly protected.</p>
+
+<p><strong>The risk:</strong> Hackers steal your session and pretend to be you.</p>
+
+<p><strong>Real example:</strong> You use WhatsApp on public WiFi. A hacker on the same WiFi steals your session token. They log in as you.</p>
+
+<h3>8. Software and Data Integrity Failures</h3>
+
+<p><strong>What it is:</strong> Updates and data aren't verified as genuine before you download them.</p>
+
+<p><strong>The risk:</strong> You download fake updates containing malware (harmful software).</p>
+
+<p>In simple terms: Someone swaps your real YouTube app with a fake one. You don't notice the difference until it steals your data.</p>
+
+<h3>9. Logging and Monitoring Failures</h3>
+
+<p><strong>What it is:</strong> Apps don't record suspicious activity or check for attacks.</p>
+
+<p><strong>The risk:</strong> Hackers steal data for weeks before anyone notices.</p>
+
+<p>In simple terms: Like a store without security cameras. Shoplifters work freely because no one watches.</p>
+
+<h3>10. Server-Side Request Forgery (SSRF)</h3>
+
+<p><strong>What it is:</strong> A hacker tricks the app's server into making requests on their behalf.</p>
+
+<p><strong>The risk:</strong> The hacker accesses internal systems they shouldn't reach.</p>
+
+<p>In simple terms: You ask a doorman to retrieve something from the manager's office. A hacker tricks the doorman into fetching confidential files instead.</p>
+
+<h2 id="why-this-matters-to-you">Why This Matters to You</h2>
+
+<p>You use apps every day: Netflix, Instagram, WhatsApp, Gmail, Amazon. Each one handles your private data. If they have OWASP Top 10 vulnerabilities, your data is at risk.</p>
+
+<p><strong>What could happen:</strong></p>
+
+<ul>
+<li>Your passwords get stolen. Your email is compromised.</li>
+<li>Your bank details are exposed. Fraudsters drain your account.</li>
+<li>Your photos and messages leak online.</li>
+<li>Your identity is stolen for fraud.</li>
+<li>Your device is infected with malware.</li>
+</ul>
+
+<p>Understanding these risks helps you:</p>
+
+<ul>
+<li>Choose safer apps (those with good security practices).</li>
+<li>Spot warning signs of compromised accounts.</li>
+<li>Protect yourself online more effectively.</li>
+<li>Know when to change passwords or report fraud.</li>
+</ul>
+
+<p>In simple terms: It's like understanding car safety features. Knowing airbags and brakes exist makes you a safer driver and buyer.</p>
+
+<h2 id="a-real-world-example-how-netflix-faces-these-risks">A Real-World Example: How Netflix Faces These Risks</h2>
+
+<p>Netflix stores your credit card, watch history, and personal profile. Here's how OWASP Top 10 risks apply:</p>
+
+<p><strong>Scenario 1 - Broken Access Control:</strong> A hacker finds a way to view other users' profiles without logging in. They see someone's full watch history and can change billing info.</p>
+
+<p><strong>Scenario 2 - Cryptographic Failures:</strong> Netflix stores passwords in plain text instead of encrypted format. A hacker breaches the database and gets millions of passwords.</p>
+
+<p><strong>Scenario 3 - Injection Attacks:</strong> A hacker types <code>OR 1=1</code> into the search box. Instead of searching for "The Office," the app returns all movies ever made, revealing the database structure.</p>
+
+<p><strong>How Netflix prevents this:</strong> They hire security teams to audit code, encrypt passwords, validate all inputs, and monitor for suspicious activity. This follows OWASP guidelines.</p>
+
+<div class="callout">
+<div class="callout-title">Pro Tip</div>
+<p>Netflix's entire security strategy is built around preventing OWASP Top 10 risks. That's why you can safely store your payment info there.</p>
+</div>
+
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+
+<h3>Mistake 1: Thinking "I'm Too Small to Hack"</h3>
+
+<p><strong>The problem:</strong> You assume hackers only target big companies like Google or Amazon.</p>
+
+<p><strong>Reality:</strong> Hackers use automated tools. They attack thousands of small websites automatically. Your size doesn't matter.</p>
+
+<p><strong>The fix:</strong> Follow OWASP guidelines regardless of your app's size. Small apps get hacked just as easily as big ones.</p>
+
+<h3>Mistake 2: Fixing Security After Launch</h3>
+
+<p><strong>The problem:</strong> Developers build the app first, then think about security.</p>
+
+<p><strong>Reality:</strong> By then, vulnerabilities are baked into the code. Adding security later is expensive and incomplete.</p>
+
+<p><strong>The fix:</strong> Plan security from day one. Use OWASP Top 10 as your design blueprint, not a checklist after launch.</p>
+
+<h3>Mistake 3: Using Default Passwords or Outdated Libraries</h3>
+
+<p><strong>The problem:</strong> Developers skip the "boring" security work like changing default settings.</p>
+
+<p><strong>Reality:</strong> Hackers know all default passwords. Outdated libraries have published exploits anyone can use.</p>
+
+<p><strong>The fix:</strong> Change all defaults. Update all libraries regularly. This prevents risks #5 and #6.</p>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h3>Q1: Is OWASP Top 10 only for developers?</h3>
+
+<p><strong>A:</strong> No. Businesses, security professionals, and users benefit from understanding it. Developers use it to build safer apps. You use it to spot risky apps. Companies use it to audit their security.</p>
+
+<h3>Q2: How often does OWASP update the Top 10 list?</h3>
+
+<p><strong>A:</strong> Roughly every 3-4 years. The latest version is from 2021. Vulnerabilities evolve as hackers get smarter. OWASP updates the list to match current threats.</p>
+
+<h3>Q3: If an app has one of these vulnerabilities, should I stop using it?</h3>
+
+<p><strong>A:</strong> Not immediately. Many apps have minor vulnerabilities but work fine. However, if a major company (like WhatsApp or Netflix) has an unfixed OWASP Top 10 vulnerability, consider switching. For personal apps, contact the developer and ask about security.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The OWASP Top 10 is your guide to understanding web security. It's not scary—it's empowering. You now know the ten most dangerous threats apps face. You understand how they work and why they matter to you. Next time you sign up for an app, you'll recognize risky behavior. You'll feel confident protecting your data online. Remember: security isn't about being paranoid. It's about being informed. Share this knowledge with friends. Ask companies about their security practices. Together, we make the internet safer for everyone.</p>
+    <div class="cta">
+      <h3>Keep Learning on ITVedas</h3>
+      <p>One of many free guides across 8 IT chapters — all in plain English.</p>
+      <a href="/" class="btn">Explore All Chapters →</a>
+    </div>
+  </article>
+  <aside>
+    <div class="sc"><div class="sc-label">Jump to section</div><ul><li><a href="#what-is-owasp-top-10">What is OWASP Top 10?</a></li><li><a href="#how-does-owasp-top-10-work">How Does OWASP Top 10 Work?</a></li><li><a href="#the-10-security-risks-explained-simply">The 10 Security Risks (Explained Simply)</a></li><li><a href="#why-this-matters-to-you">Why This Matters to You</a></li><li><a href="#a-real-world-example-how-netflix-faces-these-risks">A Real-World Example: How Netflix Faces These Risks</a></li><li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li><li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li><li><a href="#conclusion">Conclusion</a></li></ul></div>
+    <div class="sc"><div class="sc-label">All chapters</div><div class="chapter-list">
+      <a href="/articles/networking/">🌐 Networking</a>
+      <a href="/articles/cloud/">☁️ Cloud</a>
+      <a href="/articles/security/">🔐 Security</a>
+      <a href="/articles/devops/">⚙️ DevOps</a>
+      <a href="/articles/databases/">🗄️ Databases</a>
+      <a href="/articles/linux/">🐧 Linux</a>
+      <a href="/articles/hardware/">🖥️ Hardware</a>
+      <a href="/articles/compliance/">📋 Compliance</a>
+    </div></div>
+    <div class="nl-sc"><div class="sc-label" style="color:var(--accent);">Free newsletter</div>
+      <p>New IT guides every Monday, Wednesday and Friday — plain English.</p>
+      <a href="/#newsletter" class="btn" style="display:block;text-align:center;font-size:0.84rem;padding:0.65rem;">Subscribe Free →</a>
+    </div>
+  </aside>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>The complete IT knowledge hub — explained simply, for everyone.</p>
+  <div class="flinks"><a href="/">Home</a><a href="/news">News</a><a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a></div>
+  <p style="margin-top:1rem;">© 2026 ITVedas · Knowledge for everyone</p>
+</footer>
+<script>
+const pb=document.getElementById('pb');
+addEventListener('scroll',()=>{const d=document.documentElement;pb.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});
+</script>
+</body>
+</html>

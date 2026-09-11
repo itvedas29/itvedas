@@ -17,8 +17,8 @@ from typing import Callable
 
 KEY = "f02766f2e63a8a1b0fa5d8c46b7451a3"
 ENDPOINT = "https://api.indexnow.org/indexnow"
-SITE_HOST = "itvedas.com"
-SITE_URL = "https://itvedas.com"
+SITE_HOST = "www.itvedas.com"
+SITE_URL = "https://www.itvedas.com"
 
 
 def submit(paths: list[str], log_fn: Callable[[str], None] | None = None) -> None:

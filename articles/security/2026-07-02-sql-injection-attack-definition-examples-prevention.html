@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/assets/logo-mark.svg">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="description" content="SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas">
@@ -13,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-07-02">
-<link rel="canonical" href="https://www.itvedas.com/articles/security/sql-injection-attack-definition-examples-prevention">
+<link rel="canonical" href="https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention">
     <link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention">
     <link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention">
     <link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention">
@@ -23,13 +27,13 @@
     <link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention">
     
 <title>SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas</title>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples & Prevention","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","datePublished":"2026-07-02","dateModified":"2026-07-02","publisher":{"@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com"},"url":"https://www.itvedas.com/articles/security/sql-injection-attack-definition-examples-prevention","image":"https://www.itvedas.com/assets/og-default.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples & Prevention","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","datePublished":"2026-07-02","dateModified":"2026-07-02","publisher":{"@type":"Organization","name":"ITVedas","url":"https://www.itvedas.com"},"url":"https://www.itvedas.com/articles/security/2026-07-02-sql-injection-attack-definition-examples-prevention","image":"https://www.itvedas.com/assets/og-default.png"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is SQL injection attack definition?", "acceptedAnswer": {"@type": "Answer", "text": "SQL injection is a cyberattack where hackers insert malicious SQL code into web forms or input fields, manipulating your database to steal data, modify records, or delete tables. It works because developers sometimes concatenate user input directly into database queries without protection. OWASP ranked it as the #1 web vulnerability in 2021."}}, {"@type": "Question", "name": "Can parameterized queries completely prevent SQL injection?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Parameterized queries (prepared statements) completely prevent SQL injection when implemented correctly. They separate query structure from user data, so the database treats all input as literal values, never as executable code. Every major database system\u2014MySQL, PostgreSQL, Microsoft SQL Server\u2014supports parameterized queries."}}, {"@type": "Question", "name": "What is the Bobby Tables SQL injection example?", "acceptedAnswer": {"@type": "Answer", "text": "Bobby Tables is a fictional but realistic example from xkcd comic #327 (2007). A parent names their child &quot;Robert&#x27;); DROP TABLE students;--&quot; and the school&#x27;s enrollment system concatenates this into a SQL query without protection, causing the entire students table to be deleted. It popularized awareness of SQL injection vulnerabilities in web development."}}, {"@type": "Question", "name": "How do I test my website for SQL injection vulnerabilities?", "acceptedAnswer": {"@type": "Answer", "text": "Start manually: type a single quote (&#x27;) into input fields and watch for database errors. Try &#x27; OR &#x27;1&#x27;=&#x27;1&#x27; in search fields\u2014if you see unauthorized data, you&#x27;re vulnerable. For automated testing, use OWASP ZAP (free) or Burp Suite Community Edition, which scan your entire application and report injection flaws with severity ratings."}}, {"@type": "Question", "name": "Does input validation prevent SQL injection?", "acceptedAnswer": {"@type": "Answer", "text": "Input validation reduces risk but doesn&#x27;t fully prevent SQL injection alone. It checks that data matches expected patterns (usernames contain only letters/numbers, phone numbers are exactly 10 digits). However, skilled attackers use hex encoding and obfuscation to bypass validation. Parameterized queries are the only 100% reliable defense."}}, {"@type": "Question", "name": "Why do MySQL, PostgreSQL, and SQL Server all have SQL injection vulnerabilities?", "acceptedAnswer": {"@type": "Answer", "text": "All three databases have injection vulnerabilities when code doesn&#x27;t use parameterization. The vulnerability isn&#x27;t in the database software itself\u2014it&#x27;s in how developers write queries. When code concatenates user input directly into SQL, any database will execute it. Parameterized queries fix this universally across all three platforms."}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.itvedas.com"}, {"@type": "ListItem", "position": 2, "name": "Security", "item": "https://www.itvedas.com/articles/security/"}, {"@type": "ListItem", "position": 3, "name": "SQL Injection Attack: Definition, Examples & Prevention", "item": "https://www.itvedas.com/articles/security/sql-injection-attack-definition-examples-prevention"}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#1A1A28;
@@ -41,7 +45,7 @@ html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
 #prog{position:fixed;top:0;left:0;height:3px;background:var(--accent);z-index:999;width:0%;transition:width .1s linear;}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
 .logo span{color:#FF6B35;}
 .nav-links{display:flex;gap:1.5rem;}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;}
@@ -51,7 +55,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .2s;}
 .breadcrumb a:hover{color:var(--accent);}
 .ch-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.85rem;}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
+.hero h1{font-family:'Lexend',sans-serif;font-size:clamp(1.85rem,4vw,2.75rem);font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-bottom:1.25rem;}
 .hero-meta{display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;}
 .pub-date{color:var(--sub);font-weight:500;}
 .new-badge{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2em .55em;border-radius:4px;line-height:1;}
@@ -59,13 +63,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .wrap{max-width:860px;margin:0 auto;padding:1.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 210px;gap:2.5rem;align-items:start;}
 .art{min-width:0;}
 .toc{position:sticky;top:80px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;font-size:.85rem;}
-.toc h3{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
+.toc h3{font-family:'Lexend',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.85rem;}
 .toc ol{padding-left:1.1rem;}
 .toc li{margin-bottom:.4rem;}
 .toc a{color:var(--sub);text-decoration:none;transition:color .15s;}
 .toc a:hover{color:var(--accent);}
-.art h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
-.art h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
+.art h2{font-family:'Lexend',sans-serif;font-size:1.45rem;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);letter-spacing:-.015em;scroll-margin-top:80px;}
+.art h3{font-family:'Lexend',sans-serif;font-size:1.1rem;font-weight:600;margin:1.75rem 0 .6rem;color:var(--text);}
 .art p{color:var(--sub);margin-bottom:1.25rem;}
 .art ul,.art ol{color:var(--sub);padding-left:1.5rem;margin-bottom:1.25rem;}
 .art li{margin-bottom:.4rem;}
@@ -76,19 +80,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .art pre{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0;}
 .art pre code{background:none;border:none;padding:0;font-size:.875rem;color:#A8E6CF;}
 .fact-box{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0;}
-.fact-box strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
+.fact-box strong{display:block;font-family:'Lexend',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.6rem;}
 .fact-box ul{margin:0;padding-left:1.25rem;}
 .fact-box li{color:var(--sub);font-size:.9rem;margin-bottom:.3rem;}
 .takeaways{background:var(--bg3);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--r);padding:1.5rem;margin:2rem 0;}
-.takeaways h2{font-size:1rem;font-family:'Space Grotesk',sans-serif;margin:0 0 .75rem;color:var(--text);}
+.takeaways h2{font-size:1rem;font-family:'Lexend',sans-serif;margin:0 0 .75rem;color:var(--text);}
 .takeaways ul{margin:0;padding-left:1.25rem;}
 .takeaways li{color:var(--sub);font-size:.9rem;}
 .faq{margin-top:.75rem;}
 .faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.85rem;transition:border-color .2s;}
 .faq-item:hover{border-color:var(--accent);}
-.faq-item h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.faq-item h3{font-family:'Lexend',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
 .faq-item p{margin:0;font-size:.9rem;color:var(--sub);}
-.related h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin:2.5rem 0 1rem;color:var(--text);}
+.related h2{font-family:'Lexend',sans-serif;font-size:1.2rem;margin:2.5rem 0 1rem;color:var(--text);}
 .rel-grid{display:flex;flex-direction:column;gap:.6rem;}
 .rel-card{display:block;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;text-decoration:none;color:var(--sub);font-size:.875rem;transition:border-color .2s,color .2s;}
 .rel-card:hover{border-color:var(--accent);color:var(--text);}
@@ -97,7 +101,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-art a:hover{border-color:var(--accent);}
 .nav-art .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.875rem;}
-.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
+.fl{font-family:'Lexend',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;}
 .fl span{color:#FF6B35;}
 .flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap;}
 .flinks a{color:var(--muted);text-decoration:none;transition:color .2s;}
@@ -111,12 +115,12 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 </style>
   <link rel="stylesheet" href="/css/documentation-standards.css">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-02","dateModified":"2026-07-02","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-02","dateModified":"2026-07-02","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/logo.svg"}}}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-02","dateModified":"2026-07-02","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SQL Injection Attack: Definition, Examples &amp; Prevention | ITVedas","description":"SQL injection is the #1 web vulnerability (OWASP 2021). Learn how attackers exploit databases, real attack examples, and how to prevent them with code.","image":"https://www.itvedas.com/assets/og-default.png","datePublished":"2026-07-02","dateModified":"2026-07-02","author":{"@type":"Organization","name":"ITVedas"},"publisher":{"@type":"Organization","name":"ITVedas","logo":{"@type":"ImageObject","url":"https://www.itvedas.com/assets/brand/itvedas-logo.svg"}}}</script></head>
 <body>
 <div id="prog"></div>
 <nav>
-  <a href="/" class="logo">IT<span>Vedas</span></a>
+  <a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg>IT<span>Vedas</span></a>
   <div class="nav-links">
     <a href="/">Home</a><a href="/news">News</a>
     <a href="/articles/security/">🔐 Security</a>
@@ -136,7 +140,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 <li>/</li>
 <li><a href="/articles/security/">Security</a></li>
 <li>/</li>
-<li>2026 07 02 Sql Injection Attack Definition Examples Prevention</li>
+<li>SQL Injection Attack: Definition, Examples &amp;amp; Prevention</li>
 </ol>
 </nav>
 
