@@ -8,32 +8,20 @@ import json
 import urllib.request
 import urllib.error
 
-def generate_text(prompt, system_instruction=None, max_tokens=8192):
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+
+def generate_text(prompt, system_instruction=None, max_tokens=8192, temperature=0.7):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        # Fallback to ANTHROPIC_API_KEY if present
-        anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
-        if anthropic_key:
-            try:
-                import anthropic
-                client = anthropic.Anthropic(api_key=anthropic_key, timeout=180.0)
-                msg = client.messages.create(
-                    model='claude-sonnet-5',
-                    max_tokens=max_tokens,
-                    messages=[{'role': 'user', 'content': prompt}]
-                )
-                return msg.content[0].text.strip()
-            except Exception as e:
-                print(f"Anthropic fallback error: {e}")
-        print("Warning: Neither GEMINI_API_KEY nor ANTHROPIC_API_KEY is configured.")
+        print("Warning: GEMINI_API_KEY is not configured in environment.")
         return None
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={api_key}"
     headers = {"Content-Type": "application/json"}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
-            "temperature": 0.7,
+            "temperature": temperature,
             "maxOutputTokens": min(max_tokens, 8192)
         }
     }
