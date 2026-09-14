@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online cron expression generator and validator. Build a cron schedule from dropdowns, get a plain-English description, and preview the next run times.">
+<meta property="og:title" content="Cron Expression Generator | IT Vedas">
+<meta property="og:description" content="Build and validate cron expressions with a plain-English description and next-run preview.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/cron-generator">
+  <link rel="canonical" href="https://www.itvedas.com/tools/cron-generator">
+  <title>Cron Expression Generator | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #8888A8; margin-bottom: 2rem; font-size: 0.95rem; }
+    .editor { background: #13131C; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #8888A8; }
+    .expr-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    #expr {
+      flex: 1;
+      min-width: 240px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+    }
+    #expr:focus { outline: none; border-color: #10B981; }
+    button { padding: 0.75rem 1.25rem; background: transparent; border: 1px solid rgba(16,185,129,0.4); color: #10B981; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .fields { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; }
+    .field-col { display: flex; flex-direction: column; }
+    .field-col .fl { font-size: 0.75rem; color: #8888A8; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .field-col input {
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 6px;
+      padding: 0.6rem;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    }
+    .field-col input:focus { outline: none; border-color: #10B981; }
+    .field-col .range { font-size: 0.7rem; color: #55556A; margin-top: 0.25rem; text-align: center; }
+    .desc-box { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 1rem 1.25rem; font-size: 1.05rem; color: #6EE7B7; }
+    .desc-box.error { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #F87171; }
+    .next-runs { list-style: none; }
+    .next-runs li { font-family: 'Courier New', monospace; font-size: 0.9rem; color: #F0F0F8; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .preset { font-size: 0.8rem; padding: 0.4rem 0.8rem; background: #0A0A0F; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: #8888A8; cursor: pointer; }
+    .preset:hover { border-color: #10B981; color: #10B981; }
+    @media (max-width: 640px) { .fields { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>📅 Cron Expression Generator</h1>
+    <p class="description">Build a standard 5-field cron expression, get a plain-English description, and preview upcoming run times. Follows the classic <code style="color:#10B981">minute hour day-of-month month day-of-week</code> format used by cron, Kubernetes CronJobs, and CI schedulers.</p>
+
+    <div class="editor">
+      <label for="expr">Cron Expression</label>
+      <div class="expr-row">
+        <input type="text" id="expr" value="0 9 * * 1-5" spellcheck="false">
+        <button data-onclick="copyExpr" class="handler-copyExpr">📋 Copy</button>
+      </div>
+
+      <div class="fields">
+        <div class="field-col"><span class="fl">Minute</span><input id="f0" data-idx="0"><span class="range">0–59</span></div>
+        <div class="field-col"><span class="fl">Hour</span><input id="f1" data-idx="1"><span class="range">0–23</span></div>
+        <div class="field-col"><span class="fl">Day (month)</span><input id="f2" data-idx="2"><span class="range">1–31</span></div>
+        <div class="field-col"><span class="fl">Month</span><input id="f3" data-idx="3"><span class="range">1–12</span></div>
+        <div class="field-col"><span class="fl">Day (week)</span><input id="f4" data-idx="4"><span class="range">0–6</span></div>
+      </div>
+
+      <div class="presets">
+        <span class="preset" data-cron="* * * * *">Every minute</span>
+        <span class="preset" data-cron="*/5 * * * *">Every 5 min</span>
+        <span class="preset" data-cron="0 * * * *">Hourly</span>
+        <span class="preset" data-cron="0 0 * * *">Daily midnight</span>
+        <span class="preset" data-cron="0 9 * * 1-5">Weekdays 9am</span>
+        <span class="preset" data-cron="0 0 * * 0">Weekly (Sun)</span>
+        <span class="preset" data-cron="0 0 1 * *">Monthly</span>
+      </div>
+    </div>
+
+    <div class="editor">
+      <label>Description</label>
+      <div class="desc-box" id="desc">—</div>
+    </div>
+
+    <div class="editor">
+      <label>Next 5 run times (local)</label>
+      <ul class="next-runs" id="nextRuns"><li>—</li></ul>
+    </div>
+  </div>
+
+  <script>
+    const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const MONTHS = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function parseField(spec, min, max) {
+      // Returns a sorted array of allowed integer values, or throws
+      const allowed = new Set();
+      for (const part of spec.split(',')) {
+        let step = 1;
+        let rangePart = part;
+        if (part.includes('/')) {
+          const [r, s] = part.split('/');
+          rangePart = r;
+          step = parseInt(s, 10);
+          if (isNaN(step) || step < 1) throw new Error('bad step "' + part + '"');
+        }
+        let lo, hi;
+        if (rangePart === '*') { lo = min; hi = max; }
+        else if (rangePart.includes('-')) {
+          const [a, b] = rangePart.split('-');
+          lo = parseInt(a, 10); hi = parseInt(b, 10);
+        } else {
+          lo = hi = parseInt(rangePart, 10);
+        }
+        if (isNaN(lo) || isNaN(hi)) throw new Error('bad value "' + part + '"');
+        if (lo < min || hi > max || lo > hi) throw new Error('"' + part + '" out of range ' + min + '-' + max);
+        for (let v = lo; v <= hi; v += step) allowed.add(v);
+      }
+      return [...allowed].sort((a, b) => a - b);
+    }
+
+    function listPhrase(spec, arr, names) {
+      if (spec === '*') return null;
+      const labels = names ? arr.map(v => names[v]) : arr;
+      if (labels.length === 1) return labels[0];
+      if (labels.length <= 4) return labels.slice(0, -1).join(', ') + ' and ' + labels[labels.length - 1];
+      return labels.join(', ');
+    }
+
+    function describe(fields) {
+      const [mSpec, hSpec, domSpec, monSpec, dowSpec] = fields;
+      const mins = parseField(mSpec, 0, 59);
+      const hours = parseField(hSpec, 0, 23);
+      parseField(domSpec, 1, 31);
+      parseField(monSpec, 1, 12);
+      const dows = parseField(dowSpec.replace('7', '0'), 0, 6);
+
+      let time;
+      if (mSpec === '*' && hSpec === '*') time = 'Every minute';
+      else if (hSpec === '*' && mSpec.startsWith('*/')) time = 'Every ' + mSpec.slice(2) + ' minutes';
+      else if (hSpec === '*') time = 'At minute ' + listPhrase(mSpec, mins) + ' of every hour';
+      else {
+        const times = [];
+        for (const h of hours) for (const mm of mins) {
+          times.push(String(h).padStart(2,'0') + ':' + String(mm).padStart(2,'0'));
+        }
+        time = 'At ' + (times.length <= 6 ? times.join(', ') : times.length + ' times per day');
+      }
+
+      const parts = [time];
+      const domPhrase = domSpec === '*' ? null : 'on day ' + listPhrase(domSpec, parseField(domSpec,1,31)) + ' of the month';
+      const dowPhrase = dowSpec === '*' ? null : 'on ' + listPhrase(dowSpec.replace('7','0'), dows, DOW);
+      const monPhrase = monSpec === '*' ? null : 'in ' + listPhrase(monSpec, parseField(monSpec,1,12), MONTHS);
+
+      if (domPhrase && dowPhrase) parts.push(domPhrase + ' and ' + dowPhrase);
+      else if (domPhrase) parts.push(domPhrase);
+      else if (dowPhrase) parts.push(dowPhrase);
+      if (monPhrase) parts.push(monPhrase);
+
+      return parts.join(', ');
+    }
+
+    function matches(date, fields) {
+      const [mins, hours, doms, mons, dows] = fields.map((f, i) => {
+        const ranges = [[0,59],[0,23],[1,31],[1,12],[0,6]][i];
+        return parseField(i === 4 ? f.replace('7','0') : f, ranges[0], ranges[1]);
+      });
+      const domSpec = fields[2], dowSpec = fields[4];
+      const minOk = mins.includes(date.getMinutes());
+      const hourOk = hours.includes(date.getHours());
+      const monOk = mons.includes(date.getMonth() + 1);
+      const domMatch = doms.includes(date.getDate());
+      const dowMatch = dows.includes(date.getDay());
+      // Cron rule: if both DOM and DOW are restricted, either match qualifies
+      let dayOk;
+      if (domSpec !== '*' && dowSpec !== '*') dayOk = domMatch || dowMatch;
+      else dayOk = domMatch && dowMatch;
+      return minOk && hourOk && monOk && dayOk;
+    }
+
+    function nextRuns(fields, count) {
+      const out = [];
+      const d = new Date();
+      d.setSeconds(0, 0);
+      d.setMinutes(d.getMinutes() + 1);
+      let guard = 0;
+      while (out.length < count && guard < 527040) { // ~1 year of minutes
+        if (matches(d, fields)) out.push(new Date(d));
+        d.setMinutes(d.getMinutes() + 1);
+        guard++;
+      }
+      return out;
+    }
+
+    function refresh() {
+      const expr = document.getElementById('expr').value.trim().replace(/\s+/g, ' ');
+      const fields = expr.split(' ');
+      const descBox = document.getElementById('desc');
+      const runsBox = document.getElementById('nextRuns');
+
+      // sync individual field inputs
+      for (let i = 0; i < 5; i++) {
+        const el = document.getElementById('f' + i);
+        if (document.activeElement !== el) el.value = fields[i] || '';
+      }
+
+      if (fields.length !== 5) {
+        descBox.textContent = '✗ A cron expression needs exactly 5 space-separated fields';
+        descBox.className = 'desc-box error';
+        runsBox.innerHTML = '<li>—</li>';
+        return;
+      }
+
+      try {
+        descBox.textContent = describe(fields);
+        descBox.className = 'desc-box';
+        const runs = nextRuns(fields, 5);
+        runsBox.innerHTML = runs.length
+          ? runs.map(r => '<li>' + r.toLocaleString() + '</li>').join('')
+          : '<li>No upcoming runs within the next year</li>';
+      } catch (e) {
+        descBox.textContent = '✗ ' + e.message;
+        descBox.className = 'desc-box error';
+        runsBox.innerHTML = '<li>—</li>';
+      }
+    }
+
+    function copyExpr() {
+      navigator.clipboard.writeText(document.getElementById('expr').value.trim());
+    }
+
+    document.getElementById('expr').addEventListener('input', refresh);
+
+    document.querySelectorAll('.field-col input').forEach(el => {
+      el.addEventListener('input', function () {
+        const parts = document.getElementById('expr').value.trim().replace(/\s+/g, ' ').split(' ');
+        while (parts.length < 5) parts.push('*');
+        parts[parseInt(this.dataset.idx, 10)] = this.value.trim() || '*';
+        document.getElementById('expr').value = parts.slice(0, 5).join(' ');
+        refresh();
+      });
+    });
+
+    document.querySelectorAll('.preset').forEach(el => {
+      el.addEventListener('click', function () {
+        document.getElementById('expr').value = this.dataset.cron;
+        refresh();
+      });
+    });
+
+    refresh();
+  </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</body>
+</html>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cron Expression Generator | IT Vedas",
+  "description": "Build and validate cron expressions with a plain-English description and next-run preview.",
+  "url": "https://www.itvedas.com/tools/cron-generator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</html>
