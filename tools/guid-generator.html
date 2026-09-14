@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online GUID / UUID v4 generator. Create one or many cryptographically random UUIDs for applications and databases, then copy them instantly.">
+<meta property="og:title" content="GUID / UUID Generator | IT Vedas">
+<meta property="og:description" content="Generate cryptographically random v4 UUIDs and GUIDs for applications and databases.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.itvedas.com/tools/guid-generator">
+  <link rel="canonical" href="https://www.itvedas.com/tools/guid-generator">
+  <title>GUID / UUID Generator | IT Vedas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0F;
+      color: #F0F0F8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; }
+    .description { color: #8888A8; margin-bottom: 2rem; font-size: 0.95rem; }
+    .controls { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #10B981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    button.secondary { background: transparent; border: 1px solid rgba(16,185,129,0.4); color: #10B981; }
+    .count-wrap { display: flex; align-items: center; gap: 0.5rem; color: #8888A8; font-size: 0.9rem; }
+    #count {
+      width: 80px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      font-family: 'Courier New', monospace;
+    }
+    .opt { display: flex; align-items: center; gap: 0.4rem; color: #8888A8; font-size: 0.9rem; }
+    .editor { background: #13131C; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; }
+    textarea {
+      width: 100%;
+      height: 320px;
+      background: #0A0A0F;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #10B981;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: #10B981; }
+    .status { padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.9rem; margin-top: 1rem; display: none; }
+    .status.success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6EE7B7; display: block; }
+    .note { color: #8888A8; font-size: 0.85rem; margin-top: 1.5rem; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/tools/" style="color: #10B981; text-decoration: none; margin-bottom: 2rem; display: inline-block;">← Back to Tools</a>
+
+    <h1>🎰 GUID / UUID Generator</h1>
+    <p class="description">Generate cryptographically random version-4 UUIDs (GUIDs) for applications, databases, and distributed systems. Uses the browser's secure random source — nothing is transmitted.</p>
+
+    <div class="controls">
+      <button data-onclick="generateGuids" class="handler-generateGuids">Generate</button>
+      <button data-onclick="copyGuids" class="secondary handler-copyGuids">📋 Copy All</button>
+      <div class="count-wrap">
+        <label for="count">How many:</label>
+        <input type="number" id="count" min="1" max="1000" value="5">
+      </div>
+      <label class="opt"><input type="checkbox" id="uppercase"> Uppercase</label>
+      <label class="opt"><input type="checkbox" id="braces"> Wrap in { }</label>
+      <label class="opt"><input type="checkbox" id="hyphens" checked> Hyphens</label>
+    </div>
+
+    <div class="editor">
+      <textarea id="output" readonly placeholder="Generated UUIDs will appear here..."></textarea>
+      <div class="status" id="status"></div>
+    </div>
+
+    <p class="note">A version-4 UUID is a 128-bit identifier with 122 random bits, giving roughly 5.3&nbsp;×&nbsp;10<sup>36</sup> possible values — collisions are astronomically unlikely, which is why UUIDs are used as primary keys, correlation IDs, and idempotency tokens without a central authority.</p>
+  </div>
+
+  <script>
+    function makeUuid() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      // Fallback for older browsers using getRandomValues
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+      bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant
+      const hex = [...bytes].map(b => b.toString(16).padStart(2, '0'));
+      return hex.slice(0,4).join('') + '-' + hex.slice(4,6).join('') + '-' +
+             hex.slice(6,8).join('') + '-' + hex.slice(8,10).join('') + '-' + hex.slice(10,16).join('');
+    }
+
+    function generateGuids() {
+      let n = parseInt(document.getElementById('count').value, 10);
+      if (isNaN(n) || n < 1) n = 1;
+      if (n > 1000) n = 1000;
+
+      const upper = document.getElementById('uppercase').checked;
+      const braces = document.getElementById('braces').checked;
+      const hyphens = document.getElementById('hyphens').checked;
+
+      const list = [];
+      for (let i = 0; i < n; i++) {
+        let g = makeUuid();
+        if (!hyphens) g = g.replace(/-/g, '');
+        if (upper) g = g.toUpperCase();
+        if (braces) g = '{' + g + '}';
+        list.push(g);
+      }
+      document.getElementById('output').value = list.join('\n');
+      const status = document.getElementById('status');
+      status.textContent = '✓ Generated ' + n + ' UUID' + (n === 1 ? '' : 's');
+      status.className = 'status success';
+    }
+
+    function copyGuids() {
+      const out = document.getElementById('output').value;
+      if (!out) return;
+      navigator.clipboard.writeText(out).then(() => {
+        const status = document.getElementById('status');
+        status.textContent = '✓ Copied to clipboard';
+        status.className = 'status success';
+      });
+    }
+
+    generateGuids();
+  </script>
+<script src="/js/inline-handler-setup.js" defer></script>
+
+</body>
+</html>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "GUID / UUID Generator | IT Vedas",
+  "description": "Generate cryptographically random v4 UUIDs and GUIDs for applications and databases.",
+  "url": "https://www.itvedas.com/tools/guid-generator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web"
+}
+</script>
+</html>
