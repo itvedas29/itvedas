@@ -34,11 +34,12 @@ def gemini(
     log_fn: Callable[[str], None] | None = None,
 ) -> str:
     """Call Google Gemini generateContent API, with automatic retry."""
-    key = api_key if api_key is not None else (
+    key = (api_key or "").strip() or (
         os.environ.get("GEMINI_API_KEY") or
         os.environ.get("ANTHROPIC_API_KEY") or
         os.environ.get("OPENAI_API_KEY") or ""
-    )
+    ).strip()
+
     notify = log_fn or (lambda msg: _default_log("llm", msg))
     target_model = model or GEMINI_MODEL
 
