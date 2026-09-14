@@ -1,17 +1,22 @@
-# ITVedas Publishing Scripts
+# ITVedas Brain
 
-Automated content publishing for itvedas.com, run by the GitHub Actions
-workflow `.github/workflows/write-article.yml` (ITVedas Autopilot):
+Autonomous content generation and intelligence engine for ITVedas.com.
 
-- **content-writer.py** — writes and publishes a full SEO-optimised article
-  Mon / Wed / Fri (9:00 AM IST) into the correct chapter folder.
-- **news-agent.py** — refreshes IT & security news hourly and updates the
-  homepage Live Security Watch and news pages.
-- **core/** — shared helpers (LLM client, logging, IndexNow submission).
-- **state/** — publish state (`news_state.json`, `heartbeat.json`).
+Powered by **Google Gemini** (`gemini-2.5-flash`) via standard library `urllib.request` (zero external dependencies).
 
-Both scripts use only the Python standard library. Secrets
-(`ANTHROPIC_API_KEY`, etc.) come from GitHub Actions secrets.
+## Architecture & Components
 
-The interactive chat bot / agent, COO dashboard, and self-improve
-automation were removed in July 2026.
+- `core/llm.py` - Core Google Gemini API client with retry and code fence stripping
+- `gemini_client.py` - Lightweight Gemini helper utility
+- `content-writer.py` - Long-form technical curriculum and guide generator
+- `news-agent.py` - RSS ingestion and tech/security news intelligence generator
+- `state/` - Pipeline memory, publishing history, and deduplication state
+
+## Configuration
+
+Set `GEMINI_API_KEY` in your environment or repository secrets:
+
+```bash
+export GEMINI_API_KEY="your-gemini-api-key"
+export GEMINI_MODEL="gemini-2.5-flash"
+```
