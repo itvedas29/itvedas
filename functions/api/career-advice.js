@@ -1,12 +1,12 @@
 // functions/api/career-advice.js
 //
 // Cloudflare Pages Function — runs server-side on Cloudflare's edge.
-// This is what keeps your ANTHROPIC_API_KEY hidden from visitors.
-// Set ANTHROPIC_API_KEY as an environment variable in:
+// Keeps your GEMINI_API_KEY hidden from visitors.
+// Set GEMINI_API_KEY as an environment variable in:
 // Cloudflare Pages dashboard > your project > Settings > Environment variables
 //
 // Visitor's browser calls: POST /api/career-advice
-// This function calls Claude, and returns ONLY the structured result.
+// This function calls Google Gemini 2.5 Flash, and returns ONLY the structured result.
 
 const VALID_CHAPTERS = [
   "networking", "cloud", "security", "devops",
@@ -34,21 +34,15 @@ export async function onRequestPost(context) {
   const origin = request.headers.get("Origin") || "";
   const allowedOrigins = [
     "https://itvedas.com",
-    "https://www.itvedas.com",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:8080",
-    "http://127.0.0.1:8080"
+    "https://www.itvedas.com"
   ];
-
-  if (origin && !allowedOrigins.includes(origin)) {
+  // Allow localhost during local dev/testing
+  const isDev = origin.includes("localhost") || origin.includes("127.0.0.1");
+  if (origin && !allowedOrigins.includes(origin) && !isDev) {
     return jsonResponse({ error: "Origin not allowed" }, 403);
   }
 
-  // Best-effort edge rate limiting. Configure RATE_LIMIT_KV as a KV namespace
-  // binding for durable enforcement. Without the binding, request validation
-  // still applies, but the function intentionally remains fail-open for local
-  // development and deployments that have not yet added the binding.
+  // Best-effort edge rate limiting via Cloudflare KV
   const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
   if (env.RATE_LIMIT_KV && clientIp !== "unknown") {
     const allowed = await checkRateLimit(env.RATE_LIMIT_KV, clientIp);
@@ -84,7 +78,7 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Answers payload too large" }, 400);
   }
 
-  const apiKey = env.ANTHROPIC_API_KEY;
+  const apiKey = env.GEMINI_API_KEY || env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return jsonResponse({ error: "Server misconfigured: missing API key" }, 500);
   }
@@ -103,7 +97,7 @@ Respond ONLY with valid JSON, no markdown formatting, no backticks, no preamble.
 
 {
   "chapter": "one of the eight keys above, lowercase",
-  "explanation": "2-4 short sentences, written directly to the person (\\"you\\"), warm and specific, referencing at least one detail from their actual answers. No jargon. Explain WHY this path fits them specifically.",
+  "explanation": "2-4 short sentences, written directly to the person (\"you\"), warm and specific, referencing at least one detail from their actual answers. No jargon. Explain WHY this path fits them specifically.",
   "next_steps": ["3 to 4 short, concrete, beginner-appropriate action items, each one sentence, ordered from easiest to start"]
 }
 
@@ -112,41 +106,38 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate, 
   const userPrompt = `Here are the quiz answers:\n\n${formattedQA}\n\nReturn the JSON object now.`;
 
   try {
-    const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{ parts: [{ text: userPrompt }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024,
+        responseMimeType: "application/json"
+      }
+    };
+
+    const res = await fetch(geminiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 600,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userPrompt }]
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
-    if (!claudeRes.ok) {
-      const errText = await claudeRes.text();
-      console.error("Claude API error:", claudeRes.status, errText);
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Gemini API error:", res.status, errText);
       return jsonResponse({ error: "Analysis service error" }, 502);
     }
 
-    const claudeData = await claudeRes.json();
-    const rawText = (claudeData.content || [])
-      .filter(block => block.type === "text")
-      .map(block => block.text)
-      .join("")
-      .trim();
-
+    const data = await res.json();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "{}";
     const cleaned = rawText.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
 
     let parsed;
     try {
       parsed = JSON.parse(cleaned);
     } catch {
-      console.error("Failed to parse Claude response as JSON:", rawText);
+      console.error("Failed to parse Gemini response as JSON:", rawText);
       return jsonResponse({ error: "Could not parse analysis result" }, 502);
     }
 
