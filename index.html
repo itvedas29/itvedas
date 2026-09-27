@@ -1,530 +1,779 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ManageEngine Endpoint Central: Full Specifications, Requirements & Pricing | ITVedas</title>
-<meta name="description" content="ManageEngine Endpoint Central full specs: server sizing for 1–35,000 endpoints, supported OS, agent footprint, ports, databases, editions and starting prices. Verified from vendor documentation.">
-<link rel="canonical" href="https://www.itvedas.com/software/manageengine-endpoint-central/">
-<!-- Google Analytics 4 (same property as the rest of itvedas.com) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicons/favicon-180.png">
+  <link rel="manifest" href="/site.webmanifest">
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "ManageEngine Endpoint Central",
-  "alternateName": "Desktop Central",
-  "applicationCategory": "BusinessApplication",
-  "applicationSubCategory": "Unified endpoint management",
-  "operatingSystem": "Windows (server); agents for Windows, macOS, Linux; MDM for iOS, Android, ChromeOS, tvOS",
-  "publisher": { "@type": "Organization", "name": "ManageEngine (Zoho Corporation)" },
-  "offers": { "@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "0", "highPrice": "1695", "offerCount": "5" },
-  "url": "https://www.itvedas.com/software/manageengine-endpoint-central/",
-  "dateModified": "2026-09-27"
-}
-</script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
 
-<style>
-  :root {
-    --navy: #0B2750;
-    --navy-2: #163A6E;
-    --orange: #FF7A00;
-    --orange-ink: #B35500;   /* orange dark enough for text on white (4.9:1) */
-    --paper: #F5F7FA;
-    --white: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #475569;
-    --rule: #D8DEE8;
-    --rule-soft: #E9EDF3;
-    --verified: #0E7C5A;
-    --r: 6px;
-    --fd: "Lexend", "Segoe UI", system-ui, sans-serif;
-    --fb: "Inter", "Segoe UI", system-ui, sans-serif;
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6244522471042879" crossorigin="anonymous"></script>
+
+  <meta name="description" content="Master IT skills with 100+ comprehensive, practical guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI. No jargon, no paywall.">
+  <meta name="keywords" content="IT tutorials, networking guides, cybersecurity learning, cloud computing AWS Azure, Linux sysadmin, DevOps docker kubernetes, CVE database, ITVedas">
+  <meta name="robots" content="index,follow">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="ITVedas — Enterprise IT, Cloud & Cybersecurity Knowledge Hub">
+  <meta property="og:description" content="100+ practical, vendor-neutral engineering guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI. Forever free.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.itvedas.com/">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ITVedas — Enterprise IT, Cloud & Cybersecurity Knowledge Hub">
+  <meta name="twitter:description" content="100+ practical, vendor-neutral engineering guides across Networking, Cloud, Security, Linux, DevOps, Databases, Hardware and AI.">
+  <meta name="twitter:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/">
+
+  <title>ITVedas — The Complete IT, Cloud & Cybersecurity Knowledge Hub</title>
+
+  <!-- Structured Data: WebSite & Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ITVedas",
+    "url": "https://www.itvedas.com/",
+    "description": "The complete IT knowledge hub — networking, cloud computing, cybersecurity, Linux, DevOps, and enterprise software explained simply.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ITVedas",
+      "url": "https://www.itvedas.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.itvedas.com/assets/brand/itvedas-logo.svg"
+      }
+    }
   }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 116px; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 15px/1.55 var(--fb); font-variant-numeric: tabular-nums; }
-  a { color: var(--navy-2); text-underline-offset: 2px; }
-  a:hover { color: var(--orange-ink); }
-  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; border-radius: 2px; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  </script>
 
-  /* Site header (mirrors itvedas.com) */
-  .site-nav { background: var(--white); border-bottom: 1px solid var(--rule); }
-  .site-nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 1rem; }
-  .logo { font: 700 1.3rem var(--fd); color: var(--navy); text-decoration: none; }
-  .logo span { color: var(--orange); }
-  .site-nav nav { display: flex; gap: 1.4rem; font-size: 0.92rem; }
-  .site-nav nav a { color: var(--ink-2); text-decoration: none; }
-  .site-nav nav a[aria-current] { color: var(--navy); font-weight: 600; }
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/shared.css">
+  <link rel="stylesheet" href="/css/nav-mega.css">
 
-  .crumbs { font-size: 0.85rem; color: var(--ink-2); padding: 18px 0 6px; }
-  .crumbs a { color: var(--ink-2); }
+  <style>
+    /* Homepage Specific Layout Enhancements */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: var(--header-height, 64px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--fd);
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--brand-navy);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo span { color: var(--brand-orange); }
 
-  /* Product header */
-  .product-head { display: grid; grid-template-columns: 1fr; gap: 4px; padding-bottom: 18px; }
-  h1 { font: 700 clamp(1.8rem, 3.6vw, 2.6rem)/1.1 var(--fd); color: var(--navy); margin: 0; letter-spacing: -0.015em; }
-  .sub { color: var(--ink-2); margin: 6px 0 0; }
-  .sub strong { color: var(--ink); font-weight: 600; }
-  .verified-line { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 0.86rem; color: var(--verified); font-weight: 500; }
-  .verified-line svg { flex: none; }
+    /* Hero Section */
+    .hero {
+      padding: calc(var(--header-height, 64px) + 3.5rem) 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 122, 0, 0.08) 0%, transparent 60%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--brand-navy);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+      display: inline-block;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.85rem);
+      font-weight: 800;
+      color: var(--brand-navy);
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--brand-orange), #E06900);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 2.25rem;
+      font-size: clamp(1.05rem, 2vw, 1.2rem);
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
 
-  /* Hero: architecture diagram + key specs */
-  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
-  .diagram { margin: 0; background: var(--navy); color: #DCE6F5; padding: 22px 22px 16px; display: flex; flex-direction: column; }
-  .diagram svg { width: 100%; height: auto; display: block; }
-  .diagram p { font-size: 0.8rem; color: #AFC2DE; margin: 10px 0 0; }
-  .keyspecs { display: grid; grid-template-columns: 1fr 1fr; }
-  .ks { padding: 20px 22px; border-left: 1px solid var(--rule-soft); border-bottom: 1px solid var(--rule-soft); }
-  .ks:nth-child(n+3) { border-bottom: 0; }
-  .ks dt { font-size: 0.82rem; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
-  .ks dt svg { color: var(--orange); flex: none; }
-  .ks dd { margin: 6px 0 0; }
-  .ks .big { font: 700 1.9rem/1.05 var(--fd); color: var(--navy); letter-spacing: -0.02em; }
-  .ks .small { display: block; font-size: 0.84rem; color: var(--ink-2); margin-top: 4px; }
+    /* Live Search Bar */
+    .search-wrap {
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0.35rem 0.5rem 0.35rem 1.25rem;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+    }
+    .search-input-wrap:focus-within {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .search-input-wrap input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.75rem 0.5rem 0.75rem 0;
+      font-size: 1.05rem;
+      color: var(--text);
+      outline: none;
+      min-height: 46px;
+    }
+    .search-btn {
+      background: var(--brand-orange);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 0.65rem 1.5rem;
+      font-family: var(--fd);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background var(--transition-fast);
+    }
+    .search-btn:hover { background: var(--accent-hover); }
 
-  /* Sticky section nav */
-  .section-nav { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--rule); margin-top: 22px; }
-  .section-nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; overflow-x: auto; }
-  .section-nav a { display: block; padding: 14px 14px 12px; color: var(--ink-2); text-decoration: none; font-weight: 500; font-size: 0.93rem; border-bottom: 3px solid transparent; white-space: nowrap; }
-  .section-nav a:hover, .section-nav a.on { color: var(--navy); border-bottom-color: var(--orange); }
+    .search-results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 500;
+      max-height: 380px;
+      overflow-y: auto;
+      display: none;
+      text-align: left;
+    }
 
-  /* Page body */
-  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; padding: 26px 0 60px; }
-  h2 { font: 600 1.35rem/1.25 var(--fd); color: var(--navy); margin: 0 0 12px; }
-  section + section { margin-top: 38px; }
-  .lede { color: var(--ink-2); margin: -4px 0 14px; max-width: 70ch; }
+    /* Stats Banner */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-item b {
+      display: block;
+      font-size: 2rem;
+      font-family: var(--fd);
+      font-weight: 800;
+      color: var(--brand-navy);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-item span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-  /* Sizing tool — the one bold element */
-  .sizer { background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); padding: 22px; }
-  .sizer-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; }
-  .sizer label { font-weight: 600; color: var(--navy); }
-  .count-input { width: 8.5rem; font: 700 1.6rem var(--fd); color: var(--navy); border: 1px solid var(--rule); border-radius: var(--r); padding: 4px 10px; background: var(--paper); }
-  .sizer input[type=range] { width: 100%; margin: 16px 0 6px; accent-color: var(--orange); height: 28px; }
-  .ticks { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--ink-2); }
-  .result { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 18px; border-top: 1px solid var(--rule-soft); }
-  .result div { padding: 14px 12px 4px 0; }
-  .result dt { font-size: 0.8rem; color: var(--ink-2); }
-  .result dd { margin: 4px 0 0; font: 600 1.15rem/1.25 var(--fd); color: var(--ink); }
-  .result dd small { display: block; font: 400 0.8rem/1.4 var(--fb); color: var(--ink-2); margin-top: 2px; }
-  .advice { margin: 14px 0 0; padding: 12px 14px; background: #FFF4E8; border-left: 3px solid var(--orange); border-radius: 0 var(--r) var(--r) 0; font-size: 0.9rem; }
-  .advice:empty { display: none; }
-  .advice ul { margin: 0; padding-left: 1.1rem; }
+    /* Section Headings */
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 4.5rem auto 2.5rem;
+    }
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brand-orange);
+      margin-bottom: 0.5rem;
+    }
+    .section-header h2 {
+      margin-top: 0;
+      color: var(--brand-navy);
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+    }
 
-  /* Spec table */
-  .spec { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
-  .spec th[scope=rowgroup] { width: 150px; vertical-align: top; text-align: left; padding: 12px 14px; font: 600 0.95rem var(--fd); color: var(--orange-ink); border-top: 1px solid var(--rule); background: #FBFCFE; }
-  .spec th[scope=row] { width: 190px; text-align: left; vertical-align: top; padding: 9px 14px; font-weight: 600; font-size: 0.88rem; color: var(--ink); border-top: 1px solid var(--rule-soft); }
-  .spec td { padding: 9px 14px; vertical-align: top; border-top: 1px solid var(--rule-soft); }
-  .spec tbody tr:first-child > * { border-top-color: var(--rule); }
-  .spec tbody:first-of-type tr:first-child > * { border-top: 0; }
-  .spec td sup a, .note sup a { text-decoration: none; font-size: 0.72rem; font-weight: 600; color: var(--verified); }
-  .spec .muted { color: var(--ink-2); font-size: 0.86rem; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-size: 0.8rem; padding: 2px 8px; border: 1px solid var(--rule); border-radius: 999px; background: var(--paper); }
+    /* Topics Grid */
+    .topic-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: all var(--transition-normal);
+      text-decoration: none;
+    }
+    .topic-card:hover {
+      border-color: rgba(255, 122, 0, 0.4);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+    .topic-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .topic-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .topic-card h3 {
+      font-size: 1.25rem;
+      color: var(--brand-navy);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .topic-card p {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+    .topic-action {
+      font-family: var(--fd);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--brand-orange);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
 
-  /* Editions table */
-  .scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: var(--r); background: var(--white); }
-  .editions { width: 100%; border-collapse: collapse; min-width: 680px; }
-  .editions th, .editions td { padding: 11px 14px; text-align: left; vertical-align: top; border-top: 1px solid var(--rule-soft); font-size: 0.9rem; }
-  .editions thead th { border-top: 0; font: 600 1rem var(--fd); color: var(--navy); background: #FBFCFE; }
-  .editions tbody th { font-weight: 600; color: var(--ink-2); width: 150px; }
-  .price { font: 700 1.35rem var(--fd); color: var(--navy); }
-  .yes { color: var(--verified); font-weight: 600; }
-  .no { color: var(--ink-2); }
-  .note { font-size: 0.84rem; color: var(--ink-2); margin: 10px 0 0; max-width: 80ch; }
+    /* Feature Highlights Section */
+    .feature-banner {
+      background: linear-gradient(135deg, var(--brand-navy), #081B38);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 2.5rem;
+      color: #FFFFFF;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin: 4.5rem auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-banner h2 {
+      color: #FFFFFF;
+      margin-top: 0;
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    }
+    .feature-banner p {
+      color: #CBD5E1;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
 
-  /* Verdict */
-  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); }
-  .verdict > div { padding: 16px 18px; }
-  .verdict > div + div { border-left: 1px solid var(--rule-soft); }
-  .verdict h3 { font: 600 1rem var(--fd); margin: 0 0 8px; }
-  .verdict .good h3 { color: var(--verified); }
-  .verdict .watch h3 { color: var(--orange-ink); }
-  .verdict ul { margin: 0; padding-left: 1.1rem; }
-  .verdict li + li { margin-top: 6px; }
+    /* Newsletter Section */
+    .newsletter-section {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 2rem;
+      text-align: center;
+      max-width: 820px;
+      margin: 5rem auto;
+      box-shadow: var(--shadow-md);
+    }
+    .newsletter-section h2 {
+      margin-top: 0;
+      color: var(--brand-navy);
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 520px;
+      margin: 1.5rem auto 1rem;
+      flex-wrap: wrap;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 260px;
+      min-height: 48px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+    }
+    .newsletter-input:focus {
+      border-color: var(--brand-orange);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
 
-  /* Sources */
-  .sources { background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); margin: 0; padding: 14px 18px 14px 38px; }
-  .sources li { padding: 6px 0; }
-  .sources li + li { border-top: 1px solid var(--rule-soft); }
-  .sources small { display: block; color: var(--ink-2); }
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem 3rem;
+      background: #FFFFFF;
+      color: var(--muted);
+      margin-top: auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      max-width: var(--max-width);
+      margin: 0 auto 3rem;
+      text-align: left;
+    }
+    .footer-col h4 {
+      color: var(--brand-navy);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-family: var(--fd);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.65rem;
+      transition: color var(--transition-fast);
+    }
+    .footer-col a:hover { color: var(--brand-orange); }
 
-  /* Sidebar */
-  .sticky-side > div { background: var(--white); border: 1px solid var(--rule); border-radius: var(--r); padding: 16px 18px; }
-  .sticky-side > div + div { margin-top: 18px; }
-  aside h2 { font-size: 1.05rem; margin-bottom: 8px; }
-  .facts { margin: 0; }
-  .facts div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--rule-soft); font-size: 0.88rem; }
-  .facts div:first-child { border-top: 0; }
-  .facts dt { color: var(--ink-2); }
-  .facts dd { margin: 0; font-weight: 600; text-align: right; }
-  .related { list-style: none; margin: 0; padding: 0; }
-  .related li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--rule-soft); font-size: 0.9rem; }
-  .related li:first-child { border-top: 0; }
-  .related span { color: var(--ink-2); font-size: 0.8rem; }
-  .sticky-side { position: sticky; top: 64px; }
-
-  footer { border-top: 1px solid var(--rule); background: var(--white); padding: 22px 0; font-size: 0.85rem; color: var(--ink-2); }
-
-  @media (max-width: 960px) {
-    .hero { grid-template-columns: 1fr; }
-    .layout { grid-template-columns: minmax(0, 1fr); }
-    .sticky-side { position: static; }
-    .site-nav nav { display: none; }
-  }
-  @media (max-width: 640px) {
-    .result { grid-template-columns: 1fr 1fr; }
-    .verdict { grid-template-columns: 1fr; }
-    .verdict > div + div { border-left: 0; border-top: 1px solid var(--rule-soft); }
-    /* Spec table: stack category label above its rows */
-    .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
-    .spec tr { border-top: 1px solid var(--rule-soft); }
-    .spec th[scope=rowgroup] { border-top: 1px solid var(--rule); }
-    .spec th[scope=row], .spec td { border-top: 0; }
-    .spec th[scope=row] { padding-bottom: 0; color: var(--ink-2); font-size: 0.82rem; }
-    .spec td { padding-top: 2px; }
-    .ks { padding: 16px; }
-    .ks .big { font-size: 1.3rem; }
-    .ks .small { font-size: 0.8rem; }
-  }
-</style>
+    @media (max-width: 900px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+      .feature-banner { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 1.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 640px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; padding: 1.25rem; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+      .newsletter-form { flex-direction: column; }
+      .search-btn { width: 100%; justify-content: center; }
+    }
+  </style>
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
 
-<header class="site-nav">
-  <div class="wrap">
-    <a class="logo" href="/">IT<span>Vedas</span></a>
-    <nav aria-label="Main">
-      <a href="/chapters.html">Learn</a>
-      <a href="/software/" aria-current="page">Software specs</a>
-      <a href="/cve-listing.html">CVE database</a>
-      <a href="/news.html">News</a>
-    </nav>
-  </div>
-</header>
+  <!-- Top Navigation Header -->
+  <nav>
+    <a href="/" class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1.2em" height="1.2em" style="vertical-align:-0.22em;margin-right:0.32em" aria-hidden="true">
+        <rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/>
+        <rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/>
+        <rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/>
+        <path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/>
+        <path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/>
+      </svg>IT<span>Vedas</span>
+    </a>
 
-<main class="wrap">
-  <p class="crumbs"><a href="/software/">Software specs</a> › <a href="/software/endpoint-management/">Endpoint management</a> › Endpoint Central</p>
-
-  <div class="product-head">
-    <h1>ManageEngine Endpoint Central</h1>
-    <p class="sub">Unified endpoint management and security by <strong>ManageEngine</strong> (Zoho Corporation). Formerly <strong>Desktop Central</strong>.</p>
-    <span class="verified-line">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-      Specs checked against ManageEngine documentation on 27 Sep 2026. <a href="#sources" style="color:inherit">See the 8 sources</a>
-    </span>
-  </div>
-
-  <div class="hero">
-    <figure class="diagram" aria-labelledby="diag-cap">
-      <svg viewBox="0 0 440 300" role="img" aria-label="Architecture: agents connect to a central server on port 8383; distribution servers relay for remote offices; the server pushes on-demand tasks on port 8027.">
-        <defs>
-          <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 8 4 0 8z" fill="#FF7A00"/></marker>
-        </defs>
-        <!-- Central server -->
-        <rect x="160" y="16" width="120" height="70" rx="6" fill="#163A6E" stroke="#4E6F9E"/>
-        <rect x="174" y="30" width="92" height="8" rx="2" fill="#4E6F9E"/>
-        <rect x="174" y="44" width="92" height="8" rx="2" fill="#4E6F9E"/>
-        <circle cx="258" cy="34" r="2.2" fill="#3DDC97"/><circle cx="258" cy="48" r="2.2" fill="#3DDC97"/>
-        <text x="220" y="74" text-anchor="middle" font-family="Lexend, sans-serif" font-size="12" fill="#FFFFFF">Central server</text>
-        <!-- Distribution server -->
-        <rect x="300" y="128" width="116" height="48" rx="6" fill="#163A6E" stroke="#4E6F9E"/>
-        <text x="358" y="150" text-anchor="middle" font-family="Lexend, sans-serif" font-size="11" fill="#FFFFFF">Distribution</text>
-        <text x="358" y="165" text-anchor="middle" font-family="Lexend, sans-serif" font-size="11" fill="#FFFFFF">server</text>
-        <!-- Links -->
-        <path d="M110 214 C 110 150, 160 120, 196 90" fill="none" stroke="#FF7A00" stroke-width="2" marker-end="url(#ar)"/>
-        <path d="M244 90 C 290 110, 320 112, 338 126" fill="none" stroke="#8FA8CC" stroke-width="2" stroke-dasharray="5 4"/>
-        <path d="M358 178 L 358 212" fill="none" stroke="#8FA8CC" stroke-width="2" stroke-dasharray="5 4"/>
-        <path d="M206 90 C 190 130, 160 170, 150 210" fill="none" stroke="#3DDC97" stroke-width="2" marker-end="url(#arg)"/>
-        <defs><marker id="arg" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 8 4 0 8z" fill="#3DDC97"/></marker></defs>
-        <!-- Port labels -->
-        <rect x="46" y="128" width="74" height="22" rx="11" fill="#0B2750" stroke="#FF7A00"/>
-        <text x="83" y="143" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#FFB36B">HTTPS 8383</text>
-        <rect x="178" y="146" width="66" height="22" rx="11" fill="#0B2750" stroke="#3DDC97"/>
-        <text x="211" y="161" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#8FF0C4">TCP 8027</text>
-        <!-- Agents: local office -->
-        <g font-family="Inter, sans-serif" font-size="10" fill="#DCE6F5">
-          <rect x="40" y="216" width="46" height="32" rx="4" fill="#23487F"/><rect x="47" y="222" width="32" height="18" rx="2" fill="#0B2750"/>
-          <rect x="96" y="216" width="46" height="32" rx="4" fill="#23487F"/><rect x="103" y="222" width="32" height="18" rx="2" fill="#0B2750"/>
-          <rect x="152" y="216" width="46" height="32" rx="4" fill="#23487F"/><rect x="159" y="222" width="32" height="18" rx="2" fill="#0B2750"/>
-          <text x="119" y="266" text-anchor="middle">Agents on the main network</text>
-          <!-- Remote office -->
-          <rect x="300" y="216" width="30" height="46" rx="5" fill="#23487F"/><rect x="304" y="222" width="22" height="32" rx="2" fill="#0B2750"/>
-          <rect x="340" y="216" width="46" height="32" rx="4" fill="#23487F"/><rect x="347" y="222" width="32" height="18" rx="2" fill="#0B2750"/>
-          <rect x="396" y="216" width="30" height="46" rx="5" fill="#23487F"/><rect x="400" y="222" width="22" height="32" rx="2" fill="#0B2750"/>
-          <text x="363" y="282" text-anchor="middle">Remote office</text>
-        </g>
-      </svg>
-      <p id="diag-cap">Agents check in every 90 minutes (and at startup and logon) over HTTPS 8383. The server pushes on-demand tasks such as remote control over TCP 8027. A distribution server caches patches and packages for each remote office.</p>
-    </figure>
-
-    <dl class="keyspecs">
-      <div class="ks">
-        <dt><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.5 19a4.5 4.5 0 1 0-1.2-8.84A6 6 0 1 0 6 16.5"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>Deployment</dt>
-        <dd><span class="big">Cloud or on‑prem</span><span class="small">Server runs on Windows. Cloud billed monthly or yearly.</span></dd>
+    <div class="nav-links">
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Learn <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel mega">
+          <div class="nav-mega-grid">
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Core IT</div>
+              <a href="/articles/networking/">🌐 Networking</a>
+              <a href="/articles/cloud/">☁️ Cloud</a>
+              <a href="/articles/linux/">🐧 Linux</a>
+              <a href="/articles/hardware/">🖥️ Hardware</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Security & Compliance</div>
+              <a href="/articles/security/">🔐 Security</a>
+              <a href="/articles/compliance/">📋 Compliance</a>
+              <a href="/articles/cve/">🎯 CVE Analysis</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Dev, Data & AI</div>
+              <a href="/articles/api/">🔌 APIs</a>
+              <a href="/articles/devops/">🚀 DevOps</a>
+              <a href="/articles/databases/">🗄️ Databases</a>
+              <a href="/articles/ai-models/">🤖 AI Models</a>
+            </div>
+            <div class="nav-mega-col">
+              <div class="nav-mega-col-title">Microsoft Stack</div>
+              <a href="/articles/azure/">☁️ Azure</a>
+              <a href="/articles/powershell/">🔷 PowerShell</a>
+              <a href="/articles/iis/">🖧 IIS</a>
+              <a href="/articles/sql-server/">🗄️ SQL Server</a>
+            </div>
+          </div>
+          <div class="nav-mega-footer">
+            <span>15 topic areas · 100+ comprehensive guides</span>
+            <a href="/chapters.html">Browse all chapters →</a>
+          </div>
+        </div>
       </div>
-      <div class="ks">
-        <dt><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8m-4-4v4"/></svg>Endpoints per server</dt>
-        <dd><span class="big">35,000</span><span class="small">Larger estates get a custom setup from ManageEngine.</span></dd>
-      </div>
-      <div class="ks">
-        <dt><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="10" rx="1"/><path d="M8 7V4m4 3V4m4 3V4M8 20v-3m4 3v-3m4 3v-3"/></svg>Server memory</dt>
-        <dd><span class="big">4–32 GB</span><span class="small">4 GB up to 1,000 endpoints. See the sizing tool below.</span></dd>
-      </div>
-      <div class="ks">
-        <dt><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7m0 0H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7Zm0 0h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7Z"/></svg>Free edition</dt>
-        <dd><span class="big">25 + 25</span><span class="small">25 computers and 25 mobile devices. 30-day trial of paid editions.</span></dd>
-      </div>
-    </dl>
-  </div>
 
-  <nav class="section-nav" aria-label="On this page">
-    <ul>
-      <li><a href="#sizing">Server sizing</a></li>
-      <li><a href="#specs">Full specifications</a></li>
-      <li><a href="#editions">Editions & pricing</a></li>
-      <li><a href="#verdict">Who it suits</a></li>
-      <li><a href="#sources">Sources</a></li>
-    </ul>
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Tools <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/quiz.html">🧠 Skill Quiz</a>
+          <a href="/career-navigator.html">🧭 Career Navigator</a>
+          <a href="/career-paths.html">🛤️ Career Paths</a>
+          <a href="/cve-listing.html">🎯 CVE Database</a>
+          <a href="/tools/">🛠️ Developer Tools</a>
+        </div>
+      </div>
+
+      <div class="nav-drop">
+        <button type="button" class="nav-drop-btn" aria-expanded="false">Resources <span class="nav-drop-caret">▾</span></button>
+        <div class="nav-drop-panel simple">
+          <a href="/news.html">📰 News</a>
+          <a href="/security-news.html">🛡️ Security News</a>
+          <a href="/news/archive/">🗂️ News Archive</a>
+          <a href="/problems-solutions.html">🔧 Problems & Solutions</a>
+          <a href="/faq.html">❓ FAQ</a>
+        </div>
+      </div>
+
+      <a href="/about.html">About</a>
+      <a href="/author/">Author</a>
+      <a href="/services.html">Services</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/chapters.html" class="nav-cta">Start Learning</a>
+    </div>
   </nav>
 
-  <div class="layout">
-    <div>
-      <section id="sizing" aria-labelledby="sizing-h">
-        <h2 id="sizing-h">What server do you need?</h2>
-        <p class="lede">Drag to the number of computers you'll manage. Figures are ManageEngine's published minimums for the Endpoint Central server, reserved exclusively for it.<sup><a href="#s1">[1]</a></sup></p>
-        <div class="sizer">
-          <div class="sizer-top">
-            <label for="count">Computers to manage</label>
-            <input id="count" class="count-input" type="number" min="1" max="50000" value="500" inputmode="numeric" aria-describedby="tier-name">
-            <span id="tier-name" class="muted" aria-live="polite"></span>
-          </div>
-          <input id="slider" type="range" min="0" max="1000" value="0" aria-label="Computers to manage (slider)">
-          <div class="ticks" aria-hidden="true"><span>1</span><span>100</span><span>1,000</span><span>10,000</span><span>35,000+</span></div>
-          <dl class="result" aria-live="polite">
-            <div><dt>Processor</dt><dd id="r-cpu"></dd></div>
-            <div><dt>Memory</dt><dd id="r-ram"></dd></div>
-            <div><dt>Server disk</dt><dd id="r-disk"></dd></div>
-            <div><dt>SQL Server disk</dt><dd id="r-sql"></dd></div>
-          </dl>
-          <div class="advice" id="advice"></div>
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">
+          <span class="pulse"></span> 100+ Production-Ready Guides · Updated Daily
         </div>
-      </section>
+        <h1>Master Enterprise IT Skills,<br><span class="grad">Explained Simply.</span></h1>
+        <p>
+          Networking, cloud architecture, cybersecurity, Linux administration, and DevOps. Practical guides for IT engineers, students, and sysadmins. No jargon, no paywalls.
+        </p>
 
-      <section id="specs" aria-labelledby="specs-h">
-        <h2 id="specs-h">Full specifications</h2>
-        <table class="spec">
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="4">Product</th><th scope="row">Vendor</th><td>ManageEngine, a division of Zoho Corporation</td></tr>
-            <tr><th scope="row">Category</th><td>Unified endpoint management (UEM) and endpoint security</td></tr>
-            <tr><th scope="row">Former name</th><td>Desktop Central</td></tr>
-            <tr><th scope="row">Related products</th><td>Endpoint Central MSP (multi-tenant, for service providers) and Endpoint Central Cloud</td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="4">Deployment</th><th scope="row">Models</th><td>On-premises or cloud (SaaS)<sup><a href="#s4">[4]</a></sup></td></tr>
-            <tr><th scope="row">Server OS</th><td>Windows. Windows Server recommended from 5,000 endpoints.<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">Single-server limit</th><td>35,000 computers. Above that, ManageEngine designs a custom setup.<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">Remote offices</th><td>Distribution server recommended for every 1,000 computers; caches patches and packages locally<sup><a href="#s1">[1]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="5">Managed platforms</th><th scope="row">Computers</th><td><div class="chips"><span class="chip">Windows</span><span class="chip">Windows Server</span><span class="chip">macOS</span><span class="chip">Linux</span></div></td></tr>
-            <tr><th scope="row">Linux patching</th><td>Red Hat, SUSE, Ubuntu, Debian, CentOS, Oracle Linux, Rocky Linux, Amazon Linux, Pardus<sup><a href="#s3">[3]</a></sup></td></tr>
-            <tr><th scope="row">Mobile (MDM)</th><td>Android 4.0+, iOS/iPadOS 4.0+, ChromeOS 57+, tvOS 7.0+, macOS 10.11+, Windows 10 laptops<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">MDM for laptops</th><td>Windows laptop and macOS device management needs the UEM or Security edition<sup><a href="#s5">[5]</a></sup></td></tr>
-            <tr><th scope="row">Console browsers</th><td>Microsoft Edge, Firefox, Chrome, Zoho Ulaa. Minimum resolution 1280 × 1024.<sup><a href="#s1">[1]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="4">Server stack</th><th scope="row">Database</th><td>PostgreSQL (bundled) or Microsoft SQL Server 2016, 2017, 2019, 2022, including SQL Server on AWS<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">SQL edition</th><td>Standard or Enterprise. Separate SQL machine recommended above 10,000 computers.<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">Web servers</th><td>Nginx (static files) and Tomcat (application)<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">TLS</th><td>TLS 1.2 by default from build 11.2.2330.1; TLS 1.0/1.1 can be re-enabled<sup><a href="#s1">[1]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="4">Network</th><th scope="row">Agent to server</th><td>HTTPS, port 8383<sup><a href="#s2">[2]</a></sup></td></tr>
-            <tr><th scope="row">On-demand tasks</th><td>TCP 8027, used by the notification server for remote control, scans and similar actions (TLS-wrapped on Linux)<sup><a href="#s2">[2]</a></sup></td></tr>
-            <tr><th scope="row">Web console</th><td>Port 8020 by default, configurable. Must be internet-reachable to manage roaming devices without VPN.<sup><a href="#s6">[6]</a></sup></td></tr>
-            <tr><th scope="row">Server NIC</th><td>1 Gbps minimum<sup><a href="#s1">[1]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="5">Agent</th><th scope="row">Check-in</th><td>At startup, at user logon, and every 90 minutes<sup><a href="#s2">[2]</a></sup></td></tr>
-            <tr><th scope="row">Minimum hardware</th><td>1.0 GHz processor, 512 MB RAM, 3 GB free disk<sup><a href="#s1">[1]</a></sup></td></tr>
-            <tr><th scope="row">Disk used</th><td>About 1 GB on Windows and Linux, 100 MB on macOS. Red Hat and Oracle Linux patching needs 20 GB.<sup><a href="#s2">[2]</a></sup></td></tr>
-            <tr><th scope="row">Idle load (Windows)</th><td>Tray process up to 8 MB RAM and 0.1% CPU. Patch scans use about 80 MB RAM.<sup><a href="#s2">[2]</a></sup></td></tr>
-            <tr><th scope="row">Remote control bandwidth</th><td>1.5–310 Kbps with the HTML5 viewer on a direct connection, depending on quality and screen activity<sup><a href="#s2">[2]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="3">Patching</th><th scope="row">Operating systems</th><td>Windows, macOS and Linux, plus drivers and BIOS<sup><a href="#s3">[3]</a></sup></td></tr>
-            <tr><th scope="row">Third-party apps</th><td>1,100+ applications<sup><a href="#s3">[3]</a></sup></td></tr>
-            <tr><th scope="row">Vulnerability data</th><td>Synced daily from Zoho's central patch repository, or on demand<sup><a href="#s7">[7]</a></sup></td></tr>
-          </tbody>
-          <tbody>
-            <tr><th scope="rowgroup" rowspan="2">Licensing</th><th scope="row">Unit</th><td>Per endpoint; workstations and servers licensed separately. One technician included; more cost extra.<sup><a href="#s8">[8]</a></sup></td></tr>
-            <tr><th scope="row">Terms</th><td>On-prem: annual or perpetual (perpetual support is 20% of invoice per year). Cloud: monthly or annual.<sup><a href="#s4">[4]</a></sup></td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section id="editions" aria-labelledby="editions-h">
-        <h2 id="editions-h">Editions and starting prices</h2>
-        <p class="lede">Starting prices are per year for 50 endpoints and one technician, on-premises annual licence.</p>
-        <div class="scroll">
-          <table class="editions">
-            <thead>
-              <tr><th scope="col"><span class="sr-only" style="position:absolute;left:-9999px">Feature</span></th><th scope="col">Free</th><th scope="col">Professional</th><th scope="col">Enterprise</th><th scope="col">UEM</th><th scope="col">Security</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row">Starting price</th><td><span class="price">$0</span></td><td><span class="price">$795</span></td><td><span class="price">$945</span></td><td><span class="price">$1,095</span></td><td><span class="price">$1,695</span></td></tr>
-              <tr><th scope="row">Endpoints</th><td>25 computers + 25 mobile devices</td><td colspan="4">From 50 endpoints, scales per endpoint</td></tr>
-              <tr><th scope="row">Mobile device management</th><td class="yes">Included</td><td>Phones and tablets only</td><td>Phones and tablets only</td><td class="yes">Adds Windows laptops and macOS</td><td class="yes">Adds Windows laptops and macOS</td></tr>
-              <tr><th scope="row">Remote offices</th><td class="no">—</td><td class="no">Not recommended</td><td class="yes">Recommended</td><td class="yes">Recommended</td><td class="yes">Recommended</td></tr>
-              <tr><th scope="row">Security modules</th><td class="no">—</td><td class="no">Add-on</td><td class="no">Add-on</td><td class="no">Some as add-ons</td><td class="yes">All included</td></tr>
-            </tbody>
-          </table>
+        <!-- Search Bar -->
+        <div class="search-wrap">
+          <form class="search-input-wrap" role="search" onsubmit="event.preventDefault();">
+            <label for="siteSearch" class="sr-only">Search technical guides and articles</label>
+            <input type="search" id="siteSearch" placeholder="Search guides, protocols, CVEs, or commands..." autocomplete="off">
+            <button type="submit" class="search-btn" id="searchSubmitBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Search
+            </button>
+          </form>
+          <div class="search-results" id="searchResults"></div>
         </div>
-        <p class="note">Prices from independent reviews of ManageEngine's store<sup><a href="#s8">[8]</a></sup>; the Security edition figure dates from 2023. Discounts exist for education, government and non-profits. Confirm current prices on the ManageEngine store before budgeting.</p>
-      </section>
 
-      <section id="verdict" aria-labelledby="verdict-h">
-        <h2 id="verdict-h">Who it suits</h2>
-        <div class="verdict">
-          <div class="good">
-            <h3>Good fit</h3>
-            <ul>
-              <li>Mixed Windows, Mac and Linux estates that want one console for patching, software deployment and remote control</li>
-              <li>Small teams: the free edition covers 25 computers and 25 mobile devices</li>
-              <li>Sites with many branch offices, thanks to distribution servers and internet-facing agents</li>
-            </ul>
+        <!-- Metric Counter -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <b>100+</b>
+            <span>Deep-Dive Guides</span>
           </div>
-          <div class="watch">
-            <h3>Check before buying</h3>
-            <ul>
-              <li>The on-prem server needs Windows</li>
-              <li>Laptop MDM and full security features only come with the two top editions</li>
-              <li>Extra technicians and security add-ons raise the cost quickly as you grow</li>
-            </ul>
+          <div class="stat-item">
+            <b>15</b>
+            <span>Technical Topics</span>
+          </div>
+          <div class="stat-item">
+            <b>5,400+</b>
+            <span>Tracked CVEs</span>
+          </div>
+          <div class="stat-item">
+            <b>₹0</b>
+            <span>Forever Free Access</span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="sources" aria-labelledby="sources-h">
-        <h2 id="sources-h">Sources</h2>
-        <!-- Editorial note: if this page carries affiliate or partner links, add a clear disclosure here. -->
-        <ol class="sources">
-          <li id="s1"><a href="https://www.manageengine.com/products/desktop-central/help/server/system-requirements.html" rel="noopener">Endpoint Central system requirements</a><small>ManageEngine, updated 31 Jul 2026. Hardware tiers, OS, databases, browsers, TLS.</small></li>
-          <li id="s2"><a href="https://www.manageengine.com/products/desktop-central/help/device-onboarding/agent-footprint.html" rel="noopener">Agent footprint</a><small>ManageEngine, updated 26 Aug 2026. Ports, check-in cycle, CPU, memory and disk usage.</small></li>
-          <li id="s3"><a href="https://download.manageengine.com/products/desktop-central/patch_management_supported_application.html" rel="noopener">Patch management: supported applications</a><small>ManageEngine. OS and third-party application coverage.</small></li>
-          <li id="s4"><a href="https://www.manageengine.com/products/desktop-central/pricing.html" rel="noopener">Endpoint Central pricing</a><small>ManageEngine. Licence terms and support charges.</small></li>
-          <li id="s5"><a href="https://www.manageengine.com/products/desktop-central/edition-comparison-matrix.html" rel="noopener">Edition comparison</a><small>ManageEngine. Feature availability per edition.</small></li>
-          <li id="s6"><a href="https://download.manageengine.com/products//desktop-central/desktop-central-wan-architecture.pdf" rel="noopener">WAN architecture guide (PDF)</a><small>ManageEngine. Server port and remote-office design.</small></li>
-          <li id="s7"><a href="https://manageengine.com/products/desktop-central/patch-management-features.html" rel="noopener">Patch management features</a><small>ManageEngine. Vulnerability database sync.</small></li>
-          <li id="s8"><a href="https://www.techradar.com/pro/manageengine-endpoint-central-review" rel="noopener">TechRadar review</a> and <a href="https://superops.com/blog/manageengine-pricing" rel="noopener">SuperOps pricing guide</a><small>Starting prices per edition, licensing units.</small></li>
-        </ol>
-      </section>
-    </div>
+    <!-- Core Topics Section -->
+    <section class="container" style="padding-bottom: 4rem;">
+      <div class="section-header">
+        <div class="section-tag">Learning Directory</div>
+        <h2>Explore Core IT Disciplines</h2>
+        <p>From fundamental network routing and Linux system calls to multi-region cloud resilience and Zero Trust security architectures.</p>
+      </div>
 
-    <aside>
-      <div class="sticky-side">
+      <div class="grid grid-3">
+        <!-- Topic 1: Networking -->
+        <a href="/articles/networking/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🌐</span>
+            <span class="badge badge-net">Networking</span>
+          </div>
+          <h3>Networking & Protocols</h3>
+          <p>BGP, OSPF, subnetting, TCP/IP handshakes, DNS resolution, and firewall packet filtering.</p>
+          <div class="topic-action">Explore 8 Guides →</div>
+        </a>
+
+        <!-- Topic 2: Security -->
+        <a href="/articles/security/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🔐</span>
+            <span class="badge badge-sec">Security</span>
+          </div>
+          <h3>Cybersecurity & Zero Trust</h3>
+          <p>Zero Trust architecture, threat hunting, ransomware defense, encryption algorithms, and MFA protocols.</p>
+          <div class="topic-action">Explore 10 Guides →</div>
+        </a>
+
+        <!-- Topic 3: Cloud -->
+        <a href="/articles/cloud/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">☁️</span>
+            <span class="badge badge-cld">Cloud</span>
+          </div>
+          <h3>Cloud Computing</h3>
+          <p>Multi-region cloud infrastructure, disaster recovery, AWS, Azure, GCP architecture, and cost optimization.</p>
+          <div class="topic-action">Explore 9 Guides →</div>
+        </a>
+
+        <!-- Topic 4: Linux -->
+        <a href="/articles/linux/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🐧</span>
+            <span class="badge badge-os">Linux</span>
+          </div>
+          <h3>Linux & Kernel Tuning</h3>
+          <p>Systemd, cgroups v2, sysctl performance tuning, kernel hardening, and enterprise server automation.</p>
+          <div class="topic-action">Explore 7 Guides →</div>
+        </a>
+
+        <!-- Topic 5: DevOps -->
+        <a href="/articles/devops/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🚀</span>
+            <span class="badge badge-dev">DevOps</span>
+          </div>
+          <h3>DevOps & Containers</h3>
+          <p>Docker engine architecture, container escapes, Kubernetes orchestration, and Service Mesh (Istio/Linkerd).</p>
+          <div class="topic-action">Explore 8 Guides →</div>
+        </a>
+
+        <!-- Topic 6: Databases -->
+        <a href="/articles/databases/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🗄️</span>
+            <span class="badge badge-db">Databases</span>
+          </div>
+          <h3>Databases & High Availability</h3>
+          <p>SQL vs NoSQL trade-offs, PostgreSQL replication, split-brain protection, and enterprise disaster recovery.</p>
+          <div class="topic-action">Explore 7 Guides →</div>
+        </a>
+
+        <!-- Topic 7: Hardware -->
+        <a href="/articles/hardware/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🖥️</span>
+            <span class="badge badge-hw">Hardware</span>
+          </div>
+          <h3>Enterprise Hardware & Storage</h3>
+          <p>SAN vs NAS storage networks, NVMe PCIe generations, enterprise server hardware, and laptop guides.</p>
+          <div class="topic-action">Explore 6 Guides →</div>
+        </a>
+
+        <!-- Topic 8: Compliance -->
+        <a href="/articles/compliance/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">📋</span>
+            <span class="badge badge-comp">Compliance</span>
+          </div>
+          <h3>Compliance & Audit Standards</h3>
+          <p>SOC 2 Type I/II audits, ISO 27001 readiness, GDPR data security, and enterprise audit evidence collection.</p>
+          <div class="topic-action">Explore 6 Guides →</div>
+        </a>
+
+        <!-- Topic 9: AI Tools & Models -->
+        <a href="/ai-tools/" class="topic-card">
+          <div class="topic-top">
+            <span class="topic-icon">🤖</span>
+            <span class="badge badge-ai">AI Systems</span>
+          </div>
+          <h3>AI Models & Enterprise Tools</h3>
+          <p>Head-to-head model comparisons, LLM API integration guides, token economics, and AI coding tools.</p>
+          <div class="topic-action">Explore Directory →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Interactive Intelligence Feature Banner -->
+    <section class="container">
+      <div class="feature-banner">
         <div>
-          <h2>Quick facts</h2>
-          <dl class="facts">
-            <div><dt>Latest docs</dt><dd>Aug 2026</dd></div>
-            <div><dt>Server OS</dt><dd>Windows</dd></div>
-            <div><dt>Database</dt><dd>PostgreSQL / SQL Server</dd></div>
-            <div><dt>Agent port</dt><dd>HTTPS 8383</dd></div>
-            <div><dt>Third-party patches</dt><dd>1,100+ apps</dd></div>
-            <div><dt>Trial</dt><dd>30 days</dd></div>
-          </dl>
+          <div class="badge badge-critical" style="margin-bottom: 1rem;">Live Security Portal</div>
+          <h2>Actionable CVE Vulnerability Intelligence</h2>
+          <p>
+            Track real-time CVE advisories cross-referenced with CISA Known Exploited Vulnerabilities (KEV) and the National Vulnerability Database (NVD). Detailed mitigation, attack vectors, and patch links for system administrators.
+          </p>
+          <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="/cve-listing.html" class="btn btn-primary">Open CVE Database →</a>
+            <a href="/security-news.html" class="btn btn-secondary">Read Security News</a>
+          </div>
         </div>
-        <div>
-          <h2>Compare with</h2>
-          <ul class="related">
-            <li>Microsoft Intune <span>Spec sheet coming</span></li>
-            <li>NinjaOne <span>Spec sheet coming</span></li>
-            <li>Ivanti Neurons <span>Spec sheet coming</span></li>
-            <li>Jamf Pro <span>Spec sheet coming</span></li>
-            <li>ManageEngine Patch Manager Plus <span>Spec sheet coming</span></li>
+
+        <div style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <div style="font-family: var(--fd); font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; color: #FFFFFF;">
+            ⚡ What Sets ITVedas Apart
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem;">
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>10+ Years Hands-On Experience:</strong> Written by engineers who actively build and operate real production IT systems.</span>
+            </li>
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>Zero Affiliate Clutter:</strong> Honest technical recommendations based strictly on real-world stability.</span>
+            </li>
+            <li style="display: flex; gap: 0.65rem; align-items: start; color: #E2E8F0; font-size: 0.95rem;">
+              <span style="color: var(--brand-orange); font-weight: 700;">✓</span>
+              <span><strong>Full Multi-Device Accessibility:</strong> Optimized for smartphones, tablets, and desktop workstations.</span>
+            </li>
           </ul>
         </div>
       </div>
-    </aside>
-  </div>
-</main>
+    </section>
 
-<footer>
-  <div class="wrap">Specifications change between releases. Found something out of date? <a href="/contact.html">Tell us</a> and we'll recheck it against the vendor's documentation.</div>
-</footer>
+    <!-- Newsletter Section -->
+    <section class="container">
+      <div class="newsletter-section" id="newsletter">
+        <div class="section-tag">Stay Informed</div>
+        <h2>Engineering Insights, Direct to Your Inbox</h2>
+        <p style="max-width: 600px; margin: 0 auto 1.5rem;">
+          Get new technical deep dives, zero-day CVE advisories, and architecture walkthroughs once per week. Zero spam, unsubscribe anytime.
+        </p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to ITVedas!');">
+          <label for="newsletterEmail" class="sr-only">Enter your work or personal email</label>
+          <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="engineer@company.com" required>
+          <button type="submit" class="btn btn-primary" style="min-height: 48px;">Subscribe Free</button>
+        </form>
+        <small style="color: var(--muted); font-size: 0.8rem;">We respect your privacy. Read our <a href="/privacy-policy.html" style="text-decoration: underline;">Privacy Policy</a>.</small>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div style="font-family: var(--fd); font-weight: 700; font-size: 1.4rem; color: var(--brand-navy); margin-bottom: 0.75rem;">
+          IT<span style="color: var(--brand-orange);">Vedas</span>
+        </div>
+        <p style="font-size: 0.925rem; line-height: 1.65; max-width: 320px; color: var(--text-secondary);">
+          Practical technical knowledge platform designed for engineers, IT professionals, and students. Vendor-neutral, rigorous, and accessible.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Core Disciplines</h4>
+        <a href="/articles/networking/">Networking</a>
+        <a href="/articles/cloud/">Cloud Computing</a>
+        <a href="/articles/security/">Cybersecurity</a>
+        <a href="/articles/linux/">Linux Systems</a>
+        <a href="/articles/devops/">DevOps & Containers</a>
+        <a href="/articles/databases/">Databases & HA</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Tools & Feeds</h4>
+        <a href="/cve-listing.html">CVE Vulnerabilities</a>
+        <a href="/news.html">IT & Security News</a>
+        <a href="/quiz.html">Technical Skill Quiz</a>
+        <a href="/career-paths.html">IT Career Roadmaps</a>
+        <a href="/problems-solutions.html">Problems & Solutions</a>
+        <a href="/tools/">Developer Utilities</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/about.html">About ITVedas</a>
+        <a href="/author/">Author & Team</a>
+        <a href="/services.html">Services Overview</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+      </div>
+    </div>
+
+    <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 2rem; font-size: 0.85rem; color: var(--muted);">
+      © 2026 ITVedas · Practical Engineering Knowledge for Everyone
+    </div>
+  </footer>
+
+  <script src="/js/nav-search.js" defer></script>
+  <script src="/js/nav-mobile.js" defer></script>
+  <script src="/js/nav-mega.js" defer></script>
 
 <script>
-(function () {
-  // ManageEngine published server tiers (help/server/system-requirements.html, Jul 2026)
-  const TIERS = [
-    { max: 250,   cpu: "Core i3, 2 cores / 4 threads, 2.0 GHz", vcpu: "4 vCPU",  ram: "4 GB",  disk: "5 GB",   sql: "5 GB" },
-    { max: 500,   cpu: "Core i3, 2 cores / 4 threads, 2.4 GHz", vcpu: "4 vCPU",  ram: "4 GB",  disk: "10 GB",  sql: "10 GB" },
-    { max: 1000,  cpu: "Core i3, 2 cores / 4 threads, 2.9 GHz", vcpu: "4 vCPU",  ram: "4 GB",  disk: "20 GB",  sql: "20 GB" },
-    { max: 3000,  cpu: "Core i5, 4 cores / 8 threads, 2.3 GHz", vcpu: "8 vCPU",  ram: "8 GB",  disk: "30 GB",  sql: "30 GB" },
-    { max: 5000,  cpu: "Core i7, 6 cores / 12 threads, 3.2 GHz", vcpu: "12 vCPU", ram: "8 GB",  disk: "40 GB",  sql: "200 GB" },
-    { max: 10000, cpu: "Xeon, 8 cores / 16 threads, 2.6 GHz",  vcpu: "16 vCPU", ram: "16 GB", disk: "60 GB",  sql: "250 GB" },
-    { max: 15000, cpu: "Xeon, 12 cores / 24 threads, 2.7 GHz", vcpu: "24 vCPU", ram: "32 GB", disk: "100 GB", sql: "500 GB" },
-    { max: 20000, cpu: "Xeon, 14 cores / 28 threads, 2.7 GHz", vcpu: "28 vCPU", ram: "32 GB", disk: "120 GB", sql: "500 GB", sqlRam: "64 GB" },
-    { max: 25000, cpu: "Xeon, 16 cores / 32 threads, 3.0 GHz", vcpu: "32 vCPU", ram: "32 GB", disk: "500 GB", sql: "1 TB", sqlRam: "64 GB" },
-    { max: 35000, cpu: "Xeon, 16 cores / 32 threads, 3.0 GHz", vcpu: "32 vCPU", ram: "32 GB", disk: "500 GB", sql: "1 TB", sqlRam: "64 GB" }
-  ];
-  const MAX = 35000, $ = id => document.getElementById(id);
-  const count = $("count"), slider = $("slider");
-  const fmt = n => n.toLocaleString("en-US");
-
-  // Log-scale slider: 0..1000 -> 1..35000
-  const toCount = v => Math.max(1, Math.round(Math.pow(10, (v / 1000) * Math.log10(MAX))));
-  const toSlider = n => Math.round((Math.log10(Math.min(Math.max(n, 1), MAX)) / Math.log10(MAX)) * 1000);
-
-  function render(n) {
-    const tierIdx = TIERS.findIndex(t => n <= t.max);
-    if (tierIdx === -1) {
-      $("tier-name").textContent = "Above 35,000 computers";
-      ["r-cpu", "r-ram", "r-disk", "r-sql"].forEach(id => $(id).textContent = "Custom");
-      $("advice").innerHTML = "<ul><li>ManageEngine designs a custom server setup above 35,000 computers. Contact their support team before sizing hardware.</li></ul>";
-      return;
+let searchIndex = null;
+async function getSearchIndex() {
+  if (!searchIndex) {
+    try {
+      const res = await fetch('/search-index.json');
+      searchIndex = await res.json();
+    } catch (e) {
+      console.warn('Search index load failed', e);
     }
-    const t = TIERS[tierIdx], lo = tierIdx ? TIERS[tierIdx - 1].max + 1 : 1;
-    $("tier-name").textContent = `Tier: ${fmt(lo)}–${fmt(t.max)} computers`;
-    $("r-cpu").innerHTML = `${t.vcpu}<small>${t.cpu} on physical hardware</small>`;
-    $("r-ram").innerHTML = `${t.ram}<small>${t.sqlRam ? "SQL Server needs " + t.sqlRam : "Same again for SQL Server if used"}</small>`;
-    $("r-disk").innerHTML = `${t.disk}<small>Grows with scan frequency</small>`;
-    $("r-sql").innerHTML = `${t.sql}<small>Only if you use SQL Server</small>`;
-    const tips = [];
-    if (n > 1000) tips.push(`Add about ${fmt(Math.ceil(n / 1000))} distribution servers, one per 1,000 computers, to keep patch traffic local.`);
-    if (n >= 5000) tips.push("Use a Windows Server operating system for the Endpoint Central server.");
-    if (n > 10000) tips.push("Run SQL Server on a separate machine and use enterprise-grade drives or SSDs.");
-    $("advice").innerHTML = tips.length ? "<ul>" + tips.map(x => `<li>${x}</li>`).join("") + "</ul>" : "";
   }
-
-  function fromInput() {
-    let n = parseInt(count.value, 10);
-    if (!Number.isFinite(n) || n < 1) n = 1;
-    slider.value = toSlider(n);
-    render(n);
-  }
-  slider.addEventListener("input", () => { const n = toCount(+slider.value); count.value = n; render(n); });
-  count.addEventListener("input", fromInput);
-  fromInput();
-
-  // Highlight the current section in the sticky nav
-  const links = [...document.querySelectorAll(".section-nav a")];
-  const map = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.remove("on")); map.get(e.target.id)?.classList.add("on"); } });
-    }, { rootMargin: "-120px 0px -60% 0px" });
-    map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
-  }
-})();
+  return searchIndex;
+}
+document.getElementById('siteSearch')?.addEventListener('focus', () => { getSearchIndex(); });
 </script>
 </body>
 </html>
