@@ -93,5 +93,10 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Autopilot update $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push origin main || true
+            # Retry once on a race with another bot push, then fail loudly
+            # instead of silently dropping the run's output.
+            if ! git push origin main; then
+              git pull --rebase --autostash origin main
+              git push origin main
+            fi
           fi
