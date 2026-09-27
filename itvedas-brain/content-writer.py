@@ -15,14 +15,12 @@
    8. Regenerates sitemap.xml
    9. Emails you a notification (optional)
 
- LLM roles:
-   Claude (Anthropic)  primary  — self-review/QA gate (decides PUBLISH vs REWRITE)
-   OpenAI              secondary — writes the article draft
+ LLM: Google Gemini (see core/llm.py) handles both drafting and the
+ self-review/QA gate that decides PUBLISH vs REWRITE.
 
  Config via environment variables (GitHub Secrets):
-   ANTHROPIC_API_KEY   (required) — review/QA
-   OPENAI_API_KEY      (required) — article writing
-   OPENAI_MODEL        (optional, defaults to gpt-4o-mini)
+   GEMINI_API_KEY      (required)
+   GEMINI_MODEL        (optional, defaults to gemini-2.5-flash)
    GA4_ID              (optional, e.g. G-XXXXXXXXXX)
    NOTIFY_EMAIL        (optional, where to send notifications)
    SMTP_FROM           (optional, Gmail sender)
@@ -63,15 +61,15 @@ def json_ld(obj):
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────
-API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
+API_KEY    = os.environ.get("GEMINI_API_KEY", "").strip()
 GA4_ID     = os.environ.get("GA4_ID", "").strip()
 NOTIFY_TO  = os.environ.get("NOTIFY_EMAIL", "").strip()
 SMTP_FROM  = os.environ.get("SMTP_FROM", "").strip()
 SMTP_PASS  = os.environ.get("SMTP_PASS", "").strip()
 
-MODEL        = "claude-haiku-4-5-20251001"
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+MODEL      = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+# 1 (default): failed reviews block publishing. 0: old publish-regardless mode.
+REVIEW_STRICT = os.environ.get("REVIEW_STRICT", "1").strip() != "0"
 SITE_URL   = "https://www.itvedas.com"
 SITE_NAME  = "ITVedas"
 CONTACT    = "info@itvedas.com"
@@ -193,7 +191,7 @@ def claude(prompt, system=None, max_tokens=4000):
 
 def openai_chat(prompt, system=None, max_tokens=4000):
     return _core_openai_chat(prompt, system=system, max_tokens=max_tokens,
-                              api_key=OPENAI_KEY, model=OPENAI_MODEL, log_fn=log)
+                              api_key=API_KEY, model=MODEL, log_fn=log)
 
 def load_state():
     BRAIN_DIR.mkdir(exist_ok=True)
@@ -364,6 +362,9 @@ Article (first 2000 chars): {content[:2000]}"""
             return r
     except Exception as e:
         log(f"Review parse error: {e}")
+    if REVIEW_STRICT:
+        log("Review unavailable - treating as REWRITE")
+        return {"score": 0, "verdict": "REWRITE"}
     return {"score": 80, "verdict": "PUBLISH"}
 
 # ─────────────────────────────────────────────────────────────────
@@ -820,7 +821,7 @@ def main():
     log("=" * 55)
     log("ITVedas Brain — run start")
     if not API_KEY:
-        log("FATAL: ANTHROPIC_API_KEY not set")
+        log("FATAL: GEMINI_API_KEY not set")
         raise SystemExit(1)
 
 
@@ -840,7 +841,12 @@ def main():
     if r.get("verdict") == "REWRITE":
         log("Rewriting (low score)")
         content = write_article(keyword, topic)
-        score = 80
+        # Re-review the rewrite rather than assuming it passed.
+        r = review(content, keyword)
+        score = r.get("score", 80)
+        if r.get("verdict") == "REWRITE" and REVIEW_STRICT:
+            log(f"Rewrite still below the bar ({score}/100) - not publishing this run")
+            return
     # 4. metadata
     meta = extract_meta(content, keyword, topic)
     log(f"Title: {meta['title']}")

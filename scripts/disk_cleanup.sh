@@ -35,7 +35,7 @@ rm -rf /root/itvedas/dashboard-backup-20260618-1735
 
 echo
 echo "--- /opt/itvedas ---"
-echo "SKIPPED: DEPLOYMENT.md documents /opt/itvedas as the canonical,"
+echo "SKIPPED: docs/DEPLOYMENT.md documents /opt/itvedas as the canonical,"
 echo "PM2-managed production checkout on this droplet, not a duplicate."
 echo "If it really is stale on this box, verify (check 'pm2 list' for a"
 echo "process rooted there, and 'git -C /opt/itvedas remote -v') and"

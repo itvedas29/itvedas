@@ -8,7 +8,7 @@ Legal: transformative original content, not copying.
 Each story = own headline, own words, own analysis,
 own page on itvedas.com, with a source citation link.
 
-LLM: Claude writes the article body (ANTHROPIC_API_KEY, ANTHROPIC_MODEL).
+LLM: Google Gemini writes the article body (GEMINI_API_KEY, GEMINI_MODEL) via core/llm.py.
 """
 import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys, html
 
@@ -17,8 +17,9 @@ from core.llm import claude as _core_claude
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 
-ANTHROPIC_KEY   = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
+GEMINI_KEY   = os.environ.get("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+REVIEW_STRICT = os.environ.get("REVIEW_STRICT", "1").strip() != "0"
 GA4_ID  = os.environ.get("GA4_ID", "").strip()
 SITE    = "https://www.itvedas.com"
 
@@ -170,7 +171,7 @@ MAX_NEW_ARTICLES_PER_RUN = 8  # cut from 25 on 2026-08-06: news cron moved from
 
 def write_with_openai(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
-                        api_key=ANTHROPIC_KEY, model=ANTHROPIC_MODEL, log_fn=log)
+                        api_key=GEMINI_KEY, model=GEMINI_MODEL, log_fn=log)
 
 def fetch_feed(url):
     items = []
@@ -275,9 +276,11 @@ def parse_article(content, item):
 
 def review_article(body, item, meta):
     """Self-review gate before publishing, mirroring content-writer.py's
-    review(): score the article, REWRITE once if it's weak, then publish
-    regardless (so a story is never silently dropped over a review call
-    failing or staying under the bar after one retry)."""
+    review(): score the article and REWRITE once if it's weak.
+
+    REVIEW_STRICT=1 (default): a failed/unparseable review counts as REWRITE,
+    and a draft that fails twice is skipped (retried on the next run).
+    REVIEW_STRICT=0 restores the old publish-regardless behaviour."""
     cve_block = ""
     if meta.get('topic') == 'CVE' and meta.get('cve_id'):
         cve_block = f"""
@@ -312,6 +315,9 @@ Article body (first 2500 chars): {body[:2500]}"""
             return r
     except Exception as e:
         log(f"Review parse error: {e}")
+    if REVIEW_STRICT:
+        log(f"Review unavailable - treating as REWRITE ({item['title'][:50]})")
+        return {"score": 0, "verdict": "REWRITE"}
     return {"score": 80, "verdict": "PUBLISH"}
 
 def build_article_page(meta, body, item, date_str, slug, time_str=""):
@@ -420,7 +426,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
 <div class="article">
   {body}
   <div class="source-box">
-    📎 This is original ITVedas reporting. This story was inspired by coverage from <a href="{source_link}" target="_blank" rel="noopener nofollow">{source}</a>. Visit the source for their original reporting.
+    📎 This article is AI-assisted commentary produced by ITVedas's automated news pipeline, based on reporting by <a href="{source_link}" target="_blank" rel="noopener nofollow">{source}</a>. It is checked by an automated review step, not by a human editor. Read the original report for full details and verify critical facts before acting on them.
   </div>
   <div class="cta">
     <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
@@ -796,8 +802,8 @@ def update_homepage_security(published):
 
 def main():
     print("News Agent v2 — original commentary mode")
-    if not ANTHROPIC_KEY:
-        raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
+    if not GEMINI_KEY:
+        raise SystemExit("FATAL: GEMINI_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
     pathlib.Path("itvedas-brain/state").mkdir(parents=True, exist_ok=True)
 
@@ -845,7 +851,13 @@ def main():
             log(f"Rewriting (low score): {item['title'][:50]}")
             content = write_original_article(item)
             meta, body = parse_article(content, item)
-            score = 80
+            # Re-review the rewrite instead of assuming it passed. A draft
+            # that fails twice is skipped rather than published.
+            review = review_article(body, item, meta)
+            score = review.get('score', 80)
+            if review.get('verdict') == 'REWRITE' and REVIEW_STRICT:
+                log(f"Skipped after failed rewrite (score {score}): {item['title'][:50]}")
+                continue
 
         slug = f"{today}-{slugify(meta['headline'])}"
         if any(p['slug']==slug for p in published):
