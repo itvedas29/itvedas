@@ -153,9 +153,14 @@ TEMPLATES = {
     }
 }
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from cve_store import load_db, save_db, DB_GZ
+
+
 class CVEEnricher:
     def __init__(self):
-        self.db_path = Path('cve-database-full.json')
+        self.db_path = DB_GZ
         self.cves = self._load_database()
         self.report = {
             'timestamp': datetime.now().isoformat(),
@@ -167,8 +172,7 @@ class CVEEnricher:
     def _load_database(self):
         """Load existing CVE database"""
         try:
-            with open(self.db_path, 'r') as f:
-                return json.load(f)
+            return load_db()
         except Exception as e:
             logger.error(f"Error loading database: {e}")
             return []
@@ -468,8 +472,7 @@ All organizations using vulnerable versions should assume they are at risk.
     def _save_database(self):
         """Save enriched database"""
         try:
-            with open(self.db_path, 'w') as f:
-                json.dump(self.cves, f, indent=2)
+            save_db(self.cves)
             logger.info(f"Saved {len(self.cves)} enriched CVEs to {self.db_path}")
         except Exception as e:
             logger.error(f"Error saving database: {e}")

@@ -28,7 +28,9 @@ jobs:
       - name: Validate JSON and CVE schema
         run: |
           python -m json.tool search-index.json > /tmp/search-index.json
-          python -m json.tool cve-database-full.json > /tmp/cve.json
+          # Canonical CVE DB is gzipped (see scripts/cve_store.py); the
+          # schema validator below loads and checks it.
+          python -m json.tool cve-data/cve-summary-index.json > /dev/null
           python3 scripts/validate-cve-schema.py
       - name: Run security checks
         run: bash scripts/security-check.sh

@@ -8,8 +8,11 @@ import json, os, time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import requests
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from cve_store import load_db, save_db, severity, classify_type
 NVD='https://services.nvd.nist.gov/rest/json/cves/2.0'; KEV='https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json'; GHA='https://api.github.com/security-advisories'
-DB=Path('cve-database-full.json'); REPORT=Path('cve-ingestion-report.json'); CHECKPOINT=Path('.cve_last_sync'); HEADERS={'Accept':'application/json'}
+REPORT=Path('cve-ingestion-report.json'); CHECKPOINT=Path('.cve_last_sync'); HEADERS={'Accept':'application/json'}
 def now(): return datetime.now(timezone.utc)
 def get(url,params=None,headers=None):
  for attempt in range(4):
@@ -19,9 +22,7 @@ def get(url,params=None,headers=None):
   r.raise_for_status()
  raise RuntimeError(f'Unable to fetch {url}')
 def load():
- if not DB.exists():return {}
- raw=json.loads(DB.read_text()); raw=raw.get('cves',[]) if isinstance(raw,dict) else raw
- return {x['id']:x for x in raw if isinstance(x,dict) and x.get('id')}
+ return {x['id']:x for x in load_db()}
 def score(metrics):
  for key in ('cvssMetricV40','cvssMetricV31','cvssMetricV30','cvssMetricV2'):
   vals=metrics.get(key) or []
@@ -29,7 +30,6 @@ def score(metrics):
    try:return float(vals[0].get('cvssData',{}).get('baseScore',0)),key.replace('cvssMetric','')
    except (TypeError,ValueError):pass
  return 0.0,''
-def sev(s):return 'Critical' if s>=9 else 'High' if s>=7 else 'Medium' if s>=4 else 'Low'
 def normalize(cve,kev):
  cid=cve.get('id',''); desc=next((x.get('value','') for x in cve.get('descriptions',[]) if x.get('lang')=='en'),''); s,ver=score(cve.get('metrics',{})); vendors=set();products=set()
  for cfg in cve.get('configurations',[]):
@@ -43,7 +43,7 @@ def normalize(cve,kev):
    v=x.get('value');
    if v and v not in cwes:cwes.append(v)
  refs=[x.get('url') for x in cve.get('references',[]) if x.get('url')];published=cve.get('published','');modified=cve.get('lastModified',published);year=int(cid.split('-')[1]) if len(cid.split('-'))>1 and cid.split('-')[1].isdigit() else now().year
- return {'id':cid,'name':desc[:100] or cid,'affected':next(iter(vendors),'Unknown'),'affected_products':sorted(products)[:20],'year':year,'severity':sev(s),'cvss':round(s,1),'cvss_version':ver,'type':'Security Vulnerability','description':desc[:500] or 'No description available','remediation':'Apply vendor security updates and follow NVD/vendor mitigation guidance.','published_date':published.split('T')[0] if published else now().date().isoformat(),'last_modified_date':modified,'cwe':cwes,'known_exploited':cid in kev,'references':refs[:50],'source':'nvd','withdrawn':cve.get('vulnStatus')=='Rejected'}
+ return {'id':cid,'name':desc[:100] or cid,'affected':next(iter(vendors),'Unknown'),'affected_products':sorted(products)[:20],'year':year,'severity':severity(s,ver),'cvss':round(s,1),'cvss_version':ver,'type':classify_type(desc,cwes),'description':desc[:500] or 'No description available','remediation':'Apply vendor security updates and follow NVD/vendor mitigation guidance.','published_date':published.split('T')[0] if published else now().date().isoformat(),'last_modified_date':modified,'cwe':cwes,'known_exploited':cid in kev,'references':refs[:50],'source':'nvd','withdrawn':cve.get('vulnStatus')=='Rejected'}
 def main():
  db=load();before={k:json.dumps(v,sort_keys=True) for k,v in db.items()};report={'timestamp':now().isoformat(),'new_cves':[],'updated_cves':[],'kev_updates':[],'github_advisories':0,'warnings':[],'errors':[]}
  try:kev={x['cveID'] for x in get(KEV)[0].get('vulnerabilities',[]) if x.get('cveID')}
@@ -81,6 +81,6 @@ def main():
  for cid,item in db.items():
   flag=cid in kev
   if item.get('known_exploited')!=flag:item['known_exploited']=flag;report['kev_updates'].append(cid)
- DB.write_text(json.dumps(sorted(db.values(),key=lambda x:(-x.get('year',0),x.get('id',''))),indent=2,ensure_ascii=False)+'\n');CHECKPOINT.write_text(now().isoformat())
+ save_db(list(db.values()));CHECKPOINT.write_text(now().isoformat())
  report['summary']={'total':len(db),'new':len(report['new_cves']),'updated':len(report['updated_cves']),'kev_updates':len(report['kev_updates']),'warnings':len(report['warnings']),'errors':len(report['errors'])};REPORT.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report['summary'],indent=2));return 1 if report['errors'] else 0
 if __name__=='__main__':raise SystemExit(main())
