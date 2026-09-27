@@ -37,7 +37,7 @@ export async function onRequestPost(context) {
     "https://www.itvedas.com"
   ];
   // Allow localhost during local dev/testing
-  const isDev = origin.includes("localhost") || origin.includes("127.0.0.1");
+  const isDev = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
   if (origin && !allowedOrigins.includes(origin) && !isDev) {
     return jsonResponse({ error: "Origin not allowed" }, 403);
   }
@@ -78,7 +78,8 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: "Answers payload too large" }, 400);
   }
 
-  const apiKey = env.GEMINI_API_KEY || env.ANTHROPIC_API_KEY;
+  // Only ever send a Gemini key to Google (matches itvedas-brain/core/llm.py).
+  const apiKey = (env.GEMINI_API_KEY || "").trim();
   if (!apiKey) {
     return jsonResponse({ error: "Server misconfigured: missing API key" }, 500);
   }
@@ -106,7 +107,8 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate, 
   const userPrompt = `Here are the quiz answers:\n\n${formattedQA}\n\nReturn the JSON object now.`;
 
   try {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    // Key goes in a header, never the URL, so it cannot leak into logs.
+    const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
     const payload = {
       contents: [{ parts: [{ text: userPrompt }] }],
       systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -119,7 +121,7 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate, 
 
     const res = await fetch(geminiUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify(payload)
     });
 
