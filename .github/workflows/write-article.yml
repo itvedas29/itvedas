@@ -22,6 +22,10 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+concurrency:
+  group: repo-writer
+  cancel-in-progress: false
+
 jobs:
   autopilot:
     runs-on: ubuntu-latest
@@ -31,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+          fetch-depth: 1  # bots never read history; full clone of this repo is hundreds of MB
 
       - name: Set up Python
         uses: actions/setup-python@v5

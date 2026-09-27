@@ -54,7 +54,7 @@
     </div>
     <div class="flex items-center space-x-4 text-[11px]">
       <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>Database Live (v2026.9)</span>
-      <button onclick="openModal('reportModal')" class="hover:text-brand-orange transition-colors flex items-center gap-1">
+      <button data-action="openModal" data-args='["reportModal"]' class="hover:text-brand-orange transition-colors flex items-center gap-1">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
         Report Outdated Spec
       </button>
@@ -113,7 +113,7 @@
             <div id="searchResultsList" class="max-h-80 overflow-y-auto divide-y divide-slate-800/50"></div>
             <div class="p-2 bg-slate-950/80 text-[11px] text-slate-400 flex justify-between items-center">
               <span>Looking for deep diffs?</span>
-              <button onclick="openModal('diffModal')" class="text-brand-orange hover:underline font-medium">Compare Top 4 UEM Platforms →</button>
+              <button data-action="openModal" data-args='["diffModal"]' class="text-brand-orange hover:underline font-medium">Compare Top 4 UEM Platforms →</button>
             </div>
           </div>
         </div>
@@ -121,13 +121,13 @@
         <!-- Top Navigation -->
         <nav class="hidden lg:flex items-center space-x-1 font-medium text-sm text-slate-300">
           <a href="#categoriesSection" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Categories</a>
-          <button onclick="openModal('diffModal')" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5">
+          <button data-action="openModal" data-args='["diffModal"]' class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5">
             <span>Side-by-Side Compare</span>
             <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">Diff</span>
           </button>
           <a href="#filtersSidebar" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Parametric Filter</a>
-          <button onclick="switchTab('pricingTab')" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Pricing Tracker</button>
-          <button onclick="openModal('suggestModal')" class="ml-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/70 transition-all text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+          <button data-action="switchTab" data-args='["pricingTab"]' class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Pricing Tracker</button>
+          <button data-action="openModal" data-args='["suggestModal"]' class="ml-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/70 transition-all text-xs font-semibold flex items-center gap-1.5 shadow-sm">
             <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             Suggest an Edit
           </button>
@@ -135,7 +135,7 @@
 
         <!-- Mobile Menu Trigger -->
         <div class="flex lg:hidden items-center">
-          <button onclick="openModal('diffModal')" class="p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800">
+          <button data-action="openModal" data-args='["diffModal"]' class="p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
         </div>
@@ -162,37 +162,37 @@
           </div>
           <ul class="space-y-1 text-xs">
             <li>
-              <a href="#" onclick="filterByCategory('uem'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-brand-orange/15 text-brand-orange font-semibold border border-brand-orange/30">
+              <a href="#" data-action="filterByCategory" data-args='["uem"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-brand-orange/15 text-brand-orange font-semibold border border-brand-orange/30">
                 <span>Unified Endpoint (UEM)</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-brand-orange/20 text-brand-orange">14</span>
               </a>
             </li>
             <li>
-              <a href="#" onclick="filterByCategory('rmm'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+              <a href="#" data-action="filterByCategory" data-args='["rmm"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
                 <span>Remote Monitoring (RMM)</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">18</span>
               </a>
             </li>
             <li>
-              <a href="#" onclick="filterByCategory('patch'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+              <a href="#" data-action="filterByCategory" data-args='["patch"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
                 <span>Patch & Vulnerability</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">12</span>
               </a>
             </li>
             <li>
-              <a href="#" onclick="filterByCategory('itsm'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+              <a href="#" data-action="filterByCategory" data-args='["itsm"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
                 <span>IT Service Mgmt (ITSM)</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">9</span>
               </a>
             </li>
             <li>
-              <a href="#" onclick="filterByCategory('iam'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+              <a href="#" data-action="filterByCategory" data-args='["iam"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
                 <span>Identity & Directory (IAM)</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">16</span>
               </a>
             </li>
             <li>
-              <a href="#" onclick="filterByCategory('network'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+              <a href="#" data-action="filterByCategory" data-args='["network"]' data-prevent class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
                 <span>Network & NPM</span>
                 <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">11</span>
               </a>
@@ -450,7 +450,7 @@
             <div class="flex flex-wrap items-center gap-2.5">
               <button 
                 id="addToCompareBtn" 
-                onclick="toggleCompare('manageengine-endpoint-central')" 
+                data-action="toggleCompare" data-args='["manageengine-endpoint-central"]' 
                 class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-blue-900/30 transition-all"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -468,7 +468,7 @@
               </a>
 
               <button 
-                onclick="openModal('reportModal')" 
+                data-action="openModal" data-args='["reportModal"]' 
                 class="px-3.5 py-2 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs font-medium flex items-center gap-1.5 transition-colors"
               >
                 <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
@@ -489,7 +489,7 @@
           <div class="flex space-x-1 sm:space-x-4">
             <button 
               id="tabSpecsBtn"
-              onclick="switchTab('specsTab')" 
+              data-action="switchTab" data-args='["specsTab"]' 
               class="py-3 px-4 text-sm font-semibold border-b-2 border-brand-orange text-brand-orange flex items-center gap-2 transition-all"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -497,7 +497,7 @@
             </button>
             <button 
               id="tabPricingBtn"
-              onclick="switchTab('pricingTab')" 
+              data-action="switchTab" data-args='["pricingTab"]' 
               class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-all"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
@@ -505,7 +505,7 @@
             </button>
             <button 
               id="tabDiffBtn"
-              onclick="switchTab('diffTab')" 
+              data-action="switchTab" data-args='["diffTab"]' 
               class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-all"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
@@ -515,7 +515,7 @@
 
           <!-- Expand / Collapse All Accordions -->
           <div id="accordionToggleWrapper" class="hidden sm:flex items-center text-xs">
-            <button onclick="toggleAllAccordions()" id="toggleAllAccordionsBtn" class="text-slate-400 hover:text-brand-orange font-mono flex items-center gap-1 transition-colors">
+            <button data-action="toggleAllAccordions" id="toggleAllAccordionsBtn" class="text-slate-400 hover:text-brand-orange font-mono flex items-center gap-1 transition-colors">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               <span>Collapse All Sections</span>
             </button>
@@ -526,7 +526,7 @@
         <div id="specsTabContent" class="space-y-6">
           <!-- SECTION 1: General & Architecture -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec1')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec1"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-blue-900/40 text-blue-400 border border-blue-700/50 flex items-center justify-center font-mono text-xs font-bold">01</span>
                 <div>
@@ -570,7 +570,7 @@
 
           <!-- SECTION 2: Platform & OS Compatibility -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec2')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec2"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-cyan-900/40 text-cyan-400 border border-cyan-700/50 flex items-center justify-center font-mono text-xs font-bold">02</span>
                 <div>
@@ -610,7 +610,7 @@
 
           <!-- SECTION 3: Hardware & System Requirements -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec3')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec3"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-700/50 flex items-center justify-center font-mono text-xs font-bold">03</span>
                 <div>
@@ -650,7 +650,7 @@
 
           <!-- SECTION 4: Core Capabilities -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec4')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec4"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-orange-900/40 text-orange-400 border border-orange-700/50 flex items-center justify-center font-mono text-xs font-bold">04</span>
                 <div>
@@ -686,7 +686,7 @@
 
           <!-- SECTION 5: Identity, Security & Compliance -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec5')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec5"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-purple-900/40 text-purple-400 border border-purple-700/50 flex items-center justify-center font-mono text-xs font-bold">05</span>
                 <div>
@@ -728,7 +728,7 @@
 
           <!-- SECTION 6: Integrations & API -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec6')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec6"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-slate-900 text-slate-300 border border-slate-700 flex items-center justify-center font-mono text-xs font-bold">06</span>
                 <div>
@@ -760,7 +760,7 @@
 
           <!-- SECTION 7: Edition Comparison Matrix -->
           <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-            <button onclick="toggleAccordion('sec7')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+            <button data-action="toggleAccordion" data-args='["sec7"]' class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
               <div class="flex items-center gap-3">
                 <span class="w-6 h-6 rounded bg-amber-900/40 text-amber-400 border border-amber-700/50 flex items-center justify-center font-mono text-xs font-bold">07</span>
                 <div>
@@ -996,7 +996,7 @@
                 <h2 class="font-display font-bold text-lg text-white">Compare Against Direct Alternatives</h2>
                 <p class="text-xs text-slate-400 font-sans mt-0.5">Head-to-head architectural analysis against the three most requested enterprise alternatives</p>
               </div>
-              <button onclick="openModal('diffModal')" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-900/30 transition-all">
+              <button data-action="openModal" data-args='["diffModal"]' class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-900/30 transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 Launch Full Spec Diff Matrix
               </button>
@@ -1033,7 +1033,7 @@
 
                 <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
                   <span class="font-mono text-slate-400">$8/user/mo standalone</span>
-                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'microsoft-intune')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                  <button data-action="openCustomDiff" data-args='["manageengine-endpoint-central", "microsoft-intune"]' class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
                 </div>
               </div>
 
@@ -1065,7 +1065,7 @@
 
                 <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
                   <span class="font-mono text-slate-400">~$3-$5/device/mo</span>
-                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'ninjaone')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                  <button data-action="openCustomDiff" data-args='["manageengine-endpoint-central", "ninjaone"]' class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
                 </div>
               </div>
 
@@ -1097,7 +1097,7 @@
 
                 <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
                   <span class="font-mono text-slate-400">Enterprise Quote</span>
-                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'ivanti-neurons')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                  <button data-action="openCustomDiff" data-args='["manageengine-endpoint-central", "ivanti-neurons"]' class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
                 </div>
               </div>
 
@@ -1176,8 +1176,8 @@
         <div id="compareSlots" class="flex items-center gap-2"></div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="clearCompareQueue()" class="text-xs text-slate-400 hover:text-slate-200 font-mono px-2 py-1">Clear Queue</button>
-        <button onclick="openModal('diffModal')" class="px-4 py-1.5 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs font-mono shadow-md transition-all">
+        <button data-action="clearCompareQueue" class="text-xs text-slate-400 hover:text-slate-200 font-mono px-2 py-1">Clear Queue</button>
+        <button data-action="openModal" data-args='["diffModal"]' class="px-4 py-1.5 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs font-mono shadow-md transition-all">
           Compare Selected (Diff) →
         </button>
       </div>
@@ -1185,7 +1185,7 @@
   </div>
 
   <!-- MODAL: FULL SPEC DIFF MODAL (INTUNE VS NINJAONE VS IVANTI VS ENDPOINT CENTRAL) -->
-  <div id="diffModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto" onclick="if(event.target===this)closeModal('diffModal');">
+  <div id="diffModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto" data-action="closeModal" data-args='["diffModal"]' data-self-only>
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       
       <!-- Modal Header -->
@@ -1197,7 +1197,7 @@
           </h2>
           <p class="text-xs text-slate-400 font-sans mt-0.5">High-density technical architecture comparison table</p>
         </div>
-        <button onclick="closeModal('diffModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button data-action="closeModal" data-args='["diffModal"]' class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
@@ -1294,21 +1294,21 @@
       <!-- Modal Footer -->
       <div class="px-6 py-3.5 bg-slate-925 border-t border-slate-800 flex justify-between items-center text-xs">
         <span class="text-slate-400 font-mono">Specs benchmarked against official vendor documentation</span>
-        <button onclick="closeModal('diffModal')" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold font-mono">Close Diff</button>
+        <button data-action="closeModal" data-args='["diffModal"]' class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold font-mono">Close Diff</button>
       </div>
 
     </div>
   </div>
 
   <!-- MODAL: REPORT OUTDATED SPEC -->
-  <div id="reportModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('reportModal');">
+  <div id="reportModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-action="closeModal" data-args='["reportModal"]' data-self-only>
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="font-display font-bold text-base text-white flex items-center gap-2">
           <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           Report Outdated or Inaccurate Spec
         </h3>
-        <button onclick="closeModal('reportModal')" class="text-slate-400 hover:text-white">✕</button>
+        <button data-action="closeModal" data-args='["reportModal"]' class="text-slate-400 hover:text-white">✕</button>
       </div>
       <p class="text-xs text-slate-400 leading-relaxed">
         Help keep the ITVedas technical spec database authoritative. If a software version has updated minimum RAM, protocol support, or pricing models, submit the correction below.
@@ -1339,7 +1339,7 @@
           <input type="email" placeholder="admin@company.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange font-mono">
         </div>
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('reportModal')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+          <button type="button" data-action="closeModal" data-args='["reportModal"]' class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
           <button type="submit" class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold">Submit Audit Report</button>
         </div>
       </form>
@@ -1347,14 +1347,14 @@
   </div>
 
   <!-- MODAL: SUGGEST AN EDIT -->
-  <div id="suggestModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('suggestModal');">
+  <div id="suggestModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-action="closeModal" data-args='["suggestModal"]' data-self-only>
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="font-display font-bold text-base text-white flex items-center gap-2">
           <svg class="w-5 h-5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
           Suggest a Software or Spec Addition
         </h3>
-        <button onclick="closeModal('suggestModal')" class="text-slate-400 hover:text-white">✕</button>
+        <button data-action="closeModal" data-args='["suggestModal"]' class="text-slate-400 hover:text-white">✕</button>
       </div>
       <p class="text-xs text-slate-400 leading-relaxed">
         Suggest a new enterprise tool, RMM platform, or undocumented capability to include in the ITVedas database.
@@ -1380,7 +1380,7 @@
           <textarea required rows="3" placeholder="Provide link to technical whitepaper or architecture guide..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange"></textarea>
         </div>
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('suggestModal')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+          <button type="button" data-action="closeModal" data-args='["suggestModal"]' class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
           <button type="submit" class="px-4 py-2 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white font-bold">Submit Suggestion</button>
         </div>
       </form>

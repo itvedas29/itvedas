@@ -38,7 +38,22 @@ def url(f):
     elif r.endswith('.html'): r=r[:-5]
     return f'{SITE_URL}/{r}'
 
-def modified(f): return datetime.datetime.fromtimestamp(f.stat().st_mtime).date().isoformat()
+_DATE_RE = {k: re.compile(r'"%s"\s*:\s*"(\d{4}-\d{2}-\d{2})' % k) for k in ("dateModified", "datePublished")}
+
+def modified(f):
+    """Real content date for <lastmod>. File mtime is useless in CI: a fresh
+    checkout stamps every file with the checkout time, so every URL claimed
+    to change on every run and search engines learn to ignore lastmod.
+    Prefer the page's schema.org dateModified, then datePublished."""
+    try:
+        text = f.read_text(encoding="utf-8", errors="ignore")
+        for key in ("dateModified", "datePublished"):
+            m = _DATE_RE[key].search(text)
+            if m:
+                return m.group(1)
+    except OSError:
+        pass
+    return datetime.datetime.fromtimestamp(f.stat().st_mtime).date().isoformat()
 
 def build():
     files=get_html_files(); today=datetime.date.today().isoformat(); root=ET.Element('urlset',{'xmlns':'http://www.sitemaps.org/schemas/sitemap/0.9'})

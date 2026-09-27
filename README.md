@@ -94,7 +94,11 @@ references). All scripts read and write through `scripts/cve_store.py`:
 - `type` is derived from CWE ids and the description.
 
 `scripts/split-cve-database.py` then writes `cve-data/cve-summary-index.json`
-(what the listing/dashboard load) and one `cve-data/details/<ID>.json` per CVE.
+(what the listing/dashboard load) and detail **shards**
+`cve-data/details/<YEAR>-<NUMBER // 250>.json` (e.g. CVE-2025-64031 is in
+`2025-256.json`). Shards keep the deployment under Cloudflare Pages' 20,000-file
+limit; `js/cve-loader.js` and `cve-detail.html` compute the same key, so change
+`SHARD_SIZE` in all three places together.
 CVE text comes from third parties, so pages must escape it before inserting it
 into HTML.
 

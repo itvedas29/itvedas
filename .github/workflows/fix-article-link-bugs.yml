@@ -9,6 +9,10 @@ name: Fix article link bugs (one-time)
 on:
   workflow_dispatch:
 
+concurrency:
+  group: repo-writer
+  cancel-in-progress: false
+
 jobs:
   fix-links:
     runs-on: ubuntu-latest
@@ -18,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1  # bots never read history; full clone of this repo is hundreds of MB
 
       - name: Set up Python
         uses: actions/setup-python@v5
