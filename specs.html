@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManageEngine Endpoint Central Specs & Technical Architecture — ITVedas</title>
+  <meta name="description" content="Technical spec sheet, deployment architecture, system requirements, OS matrix, and edition comparison for ManageEngine Endpoint Central on ITVedas — The GSMArena for Enterprise IT & Infrastructure Software.">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { navy: '#0B2750', orange: '#FF7A00', orangeHover: '#E06900', cyan: '#06B6D4', emerald: '#10B981' },
+            slate: { 850: '#111C33', 925: '#0A0F1D', 950: '#060A14' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+            display: ['Lexend', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #060A14; color: #E2E8F0; font-family: 'Inter', sans-serif; }
+    .spec-table-row:nth-child(even) { background-color: rgba(15, 23, 42, 0.45); }
+    .spec-table-row:hover { background-color: rgba(30, 41, 59, 0.6); }
+    .spec-key { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; color: #94A3B8; }
+    .spec-value { font-size: 0.875rem; color: #F8FAFC; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0A0F1D; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
+    .badge-accent { background: rgba(255, 122, 0, 0.12); border: 1px solid rgba(255, 122, 0, 0.3); color: #FF9433; }
+    .badge-cyan { background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3); color: #22D3EE; }
+    .badge-emerald { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; }
+    .badge-purple { background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.3); color: #C084FC; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col antialiased selection:bg-brand-orange selection:text-white">
+
+  <!-- TOP BRAND STATUS BAR -->
+  <div class="bg-slate-925 border-b border-slate-800/80 px-4 py-1.5 text-xs text-slate-400 flex flex-wrap justify-between items-center z-50">
+    <div class="flex items-center space-x-3">
+      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-orange/20 text-brand-orange border border-brand-orange/30 tracking-wider uppercase">Enterprise Spec DB</span>
+      <span class="hidden sm:inline text-slate-500">|</span>
+      <span class="hidden sm:inline">The GSMArena for IT, DevOps, Cloud & Cyber Infrastructure</span>
+    </div>
+    <div class="flex items-center space-x-4 text-[11px]">
+      <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>Database Live (v2026.9)</span>
+      <button onclick="openModal('reportModal')" class="hover:text-brand-orange transition-colors flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        Report Outdated Spec
+      </button>
+      <a href="/author/" class="hover:text-slate-200 transition-colors hidden md:inline">Audited by IT Practitioners</a>
+    </div>
+  </div>
+
+  <!-- CORE BRAND & GLOBAL HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-4">
+        
+        <!-- Brand Logo & Tagline -->
+        <div class="flex items-center gap-3 shrink-0">
+          <a href="/specs.html" class="flex items-center gap-2.5 group">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-700 via-slate-900 to-brand-orange flex items-center justify-center p-0.5 shadow-lg shadow-blue-900/30 border border-slate-700">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-7 h-7" aria-hidden="true">
+                <rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#E2E8F0"/>
+                <rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#E2E8F0"/>
+                <rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#E2E8F0"/>
+                <path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.8" stroke-linecap="round"/>
+                <path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-display font-extrabold text-xl tracking-tight text-white group-hover:text-brand-orange transition-colors">IT<span class="text-brand-orange">Vedas</span></span>
+              <span class="hidden xl:block text-[10px] text-slate-400 font-medium tracking-tight">The Unbiased Technical Spec Database for IT & DevOps</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Global Search Bar with Autocomplete -->
+        <div class="relative flex-1 max-w-2xl mx-2">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <input 
+              type="text" 
+              id="globalSearchInput"
+              class="w-full bg-slate-900 border border-slate-700/80 rounded-lg pl-10 pr-20 py-2 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/60 focus:border-brand-orange transition-all font-mono"
+              placeholder="Search software, ITSM, agents, or specs (e.g., ManageEngine, Intune, Active Directory)..."
+              autocomplete="off"
+            />
+            <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center">
+              <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-800 border border-slate-700 rounded shadow-inner">⌘K</kbd>
+            </div>
+          </div>
+
+          <!-- Autocomplete Dropdown Panel -->
+          <div id="searchResultsDropdown" class="hidden absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-slate-800/80">
+            <div class="p-2 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-925/80 flex justify-between">
+              <span>Matching Enterprise Software</span>
+              <span class="text-[10px] font-mono text-slate-500">Use ↑↓ keys to navigate</span>
+            </div>
+            <div id="searchResultsList" class="max-h-80 overflow-y-auto divide-y divide-slate-800/50"></div>
+            <div class="p-2 bg-slate-950/80 text-[11px] text-slate-400 flex justify-between items-center">
+              <span>Looking for deep diffs?</span>
+              <button onclick="openModal('diffModal')" class="text-brand-orange hover:underline font-medium">Compare Top 4 UEM Platforms →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Navigation -->
+        <nav class="hidden lg:flex items-center space-x-1 font-medium text-sm text-slate-300">
+          <a href="#categoriesSection" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Categories</a>
+          <button onclick="openModal('diffModal')" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5">
+            <span>Side-by-Side Compare</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">Diff</span>
+          </button>
+          <a href="#filtersSidebar" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Parametric Filter</a>
+          <button onclick="switchTab('pricingTab')" class="px-3 py-2 rounded-md hover:text-white hover:bg-slate-800/70 transition-colors">Pricing Tracker</button>
+          <button onclick="openModal('suggestModal')" class="ml-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/70 transition-all text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+            <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Suggest an Edit
+          </button>
+        </nav>
+
+        <!-- Mobile Menu Trigger -->
+        <div class="flex lg:hidden items-center">
+          <button onclick="openModal('diffModal')" class="p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT: DESKTOP SPLIT VIEW (FILTER SIDEBAR + SPEC CONTENT) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT COLUMN: CATEGORY EXPLORER & FACETED PARAMETRIC FILTERS (3 COLS) -->
+      <aside id="filtersSidebar" class="lg:col-span-3 space-y-6">
+        
+        <!-- Category Explorer -->
+        <div id="categoriesSection" class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <h3 class="font-display font-bold text-sm tracking-wide uppercase text-slate-300 flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              Software Categories
+            </h3>
+            <span class="text-[11px] font-mono text-slate-500">6 Tracks</span>
+          </div>
+          <ul class="space-y-1 text-xs">
+            <li>
+              <a href="#" onclick="filterByCategory('uem'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-brand-orange/15 text-brand-orange font-semibold border border-brand-orange/30">
+                <span>Unified Endpoint (UEM)</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-brand-orange/20 text-brand-orange">14</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="filterByCategory('rmm'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+                <span>Remote Monitoring (RMM)</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">18</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="filterByCategory('patch'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+                <span>Patch & Vulnerability</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">12</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="filterByCategory('itsm'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+                <span>IT Service Mgmt (ITSM)</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">9</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="filterByCategory('iam'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+                <span>Identity & Directory (IAM)</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">16</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="filterByCategory('network'); return false;" class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors">
+                <span>Network & NPM</span>
+                <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">11</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Faceted Parametric Filter Form -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="font-display font-bold text-sm tracking-wide uppercase text-slate-300 flex items-center gap-2">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+              Parametric Filters
+            </h3>
+            <button id="resetFiltersBtn" class="text-[11px] text-brand-orange hover:underline font-mono">Reset</button>
+          </div>
+
+          <!-- Facet 1: Deployment Type -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-2 font-mono">1. DEPLOYMENT TYPE</label>
+            <div class="space-y-1.5 text-xs text-slate-400">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_deploy" value="Cloud SaaS" checked class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Cloud SaaS (Multi-Tenant)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_deploy" value="On-Premise" checked class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>On-Premise (Bare-Metal / VM)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_deploy" value="Air-Gapped" class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Air-Gapped / Isolated LAN</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Facet 2: Directory & Authentication -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-2 font-mono">2. DIRECTORY & AUTH</label>
+            <div class="space-y-1.5 text-xs text-slate-400">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_auth" value="Active Directory" checked class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Active Directory (on-prem)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_auth" value="Microsoft Entra ID" checked class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Microsoft Entra ID (Azure AD)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_auth" value="SAML 2.0" checked class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>SAML 2.0 / Okta / SSO</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="checkbox" name="filter_auth" value="OpenLDAP" class="rounded bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>OpenLDAP / Kerberos</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Facet 3: Free Tier Available -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-2 font-mono">3. FREE TIER AVAILABLE</label>
+            <div class="space-y-1.5 text-xs text-slate-400">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="radio" name="filter_freetier" value="any" checked class="bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Any (Show All)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="radio" name="filter_freetier" value="yes" class="bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span class="flex items-center gap-1.5">
+                  <span>Yes (Permanent Free Tier)</span>
+                  <span class="px-1 py-0.2 text-[9px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800 rounded">25 Nodes</span>
+                </span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+                <input type="radio" name="filter_freetier" value="no" class="bg-slate-800 border-slate-700 text-brand-orange focus:ring-brand-orange">
+                <span>Trial / Paid Only</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Facet 4: Minimum Node Scale -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-slate-300 font-mono">4. TESTED NODE SCALE</label>
+              <span id="nodeScaleVal" class="text-xs font-mono text-cyan-400 font-bold">25,000+ Nodes</span>
+            </div>
+            <input 
+              type="range" 
+              id="nodeScaleSlider" 
+              min="100" 
+              max="50000" 
+              step="500" 
+              value="25000" 
+              class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-orange"
+            />
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>SMB (100)</span>
+              <span>Mid (5K)</span>
+              <span>Enterprise (50K+)</span>
+            </div>
+          </div>
+
+          <!-- Applied Filters Counter -->
+          <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+            <span>Matching Specs:</span>
+            <span id="filterMatchCount" class="font-mono font-bold text-emerald-400">4 Platforms</span>
+          </div>
+
+        </div>
+
+        <!-- Quick Spec Benchmark Card -->
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-4 text-xs space-y-2">
+          <div class="font-display font-semibold text-slate-300 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <span>ITVedas Benchmark Tip</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed text-[11px]">
+            Unlike marketing review portals, ITVedas verifies on-premise hardware footprints, database scalability thresholds, and API payload contracts directly from administrator deployment manuals.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN: PRIMARY SOFTWARE DETAIL VIEW (9 COLS) -->
+      <main class="lg:col-span-9 space-y-8">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center text-xs text-slate-400 font-mono space-x-2">
+          <a href="/specs.html" class="hover:text-slate-200">ITVedas Specs</a>
+          <span>/</span>
+          <a href="#" class="hover:text-slate-200">Unified Endpoint Management (UEM)</a>
+          <span>/</span>
+          <span class="text-brand-orange">ManageEngine Endpoint Central</span>
+        </nav>
+
+        <!-- 1. PRODUCT HEADER & QUICK GLANCE CARD -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-7 shadow-xl relative overflow-hidden">
+          
+          <div class="absolute -right-24 -top-24 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-20 -bottom-20 w-60 h-60 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Top Row: Title, Vendor, Categories & Rating -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800 relative z-10">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="badge-accent px-2 py-0.5 rounded text-[11px] font-bold font-mono uppercase tracking-wide">Featured Spec Sheet</span>
+                <span class="badge-emerald px-2 py-0.5 rounded text-[11px] font-bold font-mono">Hybrid: Cloud + On-Prem</span>
+                <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded text-[11px] font-mono">Zoho Corp Tier-1</span>
+              </div>
+              
+              <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight flex flex-wrap items-center gap-3">
+                <span>ManageEngine Endpoint Central</span>
+                <span class="text-sm font-normal text-slate-400 font-sans">(Formerly Desktop Central)</span>
+              </h1>
+              
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400 mt-2 font-mono">
+                <span>Vendor: <strong class="text-slate-200 font-semibold">Zoho Corporation</strong></span>
+                <span>•</span>
+                <span>HQ: Chennai, India & Austin, TX</span>
+                <span>•</span>
+                <span>Enterprise Release: v11.3 (Active LTS)</span>
+              </div>
+
+              <!-- Category Badges -->
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                <span class="badge-cyan text-xs px-2.5 py-0.5 rounded-full font-medium">Unified Endpoint Management (UEM)</span>
+                <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-2.5 py-0.5 rounded-full font-medium">Client Management</span>
+                <span class="badge-purple text-xs px-2.5 py-0.5 rounded-full font-medium">Patch Management</span>
+                <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-2.5 py-0.5 rounded-full font-medium">Enterprise Mobility (MDM)</span>
+              </div>
+            </div>
+
+            <!-- Spec Rating Badge (GSMArena Style Score Box) -->
+            <div class="shrink-0 flex md:flex-col items-center justify-center bg-slate-950/80 border border-slate-800 rounded-xl p-4 min-w-[150px] text-center shadow-inner">
+              <div class="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold mb-1">Spec Index Score</div>
+              <div class="flex items-baseline justify-center gap-1">
+                <span class="font-display text-4xl font-extrabold text-emerald-400">9.4</span>
+                <span class="text-slate-500 font-mono text-sm">/10</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1 font-mono">
+                <span class="text-amber-400 font-semibold">★ Rank #1</span> in Hybrid UEM
+              </div>
+              <div class="text-[10px] text-slate-500 mt-0.5">850+ 3rd-party patches</div>
+            </div>
+          </div>
+
+          <!-- Quick Spec Summary Box (GSMArena Style Highlight Grid) -->
+          <div class="mt-6">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono mb-3 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Quick Glance Spec Highlights
+              </span>
+              <span class="text-[10px] text-slate-500 normal-case">Verified against Administrator Installation Guide</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              
+              <!-- Highlight 1: OS Support -->
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div class="text-[11px] text-slate-400 font-mono flex items-center justify-between mb-1">
+                  <span>OS Support</span>
+                  <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="font-bold text-sm text-slate-100 font-display">6 OS Families</div>
+                <div class="text-[10px] text-slate-400 mt-1">Win, Mac, Linux, iOS, Android, ChromeOS</div>
+              </div>
+
+              <!-- Highlight 2: Min Server RAM -->
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div class="text-[11px] text-slate-400 font-mono flex items-center justify-between mb-1">
+                  <span>Min Server RAM</span>
+                  <svg class="w-3.5 h-3.5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+                </div>
+                <div class="font-bold text-sm text-slate-100 font-display">8 GB (On-Prem)</div>
+                <div class="text-[10px] text-slate-400 mt-1">4 Cores min | 16 GB rec for 5K nodes</div>
+              </div>
+
+              <!-- Highlight 3: Directory Sync -->
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div class="text-[11px] text-slate-400 font-mono flex items-center justify-between mb-1">
+                  <span>Directory Sync</span>
+                  <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </div>
+                <div class="font-bold text-sm text-slate-100 font-display">AD + Entra + LDAP</div>
+                <div class="text-[10px] text-slate-400 mt-1">Multi-domain forest sync + SCIM</div>
+              </div>
+
+              <!-- Highlight 4: Max Tested Nodes -->
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div class="text-[11px] text-slate-400 font-mono flex items-center justify-between mb-1">
+                  <span>Max Scale</span>
+                  <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+                <div class="font-bold text-sm text-emerald-400 font-display">25,000+ Nodes</div>
+                <div class="text-[10px] text-slate-400 mt-1">Single server | 100K+ in WAN mesh</div>
+              </div>
+
+              <!-- Highlight 5: Free Tier -->
+              <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div class="text-[11px] text-slate-400 font-mono flex items-center justify-between mb-1">
+                  <span>Free Tier</span>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="font-bold text-sm text-amber-300 font-display">Yes (25 Nodes)</div>
+                <div class="text-[10px] text-slate-400 mt-1">Permanent free for SMB / Lab labs</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div class="mt-6 pt-5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button 
+                id="addToCompareBtn" 
+                onclick="toggleCompare('manageengine-endpoint-central')" 
+                class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-blue-900/30 transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span id="compareBtnText">Add to Compare</span>
+              </button>
+
+              <a 
+                href="https://www.manageengine.com/products/desktop-central/help/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                Official Documentation
+              </a>
+
+              <button 
+                onclick="openModal('reportModal')" 
+                class="px-3.5 py-2 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs font-medium flex items-center gap-1.5 transition-colors"
+              >
+                <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Report Outdated Spec
+              </button>
+            </div>
+
+            <!-- Spec Meta -->
+            <div class="text-[11px] font-mono text-slate-500">
+              Last Verified: <span class="text-slate-400">September 2026</span> • Specification Hash: <span class="text-slate-400 font-mono">ec#11.3.24</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- INTERACTIVE NAVIGATION TABS -->
+        <div class="border-b border-slate-800 flex items-center justify-between">
+          <div class="flex space-x-1 sm:space-x-4">
+            <button 
+              id="tabSpecsBtn"
+              onclick="switchTab('specsTab')" 
+              class="py-3 px-4 text-sm font-semibold border-b-2 border-brand-orange text-brand-orange flex items-center gap-2 transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Full Specs (7 Sections)
+            </button>
+            <button 
+              id="tabPricingBtn"
+              onclick="switchTab('pricingTab')" 
+              class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              Editions & Pricing Matrix
+            </button>
+            <button 
+              id="tabDiffBtn"
+              onclick="switchTab('diffTab')" 
+              class="py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              Direct Competitor Diff (Intune / Ninja / Ivanti)
+            </button>
+          </div>
+
+          <!-- Expand / Collapse All Accordions -->
+          <div id="accordionToggleWrapper" class="hidden sm:flex items-center text-xs">
+            <button onclick="toggleAllAccordions()" id="toggleAllAccordionsBtn" class="text-slate-400 hover:text-brand-orange font-mono flex items-center gap-1 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <span>Collapse All Sections</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: GSMARENA-STYLE TABULAR SPEC SHEET (ACCORDION / STRUCTURED GRID) -->
+        <div id="specsTabContent" class="space-y-6">
+          <!-- SECTION 1: General & Architecture -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec1')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-blue-900/40 text-blue-400 border border-blue-700/50 flex items-center justify-center font-mono text-xs font-bold">01</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">General & Architecture</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Delivery model, protocol support, multi-tenant MSP support, WAN distribution architecture</p>
+                </div>
+              </div>
+              <svg id="arrow-sec1" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec1">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Delivery Model</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-white">Hybrid:</strong> On-Premise physical bare-metal / hypervisor VM or Cloud SaaS (Zoho Cloud multi-DC globally).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Protocol Support</div>
+                <div class="md:col-span-8 spec-value text-slate-100">HTTPS (TLS 1.3 / 1.2 on port 8383), WebSocket live push (port 8027), WebRTC (port 8443 screen share), LDAPS (636).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Multi-Tenant MSP Support</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-emerald-400">Native MSP Architecture:</strong> Available via dedicated Endpoint Central MSP edition with tenant boundary isolation.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">WAN Distribution Architecture</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-white">Hub-and-Spoke Topology:</strong> Branch office Distribution Server caches packages locally with bandwidth throttling to prevent WAN saturation.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">High Availability / Failover</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Active-Passive Failover Server with secondary IP takeover (&lt;60s heartbeat); automated database replication.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Secure Gateway Server (DMZ)</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Reverse proxy gateway in perimeter DMZ for remote off-VPN roaming agent check-in without exposing internal LAN ports.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">NAT Traversal</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Built-in STUN / TURN relay service for out-of-band remote control & patch broadcast.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: Platform & OS Compatibility -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec2')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-cyan-900/40 text-cyan-400 border border-cyan-700/50 flex items-center justify-center font-mono text-xs font-bold">02</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Platform & OS Compatibility</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Supported Windows Server/Desktop, macOS Intel & Apple Silicon, Linux distros, mobile platforms</p>
+                </div>
+              </div>
+              <svg id="arrow-sec2" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec2">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Windows Desktop</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Windows 11 (24H2, 23H2, 22H2, 21H2 — Pro, Enterprise, Education, SE), Windows 10 (32/64-bit, LTSC/LTSB), Windows 8.1, 7 SP1.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Windows Server</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Windows Server 2025, 2022, 2019, 2016, 2012 R2, 2008 R2 SP1 (Both Full Desktop Experience and Server Core).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">macOS Architecture</div>
+                <div class="md:col-span-8 spec-value text-slate-100">macOS 15 Sequoia, macOS 14 Sonoma, 13 Ventura, 12 Monterey, 11 Big Sur — <strong class="text-cyan-300">Native Apple Silicon (M1-M4) & Intel</strong> universal binaries.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Linux Distributions</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Ubuntu (18.04 - 24.04 LTS), RHEL (7-9), Debian (10-12), CentOS Stream, Rocky Linux, AlmaLinux, SUSE SLES, openSUSE, Fedora.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Mobile & Tablets (MDM)</div>
+                <div class="md:col-span-8 spec-value text-slate-100">iOS/iPadOS 14 to 18+, tvOS 14+; Android 9.0 to 15 (Google Android Enterprise Recommended partner).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">ChromeOS & IoT</div>
+                <div class="md:col-span-8 spec-value text-slate-100">ChromeOS Enterprise enrollment via Google Workspace API; single/multi-app kiosk lockdown and lost-device geo-tracking.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: Hardware & System Requirements -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec3')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-700/50 flex items-center justify-center font-mono text-xs font-bold">03</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Hardware & System Requirements</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Minimum vs Recommended CPU cores, RAM, DB backend: PostgreSQL vs MS SQL</p>
+                </div>
+              </div>
+              <svg id="arrow-sec3" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec3">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Minimum CPU (Server)</div>
+                <div class="md:col-span-8 spec-value text-slate-100">4 Cores (Intel Xeon or AMD EPYC / modern x86-64 equivalent @ 2.4 GHz).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Recommended CPU</div>
+                <div class="md:col-span-8 spec-value text-slate-100">8 to 16 Cores for environments managing 5,000 to 25,000 active nodes.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Server RAM Scaling</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-white">8 GB</strong> (&le;1,000 nodes) • <strong class="text-brand-orange">16 GB</strong> (1,000 - 5,000 nodes) • <strong class="text-emerald-400">32-64 GB</strong> (5,000 - 25,000+ nodes).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Database Engine Backend</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-white">PostgreSQL 14+</strong> (Bundled default; zero added cost, up to 10K nodes) or <strong class="text-white">MS SQL Server</strong> (2014 to 2022 Standard/Enterprise for &gt;10K nodes).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Storage IOPS & Space</div>
+                <div class="md:col-span-8 spec-value text-slate-100">100 GB OS installation; 250 GB - 2 TB SSD repository for patch binaries; min 1,500 IOPS SSD recommended.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Agent Memory Footprint</div>
+                <div class="md:col-span-8 spec-value text-slate-100">~35 MB - 50 MB RAM idle; &lt;1.5% background CPU scan with network bandwidth throttling limits.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: Core Capabilities -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec4')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-orange-900/40 text-orange-400 border border-orange-700/50 flex items-center justify-center font-mono text-xs font-bold">04</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Core Capabilities</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Patch management 3rd-party catalog size, silent software deployment formats, remote desktop protocols, OS bare-metal imaging</p>
+                </div>
+              </div>
+              <svg id="arrow-sec4" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec4">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">3rd-Party Patch Catalog</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><span class="text-emerald-400 font-bold font-mono">850+ Pre-Tested Applications</span> across Windows and macOS (Adobe, Chrome, Zoom, Firefox, Slack, VLC, Teams, Edge, etc.) with test & approve automation.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Silent Deployment Formats</div>
+                <div class="md:col-span-8 spec-value text-slate-100">MSI, EXE, MSP, MSU, PKG, DMG, APPX, DEB, RPM, PowerShell (`.ps1`), VBScript, Batch scripts, Bash. 8,000+ pre-built templates in software library.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Remote Desktop Protocols</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Integrated HTML5 WebRTC remote control (clientless for technicians); multi-monitor switching, file transfer, HIPAA session recording.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">OS Bare-Metal Imaging</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Automated bare-metal deployment via PXE network boot & USB media; hardware-independent imaging with automated driver injection.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Asset & License Metering</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Real-time hardware inventory, warranty tracking, prohibited software auto-uninstallation, software usage metering to eliminate underutilized seats.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 5: Identity, Security & Compliance -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec5')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-purple-900/40 text-purple-400 border border-purple-700/50 flex items-center justify-center font-mono text-xs font-bold">05</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Identity, Security & Compliance</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">SSO/SAML 2.0, MFA types, RBAC granularity, encryption standards, SOC 2 / ISO 27001 / HIPAA</p>
+                </div>
+              </div>
+              <svg id="arrow-sec5" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec5">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">SSO / SAML 2.0 Providers</div>
+                <div class="md:col-span-8 spec-value text-slate-100">SAML 2.0 integration tested with Entra ID, Okta, PingIdentity, OneLogin, Google Workspace, CyberArk, JumpCloud; SCIM 2.0 auto-provisioning.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">MFA Types Supported</div>
+                <div class="md:col-span-8 spec-value text-slate-100">TOTP (Google / Microsoft Authenticator), Email OTP, SMS verification, Duo Security push, RADIUS server integration.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">RBAC Granularity</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Discrete custom permission scoping down to individual computer groups and action boundaries (e.g. Remote Control Only).</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Encryption Standards</div>
+                <div class="md:col-span-8 spec-value text-slate-100">TLS 1.3 / 1.2 in transit; AES-256 column-level encryption at rest for credentials and BitLocker recovery keys.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Compliance Accreditations</div>
+                <div class="md:col-span-8 spec-value text-slate-100 flex flex-wrap gap-1.5">
+                  <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-emerald-400 border border-slate-700">SOC 2 Type II</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-emerald-400 border border-slate-700">ISO 27001:2022</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-emerald-400 border border-slate-700">HIPAA</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-emerald-400 border border-slate-700">GDPR</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">FedRAMP Moderate (Cloud)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 6: Integrations & API -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec6')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-slate-900 text-slate-300 border border-slate-700 flex items-center justify-center font-mono text-xs font-bold">06</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Integrations & API</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Jira, ServiceDesk Plus, ServiceNow, Splunk, REST API documentation status</p>
+                </div>
+              </div>
+              <svg id="arrow-sec6" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec6">
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">ITSM Ecosystem</div>
+                <div class="md:col-span-8 spec-value text-slate-100"><strong class="text-white">ServiceDesk Plus:</strong> 100% Native zero-code bidirectional sync • <strong class="text-white">ServiceNow:</strong> Certified Store application • <strong class="text-white">Jira Service Management:</strong> Native marketplace plugin.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">SIEM & Observability</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Syslog & CEF event forwarder to Splunk, Log360, Datadog, Elastic Stack, and Microsoft Sentinel for real-time security alerts.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">REST API Architecture</div>
+                <div class="md:col-span-8 spec-value text-slate-100">Comprehensive RESTful API v2 with OpenAPI 3.0 / Swagger documentation; API token authentication with rate-limiting controls.</div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-12 px-4 py-2.5 spec-table-row items-center border-b border-slate-800/60 text-xs">
+                <div class="md:col-span-4 spec-key font-mono text-slate-400">Automation & SDKs</div>
+                <div class="md:col-span-8 spec-value text-slate-100">PowerShell SDK module (`EndpointCentral-PS`), Python automation scripts, and Webhooks for event-driven orchestration.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 7: Edition Comparison Matrix -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            <button onclick="toggleAccordion('sec7')" class="w-full px-4 py-3 bg-slate-925 border-b border-slate-800 flex items-center justify-between text-left hover:bg-slate-850 transition-colors">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded bg-amber-900/40 text-amber-400 border border-amber-700/50 flex items-center justify-center font-mono text-xs font-bold">07</span>
+                <div>
+                  <h2 class="font-display font-bold text-sm text-slate-100">Edition Comparison Matrix</h2>
+                  <p class="text-[11px] text-slate-400 font-sans">Interactive table comparing: Professional vs. Enterprise vs. UEM Edition vs. Security Edition</p>
+                </div>
+              </div>
+              <svg id="arrow-sec7" class="w-4 h-4 text-slate-400 transform transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="content-sec7" class="p-4 overflow-x-auto">
+              <div class="text-xs text-slate-400 mb-3 flex justify-between items-center">
+                <span>Compare core functional capabilities across all four enterprise editions:</span>
+                <span class="text-emerald-400 font-mono text-[11px]">Free Tier available up to 25 endpoints</span>
+              </div>
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-700 bg-slate-950/80 font-mono text-xs">
+                    <th class="py-2.5 px-3 text-slate-300">CAPABILITY / SPECIFICATION</th>
+                    <th class="py-2.5 px-2 text-center text-slate-300"><div>PROFESSIONAL</div><div class="text-[10px] text-slate-400 font-normal">Single LAN</div></th>
+                    <th class="py-2.5 px-2 text-center text-slate-300"><div>ENTERPRISE</div><div class="text-[10px] text-slate-400 font-normal">Distributed WAN</div></th>
+                    <th class="py-2.5 px-2 text-center text-cyan-400 bg-cyan-950/30 border-x border-cyan-800/40"><div>UEM EDITION</div><div class="text-[10px] text-cyan-300 font-normal">PC + Mobile MDM</div></th>
+                    <th class="py-2.5 px-2 text-center text-brand-orange"><div>SECURITY</div><div class="text-[10px] text-brand-orange font-normal">Hardened Defense</div></th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/70 font-sans">
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Automated Patch Management (OS & 3rd-Party)</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Software Deployment (MSI / EXE / Scripts)</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Asset Intelligence & Inventory Management</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Remote Desktop & File Transfer (WebRTC)</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">WAN Distribution Servers (Bandwidth Throttle)</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Multi-Domain Active Directory Management</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Failover Server (High Availability)</td>
+                    <td class="text-center py-2 px-2 text-amber-400 font-mono text-[11px]">Add-on</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Full Mobile Device Management (iOS, Android)</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Modern Management (Windows 11 / macOS MDM)</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">OS Bare-Metal Deployment & Imaging</td>
+                    <td class="text-center py-2 px-2 text-amber-400 font-mono text-[11px]">Add-on</td>
+                    <td class="text-center py-2 px-2 text-amber-400 font-mono text-[11px]">Add-on</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold bg-cyan-950/20 border-x border-cyan-800/20">✓ Included</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Vulnerability & Threat Assessment</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono bg-cyan-950/20 border-x border-cyan-800/20">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Application Control & Zero-Trust Whitelisting</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono bg-cyan-950/20 border-x border-cyan-800/20">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Browser Security & Web Filtering</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono bg-cyan-950/20 border-x border-cyan-800/20">—</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row border-b border-slate-800/60">
+                    <td class="py-2.5 px-3 font-medium text-slate-200">Endpoint DLP & BitLocker Management</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-slate-600 font-mono">—</td>
+                    <td class="text-center py-2 px-2 text-amber-400 font-mono text-[11px] bg-cyan-950/20 border-x border-cyan-800/20">Add-on</td>
+                    <td class="text-center py-2 px-2 text-emerald-400 font-bold">✓ Included</td>
+                  </tr>
+                  <tr class="spec-table-row bg-slate-950/60 font-mono text-[11px]">
+                    <td class="py-2.5 px-3 font-bold text-slate-300">Base Annual License (50 Endpoints)</td>
+                    <td class="text-center py-2 text-slate-200">$795 / yr</td>
+                    <td class="text-center py-2 text-slate-200">$945 / yr</td>
+                    <td class="text-center py-2 text-cyan-300 font-bold bg-cyan-950/30 border-x border-cyan-800/40">$1,195 / yr</td>
+                    <td class="text-center py-2 text-brand-orange font-bold">$1,695 / yr</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: EDITIONS & PRICING CONTENT -->
+        <div id="pricingTabContent" class="hidden space-y-6">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+              <div>
+                <h2 class="font-display font-bold text-lg text-white">Commercial Licensing & Pricing Architecture</h2>
+                <p class="text-xs text-slate-400 font-sans mt-0.5">ManageEngine provides transparent tier-based node licensing with zero forced vendor lock-in</p>
+              </div>
+              <div class="badge-emerald px-3 py-1 rounded text-xs font-mono font-bold shrink-0">
+                Permanent Free Tier (≤25 Endpoints)
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+              
+              <!-- Card 1: Pro -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+                <div>
+                  <div class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Edition 1</div>
+                  <h3 class="font-display text-lg font-bold text-white mt-1">Professional</h3>
+                  <div class="text-2xl font-extrabold text-slate-100 font-mono mt-3">$795<span class="text-xs text-slate-400 font-normal"> / year</span></div>
+                  <div class="text-xs text-slate-400 mt-0.5">50 Endpoints (Single LAN)</div>
+                  <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Designed for single-office SMBs needing centralized patching, software deployment, and inventory scanning.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 font-mono">
+                  ✓ Unlimited Technicians<br>
+                  ✓ Bundled PostgreSQL
+                </div>
+              </div>
+
+              <!-- Card 2: Enterprise -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+                <div>
+                  <div class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Edition 2</div>
+                  <h3 class="font-display text-lg font-bold text-white mt-1">Enterprise</h3>
+                  <div class="text-2xl font-extrabold text-slate-100 font-mono mt-3">$945<span class="text-xs text-slate-400 font-normal"> / year</span></div>
+                  <div class="text-xs text-slate-400 mt-0.5">50 Endpoints (Multi-Branch)</div>
+                  <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Adds WAN Distribution Servers and multi-domain Active Directory support for multi-location enterprises.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 font-mono">
+                  ✓ Distribution Servers<br>
+                  ✓ Bandwidth Throttling
+                </div>
+              </div>
+
+              <!-- Card 3: UEM (Most Popular) -->
+              <div class="bg-slate-950 border-2 border-cyan-500/80 rounded-xl p-5 flex flex-col justify-between relative shadow-lg shadow-cyan-950/50">
+                <div class="absolute -top-3 right-4 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500 text-slate-950 uppercase tracking-wide">
+                  Top Recommended
+                </div>
+                <div>
+                  <div class="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">Edition 3</div>
+                  <h3 class="font-display text-lg font-bold text-white mt-1">UEM Edition</h3>
+                  <div class="text-2xl font-extrabold text-cyan-400 font-mono mt-3">$1,195<span class="text-xs text-slate-400 font-normal"> / year</span></div>
+                  <div class="text-xs text-slate-400 mt-0.5">50 PCs + 50 Mobile MDM</div>
+                  <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                    Unifies full desktop lifecycle management with enterprise iOS & Android MDM, kiosk lockdown, and bare-metal imaging.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-cyan-800/60 text-[11px] text-cyan-300 font-mono">
+                  ✓ PC + Mobile in 1 Console<br>
+                  ✓ OS Imaging Included
+                </div>
+              </div>
+
+              <!-- Card 4: Security Edition -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+                <div>
+                  <div class="text-xs font-mono uppercase tracking-wider text-brand-orange font-bold">Edition 4</div>
+                  <h3 class="font-display text-lg font-bold text-white mt-1">Security Edition</h3>
+                  <div class="text-2xl font-extrabold text-brand-orange font-mono mt-3">$1,695<span class="text-xs text-slate-400 font-normal"> / year</span></div>
+                  <div class="text-xs text-slate-400 mt-0.5">50 Endpoints + Hardened Defense</div>
+                  <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Includes endpoint vulnerability scanning, application zero-trust whitelisting, browser security, and peripheral device control.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 font-mono">
+                  ✓ Vulnerability Assessment<br>
+                  ✓ App Whitelisting & USB DLP
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: DIRECT COMPETITOR DIFF (SIDE-BY-SIDE CARDS & SPEC COMPARISON) -->
+        <div id="diffTabContent" class="hidden space-y-6">
+          
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+              <div>
+                <h2 class="font-display font-bold text-lg text-white">Compare Against Direct Alternatives</h2>
+                <p class="text-xs text-slate-400 font-sans mt-0.5">Head-to-head architectural analysis against the three most requested enterprise alternatives</p>
+              </div>
+              <button onclick="openModal('diffModal')" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-900/30 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Launch Full Spec Diff Matrix
+              </button>
+            </div>
+
+            <!-- Side-by-Side Mini Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+              
+              <!-- Alternative 1: Microsoft Intune -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800">Cloud Only</span>
+                    <span class="text-xs font-mono font-bold text-slate-300">★ 9.1 Score</span>
+                  </div>
+                  <h3 class="font-display font-bold text-base text-white">Microsoft Intune</h3>
+                  <div class="text-xs text-slate-400 font-mono">Vendor: Microsoft Corporation</div>
+                  
+                  <div class="mt-4 space-y-2 text-xs">
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">DEPLOYMENT</span>
+                      <span class="text-slate-200">100% Cloud SaaS (No On-Prem)</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL PRO</span>
+                      <span class="text-emerald-400">Deepest Microsoft 365, Entra ID Conditional Access, and Autopilot integration.</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL CON</span>
+                      <span class="text-amber-400">No on-premise air-gap server; 3rd-party patch catalog requires Enterprise App add-on.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="font-mono text-slate-400">$8/user/mo standalone</span>
+                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'microsoft-intune')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                </div>
+              </div>
+
+              <!-- Alternative 2: NinjaOne -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800">RMM + UEM</span>
+                    <span class="text-xs font-mono font-bold text-slate-300">★ 9.2 Score</span>
+                  </div>
+                  <h3 class="font-display font-bold text-base text-white">NinjaOne</h3>
+                  <div class="text-xs text-slate-400 font-mono">Vendor: NinjaOne LLC</div>
+                  
+                  <div class="mt-4 space-y-2 text-xs">
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">DEPLOYMENT</span>
+                      <span class="text-slate-200">100% Cloud SaaS (AWS Multi-Region)</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL PRO</span>
+                      <span class="text-emerald-400">Fastest agent execution, high-velocity responsive UI, deep SNMP network monitoring.</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL CON</span>
+                      <span class="text-amber-400">No permanent free tier; no bare-metal PXE imaging; custom quote pricing only.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="font-mono text-slate-400">~$3-$5/device/mo</span>
+                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'ninjaone')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                </div>
+              </div>
+
+              <!-- Alternative 3: Ivanti Neurons -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Hybrid Enterprise</span>
+                    <span class="text-xs font-mono font-bold text-slate-300">★ 8.8 Score</span>
+                  </div>
+                  <h3 class="font-display font-bold text-base text-white">Ivanti Neurons for UEM</h3>
+                  <div class="text-xs text-slate-400 font-mono">Vendor: Ivanti, Inc.</div>
+                  
+                  <div class="mt-4 space-y-2 text-xs">
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">DEPLOYMENT</span>
+                      <span class="text-slate-200">Hybrid: Cloud + On-Prem (EPM)</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL PRO</span>
+                      <span class="text-emerald-400">Autonomous self-healing AI bots, superior ruggedized Android/Zebra hardware support.</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 font-mono block text-[10px]">KEY ARCHITECTURAL CON</span>
+                      <span class="text-amber-400">Complex setup requiring heavy MS SQL infrastructure; no free tier for small teams.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="font-mono text-slate-400">Enterprise Quote</span>
+                  <button onclick="openCustomDiff('manageengine-endpoint-central', 'ivanti-neurons')" class="text-cyan-400 hover:text-cyan-300 font-semibold font-mono">Compare Diff →</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Direct Diff Summary Table -->
+            <div class="mt-8 pt-6 border-t border-slate-800">
+              <h3 class="font-display font-bold text-sm text-slate-200 uppercase tracking-wider font-mono mb-4">Direct Architectural Comparison Summary</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border border-slate-800">
+                  <thead class="bg-slate-950 font-mono text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th class="py-2.5 px-3">TECHNICAL METRIC</th>
+                      <th class="py-2.5 px-3 text-brand-orange">Endpoint Central</th>
+                      <th class="py-2.5 px-3">Microsoft Intune</th>
+                      <th class="py-2.5 px-3">NinjaOne</th>
+                      <th class="py-2.5 px-3">Ivanti Neurons</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800/80">
+                    <tr class="spec-table-row">
+                      <td class="py-2 px-3 font-mono text-slate-400">Delivery Model</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Hybrid (Cloud + On-Prem)</td>
+                      <td class="py-2 px-3 text-slate-300">100% Cloud Only</td>
+                      <td class="py-2 px-3 text-slate-300">100% Cloud Only</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Hybrid (Cloud + On-Prem)</td>
+                    </tr>
+                    <tr class="spec-table-row">
+                      <td class="py-2 px-3 font-mono text-slate-400">Permanent Free Tier</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Yes (Up to 25 Nodes)</td>
+                      <td class="py-2 px-3 text-red-400 font-mono">No (Trial only)</td>
+                      <td class="py-2 px-3 text-red-400 font-mono">No (Trial only)</td>
+                      <td class="py-2 px-3 text-red-400 font-mono">No (Trial only)</td>
+                    </tr>
+                    <tr class="spec-table-row">
+                      <td class="py-2 px-3 font-mono text-slate-400">3rd-Party Patch Catalog</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">850+ Apps (Included)</td>
+                      <td class="py-2 px-3 text-amber-400">Requires Add-On ($3.25)</td>
+                      <td class="py-2 px-3 text-slate-300">200+ Core Apps</td>
+                      <td class="py-2 px-3 text-slate-300">350+ Enterprise Apps</td>
+                    </tr>
+                    <tr class="spec-table-row">
+                      <td class="py-2 px-3 font-mono text-slate-400">Bare-Metal OS Imaging</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Native PXE / USB Image</td>
+                      <td class="py-2 px-3 text-slate-400">Autopilot (Modern only)</td>
+                      <td class="py-2 px-3 text-slate-500 font-mono">—</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Native EPM Imaging</td>
+                    </tr>
+                    <tr class="spec-table-row">
+                      <td class="py-2 px-3 font-mono text-slate-400">Air-Gapped LAN Support</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Yes (Zero WAN dependency)</td>
+                      <td class="py-2 px-3 text-red-400 font-mono">No (Requires Azure)</td>
+                      <td class="py-2 px-3 text-red-400 font-mono">No (Requires AWS)</td>
+                      <td class="py-2 px-3 text-emerald-400 font-bold">Yes (On-Prem Server)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- FLOATING COMPARISON DRAWER -->
+  <div id="compareDrawer" class="fixed bottom-0 inset-x-0 bg-slate-900/95 border-t border-slate-700/80 backdrop-blur-lg p-3 z-40 transform translate-y-full transition-transform duration-300 shadow-2xl">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 px-4">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span class="text-xs font-mono font-bold text-slate-200">Side-by-Side Comparison Queue:</span>
+        <div id="compareSlots" class="flex items-center gap-2"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearCompareQueue()" class="text-xs text-slate-400 hover:text-slate-200 font-mono px-2 py-1">Clear Queue</button>
+        <button onclick="openModal('diffModal')" class="px-4 py-1.5 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs font-mono shadow-md transition-all">
+          Compare Selected (Diff) →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FULL SPEC DIFF MODAL (INTUNE VS NINJAONE VS IVANTI VS ENDPOINT CENTRAL) -->
+  <div id="diffModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto" onclick="if(event.target===this)closeModal('diffModal');">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-slate-925 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="font-display font-bold text-lg text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Full Parametric Spec Diff: Endpoint Central vs Top Alternatives
+          </h2>
+          <p class="text-xs text-slate-400 font-sans mt-0.5">High-density technical architecture comparison table</p>
+        </div>
+        <button onclick="closeModal('diffModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs font-sans">
+        <div class="overflow-x-auto border border-slate-800 rounded-xl">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-950 font-mono text-xs border-b border-slate-800 sticky top-0">
+              <tr>
+                <th class="py-3 px-4 text-slate-300">TECHNICAL CRITERIA</th>
+                <th class="py-3 px-3 text-brand-orange bg-brand-orange/5 border-x border-slate-800">ManageEngine Endpoint Central</th>
+                <th class="py-3 px-3 text-blue-400">Microsoft Intune</th>
+                <th class="py-3 px-3 text-purple-400">NinjaOne</th>
+                <th class="py-3 px-3 text-emerald-400">Ivanti Neurons</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-xs">
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Primary Delivery Model</td>
+                <td class="py-2.5 px-3 font-semibold text-white bg-brand-orange/5 border-x border-slate-800">Hybrid (Cloud SaaS + On-Premise)</td>
+                <td class="py-2.5 px-3 text-slate-300">100% Cloud SaaS</td>
+                <td class="py-2.5 px-3 text-slate-300">100% Cloud SaaS</td>
+                <td class="py-2.5 px-3 text-slate-300">Hybrid (Cloud SaaS + On-Prem)</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Permanent Free Tier</td>
+                <td class="py-2.5 px-3 font-bold text-emerald-400 bg-brand-orange/5 border-x border-slate-800">Yes (25 Endpoints)</td>
+                <td class="py-2.5 px-3 text-red-400 font-mono">No (30-day trial)</td>
+                <td class="py-2.5 px-3 text-red-400 font-mono">No (14-day trial)</td>
+                <td class="py-2.5 px-3 text-red-400 font-mono">No (Pilot only)</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Air-Gapped Network Support</td>
+                <td class="py-2.5 px-3 font-bold text-emerald-400 bg-brand-orange/5 border-x border-slate-800">Yes (Full offline deployment)</td>
+                <td class="py-2.5 px-3 text-red-400">No (Requires Azure internet)</td>
+                <td class="py-2.5 px-3 text-red-400">No (Requires AWS cloud)</td>
+                <td class="py-2.5 px-3 text-emerald-400">Yes (EPM server offline)</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Tested Scale per Single Node</td>
+                <td class="py-2.5 px-3 font-mono font-bold text-white bg-brand-orange/5 border-x border-slate-800">25,000+ Endpoints</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">Managed Azure Scale</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">50,000+ (Multi-Tenant)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">100,000+ (Clustered)</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">3rd-Party Patch Catalog</td>
+                <td class="py-2.5 px-3 font-semibold text-emerald-400 bg-brand-orange/5 border-x border-slate-800">850+ Apps (Included in base)</td>
+                <td class="py-2.5 px-3 text-amber-400">Add-on required ($3.25/mo)</td>
+                <td class="py-2.5 px-3 text-slate-300">200+ Core Apps</td>
+                <td class="py-2.5 px-3 text-slate-300">350+ Enterprise Apps</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Bare-Metal OS Imaging</td>
+                <td class="py-2.5 px-3 font-bold text-emerald-400 bg-brand-orange/5 border-x border-slate-800">Native PXE & USB Deployment</td>
+                <td class="py-2.5 px-3 text-slate-400">Autopilot (Modern OS only)</td>
+                <td class="py-2.5 px-3 text-slate-500 font-mono">—</td>
+                <td class="py-2.5 px-3 text-emerald-400 font-bold">Native EPM Imaging</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Linux Distribution Support</td>
+                <td class="py-2.5 px-3 text-slate-200 bg-brand-orange/5 border-x border-slate-800">RHEL, Ubuntu, Debian, SUSE, Rocky</td>
+                <td class="py-2.5 px-3 text-slate-400">Ubuntu/RHEL (GUI only)</td>
+                <td class="py-2.5 px-3 text-slate-200">Ubuntu, Debian, RHEL, Fedora</td>
+                <td class="py-2.5 px-3 text-slate-200">RHEL, CentOS, Ubuntu, SLES</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Remote Desktop Protocol</td>
+                <td class="py-2.5 px-3 font-mono text-white bg-brand-orange/5 border-x border-slate-800">HTML5 WebRTC + Audio Chat</td>
+                <td class="py-2.5 px-3 font-mono text-slate-400">Remote Help (Add-on $3.50)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">Ninja Remote (Proprietary)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">Ivanti Remote Control</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Database Engine Options</td>
+                <td class="py-2.5 px-3 font-mono text-white bg-brand-orange/5 border-x border-slate-800">PostgreSQL (Bundled) / MS SQL</td>
+                <td class="py-2.5 px-3 font-mono text-slate-400">Azure Cosmos DB / SQL</td>
+                <td class="py-2.5 px-3 font-mono text-slate-400">Cloud DB (AWS)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-400">MS SQL Server Enterprise</td>
+              </tr>
+              <tr class="spec-table-row">
+                <td class="py-2.5 px-4 font-mono text-slate-400">Typical Pricing Unit</td>
+                <td class="py-2.5 px-3 font-mono text-cyan-300 bg-brand-orange/5 border-x border-slate-800">From $795/yr (50 nodes)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">$8/user/month (Standalone)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">Custom Quote (~$3-$5/device)</td>
+                <td class="py-2.5 px-3 font-mono text-slate-300">Annual Enterprise Quote</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-slate-925 border-t border-slate-800 flex justify-between items-center text-xs">
+        <span class="text-slate-400 font-mono">Specs benchmarked against official vendor documentation</span>
+        <button onclick="closeModal('diffModal')" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold font-mono">Close Diff</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: REPORT OUTDATED SPEC -->
+  <div id="reportModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('reportModal');">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="font-display font-bold text-base text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          Report Outdated or Inaccurate Spec
+        </h3>
+        <button onclick="closeModal('reportModal')" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Help keep the ITVedas technical spec database authoritative. If a software version has updated minimum RAM, protocol support, or pricing models, submit the correction below.
+      </p>
+      <form onsubmit="handleReportSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Target Software</label>
+          <input type="text" value="ManageEngine Endpoint Central" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-300 font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Spec Section / Attribute</label>
+          <select class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+            <option>Section 1: General & Architecture</option>
+            <option>Section 2: Platform & OS Compatibility</option>
+            <option>Section 3: Hardware & System Requirements</option>
+            <option>Section 4: Core Capabilities</option>
+            <option>Section 5: Identity, Security & Compliance</option>
+            <option>Section 6: Integrations & API</option>
+            <option>Section 7: Edition Matrix & Pricing</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Corrected Spec & Official Citation URL</label>
+          <textarea required rows="3" placeholder="Explain the discrepancy and provide link to official vendor documentation/release notes..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange"></textarea>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Your Email (for notification upon audit)</label>
+          <input type="email" placeholder="admin@company.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange font-mono">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('reportModal')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold">Submit Audit Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SUGGEST AN EDIT -->
+  <div id="suggestModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeModal('suggestModal');">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="font-display font-bold text-base text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Suggest a Software or Spec Addition
+        </h3>
+        <button onclick="closeModal('suggestModal')" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Suggest a new enterprise tool, RMM platform, or undocumented capability to include in the ITVedas database.
+      </p>
+      <form onsubmit="handleSuggestSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Software Title & Vendor</label>
+          <input required type="text" placeholder="e.g. Datto RMM (Kaseya)" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange">
+        </div>
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Primary Category</label>
+          <select class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+            <option>Unified Endpoint Management (UEM)</option>
+            <option>Remote Monitoring & Management (RMM)</option>
+            <option>Patch Management & Vulnerability</option>
+            <option>IT Service Management (ITSM)</option>
+            <option>Identity & Access Management (IAM)</option>
+            <option>Network Performance Monitoring (NPM)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Key Specs (Delivery, Minimum RAM, Supported OS)</label>
+          <textarea required rows="3" placeholder="Provide link to technical whitepaper or architecture guide..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-orange"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('suggestModal')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white font-bold">Submit Suggestion</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastNotification" class="fixed top-5 right-5 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl text-xs flex items-center gap-3 z-50 transform translate-y-[-150%] transition-transform duration-300">
+    <span id="toastIcon" class="text-emerald-400">✓</span>
+    <span id="toastMsg" class="font-medium">Action completed successfully.</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-800/80 py-10 text-xs text-slate-500 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <a href="/specs.html" class="flex items-center gap-2 font-display font-bold text-slate-300 text-base">
+          IT<span class="text-brand-orange">Vedas</span>
+        </a>
+        <span>— The Unbiased Technical Spec Database for IT & DevOps Software</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-6 text-slate-400 font-mono text-[11px]">
+        <a href="/specs.html" class="hover:text-brand-orange transition-colors">Spec Database</a>
+        <a href="/cve-database.html" class="hover:text-brand-orange transition-colors">CVE Intelligence</a>
+        <a href="/chapters.html" class="hover:text-brand-orange transition-colors">Curriculum Tracks</a>
+        <a href="/author/" class="hover:text-brand-orange transition-colors">Practitioner Leadership</a>
+        <a href="/terms-of-service.html" class="hover:text-brand-orange transition-colors">Terms</a>
+        <a href="/privacy-policy.html" class="hover:text-brand-orange transition-colors">Privacy</a>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 text-[10px] text-slate-600 text-center md:text-left">
+      © 2026 ITVedas. All specifications, hardware baselines, and feature matrices are curated directly from vendor administrative manuals and technical whitepapers. All trademarks belong to their respective holders.
+    </div>
+  </footer>
+
+  <script src="/js/specs-app.js"></script>
+</body>
+</html>
