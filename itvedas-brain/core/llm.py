@@ -34,11 +34,10 @@ def gemini(
     log_fn: Callable[[str], None] | None = None,
 ) -> str:
     """Call Google Gemini generateContent API, with automatic retry."""
-    key = (api_key or "").strip() or (
-        os.environ.get("GEMINI_API_KEY") or
-        os.environ.get("ANTHROPIC_API_KEY") or
-        os.environ.get("OPENAI_API_KEY") or ""
-    ).strip()
+    # Only ever send a Gemini key to Google. Never fall back to keys issued by
+    # other providers (ANTHROPIC_API_KEY / OPENAI_API_KEY): doing so would hand
+    # a third party's secret to Google's endpoint and its request logs.
+    key = ((api_key or "").strip() or os.environ.get("GEMINI_API_KEY", "")).strip()
 
     notify = log_fn or (lambda msg: _default_log("llm", msg))
     target_model = model or GEMINI_MODEL
@@ -47,8 +46,10 @@ def gemini(
         notify("Warning: GEMINI_API_KEY is not set.")
         return ""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent?key={key}"
-    headers = {"Content-Type": "application/json"}
+    # Key goes in a header, not the query string, so it can't leak into proxy,
+    # CDN or exception logs that record full URLs.
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent"
+    headers = {"Content-Type": "application/json", "x-goog-api-key": key}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -78,6 +79,8 @@ def gemini(
                         return strip_code_fence(parts[0].get("text", "").strip())
                 return ""
         except Exception as e:
+            # Defensive: never let the key appear in logged error text.
+            e = RuntimeError(str(e).replace(key, "***")) if key and key in str(e) else e
             if attempt == RETRY_ATTEMPTS - 1:
                 notify(f"Gemini API failed after {RETRY_ATTEMPTS} attempts: {e}")
                 raise
