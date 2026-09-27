@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review moderation | ITVedas</title>
+<meta name="description" content="Moderation tool for ITVedas software reviews.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.itvedas.com/software/reviews-admin/">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+<link rel="stylesheet" href="/software/software.css">
+</head>
+<body>
+<div class="sw-shell sw-admin">
+  <main class="sw-main">
+    <section class="panel panel-pad">
+      <h1 class="admin-h">Review moderation</h1>
+      <form class="admin-bar" id="admin-form">
+        <div class="rv-row">
+          <label for="token">Admin token</label>
+          <input id="token" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="rv-row">
+          <label for="product">Product</label>
+          <select id="product">
+            <option value="manageengine-endpoint-central">ManageEngine Endpoint Central</option>
+          </select>
+        </div>
+        <div class="rv-row">
+          <label for="status">Show</label>
+          <select id="status">
+            <option value="pending">Waiting for approval</option>
+            <option value="approved">Published</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">Load reviews</button>
+      </form>
+      <p class="rv-status" id="admin-msg" role="status" aria-live="polite">The token stays in this browser tab only.</p>
+    </section>
+    <section class="panel panel-pad">
+      <ol class="rv-list" id="admin-list"></ol>
+    </section>
+  </main>
+</div>
+<script src="/software/reviews-admin/admin.js" defer></script>
+</body>
+</html>
