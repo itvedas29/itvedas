@@ -12,7 +12,7 @@ def indexable(path):
     return True
 
 def get_html_files():
-    files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[]}
+    files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[],'software':[]}
     for f in ROOT.glob('*.html'):
         if f.name not in ['cve-database.html','cve-database-complete.html','index.html','404.html'] and indexable(f): files['main'].append(f)
     for d in (ROOT/'articles').glob('*/'):
@@ -29,6 +29,9 @@ def get_html_files():
     if d.is_dir(): files['manageengine']=[f for f in d.glob('*.html') if indexable(f)]
     d=ROOT/'tools'
     if d.is_dir(): files['tools']=[f for f in d.glob('*.html') if indexable(f)]
+    # Software spec sheets: software/<product>/index.html -> /software/<product>/
+    d=ROOT/'software'
+    if d.is_dir(): files['software']=[f for f in sorted(d.rglob('index.html')) if indexable(f)]
     return files
 
 def url(f):
@@ -63,7 +66,7 @@ def build():
     root.remove(root[-1]); u=ET.SubElement(root,'url'); ET.SubElement(u,'loc').text=SITE_URL; ET.SubElement(u,'lastmod').text=today; ET.SubElement(u,'changefreq').text='weekly'; ET.SubElement(u,'priority').text='1.0'
     priority={'news.html':(.9,'daily'),'security-news.html':(.9,'daily'),'career-paths.html':(.8,'monthly'),'career-navigator.html':(.8,'monthly'),'chapters.html':(.8,'weekly'),'quiz.html':(.7,'monthly'),'faq.html':(.7,'weekly'),'problems-solutions.html':(.7,'monthly')}
     for f in sorted(files['main']): p,fr=priority.get(f.name,(.6,'monthly')); add(f,fr,p)
-    for key,fr,p in [('chapters','weekly',.7),('chapter_hubs','weekly',.8),('chapter_content','monthly',.7),('articles','monthly',.8),('news','weekly',.7),('manageengine','monthly',.6),('tools','monthly',.7)]:
+    for key,fr,p in [('chapters','weekly',.7),('chapter_hubs','weekly',.8),('chapter_content','monthly',.7),('articles','monthly',.8),('news','weekly',.7),('manageengine','monthly',.6),('tools','monthly',.7),('software','monthly',.8)]:
         for f in sorted(files[key]): add(f,fr,p)
     ET.indent(root,space='  '); ET.ElementTree(root).write(ROOT/'sitemap.xml',encoding='utf-8',xml_declaration=True)
     total=sum(map(len,files.values()))+1
