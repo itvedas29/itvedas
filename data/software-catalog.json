@@ -1,0 +1,553 @@
+{
+  "generated_at": "2026-09-27T09:00:00Z",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "uem",
+      "name": "Unified Endpoint Management (UEM)",
+      "count": 14
+    },
+    {
+      "id": "rmm",
+      "name": "Remote Monitoring & Management (RMM)",
+      "count": 18
+    },
+    {
+      "id": "patch",
+      "name": "Patch Management & Vulnerability",
+      "count": 12
+    },
+    {
+      "id": "itsm",
+      "name": "IT Service Management (ITSM)",
+      "count": 9
+    },
+    {
+      "id": "iam",
+      "name": "Identity & Access Management (IAM)",
+      "count": 16
+    },
+    {
+      "id": "network",
+      "name": "Network Performance Monitoring",
+      "count": 11
+    }
+  ],
+  "software": [
+    {
+      "id": "manageengine-endpoint-central",
+      "name": "ManageEngine Endpoint Central",
+      "vendor": "Zoho Corporation",
+      "tagline": "Enterprise Unified Endpoint Management & Security Suite",
+      "logo": "assets/img/endpoint-central.svg",
+      "categories": [
+        "Unified Endpoint Management (UEM)",
+        "Client Management",
+        "Patch Management"
+      ],
+      "deployment": "Hybrid (On-Premise & Cloud SaaS)",
+      "deployment_types": [
+        "Cloud SaaS",
+        "On-Premise",
+        "Air-Gapped / Private Network"
+      ],
+      "pricing_model": "Per Endpoint / Tiered Annual License",
+      "free_tier": true,
+      "free_tier_desc": "Free Edition for up to 25 endpoints (Complete Endpoint Management)",
+      "max_tested_nodes": "25,000+ per server (100,000+ in Enterprise Distributed WAN)",
+      "min_node_scale": 1,
+      "max_node_scale": 100000,
+      "os_support": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "iOS",
+        "Android",
+        "ChromeOS",
+        "tvOS"
+      ],
+      "directory_sync": [
+        "Active Directory",
+        "Microsoft Entra ID",
+        "OpenLDAP"
+      ],
+      "min_ram_onprem": "8 GB (Up to 1,000 nodes)",
+      "recommended_ram_onprem": "16 GB - 32 GB (Up to 10,000 nodes)",
+      "db_backend": "PostgreSQL (Bundled) or Microsoft SQL Server (2014-2022)",
+      "rating": 9.4,
+      "popularity_rank": "#1 in UEM Spec Index",
+      "official_docs_url": "https://www.manageengine.com/products/desktop-central/help/",
+      "quick_specs": {
+        "os_matrix": "Windows (10/11/Server), macOS (12-15 Sequoia), Linux (RHEL/Ubuntu/Debian/SUSE), iOS (14+), Android (9+), ChromeOS",
+        "min_server_ram": "8 GB (On-Premise default)",
+        "directory_sync": "Active Directory, Entra ID, OpenLDAP, Okta SCIM",
+        "max_tested_nodes": "25,000+ endpoints per single Central Server instance",
+        "free_tier": "Yes — Fully functional up to 25 endpoints & 25 mobile devices",
+        "agent_footprint": "~45 MB RAM idle, ~1.2% CPU background scan",
+        "default_ports": "HTTPS 8383 (Agent-Server), 8027 (Notification Server), 8443 (Remote Access)",
+        "database_engine": "PostgreSQL 14+ (Bundled) or MS SQL Server Enterprise"
+      },
+      "specs": {
+        "section_1_architecture": {
+          "title": "General & Architecture",
+          "specs": [
+            {
+              "key": "Delivery Model",
+              "value": "Hybrid: On-Premise bare-metal/VM or Cloud SaaS (Zoho Cloud multi-DC)"
+            },
+            {
+              "key": "Protocol Support",
+              "value": "HTTPS (TLS 1.3/1.2), WebSocket, WebRTC (Remote Control), MQTT"
+            },
+            {
+              "key": "Multi-Tenant MSP Support",
+              "value": "Yes — Dedicated Endpoint Central MSP edition with tenant boundary isolation"
+            },
+            {
+              "key": "WAN Architecture",
+              "value": "Hub-and-Spoke with lightweight Distribution Servers for bandwidth optimization & throttling"
+            },
+            {
+              "key": "High Availability / Failover",
+              "value": "Active-Passive Failover Server with secondary IP takeover (<60s heartbeat)"
+            },
+            {
+              "key": "Proxy & Reverse Proxy",
+              "value": "Secure Gateway Server in DMZ for agent communication without VPN requirement"
+            },
+            {
+              "key": "NAT Traversal",
+              "value": "Built-in STUN/TURN relay for out-of-band remote control & patch broadcast"
+            }
+          ]
+        },
+        "section_2_platform": {
+          "title": "Platform & OS Compatibility",
+          "specs": [
+            {
+              "key": "Windows Desktop",
+              "value": "Windows 11 (all builds), Windows 10 (22H2 / Enterprise / LTSC), Windows 8.1 / 7 (Extended)"
+            },
+            {
+              "key": "Windows Server",
+              "value": "Windows Server 2025, 2022, 2019, 2016, 2012 R2, 2008 R2 (Core & Desktop Experience)"
+            },
+            {
+              "key": "macOS Support",
+              "value": "macOS 15 (Sequoia), macOS 14 (Sonoma), 13 (Ventura), 12 (Monterey) — Native Apple Silicon (M1/M2/M3/M4) & Intel"
+            },
+            {
+              "key": "Linux Distributions",
+              "value": "Ubuntu (18.04-24.04 LTS), RHEL (7-9), Debian (10-12), CentOS Stream, Rocky Linux, SUSE/SLES, Fedora"
+            },
+            {
+              "key": "Mobile Platforms",
+              "value": "iOS/iPadOS 14 to 18+, Android 9.0 to 15 (Android Enterprise Recommended), tvOS, iPadOS"
+            },
+            {
+              "key": "ChromeOS & IoT",
+              "value": "ChromeOS Enterprise enrollment, kiosk lockdown, and peripheral restriction"
+            }
+          ]
+        },
+        "section_3_hardware": {
+          "title": "Hardware & System Requirements",
+          "specs": [
+            {
+              "key": "Min CPU (Server)",
+              "value": "4 Cores (Intel Xeon or AMD EPYC / Modern x86-64)"
+            },
+            {
+              "key": "Recommended CPU",
+              "value": "8-16 Cores for >5,000 managed nodes"
+            },
+            {
+              "key": "Min RAM (Server)",
+              "value": "8 GB (up to 1,000 nodes with bundled PostgreSQL)"
+            },
+            {
+              "key": "Recommended RAM",
+              "value": "16 GB (1,000 - 5,000 nodes), 32 GB (5,000 - 25,000 nodes)"
+            },
+            {
+              "key": "Database Backend",
+              "value": "PostgreSQL 14.x (Embedded default, zero license cost) or Microsoft SQL Server (2014 to 2022)"
+            },
+            {
+              "key": "Storage IOPS",
+              "value": "Min 350 IOPS SSD; 1,500+ IOPS NVMe recommended for Patch Repository and Inventory indexing"
+            },
+            {
+              "key": "Disk Space",
+              "value": "100 GB OS/App installation + Variable Patch/Software Repository (typically 250 GB - 1 TB)"
+            },
+            {
+              "key": "Agent Footprint",
+              "value": "<50 MB memory usage; silent background execution with bandwidth throttling limits"
+            }
+          ]
+        },
+        "section_4_capabilities": {
+          "title": "Core Capabilities",
+          "specs": [
+            {
+              "key": "3rd-Party Patch Catalog",
+              "value": "850+ Pre-tested 3rd-party application catalog (Adobe, Chrome, Zoom, Firefox, Slack, etc.)"
+            },
+            {
+              "key": "OS Patch Coverage",
+              "value": "Windows cumulative updates, macOS security updates, Linux kernel/package advisories"
+            },
+            {
+              "key": "Software Deployment Formats",
+              "value": "MSI, EXE, MSP, MSU, PKG, DMG, DEB, RPM, APPX, shell scripts, PowerShell scripts"
+            },
+            {
+              "key": "Remote Desktop Protocols",
+              "value": "Integrated HTML5 WebRTC remote control, multi-monitor switching, clipboard transfer, audio chat"
+            },
+            {
+              "key": "OS Bare-Metal Imaging",
+              "value": "Automated imaging via PXE boot, USB boot media, driver repository auto-injection"
+            },
+            {
+              "key": "Asset & License Management",
+              "value": "Hardware telemetry, software metering, prohibited software auto-uninstallation, warranty tracking"
+            },
+            {
+              "key": "Peripheral & Device Control",
+              "value": "USB port blocking, read-only enforcement, printer auditing, Bluetooth device restriction"
+            }
+          ]
+        },
+        "section_5_security": {
+          "title": "Identity, Security & Compliance",
+          "specs": [
+            {
+              "key": "SSO & Identity Provider",
+              "value": "SAML 2.0 (Okta, Entra ID, PingIdentity, OneLogin, Google Workspace), OAuth 2.0"
+            },
+            {
+              "key": "Multi-Factor Authentication",
+              "value": "TOTP (Google/Microsoft Authenticator), Email OTP, SMS, Duo Security, RADIUS"
+            },
+            {
+              "key": "RBAC Granularity",
+              "value": "Role-Based Access Control with custom scope definitions down to individual computer groups"
+            },
+            {
+              "key": "Data Encryption",
+              "value": "AES-256 at rest, TLS 1.3 in transit between agents, servers, and distribution nodes"
+            },
+            {
+              "key": "Audit Logging",
+              "value": "Tamper-evident audit trails with SIEM forwarding (Syslog, CEF, JSON)"
+            },
+            {
+              "key": "Compliance Certifications",
+              "value": "SOC 2 Type II, ISO/IEC 27001:2022, HIPAA, GDPR, FedRAMP Moderate (Cloud)"
+            }
+          ]
+        },
+        "section_6_integrations": {
+          "title": "Integrations & API",
+          "specs": [
+            {
+              "key": "ITSM Integrations",
+              "value": "ManageEngine ServiceDesk Plus (native bidirectional), Jira Service Management, ServiceNow, Zendesk"
+            },
+            {
+              "key": "SIEM & Observability",
+              "value": "Splunk, ManageEngine Log360, Datadog, Elastic, Microsoft Sentinel"
+            },
+            {
+              "key": "API Architecture",
+              "value": "RESTful API v2 with comprehensive OpenAPI/Swagger documentation and API key / OAuth tokens"
+            },
+            {
+              "key": "Automation & SDKs",
+              "value": "PowerShell module, Python SDK, webhooks for real-time alert triggers"
+            }
+          ]
+        },
+        "section_7_editions": {
+          "title": "Edition Comparison Matrix",
+          "editions": [
+            {
+              "name": "Professional",
+              "target": "SMB & Single LAN",
+              "pricing": "From $795/yr (50 nodes)"
+            },
+            {
+              "name": "Enterprise",
+              "target": "Mid-to-Large Distributed Enterprises",
+              "pricing": "From $945/yr (50 nodes)"
+            },
+            {
+              "name": "UEM Edition",
+              "target": "Complete Unified Endpoint & Mobile Management",
+              "pricing": "From $1,195/yr (50 nodes)"
+            },
+            {
+              "name": "Security Edition",
+              "target": "Hardened Endpoint Defense & Vulnerability",
+              "pricing": "From $1,695/yr (50 nodes)"
+            }
+          ],
+          "features": [
+            {
+              "feature": "Automated Patch Management (OS & 3rd-Party)",
+              "pro": true,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Software Deployment (MSI / EXE / Scripts)",
+              "pro": true,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Asset Intelligence & Inventory Management",
+              "pro": true,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Remote Desktop & File Transfer (WebRTC)",
+              "pro": true,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "WAN Distribution Servers (Bandwidth Throttle)",
+              "pro": false,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Multi-Domain Active Directory Management",
+              "pro": false,
+              "ent": true,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Failover Server (High Availability)",
+              "pro": "Add-on",
+              "ent": "Included",
+              "uem": "Included",
+              "sec": "Included"
+            },
+            {
+              "feature": "Full Mobile Device Management (iOS, Android, tvOS)",
+              "pro": false,
+              "ent": false,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Modern Management (Windows 11 / macOS MDM)",
+              "pro": false,
+              "ent": false,
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "OS Bare-Metal Deployment & Imaging",
+              "pro": "Add-on",
+              "ent": "Add-on",
+              "uem": true,
+              "sec": true
+            },
+            {
+              "feature": "Vulnerability & Threat Assessment",
+              "pro": false,
+              "ent": false,
+              "uem": false,
+              "sec": true
+            },
+            {
+              "feature": "Application Control & Zero-Trust Whitelisting",
+              "pro": false,
+              "ent": false,
+              "uem": false,
+              "sec": true
+            },
+            {
+              "feature": "Browser Security & Web Filtering",
+              "pro": false,
+              "ent": false,
+              "uem": false,
+              "sec": true
+            },
+            {
+              "feature": "Endpoint DLP & BitLocker Management",
+              "pro": false,
+              "ent": false,
+              "uem": "Add-on",
+              "sec": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "microsoft-intune",
+      "name": "Microsoft Intune",
+      "vendor": "Microsoft Corporation",
+      "tagline": "Cloud-Native Unified Endpoint Management & Conditional Access",
+      "categories": [
+        "Unified Endpoint Management (UEM)",
+        "Mobile Device Management (MDM)",
+        "Cloud Compliance"
+      ],
+      "deployment": "100% Cloud SaaS",
+      "deployment_types": [
+        "Cloud SaaS"
+      ],
+      "pricing_model": "Per User/Month (E3/E5 bundle or standalone $8/user/mo)",
+      "free_tier": false,
+      "free_tier_desc": "30-day trial only (No permanent free tier)",
+      "max_tested_nodes": "Unlimited (Global Microsoft Azure scale)",
+      "min_node_scale": 1,
+      "max_node_scale": 500000,
+      "os_support": [
+        "Windows",
+        "macOS",
+        "iOS",
+        "Android",
+        "Linux (Ubuntu/RHEL GUI)",
+        "ChromeOS (Basic)"
+      ],
+      "directory_sync": [
+        "Microsoft Entra ID (Native)",
+        "Active Directory via Entra Connect"
+      ],
+      "min_ram_onprem": "N/A (Cloud SaaS)",
+      "recommended_ram_onprem": "N/A (Cloud SaaS)",
+      "db_backend": "Managed Azure Cosmos DB / SQL (Microsoft Managed)",
+      "rating": 9.1,
+      "popularity_rank": "#2 in UEM Spec Index",
+      "diff_highlights": {
+        "pros": [
+          "Unmatched Microsoft 365 & Entra ID conditional access integration",
+          "Zero on-premise infrastructure requirement",
+          "Native Windows Autopilot out-of-box provisioning"
+        ],
+        "cons": [
+          "No native on-premise deployment option (Cloud only)",
+          "3rd-party patching requires Enterprise App Management add-on ($3.25/user/mo)",
+          "Limited bare-metal OS imaging capabilities compared to Endpoint Central"
+        ]
+      }
+    },
+    {
+      "id": "ninjaone",
+      "name": "NinjaOne",
+      "vendor": "NinjaOne LLC",
+      "tagline": "High-Velocity RMM & Multi-Tenant Endpoint Management for MSPs & IT",
+      "categories": [
+        "Remote Monitoring & Management (RMM)",
+        "Unified Endpoint Management (UEM)",
+        "Patch Management"
+      ],
+      "deployment": "100% Cloud SaaS",
+      "deployment_types": [
+        "Cloud SaaS"
+      ],
+      "pricing_model": "Custom Quote / Per Device/Month (approx. $3-$5/device/mo)",
+      "free_tier": false,
+      "free_tier_desc": "14-day trial only (No permanent free tier)",
+      "max_tested_nodes": "50,000+ per multi-tenant organization",
+      "min_node_scale": 25,
+      "max_node_scale": 100000,
+      "os_support": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "VMware ESXi",
+        "SNMP Network Devices"
+      ],
+      "directory_sync": [
+        "Active Directory",
+        "Microsoft Entra ID",
+        "Okta"
+      ],
+      "min_ram_onprem": "N/A (Cloud SaaS)",
+      "recommended_ram_onprem": "N/A (Cloud SaaS)",
+      "db_backend": "Multi-tenant Cloud DB (AWS-hosted)",
+      "rating": 9.2,
+      "popularity_rank": "#3 in UEM Spec Index",
+      "diff_highlights": {
+        "pros": [
+          "Industry-leading fast, lightweight web UI",
+          "Deep network device SNMP monitoring & backup",
+          "Native cloud-first multi-tenant MSP architecture"
+        ],
+        "cons": [
+          "No permanent free tier (trial only)",
+          "No on-premise self-hosted variant for air-gapped defense networks",
+          "Mobile device management (MDM) is less comprehensive than full UEMs"
+        ]
+      }
+    },
+    {
+      "id": "ivanti-neurons",
+      "name": "Ivanti Neurons for UEM",
+      "vendor": "Ivanti, Inc.",
+      "tagline": "AI-Driven Autonomous Endpoint Discovery, Healing & Workspace Security",
+      "categories": [
+        "Unified Endpoint Management (UEM)",
+        "Client Management",
+        "Autonomous IT"
+      ],
+      "deployment": "Hybrid (On-Premise & Cloud SaaS)",
+      "deployment_types": [
+        "Cloud SaaS",
+        "On-Premise"
+      ],
+      "pricing_model": "Per Node / Annual Subscription or Perpetual License",
+      "free_tier": false,
+      "free_tier_desc": "Enterprise pilot only (No permanent free tier)",
+      "max_tested_nodes": "100,000+ (High-end enterprise clusters)",
+      "min_node_scale": 250,
+      "max_node_scale": 250000,
+      "os_support": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "iOS",
+        "Android",
+        "Zebra / Rugged IoT"
+      ],
+      "directory_sync": [
+        "Active Directory",
+        "Microsoft Entra ID",
+        "LDAP"
+      ],
+      "min_ram_onprem": "16 GB (On-Prem Server)",
+      "recommended_ram_onprem": "32 GB - 64 GB for large environments",
+      "db_backend": "Microsoft SQL Server Enterprise",
+      "rating": 8.8,
+      "popularity_rank": "#4 in UEM Spec Index",
+      "diff_highlights": {
+        "pros": [
+          "Excellent ruggedized Android/Zebra IoT device management",
+          "Autonomous AI self-healing endpoint bots",
+          "Deep integration with Ivanti Neurons for ITSM"
+        ],
+        "cons": [
+          "Steeper learning curve and heavy administrative overhead",
+          "Higher barrier to entry (no free tier, high minimum seat count)",
+          "Requires dedicated MS SQL Enterprise server licensing on-prem"
+        ]
+      }
+    }
+  ]
+}
