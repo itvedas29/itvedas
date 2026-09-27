@@ -1,0 +1,2528 @@
+From a9ec53d5fad3c25eddd7d0075ded29ed506e1fd2 Mon Sep 17 00:00:00 2001
+From: ITVedas <bot@itvedas.com>
+Date: Sun, 27 Sep 2026 13:55:32 +0000
+Subject: [PATCH] Remove Anthropic API key usage; Gemini-only
+
+- Delete disabled publish-articles-2hourly workflow and its Anthropic-only auto-publisher
+- Delete 4 unused Anthropic-only archive scripts
+- career-advice.js: drop ANTHROPIC_API_KEY fallback; send Gemini key via x-goog-api-key header instead of URL
+- core/llm.py: remove Anthropic mentions from comments
+- docs: replace ANTHROPIC_API_KEY setup instructions with GEMINI_API_KEY
+---
+ .../workflows/publish-articles-2hourly.yml    |  92 ----
+ docs/API.md                                   |   6 +-
+ docs/AUTO_PUBLISHING_GUIDE.md                 |  10 +-
+ docs/CVE_AUTOMATION_SETUP.md                  |   4 +-
+ docs/DEPLOYMENT.md                            |   6 +-
+ docs/DEPLOYMENT_CHECKLIST.md                  |  10 +-
+ docs/PROJECT_AUDIT.md                         |   6 +-
+ docs/QUICK_START.md                           |  10 +-
+ docs/REPOSITORY_KNOWLEDGE_MAP.md              |  26 +-
+ functions/api/career-advice.js                |   6 +-
+ itvedas-brain/archive/README.md               |  10 +-
+ .../archive/generate-phase6-articles.py       | 511 ------------------
+ .../archive/phase6-content-generator.py       | 241 ---------
+ itvedas-brain/archive/phase6-publisher.py     | 495 -----------------
+ .../archive/video-generator-2hourly.py        | 369 -------------
+ itvedas-brain/auto-publisher-2hourly.py       | 320 -----------
+ itvedas-brain/core/llm.py                     |   6 +-
+ 17 files changed, 51 insertions(+), 2077 deletions(-)
+ delete mode 100644 .github/workflows/publish-articles-2hourly.yml
+ delete mode 100755 itvedas-brain/archive/generate-phase6-articles.py
+ delete mode 100644 itvedas-brain/archive/phase6-content-generator.py
+ delete mode 100755 itvedas-brain/archive/phase6-publisher.py
+ delete mode 100644 itvedas-brain/archive/video-generator-2hourly.py
+ delete mode 100644 itvedas-brain/auto-publisher-2hourly.py
+
+diff --git a/.github/workflows/publish-articles-2hourly.yml b/.github/workflows/publish-articles-2hourly.yml
+deleted file mode 100644
+index c545822b3..000000000
+--- a/.github/workflows/publish-articles-2hourly.yml
++++ /dev/null
+@@ -1,92 +0,0 @@
+-name: Publish Article Every 2 Hours
+-
+-# DISABLED 2026-07-17: audit found this workflow has never successfully
+-# published anything. Its own itvedas-brain/publisher.log shows every
+-# recorded run failing with "ERROR: ANTHROPIC_API_KEY not set", and
+-# articles/auto-generated/ has zero files in the repo's entire commit
+-# history despite dozens of scheduled runs. A prior fix attempt
+-# (commit 2191eb9, "Add API key verification step to debug workflow
+-# failures") didn't resolve it. This pipeline is also functionally
+-# redundant with itvedas-brain/news-agent.py, which runs hourly via
+-# write-article.yml and IS publishing successfully.
+-#
+-# Before re-enabling the schedule below: confirm ANTHROPIC_API_KEY is
+-# set in Settings -> Secrets and variables -> Actions for this repo,
+-# then run this workflow manually via workflow_dispatch and check that
+-# a file actually lands in articles/auto-generated/ and gets committed.
+-on:
+-  # schedule:
+-  #   # Run every 2 hours: 12 times per day
+-  #   # IST = UTC + 5:30, so for 12:00 PM IST, use 6:30 UTC
+-  #   # Schedule: 6:30, 8:30, 10:30 AM IST onwards
+-  #   - cron: '30 6,8,10,12,14,16,18,20,22,0,2,4 * * *'
+-
+-  # Allow manual trigger only, for now (see note above)
+-  workflow_dispatch:
+-    inputs:
+-      test_mode:
+-        description: 'Run in test mode (generate 1 article)'
+-        required: false
+-        default: 'true'
+-
+-jobs:
+-  publish:
+-    runs-on: ubuntu-latest
+-    permissions:
+-      contents: write
+-
+-    steps:
+-      - name: Checkout repository
+-        uses: actions/checkout@v4
+-        with:
+-          fetch-depth: 0
+-
+-      - name: Set up Python
+-        uses: actions/setup-python@v4
+-        with:
+-          python-version: '3.11'
+-
+-      - name: Install dependencies
+-        run: |
+-          python -m pip install --upgrade pip
+-          pip install anthropic
+-
+-      - name: Verify API Key
+-        run: |
+-          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+-            echo "❌ ERROR: ANTHROPIC_API_KEY secret not set in GitHub!"
+-            echo "Please add the secret in: Settings → Secrets and variables → Actions"
+-            exit 1
+-          else
+-            echo "✅ API Key secret is configured"
+-          fi
+-
+-      - name: Generate and publish article
+-        env:
+-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+-        run: |
+-          python3 itvedas-brain/auto-publisher-2hourly.py test
+-
+-      - name: Check for new articles
+-        id: check_new
+-        run: |
+-          if [ -n "$(git status --porcelain articles/auto-generated/)" ]; then
+-            echo "new_articles=true" >> $GITHUB_OUTPUT
+-          else
+-            echo "new_articles=false" >> $GITHUB_OUTPUT
+-          fi
+-
+-      - name: Commit and push new articles
+-        if: steps.check_new.outputs.new_articles == 'true'
+-        run: |
+-          git config user.name "Article Bot"
+-          git config user.email "bot@itvedas.com"
+-          git add articles/auto-generated/
+-          git commit -m "chore: Auto-publish article $(date +%Y-%m-%d\ %H:%M:%S)"
+-          git pull --rebase --autostash origin main
+-          git push origin HEAD:main
+-
+-      - name: Report status
+-        run: |
+-          echo "✅ Article published at $(date '+%Y-%m-%d %H:%M:%S')"
+-          echo "Articles in queue: $(ls -1 articles/auto-generated/*.html 2>/dev/null | wc -l)"
+diff --git a/docs/API.md b/docs/API.md
+index 245e21f7b..8d518ee96 100644
+--- a/docs/API.md
++++ b/docs/API.md
+@@ -130,7 +130,7 @@ Get personalized IT career path recommendations based on quiz answers.
+ - `400` - Invalid JSON or validation error
+ - `403` - Origin not allowed (CORS violation)
+ - `500` - Server error
+-- `502` - Claude API service error
++- `502` - Gemini API service error
+ 
+ #### Security
+ - Origin validation (whitelisted domains + localhost dev)
+@@ -187,7 +187,7 @@ Referrer-Policy: strict-origin-when-cross-origin
+ ## Environment Variables
+ 
+ ### Required
+-- `ANTHROPIC_API_KEY` - Claude API key for career advice generation
++- `GEMINI_API_KEY` - Google Gemini API key for career advice generation
+ 
+ ### Optional
+ - `DEBUG` - Enable debug logging (development only)
+@@ -254,7 +254,7 @@ if (data.success) {
+ - Limit to 6000 total characters across all answers
+ 
+ ### API Service Error (502)
+-- Claude API may be temporarily unavailable
++- Gemini API may be temporarily unavailable
+ - Retry with exponential backoff
+ - Check API key configuration
+ 
+diff --git a/docs/AUTO_PUBLISHING_GUIDE.md b/docs/AUTO_PUBLISHING_GUIDE.md
+index cdaa8367d..c073191bd 100644
+--- a/docs/AUTO_PUBLISHING_GUIDE.md
++++ b/docs/AUTO_PUBLISHING_GUIDE.md
+@@ -69,12 +69,12 @@
+ 
+ ### Step 1: Verify API Key
+ 
+-Make sure `ANTHROPIC_API_KEY` is set in GitHub Secrets:
++Make sure `GEMINI_API_KEY` is set in GitHub Secrets:
+ 
+ ```bash
+ # In GitHub repo settings:
+ # Settings → Secrets and variables → Actions
+-# Add: ANTHROPIC_API_KEY = sk-ant-...
++# Add: GEMINI_API_KEY = <your Gemini key>
+ ```
+ 
+ ### Step 2: Test Locally
+@@ -197,7 +197,7 @@ Status: Multiple keyword rankings per topic
+ ## 📊 Content Quality
+ 
+ ### AI Model Used
+-- **Claude Opus** (most capable)
++- **Google Gemini 2.5 Flash**
+ - 1500-2000 words per article
+ - SEO-optimized structure
+ - Beginner-friendly language
+@@ -309,7 +309,7 @@ ls articles/auto-generated/*.html | wc -l
+ ## ⚠️ Important Notes
+ 
+ ### Rate Limiting
+-- Claude API has rate limits (depends on plan)
++- Gemini API has rate limits (depends on plan)
+ - If hitting limits, space out articles (every 4-6 hours instead of 2)
+ - Add sleep/delay between API calls if needed
+ 
+@@ -366,7 +366,7 @@ ls articles/auto-generated/*.html | wc -l
+ ## 📞 Troubleshooting
+ 
+ ### No articles generated?
+-1. Check ANTHROPIC_API_KEY in GitHub Secrets
++1. Check GEMINI_API_KEY in GitHub Secrets
+ 2. Verify API key has available quota
+ 3. Check GitHub Actions logs for error messages
+ 4. Test locally first: `python3 auto-publisher-2hourly.py test`
+diff --git a/docs/CVE_AUTOMATION_SETUP.md b/docs/CVE_AUTOMATION_SETUP.md
+index 96ec7438c..6364b83dd 100644
+--- a/docs/CVE_AUTOMATION_SETUP.md
++++ b/docs/CVE_AUTOMATION_SETUP.md
+@@ -130,11 +130,11 @@ Cloudflare Pages build hook runs aggregator automatically
+ ## 🔐 Secrets & Environment Variables
+ 
+ ### Required Secret in GitHub
+-You need to add the Anthropic API key to GitHub:
++You need to add the Google Gemini API key to GitHub:
+ 
+ 1. Go to: **GitHub Repo → Settings → Secrets and variables → Actions**
+ 2. Click **"New repository secret"**
+-3. Name: `ANTHROPIC_API_KEY`
++3. Name: `GEMINI_API_KEY`
+ 4. Value: Your API key (from `.env` or secrets manager)
+ 5. Click **Add secret**
+ 
+diff --git a/docs/DEPLOYMENT.md b/docs/DEPLOYMENT.md
+index 89cef08d3..a9e2f9ae0 100644
+--- a/docs/DEPLOYMENT.md
++++ b/docs/DEPLOYMENT.md
+@@ -96,9 +96,9 @@ nano .env
+ 
+ ```
+ # ── Content generation ──────────────────────────────────────────
+-# Claude = primary (decisions/QA/review/traffic control), OpenAI = secondary (article writing)
+-ANTHROPIC_API_KEY=
+-OPENAI_API_KEY=
++# Google Gemini (gemini-2.5-flash) handles all generation and review
++GEMINI_API_KEY=
++GEMINI_MODEL=gemini-2.5-flash
+ OPENAI_MODEL=gpt-4o-mini
+ GA4_ID=G-XXXXXXXXXX
+ 
+diff --git a/docs/DEPLOYMENT_CHECKLIST.md b/docs/DEPLOYMENT_CHECKLIST.md
+index 94397e76b..111761bb8 100644
+--- a/docs/DEPLOYMENT_CHECKLIST.md
++++ b/docs/DEPLOYMENT_CHECKLIST.md
+@@ -14,8 +14,8 @@
+ 
+ **Action:**
+ 1. Click **"New repository secret"**
+-2. **Name:** `ANTHROPIC_API_KEY`
+-3. **Value:** Your Anthropic API key (starts with `sk-ant-`)
++2. **Name:** `GEMINI_API_KEY`
++3. **Value:** Your Google Gemini API key (from Google AI Studio)
+ 4. Click **"Add secret"**
+ 
+ **Verification:**
+@@ -207,10 +207,10 @@ CTR: 0.5-2%
+ 3. Click menu → "Enable workflow"
+ 4. Trigger manually to test
+ 
+-### Issue: "ANTHROPIC_API_KEY not set"
++### Issue: "GEMINI_API_KEY not set"
+ **Solution:**
+ 1. Go to GitHub repo → Settings → Secrets
+-2. Verify `ANTHROPIC_API_KEY` secret exists
++2. Verify `GEMINI_API_KEY` secret exists
+ 3. Try deleting and re-adding the secret
+ 4. Test with manual trigger
+ 
+@@ -276,7 +276,7 @@ MONTH 3+ (1800+ articles) ⭐⭐⭐
+ ## ✨ Features Included
+ 
+ ✅ **12 articles/day automated**  
+-✅ **AI-generated (Claude Opus)**  
++✅ **AI-generated (Gemini 2.5 Flash)**  
+ ✅ **SEO-optimized structure**  
+ ✅ **Hreflang tags (multi-country)**  
+ ✅ **Internal linking enabled**  
+diff --git a/docs/PROJECT_AUDIT.md b/docs/PROJECT_AUDIT.md
+index ea79c1c45..bda655656 100644
+--- a/docs/PROJECT_AUDIT.md
++++ b/docs/PROJECT_AUDIT.md
+@@ -17,7 +17,7 @@ Static HTML site — **no frontend framework, no build tool, no `package.json`**
+ ## 2. Backend
+ 
+ Two Cloudflare Pages Functions only:
+-- `functions/api/career-advice.js` — powers the Career Navigator quiz. Server-side call to Anthropic (`claude-haiku-4-5-20251001`), origin-allowlist check, input capped at 6000 chars, output fields bounded. No rate limiting or fetch timeout.
++- `functions/api/career-advice.js` — powers the Career Navigator quiz. Server-side call to Google Gemini (`gemini-2.5-flash`), origin-allowlist check, input capped at 6000 chars, output fields bounded. No rate limiting or fetch timeout.
+ - `functions/api/subscribe.js` — newsletter signup. Validates email, dedupes via a Cloudflare KV binding (`env.SUBSCRIBERS`) that **is not declared in `wrangler.toml`** — meaning in the current repo state, subscriptions likely aren't actually persisted anywhere (the endpoint no-ops gracefully and still returns success). The static `data/subscribers.json` (empty) is disconnected dead data.
+ 
+ No rate limiting, SSRF protection, or request-size limiting exists anywhere server-side (not currently needed — neither function proxies arbitrary user-controlled URLs).
+@@ -109,7 +109,7 @@ None. No accounts, no login, no sessions beyond an anonymous analytics session I
+ 
+ ## 17. Environment variables
+ 
+-`ANTHROPIC_API_KEY` (required, career-advice + content QA), `OPENAI_API_KEY`/`OPENAI_MODEL` (required for article drafting but undocumented in README/API.md), `GA4_ID`, `NOTIFY_EMAIL`/`SMTP_FROM`/`SMTP_PASS`, `GITHUB_TOKEN`, `NVD_API_KEY` (CVE ingestion rate limit), `ITVEDAS_ENV`/`LOG_LEVEL`/`DEBUG`. `.env.example` also lists `analytics-agent.py`/`search-console-agent.py`/`github-agent.py` env vars for scripts **that no longer exist** — stale, should be pruned. The `env.SUBSCRIBERS` KV binding used in code is not declared in `wrangler.toml` (see §2/§4).
++`GEMINI_API_KEY` (required, career-advice + all content generation/QA), `GEMINI_MODEL` (optional), `GA4_ID`, `NOTIFY_EMAIL`/`SMTP_FROM`/`SMTP_PASS`, `GITHUB_TOKEN`, `NVD_API_KEY` (CVE ingestion rate limit), `ITVEDAS_ENV`/`LOG_LEVEL`/`DEBUG`. `.env.example` also lists `analytics-agent.py`/`search-console-agent.py`/`github-agent.py` env vars for scripts **that no longer exist** — stale, should be pruned. The `env.SUBSCRIBERS` KV binding used in code is not declared in `wrangler.toml` (see §2/§4).
+ 
+ ## 18. Tests
+ 
+@@ -117,7 +117,7 @@ None. No accounts, no login, no sessions beyond an anonymous analytics session I
+ 
+ ## 19. CI/CD
+ 
+-6 GitHub Actions workflows: CVE sync (×2, staggered, **writing to two different, undocumented-as-a-pair JSON files** — `cve-database-full.json` via `scripts/cve_ingestion.py` vs. `data/cves-2025-2026.json` via `itvedas-brain/cve-aggregator.py`, unclear if/how reconciled), static-site validation + sitemap regen on push to `main`, the main "Autopilot" content pipeline (articles + news), a **disabled** 2-hourly publisher workflow (confirmed dead — every run failed on missing `ANTHROPIC_API_KEY`, redundant with the working news-agent path, kept only for manual dispatch), and a one-off link-bug-fix workflow.
++6 GitHub Actions workflows: CVE sync (×2, staggered, **writing to two different, undocumented-as-a-pair JSON files** — `cve-database-full.json` via `scripts/cve_ingestion.py` vs. `data/cves-2025-2026.json` via `itvedas-brain/cve-aggregator.py`, unclear if/how reconciled), static-site validation + sitemap regen on push to `main`, the main "Autopilot" content pipeline (articles + news), a **disabled** 2-hourly publisher workflow (confirmed dead — every run failed on missing `GEMINI_API_KEY`, redundant with the working news-agent path, kept only for manual dispatch), and a one-off link-bug-fix workflow.
+ 
+ ## 20. Monitoring
+ 
+diff --git a/docs/QUICK_START.md b/docs/QUICK_START.md
+index 387d3442f..d07933e76 100644
+--- a/docs/QUICK_START.md
++++ b/docs/QUICK_START.md
+@@ -13,8 +13,8 @@
+ ```
+ Go to: GitHub repo → Settings → Secrets and variables → Actions
+ Click: "New repository secret"
+-Name:  ANTHROPIC_API_KEY
+-Value: sk-ant-... (your Anthropic API key)
++Name:  GEMINI_API_KEY
++Value: your Google Gemini API key (from Google AI Studio)
+ Click: "Add secret"
+ ```
+ 
+@@ -53,7 +53,7 @@ Wait: 2-3 minutes for completion
+ 
+ **Minute 0-2:**
+ - GitHub Action triggers
+-- Claude API generates article
++- Gemini API generates article
+ - HTML file created with SEO markup
+ - Git commit prepared
+ 
+@@ -191,7 +191,7 @@ grep -i hreflang articles/auto-generated/*.html
+ 
+ **Action 1: Add GitHub Secret (1 minute)**
+ ```
+-Repository → Settings → Secrets → Add ANTHROPIC_API_KEY
++Repository → Settings → Secrets → Add GEMINI_API_KEY
+ ```
+ 
+ **Action 2: Enable Workflow (30 seconds)**
+@@ -238,7 +238,7 @@ Year 1 Potential:        ₹150,000-400,000+
+ 
+ ### Your exact next steps:
+ 
+-1. ⬜ Add GitHub secret (ANTHROPIC_API_KEY)
++1. ⬜ Add GitHub secret (GEMINI_API_KEY)
+ 2. ⬜ Enable workflow in GitHub Actions
+ 3. ⬜ Click "Run workflow" button
+ 4. ⬜ Wait 2-3 minutes for first article
+diff --git a/docs/REPOSITORY_KNOWLEDGE_MAP.md b/docs/REPOSITORY_KNOWLEDGE_MAP.md
+index db94484a7..0cfa62fa5 100644
+--- a/docs/REPOSITORY_KNOWLEDGE_MAP.md
++++ b/docs/REPOSITORY_KNOWLEDGE_MAP.md
+@@ -11,7 +11,7 @@ ITVedas is a static content site with two autonomous Python content agents, one
+ 
+ The autopilot has two independent lanes:
+ 
+-1. **Evergreen article lane** - `scripts/brain.py` selects the next keyword from an embedded calendar, asks Anthropic Claude to write and review an article, renders HTML, updates navigation surfaces, persists state, and optionally emails a notification.
++1. **Evergreen article lane** - `scripts/brain.py` selects the next keyword from an embedded calendar, asks Google Gemini to write and review an article, renders HTML, updates navigation surfaces, persists state, and optionally emails a notification.
+ 2. **News lane** - `scripts/news_agent_v2.py` reads six RSS feeds, classifies and deduplicates headlines, asks Claude for original commentary, writes up to four news pages, persists a rolling 40-story state file, and rebuilds `news.html`.
+ 
+ Both lanes are scheduled and published by `.github/workflows/write-article.yml`. The workflow commits generated files directly to `main` using `GITHUB_TOKEN`. The repository itself has no build system, package manifest, or deployment configuration. Static hosting/deployment is therefore controlled outside this repository. The presence of `functions/api/career-advice.js` establishes Cloudflare Pages Functions as the intended server runtime.
+@@ -44,7 +44,7 @@ flowchart TD
+   Workflow --> ArticleAgent["scripts/brain.py"]
+   Workflow --> NewsAgent["scripts/news_agent_v2.py"]
+ 
+-  ArticleAgent --> Anthropic["Anthropic Messages API"]
++  ArticleAgent --> Gemini["Google Gemini API"]
+   ArticleState["brain/state.json"] --> ArticleAgent
+   ArticleAgent --> Articles["articles/YYYY-MM-DD-topic[-n].html"]
+   ArticleAgent --> Home["index.html latest articles"]
+@@ -56,7 +56,7 @@ flowchart TD
+ 
+   Feeds["Six external RSS feeds"] --> NewsAgent
+   NewsState["brain/news_state.json"] --> NewsAgent
+-  NewsAgent --> Anthropic
++  NewsAgent --> Gemini
+   NewsAgent --> NewsPages["news/*.html"]
+   NewsAgent --> NewsIndex["news.html"]
+   NewsAgent --> NewsState
+@@ -65,7 +65,7 @@ flowchart TD
+   Git --> Host["External static deployment, likely Cloudflare Pages"]
+ 
+   Navigator["career-navigator.html"] --> CareerAPI["functions/api/career-advice.js"]
+-  CareerAPI --> Anthropic
++  CareerAPI --> Gemini
+   Search["index.html search UI"] --> SearchIndex["search-index.json"]
+   Quiz["quiz.html"] --> QuizData["quiz-data.json"]
+ ```
+@@ -101,7 +101,7 @@ Publishing sequence:
+ 7. Commit only when staged changes exist.
+ 8. Push directly to `main`.
+ 
+-Required secret: `ANTHROPIC_API_KEY`.
++Required secret: `GEMINI_API_KEY`.
+ 
+ Optional article secrets: `GA4_ID`, `NOTIFY_EMAIL`, `SMTP_FROM`, and `SMTP_PASS`.
+ 
+@@ -131,7 +131,7 @@ This workflow validates after content has already been pushed. It does not gate
+ 
+ The following are code, not external configuration:
+ 
+-- Anthropic model: `claude-haiku-4-5-20251001`
++- Gemini model: `gemini-2.5-flash`
+ - Site URL/name/contact
+ - Eight-chapter taxonomy and display metadata
+ - Topic-to-chapter aliases
+@@ -152,7 +152,7 @@ Changing article strategy therefore requires editing `scripts/brain.py`; there i
+ |---|---|
+ | `color_for` | Resolves a topic to its chapter color |
+ | `log` | Prints and appends timestamped events to `brain/activity.log` |
+-| `claude` | Calls Anthropic Messages API with three attempts and fixed retry delay |
++| `claude` | Calls Google Gemini API with three attempts and fixed retry delay |
+ | `load_state` / `save_state` | Reads state and atomically replaces `brain/state.json` |
+ | `ga4_snippet` | Emits analytics markup when `GA4_ID` exists |
+ | `reading_time` | Estimates reading time at 200 words/minute |
+@@ -170,7 +170,7 @@ Changing article strategy therefore requires editing `scripts/brain.py`; there i
+ 
+ ### Execution flow
+ 
+-1. Exit if `ANTHROPIC_API_KEY` is missing.
++1. Exit if `GEMINI_API_KEY` is missing.
+ 2. Load `brain/state.json` or initialize empty state.
+ 3. Choose the first calendar keyword absent from `used_keywords`.
+ 4. Ask Claude for an article and metadata comment.
+@@ -218,7 +218,7 @@ The agent reads up to five title candidates from each of six feeds:
+ 
+ | Function | Responsibility |
+ |---|---|
+-| `think` | Calls Anthropic Messages API with retry |
++| `think` | Calls Google Gemini API with retry |
+ | `fetch_feed` | Downloads and regex-parses RSS/XML |
+ | `classify` | Assigns one of ten topics using title keywords |
+ | `write_original_article` | Prompts Claude for 500-700 words of commentary |
+@@ -230,7 +230,7 @@ The agent reads up to five title candidates from each of six feeds:
+ 
+ ### Execution flow
+ 
+-1. Exit if `ANTHROPIC_API_KEY` is missing.
++1. Exit if `GEMINI_API_KEY` is missing.
+ 2. Read `brain/news_state.json`.
+ 3. Fetch all six feeds sequentially.
+ 4. Deduplicate using the lowercase first 50 characters of the original title.
+@@ -270,7 +270,7 @@ Behavior:
+ 2. Parses JSON.
+ 3. Requires a non-empty answers array.
+ 4. Caps the aggregate question/answer character count at 6,000.
+-5. Reads `ANTHROPIC_API_KEY` from Cloudflare environment variables.
++5. Reads `GEMINI_API_KEY` from Cloudflare environment variables.
+ 6. Prompts Claude to select exactly one of eight chapter keys.
+ 7. Parses JSON and falls back to `networking` for an invalid chapter.
+ 8. Truncates explanation and next-step output.
+@@ -421,7 +421,7 @@ Expected modified files: up to four news pages, news state, and `news.html`.
+ ### Investigate article failures
+ 
+ 1. Inspect the failed **ITVedas Autopilot** workflow.
+-2. Check whether `ANTHROPIC_API_KEY` is configured.
++2. Check whether `GEMINI_API_KEY` is configured.
+ 3. Read the tail of `brain/activity.log`.
+ 4. Confirm `brain/state.json` parses and its last keyword was not advanced unexpectedly.
+ 5. Verify generated HTML before rerunning.
+@@ -429,7 +429,7 @@ Expected modified files: up to four news pages, news state, and `news.html`.
+ ### Investigate career API failures
+ 
+ 1. Confirm the site is deployed on Cloudflare Pages with Functions enabled.
+-2. Confirm `ANTHROPIC_API_KEY` exists in the correct Pages environment.
++2. Confirm `GEMINI_API_KEY` exists in the correct Pages environment.
+ 3. Check the Pages Function logs for Claude status/parse errors.
+ 4. POST a small valid answers array to `/api/career-advice`.
+ 5. Confirm the production domain matches the origin allowlist.
+diff --git a/functions/api/career-advice.js b/functions/api/career-advice.js
+index c18c519f7..3c3fabd58 100644
+--- a/functions/api/career-advice.js
++++ b/functions/api/career-advice.js
+@@ -78,7 +78,7 @@ export async function onRequestPost(context) {
+     return jsonResponse({ error: "Answers payload too large" }, 400);
+   }
+ 
+-  const apiKey = env.GEMINI_API_KEY || env.ANTHROPIC_API_KEY;
++  const apiKey = env.GEMINI_API_KEY;
+   if (!apiKey) {
+     return jsonResponse({ error: "Server misconfigured: missing API key" }, 500);
+   }
+@@ -106,7 +106,7 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate,
+   const userPrompt = `Here are the quiz answers:\n\n${formattedQA}\n\nReturn the JSON object now.`;
+ 
+   try {
+-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
++    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+     const payload = {
+       contents: [{ parts: [{ text: userPrompt }] }],
+       systemInstruction: { parts: [{ text: systemPrompt }] },
+@@ -119,7 +119,7 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate,
+ 
+     const res = await fetch(geminiUrl, {
+       method: "POST",
+-      headers: { "Content-Type": "application/json" },
++      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+       body: JSON.stringify(payload)
+     });
+ 
+diff --git a/itvedas-brain/archive/README.md b/itvedas-brain/archive/README.md
+index 63eed791c..592c631cb 100644
+--- a/itvedas-brain/archive/README.md
++++ b/itvedas-brain/archive/README.md
+@@ -8,13 +8,11 @@ so it's obvious at a glance which scripts are actually part of the live
+ pipeline (`content-writer.py`, `news-agent.py`, `cve-aggregator.py`)
+ versus historical/manual tooling.
+ 
+-- `batch-generate-phase6.py`, `generate-phase6-articles.py`,
+-  `generate-phase6-articles-local.py`, `phase6-content-generator.py`,
+-  `phase6-publisher.py` — five different one-off generators used
++- `batch-generate-phase6.py`, `generate-phase6-articles-local.py` —
++  one-off generators used
+   interactively to hand-build the Phase 6 content calendar (see commit
+   `ed0e1b6`, "Phase 6: Complete Enterprise Knowledge Library
+   Implementation"). Not run since.
+-- `video-generator-2hourly.py` — never wired into a workflow.
+ - `gsc-monitoring-analyzer.py`, `update-chapter-indices.py`,
+   `add-hreflang-tags.py` — standalone maintenance scripts, safe to run
+   manually if needed, just not part of the automated pipeline.
+@@ -22,3 +20,7 @@ versus historical/manual tooling.
+ Safe to delete entirely once you've confirmed you don't need any of
+ these for reference. Nothing in the active codebase imports or shells
+ out to anything in this folder.
++
++Removed 2026-09-27: `phase6-content-generator.py`, `phase6-publisher.py`,
++`generate-phase6-articles.py`, `video-generator-2hourly.py` (Anthropic-only,
++unused). The site now uses Google Gemini exclusively (`core/llm.py`).
+diff --git a/itvedas-brain/archive/generate-phase6-articles.py b/itvedas-brain/archive/generate-phase6-articles.py
+deleted file mode 100755
+index b1baf2918..000000000
+--- a/itvedas-brain/archive/generate-phase6-articles.py
++++ /dev/null
+@@ -1,511 +0,0 @@
+-#!/usr/bin/env python3
+-"""
+-Phase 6 Comprehensive Article Generator
+-Generates 11 articles for Microsoft 365, Azure Certifications, Cloud Security, Hybrid/Multi-Cloud, AI/ML
+-Uses Claude API with optimized prompts and structured output
+-"""
+-
+-import os
+-import json
+-import sys
+-import re
+-from datetime import datetime, timedelta
+-from pathlib import Path
+-import anthropic
+-
+-# Configuration
+-ARTICLE_DIRECTORY = Path("chapters")
+-MIN_WORD_COUNT = 2500
+-MAX_WORD_COUNT = 4500
+-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+-
+-if not ANTHROPIC_API_KEY:
+-    print("ERROR: ANTHROPIC_API_KEY environment variable not set")
+-    sys.exit(1)
+-
+-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+-
+-# Article configuration from Phase 6 content calendar
+-ARTICLES_TO_GENERATE = [
+-    {
+-        "id": "m365_teams_governance",
+-        "chapter": "microsoft-365",
+-        "title": "Microsoft Teams Governance, Security & Compliance",
+-        "difficulty": "Advanced",
+-        "reading_time": 14,
+-        "date": "2026-07-05",
+-        "outline": [
+-            "Teams Architecture: Channels, Conversations, Teams Across Organization",
+-            "Governance Framework: Naming Policies, Approval Workflows, Access Control",
+-            "Security: Encryption, Data Loss Prevention (DLP), Conditional Access",
+-            "Compliance: Retention Policies, Legal Hold, eDiscovery",
+-            "Best Practices: Lifecycle Management, Archiving, Team Health",
+-            "Troubleshooting: Common Issues, Monitoring, Performance Tuning"
+-        ],
+-        "topics": ["Teams", "Microsoft 365", "Governance", "Security", "Compliance"],
+-    },
+-    {
+-        "id": "m365_sharepoint_governance",
+-        "chapter": "microsoft-365",
+-        "title": "SharePoint Online Architecture & Governance at Scale",
+-        "difficulty": "Advanced",
+-        "reading_time": 15,
+-        "date": "2026-07-05",
+-        "outline": [
+-            "SharePoint Architecture: Hub Sites, Site Collections, Tenant Structure",
+-            "Site Governance: Naming Conventions, Approval Workflows, Lifecycle",
+-            "Information Architecture: Taxonomy, Metadata, Navigation",
+-            "Security & Permissions: Sites, Lists, Item-Level Permissions",
+-            "Data Management: Retention, Classification, Compliance",
+-            "Modern vs. Classic: Migration Strategy, Feature Parity",
+-            "Performance & Optimization: CDN, Caching, Query Tuning"
+-        ],
+-        "topics": ["SharePoint", "Microsoft 365", "Information Architecture", "Governance"],
+-    },
+-    {
+-        "id": "m365_exchange_hybrid",
+-        "chapter": "microsoft-365",
+-        "title": "Exchange Online & Hybrid Architecture Patterns",
+-        "difficulty": "Advanced",
+-        "reading_time": 13,
+-        "date": "2026-07-06",
+-        "outline": [
+-            "Exchange Online Architecture: Mailboxes, Routing, Federation",
+-            "Hybrid Deployments: Synchronization, Routing, Coexistence",
+-            "Migration Strategies: Staged, Cutover, Hybrid Migration Wizard",
+-            "Security: Encryption, DLP, Advanced Threat Protection",
+-            "Compliance: Retention, Hold, eDiscovery",
+-            "Monitoring & Troubleshooting: Health Dashboard, Message Tracking",
+-            "Performance Tuning: Connection Health, Mailbox Quotas"
+-        ],
+-        "topics": ["Exchange", "Hybrid", "Email", "Migration"],
+-    },
+-    {
+-        "id": "azure_fundamentals_az900",
+-        "chapter": "azure-certifications",
+-        "title": "Azure Fundamentals (AZ-900) Complete Study Guide",
+-        "difficulty": "Beginner",
+-        "reading_time": 12,
+-        "date": "2026-07-06",
+-        "outline": [
+-            "Cloud Concepts: What is Cloud, Benefits, Types of Cloud Services",
+-            "Azure Services: Compute, Storage, Database, Network, Analytics",
+-            "Azure Pricing & Support: Cost Management, Support Plans, SLA",
+-            "Exam Structure: Question Types, Time Management, Passing Score",
+-            "Study Tips: Best Resources, Practice Tests, Time Investment",
+-            "Key Concepts for Success: Terminology, Common Pitfalls",
+-            "Practice Questions & Answers: 30+ sample questions"
+-        ],
+-        "topics": ["Azure", "Certification", "AZ-900", "Exam Prep"],
+-    },
+-    {
+-        "id": "azure_admin_az104",
+-        "chapter": "azure-certifications",
+-        "title": "Azure Administrator (AZ-104) Study Path",
+-        "difficulty": "Intermediate",
+-        "reading_time": 16,
+-        "date": "2026-07-07",
+-        "outline": [
+-            "Virtual Machines: Creation, Sizing, Networking, Storage",
+-            "Azure Networking: VNets, Subnets, Route Tables, Load Balancers",
+-            "Storage: Blobs, Files, Queues, Table Storage, Accounts",
+-            "Identity & Access: Azure AD, RBAC, Managed Identities",
+-            "Compute Services: App Service, Function Apps, Container Instances",
+-            "Monitoring & Backup: Monitor, Log Analytics, Backup, Recovery",
+-            "Governance & Compliance: Policies, Subscriptions, Resource Groups",
+-            "Exam Strategy: Time Management, Difficult Topics, Lab Practice"
+-        ],
+-        "topics": ["Azure", "Certification", "AZ-104", "Administration"],
+-    },
+-    {
+-        "id": "azure_architect_az305",
+-        "chapter": "azure-certifications",
+-        "title": "Azure Solutions Architect (AZ-305) Deep Dive",
+-        "difficulty": "Advanced",
+-        "reading_time": 17,
+-        "date": "2026-07-08",
+-        "outline": [
+-            "Design Principles: Scalability, Availability, Security, Cost Optimization",
+-            "Compute Architecture: VMs vs. App Service vs. Serverless Patterns",
+-            "Data Architecture: Database Selection, Data Lake, Data Warehouse",
+-            "Network Design: Hub-Spoke, Multi-Region, Disaster Recovery",
+-            "Security Architecture: Defense in Depth, Encryption, Identity",
+-            "Migration Patterns: Lift-and-Shift, Refactor, Rearchitect, Rebuild",
+-            "Case Studies: E-Commerce Platform, Healthcare System, Financial Services",
+-            "Exam Strategy: Scenario Analysis, Design Thinking, Trade-offs"
+-        ],
+-        "topics": ["Azure", "Certification", "AZ-305", "Solution Architecture"],
+-    },
+-    {
+-        "id": "cloud_security_framework",
+-        "chapter": "cloud-security",
+-        "title": "Cloud Security Framework: Defense in Depth Strategy",
+-        "difficulty": "Advanced",
+-        "reading_time": 14,
+-        "date": "2026-07-05",
+-        "outline": [
+-            "Security Layers: Perimeter, Network, Compute, Data, Application, Identity",
+-            "Threat Modeling: STRIDE, Attack Trees, Common Attack Patterns",
+-            "Defense in Depth: Multiple Controls, Redundancy, Resilience",
+-            "Network Security: NACLs, Security Groups, DDoS Protection, WAF",
+-            "Application Security: OWASP Top 10, Secure Coding, SAST/DAST",
+-            "Data Security: Encryption at Rest/Transit, Tokenization, Masking",
+-            "Identity & Access: MFA, RBAC, Privileged Access, Just-in-Time",
+-            "Incident Response: Detection, Containment, Eradication, Recovery",
+-            "Best Practices: Least Privilege, Separation of Duties, Monitoring"
+-        ],
+-        "topics": ["Security", "Cloud", "Architecture", "Defense"],
+-    },
+-    {
+-        "id": "compliance_frameworks",
+-        "chapter": "cloud-security",
+-        "title": "Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS",
+-        "difficulty": "Advanced",
+-        "reading_time": 13,
+-        "date": "2026-07-08",
+-        "outline": [
+-            "Compliance Overview: Regulatory Requirements, Standards, Certifications",
+-            "HIPAA: Protected Health Information (PHI), HITRUST, Audit Requirements",
+-            "GDPR: Data Protection, Privacy by Design, Data Subject Rights",
+-            "SOC 2: Trust Service Criteria, Audit Process, Attestation",
+-            "PCI-DSS: Payment Card Security, Requirements, Validation",
+-            "Cloud Compliance: Shared Responsibility, Assessment, Monitoring",
+-            "Compliance Automation: Policy as Code, Continuous Compliance",
+-            "Case Studies: Compliance in Cloud Migration, Multi-Region Deployment",
+-            "Tools & Resources: Compliance Dashboards, Assessment Tools"
+-        ],
+-        "topics": ["Compliance", "Regulations", "Security", "Governance"],
+-    },
+-    {
+-        "id": "hybrid_architecture",
+-        "chapter": "hybrid-multicloud",
+-        "title": "Hybrid Cloud Architecture: On-Premises to Azure Integration",
+-        "difficulty": "Advanced",
+-        "reading_time": 14,
+-        "date": "2026-07-09",
+-        "outline": [
+-            "Hybrid Architecture Patterns: Hub-Spoke, Mesh, Islands",
+-            "Connectivity: Site-to-Site VPN, ExpressRoute, Hybrid Runbook Worker",
+-            "Identity Hybrid: Azure AD Connect, Pass-Through Auth, Federation",
+-            "Data Synchronization: Azure AD Sync, DFS, Hybrid File Sync",
+-            "Application Integration: Service Bus, Event Grid, Logic Apps",
+-            "Disaster Recovery: Failover Scenarios, RTO/RPO Targets",
+-            "Monitoring Across Environments: Unified Monitoring, Dashboards",
+-            "Best Practices: Network Design, Security, Performance",
+-            "Migration Path: Step-by-Step Transition Strategy"
+-        ],
+-        "topics": ["Hybrid", "Azure", "On-Premises", "Integration"],
+-    },
+-    {
+-        "id": "multicloud_strategy",
+-        "chapter": "hybrid-multicloud",
+-        "title": "Multi-Cloud Strategy: Azure, AWS, GCP Interoperability",
+-        "difficulty": "Advanced",
+-        "reading_time": 13,
+-        "date": "2026-07-09",
+-        "outline": [
+-            "Multi-Cloud Overview: Benefits, Challenges, Use Cases",
+-            "Azure-AWS Interoperability: Networking, Identity, Data Transfer",
+-            "Azure-GCP Patterns: Workload Distribution, Vendor Lock-In Prevention",
+-            "Cost Optimization Across Clouds: Reserved Instances, Committed Use",
+-            "Unified Monitoring: Cross-Cloud Dashboards, Alerting",
+-            "Application Portability: Containers, Kubernetes, Microservices",
+-            "Data Strategy: Multi-Cloud Data Lakes, Replication",
+-            "Governance: Policy Enforcement, Compliance Across Providers",
+-            "Case Studies: Real-World Multi-Cloud Deployments"
+-        ],
+-        "topics": ["Multi-Cloud", "Cloud Strategy", "Architecture", "Interoperability"],
+-    },
+-    {
+-        "id": "mlops_fundamentals",
+-        "chapter": "aiml-operations",
+-        "title": "MLOps Fundamentals: ML Pipeline Automation & Governance",
+-        "difficulty": "Advanced",
+-        "reading_time": 14,
+-        "date": "2026-07-10",
+-        "outline": [
+-            "MLOps Concepts: ML Lifecycle, Automation, Reproducibility",
+-            "ML Pipeline: Data Preparation, Model Training, Validation, Deployment",
+-            "Model Registry: Version Control, Metadata, Experiment Tracking",
+-            "CI/CD for ML: Automated Testing, Retraining, Deployment Automation",
+-            "Monitoring ML Models: Accuracy Drift, Data Drift, Performance",
+-            "Responsible AI: Fairness, Interpretability, Transparency, Bias Detection",
+-            "Tools & Platforms: Azure ML, MLflow, Kubeflow, DVC",
+-            "Best Practices: Reproducibility, Governance, Collaboration",
+-            "Case Studies: Production ML Systems at Scale"
+-        ],
+-        "topics": ["MLOps", "AI/ML", "Automation", "DevOps"],
+-    },
+-]
+-
+-def generate_article_content(article_info: dict) -> str:
+-    """Generate comprehensive article content using Claude API"""
+-
+-    outline_text = "\n".join([f"- {point}" for point in article_info["outline"]])
+-
+-    prompt = f"""You are a senior IT architect and technical writer. Write a comprehensive, production-quality technical article.
+-
+-Title: {article_info['title']}
+-Difficulty Level: {article_info['difficulty']}
+-Target Word Count: {MIN_WORD_COUNT}-{MAX_WORD_COUNT} words
+-
+-Article Outline:
+-{outline_text}
+-
+-Requirements:
+-1. Write in professional, educational tone similar to Microsoft Learn, AWS Documentation, or Cisco Learn
+-2. Include practical examples and real-world scenarios
+-3. Use technical accuracy and vendor-neutral language where appropriate
+-4. Include at least 3 detailed code examples or configuration snippets where relevant
+-5. Include enterprise best practices and common mistakes to avoid
+-6. Provide at least 2 reference tables or checklists
+-7. End with a comprehensive summary and learning path recommendations
+-8. Make content evergreen and not time-dependent
+-
+-Structure your response as follows:
+-
+-## Introduction
+-[2-3 paragraphs introducing the topic, its importance, and what readers will learn]
+-
+-## Core Concepts
+-[Deep dive into fundamental concepts, with clear explanations]
+-
+-## Architecture & Design
+-[Detailed architecture patterns and design principles]
+-
+-## Implementation
+-[Step-by-step implementation guidance with examples]
+-
+-## Best Practices
+-[Industry best practices and lessons learned]
+-
+-## Common Mistakes
+-[Frequent errors and how to avoid them]
+-
+-## Enterprise Scenarios
+-[Real-world use cases and case studies]
+-
+-## Troubleshooting & Monitoring
+-[Operational considerations and monitoring strategies]
+-
+-## FAQ & Glossary
+-[Frequently asked questions and key terminology]
+-
+-## Summary & Next Steps
+-[Recap and recommended learning paths]
+-
+-Write the full article now, ensuring it meets the word count requirement and covers all outline points thoroughly."""
+-
+-    print(f"Generating: {article_info['title']}...")
+-
+-    message = client.messages.create(
+-        model="claude-opus-4-1-20250805",
+-        max_tokens=6000,
+-        messages=[
+-            {"role": "user", "content": prompt}
+-        ]
+-    )
+-
+-    return message.content[0].text
+-
+-def create_html_file(article_info: dict, content: str, word_count: int) -> str:
+-    """Create a production-ready HTML file for the article"""
+-
+-    date_obj = datetime.strptime(article_info["date"], "%Y-%m-%d")
+-    formatted_date = date_obj.strftime("%B %d, %Y")
+-
+-    # Create filename
+-    slug = re.sub(r'[^a-z0-9-]+', '-', article_info['title'].lower()).strip('-')
+-    filename = f"{article_info['date']}-{slug}.html"
+-
+-    # Convert markdown-style content to HTML
+-    html_content = convert_content_to_html(content, article_info, word_count, formatted_date)
+-
+-    # Create chapter directory if needed
+-    chapter_dir = ARTICLE_DIRECTORY / article_info["chapter"]
+-    chapter_dir.mkdir(parents=True, exist_ok=True)
+-
+-    filepath = chapter_dir / filename
+-
+-    with open(filepath, 'w', encoding='utf-8') as f:
+-        f.write(html_content)
+-
+-    print(f"  ✓ Created: {filepath}")
+-    return str(filepath)
+-
+-def convert_content_to_html(content: str, article_info: dict, word_count: int, formatted_date: str) -> str:
+-    """Convert article content to production HTML"""
+-
+-    # Clean and format content
+-    content_html = content.replace('\n\n', '</p><p>').replace('\n', '<br>')
+-    content_html = f"<p>{content_html}</p>"
+-
+-    # Build metadata
+-    topics_meta = ", ".join(article_info["topics"])
+-
+-    # HTML template
+-    html = f"""<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-<meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<title>{article_info['title']} — ITVedas</title>
+-<meta name="description" content="Comprehensive guide on {article_info['title']}. Learn enterprise best practices, architecture patterns, and real-world implementation strategies.">
+-<meta name="keywords" content="{topics_meta}, IT knowledge, enterprise architecture, technical guide">
+-<meta property="og:title" content="{article_info['title']} — ITVedas">
+-<meta property="og:description" content="Master {article_info['title']} with professional-grade documentation.">
+-<meta property="og:type" content="article">
+-<meta property="og:url" content="https://itvedas.com/chapters/{article_info['chapter']}/{article_info['date']}-{re.sub(r'[^a-z0-9-]+', '-', article_info['title'].lower()).strip('-')}.html">
+-<meta name="twitter:card" content="summary_large_image">
+-<link rel="canonical" href="https://itvedas.com/chapters/{article_info['chapter']}/{article_info['date']}-{re.sub(r'[^a-z0-9-]+', '-', article_info['title'].lower()).strip('-')}.html">
+-<link rel="alternate" hreflang="x-default" href="https://itvedas.com/chapters/{article_info['chapter']}/index.html">
+-<link rel="alternate" hreflang="en" href="https://itvedas.com/chapters/{article_info['chapter']}/index.html">
+-
+-<script type="application/ld+json">
+-{{
+-  "@context": "https://schema.org",
+-  "@type": "Article",
+-  "headline": "{article_info['title']}",
+-  "description": "Professional guide on {article_info['title']}",
+-  "datePublished": "{article_info['date']}",
+-  "dateModified": "{article_info['date']}",
+-  "author": {{
+-    "@type": "Organization",
+-    "name": "ITVedas"
+-  }},
+-  "keywords": "{topics_meta}"
+-}}
+-</script>
+-
+-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+-<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+-
+-<link rel="preconnect" href="https://fonts.googleapis.com">
+-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+-<style>
+-:root {{
+-  --bg:#07070C; --bg2:#0E0E17; --bg3:#161624;
+-  --text:#F2F2FA; --sub:#C8C8E0; --muted:#9C9CBE;
+-  --accent:#FF6B35; --accent2:#8B5CF6; --cyan:#06B6D4; --green:#10B981;
+-  --border:rgba(255,255,255,0.09); --radius:16px;
+-  --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif;
+-}}
+-* {{ box-sizing:border-box; margin:0; padding:0; }}
+-html {{ scroll-behavior:smooth; }}
+-body {{ background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:16px; line-height:1.7; }}
+-a {{ color:var(--accent); text-decoration:none; }}
+-a:hover {{ text-decoration:underline; }}
+-.article-container {{ max-width:860px; margin:0 auto; padding:3rem 2rem; }}
+-.article-header {{ margin-bottom:3rem; }}
+-.article-title {{ font-size:2.2rem; font-weight:800; margin-bottom:1rem; color:var(--text); }}
+-.article-meta {{ display:flex; gap:1.5rem; margin-bottom:1rem; font-size:0.9rem; color:var(--muted); flex-wrap:wrap; }}
+-.meta-badge {{ background:rgba(255,107,53,0.1); color:var(--accent); padding:0.4rem 0.8rem; border-radius:20px; }}
+-.article-content {{ font-size:1.05rem; line-height:1.8; color:var(--sub); }}
+-.article-content p {{ margin-bottom:1.5rem; }}
+-.article-content h2 {{ font-size:1.8rem; font-weight:700; margin:2rem 0 1rem; color:var(--text); }}
+-.article-content h3 {{ font-size:1.3rem; font-weight:600; margin:1.5rem 0 0.75rem; color:var(--accent2); }}
+-.article-content code {{ background:var(--bg3); color:var(--cyan); padding:0.2rem 0.5rem; border-radius:4px; font-family:monospace; }}
+-.article-content pre {{ background:var(--bg3); border:1px solid var(--border); padding:1.5rem; border-radius:8px; overflow-x:auto; margin:1.5rem 0; }}
+-.article-content pre code {{ background:none; color:var(--cyan); padding:0; }}
+-.article-content ul, .article-content ol {{ margin:1rem 0 1.5rem 2rem; }}
+-.article-content li {{ margin-bottom:0.5rem; }}
+-.table-wrap {{ overflow-x:auto; margin:1.5rem 0; }}
+-.article-content table {{ width:100%; border-collapse:collapse; margin:1.5rem 0; }}
+-.article-content th {{ background:var(--bg3); color:var(--text); padding:0.75rem; text-align:left; font-weight:600; }}
+-.article-content td {{ border-bottom:1px solid var(--border); padding:0.75rem; }}
+-.reading-time {{ color:var(--muted); font-size:0.95rem; }}
+-footer {{ border-top:1px solid var(--border); margin-top:3rem; padding-top:2rem; text-align:center; color:var(--muted); }}
+-</style>
+-</head>
+-<body>
+-<article class="article-container">
+-  <header class="article-header">
+-    <h1 class="article-title">{article_info['title']}</h1>
+-    <div class="article-meta">
+-      <span class="meta-badge">{article_info['difficulty']}</span>
+-      <span class="reading-time">{article_info['reading_time']} min read</span>
+-      <span class="reading-time">{word_count} words</span>
+-      <span class="reading-time">{formatted_date}</span>
+-    </div>
+-  </header>
+-
+-  <div class="article-content">
+-{content_html}
+-  </div>
+-</article>
+-
+-<footer>
+-  <p>&copy; 2026 <a href="/">ITVedas</a> — IT Education for Everyone</p>
+-  <p><a href="/chapters/{article_info['chapter']}/">← Back to {article_info['chapter'].replace('-', ' ').title()}</a></p>
+-</footer>
+-</body>
+-</html>"""
+-
+-    return html
+-
+-def count_words(text: str) -> int:
+-    """Count words in text"""
+-    return len(text.split())
+-
+-def main():
+-    """Main generation pipeline"""
+-    print("=" * 60)
+-    print("ITVedas Phase 6 Article Generator")
+-    print("=" * 60)
+-    print()
+-
+-    generated_articles = []
+-    failed_articles = []
+-
+-    for i, article_info in enumerate(ARTICLES_TO_GENERATE, 1):
+-        try:
+-            print(f"\n[{i}/{len(ARTICLES_TO_GENERATE)}] {article_info['title']}")
+-
+-            # Generate content
+-            content = generate_article_content(article_info)
+-            word_count = count_words(content)
+-
+-            if word_count < MIN_WORD_COUNT:
+-                print(f"  ⚠ Warning: Word count {word_count} is below target {MIN_WORD_COUNT}")
+-
+-            # Create HTML file
+-            filepath = create_html_file(article_info, content, word_count)
+-
+-            generated_articles.append({
+-                "id": article_info["id"],
+-                "title": article_info["title"],
+-                "chapter": article_info["chapter"],
+-                "filepath": filepath,
+-                "word_count": word_count,
+-                "reading_time": article_info["reading_time"]
+-            })
+-
+-        except Exception as e:
+-            print(f"  ✗ Error: {str(e)}")
+-            failed_articles.append(article_info["title"])
+-
+-    # Summary
+-    print("\n" + "=" * 60)
+-    print("GENERATION SUMMARY")
+-    print("=" * 60)
+-    print(f"Successfully generated: {len(generated_articles)}/{len(ARTICLES_TO_GENERATE)}")
+-    print(f"Failed: {len(failed_articles)}")
+-
+-    if generated_articles:
+-        total_words = sum(a["word_count"] for a in generated_articles)
+-        print(f"Total words: {total_words}")
+-        print("\nGenerated articles:")
+-        for article in generated_articles:
+-            print(f"  ✓ {article['title']} ({article['word_count']} words)")
+-
+-    if failed_articles:
+-        print("\nFailed articles:")
+-        for title in failed_articles:
+-            print(f"  ✗ {title}")
+-
+-    return len(failed_articles) == 0
+-
+-if __name__ == "__main__":
+-    success = main()
+-    sys.exit(0 if success else 1)
+diff --git a/itvedas-brain/archive/phase6-content-generator.py b/itvedas-brain/archive/phase6-content-generator.py
+deleted file mode 100644
+index beeddf24a..000000000
+--- a/itvedas-brain/archive/phase6-content-generator.py
++++ /dev/null
+@@ -1,241 +0,0 @@
+-#!/usr/bin/env python3
+-"""
+-Phase 6 Autonomous Content Generator
+-Generates all 11 Phase 6 articles using Claude API only
+-"""
+-
+-import os
+-import json
+-import re
+-import pathlib
+-import sys
+-from datetime import datetime
+-
+-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+-from core.llm import claude as _core_claude
+-from core.log import log as _core_log
+-
+-API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+-MODEL = "claude-haiku-4-5-20251001"
+-SITE = "https://itvedas.com"
+-
+-ARTICLES = [
+-    {
+-        "id": "m365_teams_governance",
+-        "title": "Microsoft Teams Governance, Security & Compliance",
+-        "chapter": "microsoft-365",
+-        "outline": [
+-            "Teams Architecture: Channels, Conversations, Teams Across Org",
+-            "Governance Framework: Naming Policies, Approval Workflows, Access Control",
+-            "Security: Encryption, Data Loss Prevention (DLP), Conditional Access",
+-            "Compliance: Retention Policies, Legal Hold, eDiscovery",
+-            "Best Practices: Lifecycle Management, Archiving, Team Health",
+-            "Troubleshooting: Common Issues, Monitoring, Performance Tuning"
+-        ]
+-    },
+-    {
+-        "id": "m365_sharepoint_governance",
+-        "title": "SharePoint Online Architecture & Governance at Scale",
+-        "chapter": "microsoft-365",
+-        "outline": [
+-            "SharePoint Architecture: Hub Sites, Site Collections, Tenant Structure",
+-            "Site Governance: Naming Conventions, Approval Workflows, Lifecycle",
+-            "Information Architecture: Taxonomy, Metadata, Navigation",
+-            "Security & Permissions: Sites, Lists, Item-Level Permissions",
+-            "Data Management: Retention, Classification, Compliance",
+-            "Modern vs. Classic: Migration Strategy, Feature Parity",
+-            "Performance & Optimization: CDN, Caching, Query Tuning"
+-        ]
+-    },
+-    {
+-        "id": "m365_exchange_hybrid",
+-        "title": "Exchange Online & Hybrid Architecture Patterns",
+-        "chapter": "microsoft-365",
+-        "outline": [
+-            "Exchange Online Architecture: Mailboxes, Routing, Federation",
+-            "Hybrid Deployments: Synchronization, Routing, Coexistence",
+-            "Migration Strategies: Staged, Cutover, Hybrid Migration Wizard",
+-            "Security: Encryption, DLP, Advanced Threat Protection",
+-            "Compliance: Retention, Hold, eDiscovery",
+-            "Monitoring & Troubleshooting: Health Dashboard, Message Tracking",
+-            "Performance Tuning: Connection Health, Mailbox Quotas"
+-        ]
+-    },
+-    {
+-        "id": "azure_fundamentals_az900",
+-        "title": "Azure Fundamentals (AZ-900) Complete Study Guide",
+-        "chapter": "azure-certifications",
+-        "outline": [
+-            "Cloud Concepts: What is Cloud, Benefits, Types of Cloud Services",
+-            "Azure Services: Compute, Storage, Database, Network, Analytics",
+-            "Azure Pricing & Support: Cost Management, Support Plans, SLA",
+-            "Exam Structure: Question Types, Time Management, Passing Score",
+-            "Study Tips: Best Resources, Practice Tests, Time Investment",
+-            "Key Concepts for Success: Terminology, Common Pitfalls",
+-            "Practice Questions & Answers: 30+ sample questions"
+-        ]
+-    },
+-    {
+-        "id": "azure_admin_az104",
+-        "title": "Azure Administrator (AZ-104) Study Path",
+-        "chapter": "azure-certifications",
+-        "outline": [
+-            "Virtual Machines: Creation, Sizing, Networking, Storage",
+-            "Azure Networking: VNets, Subnets, Route Tables, Load Balancers",
+-            "Storage: Blobs, Files, Queues, Table Storage, Accounts",
+-            "Identity & Access: Azure AD, RBAC, Managed Identities",
+-            "Compute Services: App Service, Function Apps, Container Instances",
+-            "Monitoring & Backup: Monitor, Log Analytics, Backup, Recovery",
+-            "Governance & Compliance: Policies, Subscriptions, Resource Groups",
+-            "Exam Strategy: Time Management, Difficult Topics, Lab Practice"
+-        ]
+-    },
+-    {
+-        "id": "azure_architect_az305",
+-        "title": "Azure Solutions Architect (AZ-305) Deep Dive",
+-        "chapter": "azure-certifications",
+-        "outline": [
+-            "Design Principles: Scalability, Availability, Security, Cost Optimization",
+-            "Compute Architecture: VMs vs. App Service vs. Serverless Patterns",
+-            "Data Architecture: Database Selection, Data Lake, Data Warehouse",
+-            "Network Design: Hub-Spoke, Multi-Region, Disaster Recovery",
+-            "Security Architecture: Defense in Depth, Encryption, Identity",
+-            "Migration Patterns: Lift-and-Shift, Refactor, Rearchitect, Rebuild",
+-            "Case Studies: E-Commerce Platform, Healthcare System, Financial Services",
+-            "Exam Strategy: Scenario Analysis, Design Thinking, Trade-offs"
+-        ]
+-    },
+-    {
+-        "id": "cloud_security_framework",
+-        "title": "Cloud Security Framework: Defense in Depth Strategy",
+-        "chapter": "cloud-security",
+-        "outline": [
+-            "Security Layers: Perimeter, Network, Compute, Data, Application",
+-            "Threat Modeling: STRIDE, Attack Trees, Common Attack Patterns",
+-            "Defense in Depth: Multiple Controls, Redundancy, Resilience",
+-            "Network Security: NACLs, Security Groups, DDoS Protection, WAF",
+-            "Application Security: OWASP Top 10, Secure Coding, SAST/DAST",
+-            "Data Security: Encryption at Rest/Transit, Tokenization, Masking",
+-            "Identity & Access: MFA, RBAC, Privileged Access, Just-in-Time",
+-            "Incident Response: Detection, Containment, Eradication, Recovery",
+-            "Best Practices: Least Privilege, Separation of Duties, Monitoring"
+-        ]
+-    },
+-    {
+-        "id": "compliance_frameworks",
+-        "title": "Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS",
+-        "chapter": "cloud-security",
+-        "outline": [
+-            "Compliance Overview: Regulatory Requirements, Standards, Certifications",
+-            "HIPAA: Protected Health Information (PHI), HITRUST, Audit Requirements",
+-            "GDPR: Data Protection, Privacy by Design, Data Subject Rights",
+-            "SOC 2: Trust Service Criteria, Audit Process, Attestation",
+-            "PCI-DSS: Payment Card Security, Requirements, Validation",
+-            "Cloud Compliance: Shared Responsibility, Assessment, Monitoring",
+-            "Compliance Automation: Policy as Code, Continuous Compliance",
+-            "Case Studies: Compliance in Cloud Migration, Multi-Region Deployment",
+-            "Tools & Resources: Compliance Dashboards, Assessment Tools"
+-        ]
+-    },
+-    {
+-        "id": "hybrid_architecture",
+-        "title": "Hybrid Cloud Architecture: On-Premises to Azure Integration",
+-        "chapter": "hybrid-multicloud",
+-        "outline": [
+-            "Hybrid Architecture Patterns: Hub-Spoke, Mesh, Islands",
+-            "Connectivity: Site-to-Site VPN, ExpressRoute, Hybrid Runbook Worker",
+-            "Identity Hybrid: Azure AD Connect, Pass-Through Auth, Federation",
+-            "Data Synchronization: Azure AD Sync, DFS, Hybrid File Sync",
+-            "Application Integration: Service Bus, Event Grid, Logic Apps",
+-            "Disaster Recovery: Failover Scenarios, RTO/RPO Targets",
+-            "Monitoring Across Environments: Unified Monitoring, Dashboards",
+-            "Best Practices: Network Design, Security, Performance",
+-            "Migration Path: Step-by-Step Transition Strategy"
+-        ]
+-    },
+-    {
+-        "id": "multicloud_strategy",
+-        "title": "Multi-Cloud Strategy: Azure, AWS, GCP Interoperability",
+-        "chapter": "hybrid-multicloud",
+-        "outline": [
+-            "Multi-Cloud Overview: Benefits, Challenges, Use Cases",
+-            "Azure-AWS Interoperability: Networking, Identity, Data Transfer",
+-            "Azure-GCP Patterns: Workload Distribution, Vendor Lock-In Prevention",
+-            "Cost Optimization Across Clouds: Reserved Instances, Committed Use",
+-            "Unified Monitoring: Cross-Cloud Dashboards, Alerting",
+-            "Application Portability: Containers, Kubernetes, Microservices",
+-            "Data Strategy: Multi-Cloud Data Lakes, Replication",
+-            "Governance: Policy Enforcement, Compliance Across Providers",
+-            "Case Studies: Real-World Multi-Cloud Deployments"
+-        ]
+-    },
+-    {
+-        "id": "mlops_fundamentals",
+-        "title": "MLOps Fundamentals: ML Pipeline Automation & Governance",
+-        "chapter": "aiml-operations",
+-        "outline": [
+-            "MLOps Concepts: ML Lifecycle, Automation, Reproducibility",
+-            "ML Pipeline: Data Preparation, Model Training, Validation, Deployment",
+-            "Model Registry: Version Control, Metadata, Experiment Tracking",
+-            "CI/CD for ML: Automated Testing, Retraining, Deployment Automation",
+-            "Monitoring ML Models: Accuracy Drift, Data Drift, Performance",
+-            "Responsible AI: Fairness, Interpretability, Transparency, Bias Detection",
+-            "Tools & Platforms: Azure ML, MLflow, Kubeflow, DVC",
+-            "Best Practices: Reproducibility, Governance, Collaboration",
+-            "Case Studies: Production ML Systems at Scale"
+-        ]
+-    }
+-]
+-
+-def log(msg):
+-    _core_log("phase6-generator", msg)
+-
+-def generate_article_content(title, outline):
+-    """Generate article content using Claude"""
+-    prompt = f"""Write a comprehensive IT infrastructure article titled "{title}".
+-
+-Section Outline:
+-{chr(10).join(f'- {s}' for s in outline)}
+-
+-Guidelines:
+-- Write in plain English (no jargon without explanation)
+-- Include 30+ interview Q&A
+-- Include 45+ FAQ items
+-- Include 24+ troubleshooting scenarios
+-- Include real-world examples and diagrams descriptions
+-- Professional, enterprise-focused tone
+-- 2000-3000 words
+-- Include introduction, detailed sections, and conclusion
+-- Add practical tips and best practices
+-
+-Return ONLY the article body. No title, no HTML tags."""
+-
+-    return _core_claude(prompt, max_tokens=4000, api_key=API_KEY, model=MODEL, log_fn=log)
+-
+-def main():
+-    if not API_KEY:
+-        print("ERROR: ANTHROPIC_API_KEY not set")
+-        return False
+-
+-    log(f"Starting Phase 6 autonomous content generation ({len(ARTICLES)} articles)")
+-
+-    generated = 0
+-    for i, article in enumerate(ARTICLES, 1):
+-        print(f"\n[{i}/{len(ARTICLES)}] Generating: {article['title']}")
+-
+-        # Generate content
+-        content = generate_article_content(article['title'], article['outline'])
+-        if not content:
+-            print(f"  ERROR: Failed to generate content")
+-            continue
+-
+-        print(f"  ✓ Generated {len(content)} characters")
+-        generated += 1
+-
+-    log(f"Completed: {generated}/{len(ARTICLES)} articles generated")
+-    print(f"\n✓ Phase 6 autonomous generation complete: {generated} articles")
+-    return True
+-
+-if __name__ == "__main__":
+-    success = main()
+-    sys.exit(0 if success else 1)
+diff --git a/itvedas-brain/archive/phase6-publisher.py b/itvedas-brain/archive/phase6-publisher.py
+deleted file mode 100755
+index 396b28d71..000000000
+--- a/itvedas-brain/archive/phase6-publisher.py
++++ /dev/null
+@@ -1,495 +0,0 @@
+-#!/usr/bin/env python3
+-"""
+-Phase 6 Article Publisher
+-Generates, formats, and publishes 11 Phase 6 articles to website
+-"""
+-
+-import os
+-import json
+-import pathlib
+-import sys
+-from datetime import datetime
+-
+-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+-from core.llm import claude as _core_claude
+-from core.log import log as _core_log
+-
+-API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+-MODEL = "claude-haiku-4-5-20251001"
+-SITE = "https://itvedas.com"
+-BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
+-
+-ARTICLES = [
+-    {
+-        "id": "m365_teams_governance",
+-        "title": "Microsoft Teams Governance, Security & Compliance",
+-        "chapter": "microsoft-365",
+-        "color": "#0078D4",
+-        "outline": [
+-            "Teams Architecture: Channels, Conversations, Teams Across Org",
+-            "Governance Framework: Naming Policies, Approval Workflows, Access Control",
+-            "Security: Encryption, Data Loss Prevention (DLP), Conditional Access",
+-            "Compliance: Retention Policies, Legal Hold, eDiscovery",
+-            "Best Practices: Lifecycle Management, Archiving, Team Health",
+-            "Troubleshooting: Common Issues, Monitoring, Performance Tuning"
+-        ]
+-    },
+-    {
+-        "id": "m365_sharepoint_governance",
+-        "title": "SharePoint Online Architecture & Governance at Scale",
+-        "chapter": "microsoft-365",
+-        "color": "#0078D4",
+-        "outline": [
+-            "SharePoint Architecture: Hub Sites, Site Collections, Tenant Structure",
+-            "Site Governance: Naming Conventions, Approval Workflows, Lifecycle",
+-            "Information Architecture: Taxonomy, Metadata, Navigation",
+-            "Security & Permissions: Sites, Lists, Item-Level Permissions",
+-            "Data Management: Retention, Classification, Compliance",
+-            "Modern vs. Classic: Migration Strategy, Feature Parity",
+-            "Performance & Optimization: CDN, Caching, Query Tuning"
+-        ]
+-    },
+-    {
+-        "id": "m365_exchange_hybrid",
+-        "title": "Exchange Online & Hybrid Architecture Patterns",
+-        "chapter": "microsoft-365",
+-        "color": "#0078D4",
+-        "outline": [
+-            "Exchange Online Architecture: Mailboxes, Routing, Federation",
+-            "Hybrid Deployments: Synchronization, Routing, Coexistence",
+-            "Migration Strategies: Staged, Cutover, Hybrid Migration Wizard",
+-            "Security: Encryption, DLP, Advanced Threat Protection",
+-            "Compliance: Retention, Hold, eDiscovery",
+-            "Monitoring & Troubleshooting: Health Dashboard, Message Tracking",
+-            "Performance Tuning: Connection Health, Mailbox Quotas"
+-        ]
+-    },
+-    {
+-        "id": "azure_fundamentals_az900",
+-        "title": "Azure Fundamentals (AZ-900) Complete Study Guide",
+-        "chapter": "azure-certifications",
+-        "color": "#0078D4",
+-        "outline": [
+-            "Cloud Concepts: What is Cloud, Benefits, Types of Cloud Services",
+-            "Azure Services: Compute, Storage, Database, Network, Analytics",
+-            "Azure Pricing & Support: Cost Management, Support Plans, SLA",
+-            "Exam Structure: Question Types, Time Management, Passing Score",
+-            "Study Tips: Best Resources, Practice Tests, Time Investment",
+-            "Key Concepts for Success: Terminology, Common Pitfalls",
+-            "Practice Questions & Answers: 30+ sample questions"
+-        ]
+-    },
+-    {
+-        "id": "azure_admin_az104",
+-        "title": "Azure Administrator (AZ-104) Study Path",
+-        "chapter": "azure-certifications",
+-        "color": "#0078D4",
+-        "outline": [
+-            "Virtual Machines: Creation, Sizing, Networking, Storage",
+-            "Azure Networking: VNets, Subnets, Route Tables, Load Balancers",
+-            "Storage: Blobs, Files, Queues, Table Storage, Accounts",
+-            "Identity & Access: Azure AD, RBAC, Managed Identities",
+-            "Compute Services: App Service, Function Apps, Container Instances",
+-            "Monitoring & Backup: Monitor, Log Analytics, Backup, Recovery",
+-            "Governance & Compliance: Policies, Subscriptions, Resource Groups",
+-            "Exam Strategy: Time Management, Difficult Topics, Lab Practice"
+-        ]
+-    },
+-    {
+-        "id": "azure_architect_az305",
+-        "title": "Azure Solutions Architect (AZ-305) Deep Dive",
+-        "chapter": "azure-certifications",
+-        "color": "#0078D4",
+-        "outline": [
+-            "Design Principles: Scalability, Availability, Security, Cost Optimization",
+-            "Compute Architecture: VMs vs. App Service vs. Serverless Patterns",
+-            "Data Architecture: Database Selection, Data Lake, Data Warehouse",
+-            "Network Design: Hub-Spoke, Multi-Region, Disaster Recovery",
+-            "Security Architecture: Defense in Depth, Encryption, Identity",
+-            "Migration Patterns: Lift-and-Shift, Refactor, Rearchitect, Rebuild",
+-            "Case Studies: E-Commerce Platform, Healthcare System, Financial Services",
+-            "Exam Strategy: Scenario Analysis, Design Thinking, Trade-offs"
+-        ]
+-    },
+-    {
+-        "id": "cloud_security_framework",
+-        "title": "Cloud Security Framework: Defense in Depth Strategy",
+-        "chapter": "cloud-security",
+-        "color": "#C5192D",
+-        "outline": [
+-            "Security Layers: Perimeter, Network, Compute, Data, Application",
+-            "Threat Modeling: STRIDE, Attack Trees, Common Attack Patterns",
+-            "Defense in Depth: Multiple Controls, Redundancy, Resilience",
+-            "Network Security: NACLs, Security Groups, DDoS Protection, WAF",
+-            "Application Security: OWASP Top 10, Secure Coding, SAST/DAST",
+-            "Data Security: Encryption at Rest/Transit, Tokenization, Masking",
+-            "Identity & Access: MFA, RBAC, Privileged Access, Just-in-Time",
+-            "Incident Response: Detection, Containment, Eradication, Recovery",
+-            "Best Practices: Least Privilege, Separation of Duties, Monitoring"
+-        ]
+-    },
+-    {
+-        "id": "compliance_frameworks",
+-        "title": "Compliance Frameworks: HIPAA, GDPR, SOC 2, PCI-DSS",
+-        "chapter": "cloud-security",
+-        "color": "#C5192D",
+-        "outline": [
+-            "Compliance Overview: Regulatory Requirements, Standards, Certifications",
+-            "HIPAA: Protected Health Information (PHI), HITRUST, Audit Requirements",
+-            "GDPR: Data Protection, Privacy by Design, Data Subject Rights",
+-            "SOC 2: Trust Service Criteria, Audit Process, Attestation",
+-            "PCI-DSS: Payment Card Security, Requirements, Validation",
+-            "Cloud Compliance: Shared Responsibility, Assessment, Monitoring",
+-            "Compliance Automation: Policy as Code, Continuous Compliance",
+-            "Case Studies: Compliance in Cloud Migration, Multi-Region Deployment",
+-            "Tools & Resources: Compliance Dashboards, Assessment Tools"
+-        ]
+-    },
+-    {
+-        "id": "hybrid_architecture",
+-        "title": "Hybrid Cloud Architecture: On-Premises to Azure Integration",
+-        "chapter": "hybrid-multicloud",
+-        "color": "#7B2CBF",
+-        "outline": [
+-            "Hybrid Architecture Patterns: Hub-Spoke, Mesh, Islands",
+-            "Connectivity: Site-to-Site VPN, ExpressRoute, Hybrid Runbook Worker",
+-            "Identity Hybrid: Azure AD Connect, Pass-Through Auth, Federation",
+-            "Data Synchronization: Azure AD Sync, DFS, Hybrid File Sync",
+-            "Application Integration: Service Bus, Event Grid, Logic Apps",
+-            "Disaster Recovery: Failover Scenarios, RTO/RPO Targets",
+-            "Monitoring Across Environments: Unified Monitoring, Dashboards",
+-            "Best Practices: Network Design, Security, Performance",
+-            "Migration Path: Step-by-Step Transition Strategy"
+-        ]
+-    },
+-    {
+-        "id": "multicloud_strategy",
+-        "title": "Multi-Cloud Strategy: Azure, AWS, GCP Interoperability",
+-        "chapter": "hybrid-multicloud",
+-        "color": "#7B2CBF",
+-        "outline": [
+-            "Multi-Cloud Overview: Benefits, Challenges, Use Cases",
+-            "Azure-AWS Interoperability: Networking, Identity, Data Transfer",
+-            "Azure-GCP Patterns: Workload Distribution, Vendor Lock-In Prevention",
+-            "Cost Optimization Across Clouds: Reserved Instances, Committed Use",
+-            "Unified Monitoring: Cross-Cloud Dashboards, Alerting",
+-            "Application Portability: Containers, Kubernetes, Microservices",
+-            "Data Strategy: Multi-Cloud Data Lakes, Replication",
+-            "Governance: Policy Enforcement, Compliance Across Providers",
+-            "Case Studies: Real-World Multi-Cloud Deployments"
+-        ]
+-    },
+-    {
+-        "id": "mlops_fundamentals",
+-        "title": "MLOps Fundamentals: ML Pipeline Automation & Governance",
+-        "chapter": "aiml-operations",
+-        "color": "#FF6B35",
+-        "outline": [
+-            "MLOps Concepts: ML Lifecycle, Automation, Reproducibility",
+-            "ML Pipeline: Data Preparation, Model Training, Validation, Deployment",
+-            "Model Registry: Version Control, Metadata, Experiment Tracking",
+-            "CI/CD for ML: Automated Testing, Retraining, Deployment Automation",
+-            "Monitoring ML Models: Accuracy Drift, Data Drift, Performance",
+-            "Responsible AI: Fairness, Interpretability, Transparency, Bias Detection",
+-            "Tools & Platforms: Azure ML, MLflow, Kubeflow, DVC",
+-            "Best Practices: Reproducibility, Governance, Collaboration",
+-            "Case Studies: Production ML Systems at Scale"
+-        ]
+-    }
+-]
+-
+-def log(msg):
+-    _core_log("phase6-publisher", msg)
+-
+-def generate_article_content(title, outline):
+-    """Generate article content using Claude"""
+-    prompt = f"""Write a comprehensive IT infrastructure article titled "{title}".
+-
+-Section Outline:
+-{chr(10).join(f'- {s}' for s in outline)}
+-
+-Guidelines:
+-- Write in plain English (no jargon without explanation)
+-- Include 30+ interview Q&A
+-- Include 45+ FAQ items
+-- Include 24+ troubleshooting scenarios
+-- Include real-world examples and diagrams descriptions
+-- Professional, enterprise-focused tone
+-- 2000-3000 words
+-- Include introduction, detailed sections, and conclusion
+-- Add practical tips and best practices
+-
+-Return ONLY the article body. No title, no HTML tags."""
+-
+-    return _core_claude(prompt, max_tokens=4000, api_key=API_KEY, model=MODEL, log_fn=log)
+-
+-def format_article_html(article, content):
+-    """Format article content as proper HTML"""
+-    title = article['title']
+-    article_id = article['id']
+-    chapter = article['chapter']
+-    color = article['color']
+-
+-    description = f"Enterprise-grade guide to {title.lower()}. Complete with Q&A, FAQs, and troubleshooting scenarios."
+-    keywords = ", ".join([t.strip() for t in title.split("&")] + [article['chapter'].replace("-", " ").title()])
+-
+-    url = f"{SITE}/chapters/{chapter}/articles/{article_id}.html"
+-
+-    html = f"""<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-    <meta charset="UTF-8">
+-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-    <title>{title} | IT Vedas</title>
+-    <meta name="description" content="{description}">
+-    <meta name="keywords" content="{keywords}">
+-    <meta property="og:title" content="{title}">
+-    <meta property="og:description" content="{description}">
+-    <meta property="og:type" content="article">
+-    <meta property="og:url" content="{url}">
+-    <meta name="twitter:card" content="summary_large_image">
+-    <meta name="twitter:title" content="{title}">
+-    <meta name="twitter:description" content="{description}">
+-    <link rel="canonical" href="{url}">
+-
+-    <script type="application/ld+json">
+-    {{
+-      "@context": "https://schema.org",
+-      "@type": "Article",
+-      "headline": "{title}",
+-      "description": "{description}",
+-      "datePublished": "2026-07-04",
+-      "author": {{
+-        "@type": "Organization",
+-        "name": "IT Vedas",
+-        "url": "https://itvedas.com"
+-      }},
+-      "publisher": {{
+-        "@type": "Organization",
+-        "name": "IT Vedas"
+-      }}
+-    }}
+-    </script>
+-
+-    <style>
+-        :root {{ --primary: {color}; }}
+-        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+-        body {{
+-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+-            background: #0A0A0F;
+-            color: #F0F0F8;
+-            line-height: 1.7;
+-        }}
+-        nav {{
+-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+-            display: flex; align-items: center; justify-content: space-between;
+-            padding: 0 2rem; height: 64px;
+-            background: rgba(10,10,15,0.92);
+-            backdrop-filter: blur(32px);
+-            border-bottom: 1px solid rgba(255,255,255,0.08);
+-        }}
+-        .nav-logo {{ font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; }}
+-        article {{ position: relative; z-index: 1; margin-top: 64px; }}
+-        .article-header {{
+-            border-left: 4px solid var(--primary);
+-            padding: 3rem 2rem;
+-            max-width: 900px;
+-            margin: 2rem auto 0;
+-        }}
+-        .article-header h1 {{
+-            font-size: 2.5rem;
+-            margin-bottom: 0.5rem;
+-            font-weight: 700;
+-        }}
+-        .article-meta {{
+-            color: #8888A8;
+-            font-size: 0.9rem;
+-        }}
+-        main {{
+-            max-width: 900px;
+-            margin: 0 auto;
+-            padding: 3rem 2rem;
+-        }}
+-        main h2 {{
+-            font-size: 1.5rem;
+-            margin: 2rem 0 1rem 0;
+-            color: var(--primary);
+-        }}
+-        main h3 {{
+-            font-size: 1.2rem;
+-            margin: 1.5rem 0 0.8rem 0;
+-        }}
+-        main p {{
+-            margin-bottom: 1rem;
+-            color: #D0D0E8;
+-        }}
+-        .qa-section, .faq-section, .troubleshooting {{
+-            background: rgba(255,255,255,0.03);
+-            border: 1px solid rgba(255,255,255,0.08);
+-            border-left: 4px solid var(--primary);
+-            padding: 2rem;
+-            border-radius: 8px;
+-            margin: 2rem 0;
+-        }}
+-        .qa-section h3, .faq-section h3, .troubleshooting h3 {{
+-            margin-top: 0;
+-            color: var(--primary);
+-        }}
+-        .qa-item, .faq-item, .troubleshooting-item {{
+-            margin-bottom: 1.5rem;
+-            padding-bottom: 1.5rem;
+-            border-bottom: 1px solid rgba(255,255,255,0.05);
+-        }}
+-        .qa-item:last-child, .faq-item:last-child, .troubleshooting-item:last-child {{
+-            margin-bottom: 0;
+-            padding-bottom: 0;
+-            border-bottom: none;
+-        }}
+-        .qa-q, .faq-q, .troubleshooting-scenario {{
+-            font-weight: 600;
+-            color: var(--primary);
+-            margin-bottom: 0.5rem;
+-        }}
+-        code {{
+-            background: rgba(0,0,0,0.3);
+-            padding: 0.2em 0.4em;
+-            border-radius: 4px;
+-            font-family: 'Courier New', monospace;
+-            font-size: 0.9em;
+-        }}
+-        pre {{
+-            background: rgba(0,0,0,0.5);
+-            padding: 1rem;
+-            border-radius: 8px;
+-            overflow-x: auto;
+-            margin: 1rem 0;
+-        }}
+-        pre code {{
+-            background: none;
+-            padding: 0;
+-        }}
+-        ul, ol {{
+-            margin: 1rem 0 1rem 2rem;
+-        }}
+-        li {{
+-            margin-bottom: 0.5rem;
+-        }}
+-        footer {{
+-            text-align: center;
+-            padding: 2rem;
+-            color: #8888A8;
+-            font-size: 0.9rem;
+-            border-top: 1px solid rgba(255,255,255,0.08);
+-            margin-top: 3rem;
+-        }}
+-    </style>
+-</head>
+-<body>
+-    <nav>
+-        <a href="/" class="nav-logo">IT<span style="color: #FF6B35;">Vedas</span></a>
+-        <a href="/" style="color: #8888A8; text-decoration: none;">← Back to Home</a>
+-    </nav>
+-
+-    <article>
+-        <div class="article-header">
+-            <h1>{title}</h1>
+-            <p class="article-meta">Published: 2026-07-04 | Chapter: {chapter.replace('-', ' ').title()}</p>
+-        </div>
+-
+-        <main>
+-            {content}
+-
+-            <section class="qa-section">
+-                <h3>🎯 Interview Q&A</h3>
+-                <div class="qa-item">
+-                    <div class="qa-q">Q: What are the key differences between the concepts discussed?</div>
+-                    <p>A: Review the detailed sections above for comprehensive comparisons.</p>
+-                </div>
+-                <div class="qa-item">
+-                    <div class="qa-q">Q: How can these concepts be implemented in production?</div>
+-                    <p>A: See the best practices and real-world examples throughout this article.</p>
+-                </div>
+-            </section>
+-
+-            <section class="faq-section">
+-                <h3>❓ Frequently Asked Questions</h3>
+-                <div class="faq-item">
+-                    <div class="faq-q">What is the best approach for implementation?</div>
+-                    <p>Start with the foundational concepts, understand the architecture, and follow the best practices outlined in each section.</p>
+-                </div>
+-                <div class="faq-item">
+-                    <div class="faq-q">How do I troubleshoot common issues?</div>
+-                    <p>Refer to the troubleshooting scenarios section below for detailed diagnosis and resolution steps.</p>
+-                </div>
+-            </section>
+-
+-            <section class="troubleshooting">
+-                <h3>🔧 Troubleshooting Scenarios</h3>
+-                <div class="troubleshooting-item">
+-                    <div class="troubleshooting-scenario">Scenario: Common Issue Detection</div>
+-                    <p><strong>Problem:</strong> Systems not responding as expected.</p>
+-                    <p><strong>Root Cause:</strong> Configuration mismatch or missing prerequisites.</p>
+-                    <p><strong>Solution:</strong> Verify all settings against documentation and enable comprehensive logging.</p>
+-                </div>
+-                <div class="troubleshooting-item">
+-                    <div class="troubleshooting-scenario">Scenario: Performance Degradation</div>
+-                    <p><strong>Problem:</strong> Slow response times or high resource utilization.</p>
+-                    <p><strong>Root Cause:</strong> Insufficient capacity or suboptimal configuration.</p>
+-                    <p><strong>Solution:</strong> Review capacity planning and implement performance optimization techniques.</p>
+-                </div>
+-            </section>
+-        </main>
+-
+-        <footer>
+-            <p>© 2026 IT Vedas. All rights reserved. | <a href="/" style="color: inherit;">Home</a></p>
+-        </footer>
+-    </article>
+-</body>
+-</html>"""
+-
+-    return html
+-
+-def main():
+-    if not API_KEY:
+-        print("ERROR: ANTHROPIC_API_KEY not set")
+-        return False
+-
+-    log(f"Starting Phase 6 article publishing ({len(ARTICLES)} articles)")
+-
+-    # Create articles directory structure
+-    for article in ARTICLES:
+-        chapter = article['chapter']
+-        articles_dir = BASE_DIR / "chapters" / chapter / "articles"
+-        articles_dir.mkdir(parents=True, exist_ok=True)
+-
+-    published = 0
+-    for i, article in enumerate(ARTICLES, 1):
+-        print(f"\n[{i}/{len(ARTICLES)}] Publishing: {article['title']}")
+-
+-        # Generate content
+-        content = generate_article_content(article['title'], article['outline'])
+-        if not content:
+-            print(f"  ERROR: Failed to generate content")
+-            continue
+-
+-        # Format as HTML
+-        html = format_article_html(article, content)
+-
+-        # Save to file
+-        chapter = article['chapter']
+-        article_id = article['id']
+-        file_path = BASE_DIR / "chapters" / chapter / "articles" / f"{article_id}.html"
+-
+-        with open(file_path, 'w') as f:
+-            f.write(html)
+-
+-        print(f"  ✓ Published {len(content)} chars → {file_path.relative_to(BASE_DIR)}")
+-        published += 1
+-
+-    log(f"Completed: {published}/{len(ARTICLES)} articles published")
+-    print(f"\n✓ Phase 6 publishing complete: {published} articles")
+-    return True
+-
+-if __name__ == "__main__":
+-    success = main()
+-    sys.exit(0 if success else 1)
+diff --git a/itvedas-brain/archive/video-generator-2hourly.py b/itvedas-brain/archive/video-generator-2hourly.py
+deleted file mode 100644
+index 6ad697b55..000000000
+--- a/itvedas-brain/archive/video-generator-2hourly.py
++++ /dev/null
+@@ -1,369 +0,0 @@
+-#!/usr/bin/env python3
+-"""
+-Automated Video Generator - Create AI videos every 2 hours
+-Generates educational videos for chapters with text-to-speech and visual overlays
+-"""
+-
+-import os
+-import json
+-import time
+-import subprocess
+-from datetime import datetime, timedelta
+-from pathlib import Path
+-from bs4 import BeautifulSoup
+-
+-class VideoGenerator:
+-    """Generate educational videos for chapters every 2 hours"""
+-
+-    # Chapter categories to rotate through
+-    CHAPTERS = [
+-        {
+-            "category": "Cloud Computing",
+-            "path": "chapters/cloud",
+-            "topics": [
+-                "AWS S3",
+-                "AWS EC2",
+-                "Kubernetes",
+-                "Docker",
+-                "Serverless",
+-                "Load Balancers",
+-                "Cloud Storage",
+-                "Cloud Cost Optimization"
+-            ]
+-        },
+-        {
+-            "category": "DevOps",
+-            "path": "chapters/devops",
+-            "topics": [
+-                "Jenkins CI/CD",
+-                "GitHub Actions",
+-                "Kubernetes Helm",
+-                "Ansible",
+-                "GitOps",
+-                "Blue-Green Deployment",
+-                "Prometheus Grafana",
+-                "Nginx vs Apache"
+-            ]
+-        },
+-        {
+-            "category": "Databases",
+-            "path": "chapters/databases",
+-            "topics": [
+-                "MySQL vs PostgreSQL",
+-                "MongoDB",
+-                "SQL Query Optimization",
+-                "Database Indexing",
+-                "Database Replication",
+-                "Redis",
+-                "Elasticsearch",
+-                "Database Sharding"
+-            ]
+-        },
+-        {
+-            "category": "Networking",
+-            "path": "chapters/networking",
+-            "topics": [
+-                "OSI Model",
+-                "TCP vs UDP",
+-                "HTTPS/SSL",
+-                "CDN",
+-                "Subnetting",
+-                "Firewall",
+-                "BGP Routing",
+-                "WiFi 802.11"
+-            ]
+-        },
+-        {
+-            "category": "Linux",
+-            "path": "chapters/linux",
+-            "topics": [
+-                "Bash Scripting",
+-                "Linux Permissions",
+-                "File System",
+-                "Cron Jobs",
+-                "SSH Keys",
+-                "Package Management",
+-                "Process Management",
+-                "System Monitoring"
+-            ]
+-        },
+-        {
+-            "category": "CVE Security",
+-            "path": "chapters/cve",
+-            "topics": [
+-                "What is CVE",
+-                "Zero Day Vulnerability",
+-                "CVSS Scoring",
+-                "Security Patch",
+-                "Vulnerability Management",
+-                "Proof of Concept",
+-                "Responsible Disclosure",
+-                "CVE vs CWE"
+-            ]
+-        }
+-    ]
+-
+-    def __init__(self):
+-        self.base_dir = Path('/home/user/itvedas')
+-        self.videos_dir = self.base_dir / 'videos' / 'auto-generated'
+-        self.videos_dir.mkdir(parents=True, exist_ok=True)
+-        self.log_file = self.base_dir / 'itvedas-brain' / 'video-publisher.log'
+-        self.check_dependencies()
+-
+-    def log(self, message):
+-        """Log message with timestamp"""
+-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+-        log_msg = f"[{timestamp}] {message}"
+-        print(log_msg)
+-
+-        with open(self.log_file, 'a') as f:
+-            f.write(log_msg + '\n')
+-
+-    def check_dependencies(self):
+-        """Check if ffmpeg and other dependencies are installed"""
+-        try:
+-            subprocess.run(['ffmpeg', '-version'], capture_output=True, timeout=5)
+-            self.log("✓ ffmpeg available")
+-        except FileNotFoundError:
+-            self.log("⚠ ffmpeg not installed (required for video generation)")
+-        except Exception as e:
+-            self.log(f"⚠ ffmpeg check error: {str(e)}")
+-
+-    def get_current_chapter(self):
+-        """Get chapter based on current hour"""
+-        hour = datetime.now().hour
+-        chapter_index = (hour // 2) % len(self.CHAPTERS)
+-        return self.CHAPTERS[chapter_index]
+-
+-    def extract_chapter_content(self, chapter_path):
+-        """Extract text content from chapter HTML file"""
+-        try:
+-            if not chapter_path.exists():
+-                return None
+-
+-            with open(chapter_path, 'r', encoding='utf-8') as f:
+-                html = f.read()
+-
+-            soup = BeautifulSoup(html, 'html.parser')
+-
+-            # Remove script and style tags
+-            for script in soup(['script', 'style']):
+-                script.decompose()
+-
+-            # Extract text
+-            text = soup.get_text(separator='\n', strip=True)
+-
+-            # Clean up
+-            lines = [line.strip() for line in text.split('\n') if line.strip()]
+-            content = '\n'.join(lines[:2000])  # Limit to 2000 lines
+-
+-            return content
+-        except Exception as e:
+-            self.log(f"Error extracting content: {str(e)}")
+-            return None
+-
+-    def generate_video_script(self, chapter, topic):
+-        """Generate video script using Claude API"""
+-        prompt = f"""Create a 3-5 minute educational video script for beginners about:
+-
+-Topic: {topic}
+-Category: {chapter['category']}
+-Target Audience: IT students and professionals in India
+-Format: Spoken narration with visual descriptions
+-
+-Requirements:
+-1. Beginner-friendly explanation (no jargon or explain terms)
+-2. Clear sections: Introduction (30s), Main content (2-3 min), Examples (1-2 min), Conclusion (30s)
+-3. Each section should be 2-3 sentences for voiceover
+-4. Include visual descriptions in [brackets] for what to show on screen
+-5. Include real-world examples relevant to India
+-6. Keep sentences short and punchy (suitable for speech)
+-7. Add 3-5 key takeaways at the end
+-
+-Format the script as:
+----
+-[VISUAL DESCRIPTION]
+-Narrator: "Script text here..."
+-
+-[VISUAL DESCRIPTION]
+-Narrator: "Script text here..."
+----
+-
+-Video Topic: {topic}
+-"""
+-
+-        try:
+-            api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
+-            if not api_key:
+-                self.log("ERROR: ANTHROPIC_API_KEY not set")
+-                return None
+-
+-            cmd = f"""python3 -c "
+-import anthropic
+-client = anthropic.Anthropic(api_key='{api_key}')
+-message = client.messages.create(
+-    model='claude-opus-4-1',
+-    max_tokens=2048,
+-    messages=[{{'role': 'user', 'content': '''{{prompt}}'''}}]
+-)
+-print(message.content[0].text)
+-"
+-"""
+-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
+-
+-            if result.returncode == 0:
+-                return result.stdout.strip()
+-            else:
+-                self.log(f"ERROR: Script generation failed: {result.stderr}")
+-                return None
+-
+-        except Exception as e:
+-            self.log(f"ERROR: {str(e)}")
+-            return None
+-
+-    def generate_voiceover(self, script_text):
+-        """Generate voiceover using ElevenLabs API (if available)"""
+-        try:
+-            api_key = os.environ.get('ELEVENLABS_API_KEY', '').strip()
+-            if not api_key:
+-                self.log("⚠ ElevenLabs API key not set, skipping voiceover generation")
+-                return None
+-
+-            # Remove visual descriptions for voiceover
+-            lines = script_text.split('\n')
+-            voiceover_lines = []
+-            for line in lines:
+-                if not line.startswith('[') and line.startswith('Narrator:'):
+-                    text = line.replace('Narrator:', '').strip().strip('"')
+-                    voiceover_lines.append(text)
+-
+-            voiceover_text = ' '.join(voiceover_lines)
+-
+-            # Call ElevenLabs API
+-            import requests
+-            url = "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM"
+-
+-            headers = {
+-                "xi-api-key": api_key,
+-                "Content-Type": "application/json"
+-            }
+-
+-            data = {
+-                "text": voiceover_text,
+-                "model_id": "eleven_monolingual_v1",
+-                "voice_settings": {
+-                    "stability": 0.5,
+-                    "similarity_boost": 0.75
+-                }
+-            }
+-
+-            response = requests.post(url, json=data, headers=headers, timeout=120)
+-
+-            if response.status_code == 200:
+-                return response.content
+-            else:
+-                self.log(f"⚠ ElevenLabs error: {response.status_code}")
+-                return None
+-
+-        except ImportError:
+-            self.log("⚠ requests library not available for voiceover")
+-            return None
+-        except Exception as e:
+-            self.log(f"⚠ Voiceover generation error: {str(e)}")
+-            return None
+-
+-    def create_video_with_text(self, script_text, topic, audio_file=None):
+-        """Create video with text overlays using ffmpeg"""
+-        try:
+-            slug = topic.replace(' ', '-').lower()
+-            output_file = self.videos_dir / f"{slug}.mp4"
+-
+-            # For now, create a simple video with text overlay
+-            # Full implementation would require ffmpeg with video encoding
+-
+-            self.log(f"📹 Video template created for: {topic}")
+-
+-            # Save script as subtitle file for video production
+-            subtitle_file = self.videos_dir / f"{slug}.vtt"
+-            with open(subtitle_file, 'w') as f:
+-                f.write("WEBVTT\n\n")
+-                f.write("00:00:00.000 --> 00:00:10.000\n")
+-                f.write(f"{topic}\n\n")
+-                f.write("00:00:10.000 --> 00:00:30.000\n")
+-                f.write("Watch this educational video about " + topic + "\n")
+-
+-            return str(output_file)
+-
+-        except Exception as e:
+-            self.log(f"ERROR creating video: {str(e)}")
+-            return None
+-
+-    def publish_video(self):
+-        """Generate and publish single video"""
+-        chapter = self.get_current_chapter()
+-        topic_index = datetime.now().minute % len(chapter['topics'])
+-        topic = chapter['topics'][topic_index]
+-
+-        self.log(f"🎬 Generating video: {chapter['category']} - {topic}")
+-
+-        # Generate video script
+-        script = self.generate_video_script(chapter, topic)
+-
+-        if not script:
+-            self.log("✗ Failed to generate video script")
+-            return False
+-
+-        # Generate voiceover (optional, if ElevenLabs key available)
+-        audio = self.generate_voiceover(script)
+-        if audio:
+-            self.log(f"✓ Voiceover generated ({len(audio)} bytes)")
+-
+-        # Create video with text overlays
+-        video_path = self.create_video_with_text(script, topic, audio)
+-
+-        if video_path:
+-            self.log(f"✅ Published: {chapter['category']} video on '{topic}'")
+-            return True
+-
+-        return False
+-
+-    def schedule_video_publisher(self):
+-        """Run video publisher on schedule (every 2 hours)"""
+-        self.log("🚀 Starting automated video publisher (every 2 hours)")
+-
+-        while True:
+-            try:
+-                self.publish_video()
+-
+-                # Wait 2 hours (7200 seconds)
+-                next_publish = datetime.now() + timedelta(hours=2)
+-                self.log(f"⏱️ Next video: {next_publish.strftime('%Y-%m-%d %H:%M:%S')}")
+-                self.log("Sleeping for 2 hours...")
+-                time.sleep(7200)
+-
+-            except KeyboardInterrupt:
+-                self.log("🛑 Video publisher stopped by user")
+-                break
+-            except Exception as e:
+-                self.log(f"✗ Error: {str(e)}")
+-                time.sleep(300)  # Wait 5 min and retry
+-
+-def main():
+-    generator = VideoGenerator()
+-
+-    import sys
+-    if len(sys.argv) > 1:
+-        if sys.argv[1] == 'test':
+-            # Generate one test video
+-            generator.log("🎬 Test mode: Generating single video...")
+-            generator.publish_video()
+-        elif sys.argv[1] == 'schedule':
+-            # Start 2-hourly scheduler
+-            generator.schedule_video_publisher()
+-    else:
+-        print("Usage:")
+-        print("  python3 video-generator-2hourly.py test      # Generate one test video")
+-        print("  python3 video-generator-2hourly.py schedule  # Start 2-hourly scheduler")
+-
+-if __name__ == '__main__':
+-    main()
+diff --git a/itvedas-brain/auto-publisher-2hourly.py b/itvedas-brain/auto-publisher-2hourly.py
+deleted file mode 100644
+index fbaefe34a..000000000
+--- a/itvedas-brain/auto-publisher-2hourly.py
++++ /dev/null
+@@ -1,320 +0,0 @@
+-#!/usr/bin/env python3
+-"""
+-Automated Article Publisher - Publish every 2 hours
+-Generates and publishes trending IT/Security articles on schedule
+-"""
+-
+-import os
+-import json
+-import time
+-from datetime import datetime, timedelta
+-from pathlib import Path
+-
+-class AutoPublisher:
+-    """Publish articles every 2 hours on various IT topics"""
+-
+-    # Topic rotation (every 2 hours, 12 articles per day) - INDIA OPTIMIZED
+-    TOPICS = [
+-        {
+-            "category": "CVE/Security",
+-            "keywords": [
+-                "how to protect from ransomware attack India",
+-                "critical vulnerability explained for beginners",
+-                "zero-day exploit analysis and prevention",
+-                "malware detection techniques for Windows Linux",
+-                "latest security patch installation guide",
+-                "cybersecurity threats India 2026",
+-                "data breach prevention tips",
+-                "antivirus software comparison India"
+-            ]
+-        },
+-        {
+-            "category": "Cloud Computing",
+-            "keywords": [
+-                "AWS pricing and cost optimization India",
+-                "Azure deployment guide for beginners",
+-                "cloud computing benefits for Indian startups",
+-                "serverless computing explained simply",
+-                "Google Cloud vs AWS vs Azure comparison",
+-                "cloud security best practices",
+-                "cloud storage solutions for small business India",
+-                "how to migrate to cloud from on-premise"
+-            ]
+-        },
+-        {
+-            "category": "DevOps/Automation",
+-            "keywords": [
+-                "Docker containerization tutorial for beginners",
+-                "Kubernetes orchestration step by step",
+-                "CI/CD pipeline setup with Jenkins",
+-                "infrastructure as code with Terraform",
+-                "DevOps tools comparison 2026",
+-                "continuous deployment best practices",
+-                "automation testing with Selenium",
+-                "GitLab vs GitHub for DevOps"
+-            ]
+-        },
+-        {
+-            "category": "Networking",
+-            "keywords": [
+-                "how does VPN work explained simply",
+-                "best VPN for India legal issues",
+-                "network security protocols explained",
+-                "how to use VPN on mobile India",
+-                "firewall configuration tutorial",
+-                "DNS security and DNS over HTTPS",
+-                "network troubleshooting commands",
+-                "how to secure home WiFi network"
+-            ]
+-        },
+-        {
+-            "category": "Linux/System Admin",
+-            "keywords": [
+-                "Linux commands every beginner should know",
+-                "how to install Linux on Windows",
+-                "Ubuntu vs CentOS which is better",
+-                "Linux system hardening security guide",
+-                "Linux performance tuning tips",
+-                "how to manage users and permissions Linux",
+-                "Linux system monitoring tools",
+-                "bash scripting tutorial for beginners"
+-            ]
+-        },
+-        {
+-            "category": "Databases",
+-            "keywords": [
+-                "MySQL vs PostgreSQL comparison 2026",
+-                "how to optimize slow SQL queries",
+-                "MongoDB tutorial for beginners",
+-                "database backup and recovery strategies",
+-                "database replication master slave setup",
+-                "database indexing explained simply",
+-                "NoSQL vs SQL when to use which",
+-                "database security best practices"
+-            ]
+-        },
+-        {
+-            "category": "Web Development",
+-            "keywords": [
+-                "REST API design best practices",
+-                "how to build secure web application",
+-                "API authentication OAuth vs JWT",
+-                "web server Apache vs Nginx comparison",
+-                "how to deploy web application to production",
+-                "HTTPS SSL certificate installation guide",
+-                "web performance optimization techniques",
+-                "web application firewall WAF explained"
+-            ]
+-        },
+-        {
+-            "category": "AI/Machine Learning",
+-            "keywords": [
+-                "machine learning for beginners explained",
+-                "artificial intelligence vs machine learning",
+-                "how to train machine learning model",
+-                "deep learning neural networks tutorial",
+-                "TensorFlow vs PyTorch comparison",
+-                "natural language processing NLP explained",
+-                "computer vision applications 2026",
+-                "machine learning ethics and bias"
+-            ]
+-        }
+-    ]
+-
+-    def __init__(self):
+-        self.base_dir = Path(__file__).resolve().parent.parent
+-        self.articles_dir = self.base_dir / 'articles' / 'auto-generated'
+-        self.articles_dir.mkdir(parents=True, exist_ok=True)
+-        self.log_file = self.base_dir / 'itvedas-brain' / 'publisher.log'
+-
+-    def log(self, message):
+-        """Log message with timestamp"""
+-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+-        log_msg = f"[{timestamp}] {message}"
+-        print(log_msg)
+-
+-        with open(self.log_file, 'a') as f:
+-            f.write(log_msg + '\n')
+-
+-    def get_current_topic(self):
+-        """Get topic based on current hour"""
+-        hour = datetime.now().hour
+-        topic_index = (hour // 2) % len(self.TOPICS)
+-        return self.TOPICS[topic_index]
+-
+-    def generate_article_prompt(self, topic, keyword):
+-        """Generate Claude prompt for article"""
+-        prompt = f"""
+-Generate a comprehensive IT education article for beginners:
+-
+-Topic: {topic['category']}
+-Keyword: {keyword}
+-Target Audience: IT students and professionals in India
+-Length: 1500-2000 words
+-Format: HTML with proper structure
+-
+-Requirements:
+-1. Clear, beginner-friendly explanation
+-2. Real-world examples relevant to India
+-3. Practical tips and best practices
+-4. Step-by-step guides where applicable
+-5. Common mistakes to avoid
+-6. Internal link opportunities (mention related topics)
+-7. SEO-optimized headings
+-8. Include FAQ section with 5-7 questions
+-9. All prices and money amounts must be in Indian Rupees (₹), never USD
+-
+-Write the article in HTML format with:
+-- Proper semantic HTML5
+-- h2, h3, h4 headings
+-- Paragraphs and lists
+-- Code examples where relevant
+-- Strong, em tags for emphasis
+-
+-Start with <article> tag and end with </article>
+-
+-Article keyword: {keyword}
+-Article category: {topic['category']}
+-"""
+-        return prompt
+-
+-    def call_claude_api(self, prompt):
+-        """Call Claude API via Anthropic SDK (in-process, no shell)"""
+-        try:
+-            api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
+-            if not api_key:
+-                self.log("ERROR: ANTHROPIC_API_KEY not set")
+-                return None
+-
+-            import anthropic
+-            client = anthropic.Anthropic(api_key=api_key, timeout=300.0)
+-            message = client.messages.create(
+-                model='claude-sonnet-5',
+-                max_tokens=8000,
+-                messages=[{'role': 'user', 'content': prompt}]
+-            )
+-            return message.content[0].text.strip()
+-
+-        except Exception as e:
+-            self.log(f"ERROR: API call failed: {str(e)}")
+-            return None
+-
+-    def create_html_article(self, article_content, topic, keyword):
+-        """Wrap article content in full HTML template"""
+-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+-        slug = keyword.replace(' ', '-').lower()
+-
+-        html = f"""<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-<meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+-<title>{keyword.title()} - Complete Guide 2026 | ITVedas</title>
+-<meta name="description" content="Learn {keyword} in plain English. Step-by-step guide with examples, best practices, and real-world applications. Updated {timestamp}.">
+-<meta name="keywords" content="{keyword}, IT education, {topic['category']}, beginner guide">
+-<link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+-<link rel="canonical" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<link rel="alternate" hreflang="x-default" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<link rel="alternate" hreflang="en-US" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<link rel="alternate" hreflang="en-GB" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<link rel="alternate" hreflang="en-IN" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<link rel="alternate" hreflang="en" href="https://www.itvedas.com/articles/auto-generated/{slug}.html">
+-<style>
+-:root{{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--accent:#FF6B35;}}
+-*{{box-sizing:border-box;margin:0;padding:0;}}
+-body{{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.8;}}
+-article{{max-width:860px;margin:4rem auto;padding:2rem;}}
+-h2{{font-size:1.8rem;margin:2rem 0 1rem;color:var(--text);}}
+-h3{{font-size:1.4rem;margin:1.5rem 0 0.75rem;color:var(--text);}}
+-p{{margin:1rem 0;color:var(--text);}}
+-code{{background:var(--bg2);padding:0.2rem 0.5rem;border-radius:4px;font-family:monospace;}}
+-</style>
+-</head>
+-<body>
+-<article>
+-{article_content}
+-</article>
+-</body>
+-</html>
+-"""
+-        return html, slug
+-
+-    def save_article(self, html_content, slug):
+-        """Save article to file"""
+-        filename = self.articles_dir / f"{slug}.html"
+-
+-        try:
+-            with open(filename, 'w') as f:
+-                f.write(html_content)
+-
+-            self.log(f"✓ Article saved: {filename}")
+-            return True
+-        except Exception as e:
+-            self.log(f"✗ Error saving article: {str(e)}")
+-            return False
+-
+-    def publish_article(self):
+-        """Generate and publish single article"""
+-        topic = self.get_current_topic()
+-        keyword = topic['keywords'][datetime.now().minute % len(topic['keywords'])]
+-
+-        self.log(f"📝 Generating article: {topic['category']} - {keyword}")
+-
+-        # Generate article via Claude
+-        prompt = self.generate_article_prompt(topic, keyword)
+-        article_content = self.call_claude_api(prompt)
+-
+-        if not article_content:
+-            self.log("✗ Failed to generate article content")
+-            return False
+-
+-        # Create full HTML
+-        html, slug = self.create_html_article(article_content, topic, keyword)
+-
+-        # Save to file
+-        if self.save_article(html, slug):
+-            self.log(f"✅ Published: {topic['category']} article on '{keyword}'")
+-            return True
+-
+-        return False
+-
+-    def schedule_publisher(self):
+-        """Run publisher on schedule (every 2 hours)"""
+-        self.log("🚀 Starting automated publisher (every 2 hours)")
+-
+-        while True:
+-            try:
+-                self.publish_article()
+-
+-                # Wait 2 hours (7200 seconds)
+-                next_publish = datetime.now() + timedelta(hours=2)
+-                self.log(f"⏱️ Next publish: {next_publish.strftime('%Y-%m-%d %H:%M:%S')}")
+-                self.log("Sleeping for 2 hours...")
+-                time.sleep(7200)
+-
+-            except KeyboardInterrupt:
+-                self.log("🛑 Publisher stopped by user")
+-                break
+-            except Exception as e:
+-                self.log(f"✗ Error: {str(e)}")
+-                time.sleep(300)  # Wait 5 min and retry
+-
+-def main():
+-    publisher = AutoPublisher()
+-
+-    import sys
+-    if len(sys.argv) > 1:
+-        if sys.argv[1] == 'test':
+-            # Generate one test article
+-            publisher.log("📝 Test mode: Generating single article...")
+-            publisher.publish_article()
+-        elif sys.argv[1] == 'schedule':
+-            # Start 2-hourly scheduler
+-            publisher.schedule_publisher()
+-    else:
+-        print("Usage:")
+-        print("  python3 auto-publisher-2hourly.py test      # Generate one test article")
+-        print("  python3 auto-publisher-2hourly.py schedule  # Start 2-hourly scheduler")
+-
+-if __name__ == '__main__':
+-    main()
+diff --git a/itvedas-brain/core/llm.py b/itvedas-brain/core/llm.py
+index 8acf05518..f68dc2080 100644
+--- a/itvedas-brain/core/llm.py
++++ b/itvedas-brain/core/llm.py
+@@ -1,6 +1,6 @@
+ """Shared Google Gemini HTTP call helpers for all ITVedas brain scripts.
+ 
+-Replaces legacy Anthropic and OpenAI integrations with Google Gemini (gemini-2.5-flash)
++Replaces legacy LLM integrations with Google Gemini (gemini-2.5-flash)
+ using standard library urllib.request (zero external dependencies).
+ 
+ Backwards-compatible aliases for claude and openai_chat are provided so all
+@@ -35,8 +35,8 @@ def gemini(
+ ) -> str:
+     """Call Google Gemini generateContent API, with automatic retry."""
+     # Only ever send a Gemini key to Google. Never fall back to keys issued by
+-    # other providers (ANTHROPIC_API_KEY / OPENAI_API_KEY): doing so would hand
+-    # a third party's secret to Google's endpoint and its request logs.
++    # other providers: doing so would hand a third party's secret to Google's
++    # endpoint and its request logs.
+     key = ((api_key or "").strip() or os.environ.get("GEMINI_API_KEY", "")).strip()
+ 
+     notify = log_fn or (lambda msg: _default_log("llm", msg))
+-- 
+2.43.0
+
