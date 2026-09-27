@@ -11,7 +11,7 @@ import requests
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from cve_store import load_db, save_db, severity, classify_type
-NVD='https://services.nvd.nist.gov/rest/json/cves/2.0'; KEV='https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json'; GHA='https://api.github.com/security-advisories'
+NVD='https://services.nvd.nist.gov/rest/json/cves/2.0'; KEV='https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json'; GHA='https://api.github.com/advisories'  # global advisory DB (was /security-advisories, a 404)
 REPORT=Path('cve-ingestion-report.json'); CHECKPOINT=Path('.cve_last_sync'); HEADERS={'Accept':'application/json'}
 def now(): return datetime.now(timezone.utc)
 def get(url,params=None,headers=None):
@@ -44,22 +44,45 @@ def normalize(cve,kev):
    if v and v not in cwes:cwes.append(v)
  refs=[x.get('url') for x in cve.get('references',[]) if x.get('url')];published=cve.get('published','');modified=cve.get('lastModified',published);year=int(cid.split('-')[1]) if len(cid.split('-'))>1 and cid.split('-')[1].isdigit() else now().year
  return {'id':cid,'name':desc[:100] or cid,'affected':next(iter(vendors),'Unknown'),'affected_products':sorted(products)[:20],'year':year,'severity':severity(s,ver),'cvss':round(s,1),'cvss_version':ver,'type':classify_type(desc,cwes),'description':desc[:500] or 'No description available','remediation':'Apply vendor security updates and follow NVD/vendor mitigation guidance.','published_date':published.split('T')[0] if published else now().date().isoformat(),'last_modified_date':modified,'cwe':cwes,'known_exploited':cid in kev,'references':refs[:50],'source':'nvd','withdrawn':cve.get('vulnStatus')=='Rejected'}
+def fetch_github_advisories(report):
+ """CVE-id -> {ghsa,url,summary} from GitHub's global advisory database.
+
+ Newest-updated first, following the cursor in the Link header (this endpoint
+ has no page= parameter). Normally stops once advisories are older than the
+ last sync minus 7 days; set GHSA_BACKFILL=1 to walk the whole database once.
+ """
+ token=os.getenv('GITHUB_TOKEN');gh={}
+ headers={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+ if token:headers['Authorization']=f'Bearer {token}'
+ backfill=os.getenv('GHSA_BACKFILL')=='1';max_pages=int(os.getenv('GHSA_MAX_PAGES','400' if backfill else '20'))
+ cutoff=None
+ if not backfill and CHECKPOINT.exists():
+  try:cutoff=datetime.fromisoformat(CHECKPOINT.read_text().strip())-timedelta(days=7)
+  except Exception:cutoff=None
+ url,params=GHA,{'per_page':100,'sort':'updated','direction':'desc'}
+ try:
+  for _ in range(max_pages):
+   data,resp=get(url,params,headers);params=None
+   stop=False
+   for a in data:
+    cid=a.get('cve_id') or next((i.get('value') for i in a.get('identifiers',[]) if i.get('type')=='CVE'),None)
+    if cid:gh.setdefault(cid.upper(),{'ghsa':a.get('ghsa_id'),'url':a.get('html_url'),'summary':a.get('summary')})
+    upd=a.get('updated_at')
+    if cutoff and upd:
+     try:
+      if datetime.fromisoformat(upd.replace('Z','+00:00'))<cutoff:stop=True
+     except ValueError:pass
+   nxt=next((part.split(';')[0].strip()[1:-1] for part in resp.headers.get('Link','').split(',') if 'rel="next"' in part),None)
+   if stop or not data or not nxt:break
+   url=nxt
+ except Exception as e:report['warnings'].append('GitHub advisory enrichment skipped: '+str(e))
+ return gh
+
 def main():
  db=load();before={k:json.dumps(v,sort_keys=True) for k,v in db.items()};report={'timestamp':now().isoformat(),'new_cves':[],'updated_cves':[],'kev_updates':[],'github_advisories':0,'warnings':[],'errors':[]}
  try:kev={x['cveID'] for x in get(KEV)[0].get('vulnerabilities',[]) if x.get('cveID')}
  except Exception as e:kev={k for k,v in db.items() if v.get('known_exploited')};report['errors'].append('CISA KEV: '+str(e))
- gh={};token=os.getenv('GITHUB_TOKEN')
- if token:
-  try:
-   page=1
-   while True:
-    data,resp=get(GHA,{'per_page':100,'page':page},{'Accept':'application/vnd.github+json','Authorization':f'Bearer {token}'})
-    for a in data:
-     for ident in a.get('identifiers',[]):
-      if ident.get('type')=='CVE' and ident.get('value'):gh[ident['value']]={'ghsa':a.get('ghsa_id'),'url':a.get('html_url'),'summary':a.get('summary')}
-    if len(data)<100 or 'rel="next"' not in resp.headers.get('Link',''):break
-    page+=1
-  except Exception as e:report['warnings'].append('GitHub advisory enrichment skipped: '+str(e))
+ gh=fetch_github_advisories(report)
  report['github_advisories']=len(gh)
  checkpoint=now()-timedelta(hours=2)
  if CHECKPOINT.exists():
@@ -78,6 +101,12 @@ def main():
    elif before.get(item['id'])!=json.dumps(item,sort_keys=True):report['updated_cves'].append(item['id'])
   start+=100
   if start>=int(data.get('totalResults',0)) or not items:break
+ for cid,adv in gh.items():
+  item=db.get(cid)
+  if item is not None and item.get('github_advisory')!=adv:
+   item['github_advisory']=adv
+   if adv.get('url') and adv['url'] not in item.get('references',[]):item['references']=list(item.get('references',[]))+[adv['url']]
+   if cid not in report['new_cves'] and cid not in report['updated_cves']:report['updated_cves'].append(cid)
  for cid,item in db.items():
   flag=cid in kev
   if item.get('known_exploited')!=flag:item['known_exploited']=flag;report['kev_updates'].append(cid)
