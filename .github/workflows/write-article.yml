@@ -87,6 +87,9 @@ jobs:
       - name: Rebuild sitemap
         run: python3 scripts/generate-sitemap.py
 
+      - name: Apply shared site navigation to new pages
+        run: python3 scripts/apply-site-nav.py
+
       - name: Commit and push
         run: |
           git config user.name "ITVedas Bot"
