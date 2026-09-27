@@ -11,7 +11,7 @@ Static HTML site — **no frontend framework, no build tool, no `package.json`**
 
 - **Backend**: exactly two Cloudflare Pages Functions exist — `functions/api/career-advice.js` and `functions/api/subscribe.js`. Nothing else server-side.
 - **Content pipeline**: `itvedas-brain/` — Python scripts run by GitHub Actions that write articles (OpenAI drafts, Claude reviews/QA-gates), generate news commentary (Claude), and sync CVE data. This is what the frequent "Autopilot update" commits are.
-- **`ARCHITECTURE.md` is not a factual architecture doc** — it's a mission/role-prompt document with unverifiable "Phases 1–15 completed" claims. Treat as aspirational, not current-state.
+- **`ARCHITECTURE.md` (now `docs/archive/ARCHITECTURE-vision.md`) is not a factual architecture doc** — it's a mission/role-prompt document with unverifiable "Phases 1–15 completed" claims. Treat as aspirational, not current-state.
 - **`docs/REPOSITORY_KNOWLEDGE_MAP.md` is stale** (dated 2026-06-18) — describes `scripts/brain.py`/`scripts/news_agent_v2.py`, neither of which exists anymore. Superseded by the current `itvedas-brain/` pipeline.
 
 ## 2. Backend

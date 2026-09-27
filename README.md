@@ -25,42 +25,54 @@ itvedas-brain/core/   Shared LLM call + logging helpers for all brain scripts
 
 ## Content pipeline
 
-Two scripts run unattended on a schedule (`.github/workflows/write-article.yml`):
+All LLM calls go through `itvedas-brain/core/llm.py`, which uses **Google
+Gemini** (`gemini-2.5-flash` by default). Scheduled runs live in
+`.github/workflows/write-article.yml`:
 
 - **`itvedas-brain/content-writer.py`** — picks the next keyword from the content
-  calendar, writes a full article with Claude, self-reviews it, builds the
-  styled HTML page, publishes it to `articles/`, refreshes the homepage
-  "Latest Articles" section and chapter landing pages, and regenerates
-  `sitemap.xml`. Runs Mon/Wed/Fri. Once every calendar keyword already has
-  a published article, it stops publishing new pages for keywords it
-  already ranks for and instead refreshes the oldest article in place
-  (same URL, new content, `dateModified` bumped) — a freshness signal
-  instead of a second page competing for the same exact-match keyword.
+calendar, writes a full article, self-reviews it, builds the styled HTML page,
+publishes it to `articles/`, refreshes the homepage "Latest Articles" section
+and chapter landing pages, and regenerates `sitemap.xml`. Runs Mon/Wed/Fri.
+Once every calendar keyword already has a published article, it refreshes the
+oldest article in place (same URL, new content, `dateModified` bumped) instead
+of creating a second page competing for the same keyword.
 - **`itvedas-brain/news-agent.py`** — fetches RSS headlines (including
-  security/CVE feeds), generates original commentary with Claude for every
-  fresh story (capped at `MAX_NEW_ARTICLES_PER_RUN`), and publishes to
-  `news/`. Runs hourly so new stories — especially CVEs, attacks and
-  breaches surfaced on `/security-news.html` — go live within about an
-  hour of being published upstream.
+security/CVE feeds), writes AI-assisted commentary for fresh stories (at most
+`MAX_NEW_ARTICLES_PER_RUN` = 8 per run), and publishes to `news/`. Runs **once
+daily**. Every news page carries a disclosure that it is AI-assisted and links
+the original source.
 
-Both scripts require `ANTHROPIC_API_KEY` and exit immediately if it's
-missing. Optional env vars (`GA4_ID`, `NOTIFY_EMAIL`, `SMTP_FROM`,
-`SMTP_PASS`) are documented in the docstring at the top of `content-writer.py`.
+**Review gate.** Each draft is scored by a second model call before publishing.
+A draft below the bar is rewritten once and reviewed again; if it still fails,
+or the review call itself fails, it is not published that run. Set
+`REVIEW_STRICT=0` to restore the old publish-regardless behaviour.
 
-Both scripts also ping [IndexNow](https://www.indexnow.org) (`itvedas-brain/core/indexnow.py`)
-after publishing, so Bing/Yandex pick up new or refreshed pages immediately
-instead of waiting for their next crawl. `<KEY>.txt` at the repo root is the
-public ownership-verification file IndexNow requires — it's not a secret.
-Google has no equivalent public instant-indexing API, so this doesn't cover
-Google; discovery there still relies on `sitemap.xml` + normal crawling.
+**Environment variables**
 
-Workflow cron schedules are in UTC; comments in
-`.github/workflows/write-article.yml` note the equivalent IST time.
+| Variable | Required | Used by |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | yes | both scripts (exit immediately if missing) |
+| `GEMINI_MODEL` | no | override the model (default `gemini-2.5-flash`) |
+| `REVIEW_STRICT` | no | `1` (default) blocks unreviewed drafts; `0` disables |
+| `GA4_ID` | no | analytics tag on generated pages |
+| `NOTIFY_EMAIL`, `SMTP_FROM`, `SMTP_PASS` | no | content-writer email notifications |
+
+The key is sent to Google in the `x-goog-api-key` header, never in the URL, and
+keys issued by other providers are never used as a fallback.
+
+Both scripts ping [IndexNow](https://www.indexnow.org) (`itvedas-brain/core/indexnow.py`)
+after publishing, so Bing/Yandex pick up new or refreshed pages immediately.
+`<KEY>.txt` at the repo root is the public ownership-verification file IndexNow
+requires — it's not a secret. Google has no equivalent API, so discovery there
+relies on `sitemap.xml` and normal crawling.
+
+Workflow cron schedules are in UTC; comments in `.github/workflows/write-article.yml`
+note the equivalent IST time.
 
 ### Running the pipeline locally
 
-```bash
-export ANTHROPIC_API_KEY=sk-...
+```
+export GEMINI_API_KEY=...
 python3 itvedas-brain/content-writer.py   # write a new article
 python3 itvedas-brain/news-agent.py       # refresh the news feed
 ```
@@ -68,10 +80,34 @@ python3 itvedas-brain/news-agent.py       # refresh the news feed
 Both scripts read/write relative to the repository root, so run them from
 the repo root.
 
+## CVE database
+
+`.github/workflows/cve-daily-sync.yml` runs `scripts/cve_unified_sync.py` daily
+(NVD is canonical, CISA KEV marks known exploitation, GitHub advisories add
+references). All scripts read and write through `scripts/cve_store.py`:
+
+- The canonical DB is **`cve-database-full.json.gz`** (gzipped, written
+  deterministically so unchanged data produces no git diff). A legacy
+  `cve-database-full.json` is migrated automatically on the next sync.
+- CVEs NVD hasn't scored yet get severity **`Unscored`** (shown as "Not yet
+  scored"), not `Low`.
+- `type` is derived from CWE ids and the description.
+
+`scripts/split-cve-database.py` then writes `cve-data/cve-summary-index.json`
+(what the listing/dashboard load) and one `cve-data/details/<ID>.json` per CVE.
+CVE text comes from third parties, so pages must escape it before inserting it
+into HTML.
+
 ## Other workflows
 
-- **`.github/workflows/validate-static-site.yml`** — validates JSON files
-  and generated HTML on every push.
+- **`.github/workflows/validate-static-site.yml`** — validates JSON, the CVE
+schema, and JavaScript syntax on every push.
+
+## Documentation
+
+Current guides are in [`docs/`](docs/). Superseded plans and one-off reports
+are kept in [`docs/archive/`](docs/archive/) for history and should not be
+treated as describing the current system.
 
 ## Troubleshooting
 

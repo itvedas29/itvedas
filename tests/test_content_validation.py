@@ -223,7 +223,7 @@ class TestDocumentation(unittest.TestCase):
 
     def test_api_documentation_exists(self):
         """API documentation should exist"""
-        api_doc = Path(str(REPO_ROOT) + "/API.md")
+        api_doc = Path(str(REPO_ROOT) + "/docs/API.md")
         self.assertTrue(api_doc.exists())
 
     def test_contributing_guide_exists(self):
@@ -243,7 +243,7 @@ class TestDocumentation(unittest.TestCase):
 
     def test_api_documentation_content(self):
         """API documentation should have endpoints documented"""
-        api_doc = Path(str(REPO_ROOT) + "/API.md")
+        api_doc = Path(str(REPO_ROOT) + "/docs/API.md")
         content = api_doc.read_text(encoding="utf-8")
 
         self.assertIn("/api/subscribe", content)
