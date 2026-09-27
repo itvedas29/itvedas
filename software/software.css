@@ -132,14 +132,14 @@ nav {
 .crumbs span[aria-current] { color: var(--ink-2); }
 
 /* Product header */
-.prod-head { display: grid; grid-template-columns: 170px minmax(0, 1fr); }
+.prod-head { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
 .prod-plate {
-  background: var(--navy); color: #fff;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line);
   border-radius: var(--radius) 0 0 var(--radius);
   display: grid; place-items: center; padding: 1.25rem;
 }
-@media (prefers-color-scheme: dark) { .prod-plate { background: #16305A; } }
-.prod-plate svg { width: 100%; max-width: 128px; height: auto; }
+.plate-logo { display: block; width: 100%; max-width: 210px; height: auto; }
 .prod-info { padding: 1.3rem 1.5rem 1.1rem; display: grid; gap: 0.9rem; }
 .prod-title h1 {
   font-family: var(--fd); font-weight: 700; letter-spacing: -0.02em;
@@ -151,8 +151,8 @@ nav {
 .facts b { font-weight: 600; color: var(--ink); }
 @media (max-width: 640px) {
   .prod-head { grid-template-columns: 1fr; }
-  .prod-plate { border-radius: var(--radius) var(--radius) 0 0; padding: 1rem; }
-  .prod-plate svg { max-width: 92px; }
+  .prod-plate { border-radius: var(--radius) var(--radius) 0 0; border-right: 0; border-bottom: 1px solid var(--line); padding: 1rem; }
+  .plate-logo { max-width: 200px; }
   .facts { grid-template-columns: 1fr; }
 }
 
@@ -279,9 +279,8 @@ nav {
 .cards { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.9rem; }
 .card { display: grid; grid-template-rows: auto 1fr; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
 .card a { text-decoration: none; color: inherit; display: contents; }
-.card-top { background: var(--navy); padding: 1rem; display: grid; place-items: center; }
-@media (prefers-color-scheme: dark) { .card-top { background: #16305A; } }
-.card-top svg { width: 72px; height: 72px; }
+.card-top { background: var(--surface-2); border-bottom: 1px solid var(--line); padding: 1.1rem; display: grid; place-items: center; }
+.card-logo { display: block; width: 100%; max-width: 180px; height: auto; }
 .card-body { padding: 0.9rem 1rem 1rem; display: grid; gap: 0.35rem; align-content: start; }
 .card-body b { font-family: var(--fd); font-weight: 600; font-size: 1rem; }
 .card-body span { font-size: 0.84rem; color: var(--muted); }
