@@ -555,3 +555,25 @@ function escapeHtml(string) {
   div.appendChild(document.createTextNode(string));
   return div.innerHTML;
 }
+
+
+// Delegated click handling for elements marked data-action="fnName"
+// (replaces inline onclick= attributes so the page can run under a CSP
+// without 'unsafe-inline' handlers). Only whitelisted functions run.
+(function () {
+  const ACTIONS = {
+    clearCompareQueue, closeModal, filterByCategory, openCustomDiff,
+    openModal, switchTab, toggleAccordion, toggleAllAccordions, toggleCompare,
+  };
+  document.addEventListener('click', function (e) {
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    if (el.hasAttribute('data-self-only') && e.target !== el) return;
+    const fn = ACTIONS[el.dataset.action];
+    if (!fn) return;
+    if (el.hasAttribute('data-prevent')) e.preventDefault();
+    let args = [];
+    try { args = JSON.parse(el.dataset.args || '[]'); } catch (_) {}
+    fn.apply(el, args);
+  });
+})();

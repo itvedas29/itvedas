@@ -32,6 +32,8 @@ jobs:
           # schema validator below loads and checks it.
           python -m json.tool cve-data/cve-summary-index.json > /dev/null
           python3 scripts/validate-cve-schema.py
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests
       - name: Run security checks
         run: bash scripts/security-check.sh
       - name: Check JavaScript syntax
