@@ -51,14 +51,15 @@ jobs:
           (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'article_only'))
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           GA4_ID: ${{ secrets.GA4_ID }}
           NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           SMTP_FROM: ${{ secrets.SMTP_FROM }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then
-            echo "⚠️ GEMINI_API_KEY secret is not configured in GitHub Repository Secrets. Skipping deep article generation step."
-            exit 0
+            echo "::error::GEMINI_API_KEY secret is not configured (Settings > Secrets and variables > Actions)."
+            exit 1
           fi
           python3 itvedas-brain/content-writer.py
 
@@ -68,11 +69,12 @@ jobs:
           (github.event_name == 'workflow_dispatch' && (inputs.run_type == 'both' || inputs.run_type == 'news_only'))
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           GA4_ID: ${{ secrets.GA4_ID }}
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then
-            echo "⚠️ GEMINI_API_KEY secret is not configured in GitHub Repository Secrets. Skipping AI news rewrite step."
-            exit 0
+            echo "::error::GEMINI_API_KEY secret is not configured (Settings > Secrets and variables > Actions)."
+            exit 1
           fi
           python3 itvedas-brain/news-agent.py
 
@@ -107,3 +109,6 @@ jobs:
               git push origin main
             fi
           fi
+
+      - name: Check news is fresh
+        run: python3 scripts/check-news-freshness.py
