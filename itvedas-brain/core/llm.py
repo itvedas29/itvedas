@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import time
 import urllib.request
 import urllib.error
@@ -28,9 +29,15 @@ _MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models?pageSize=
 _BAD_NAME_PARTS = ("lite", "image", "tts", "live", "audio", "embedding", "exp",
                    "preview", "thinking", "8b", "vision", "robotics", "computer")
 
-RETRY_ATTEMPTS = 3
-RETRY_SLEEP_SECONDS = 8
+RETRY_ATTEMPTS = 5            # per model, for transient errors only
+RETRY_SLEEP_SECONDS = 5       # backoff: 5, 10, 20, 40 (+jitter), capped below
+MAX_BACKOFF_SECONDS = 60
 REQUEST_TIMEOUT_SECONDS = 90
+# Errors worth retrying: rate limit, overloaded, gateway/server trouble.
+RETRYABLE_HTTP = {429, 500, 502, 503, 504}
+# Spacing between calls keeps us under free-tier requests-per-minute limits.
+MIN_INTERVAL_SECONDS = float(os.environ.get("GEMINI_MIN_INTERVAL") or 6)
+_last_call_at = 0.0
 
 
 def _model_rank(name: str):
@@ -71,6 +78,10 @@ class _ModelNotFound(Exception):
     pass
 
 
+class _ModelBusy(Exception):
+    """Retries exhausted on 429/5xx/timeouts; another model may still work."""
+
+
 def gemini(
     prompt: str,
     system: str | None = None,
@@ -107,14 +118,25 @@ def gemini(
     body = json.dumps(payload).encode("utf-8")
 
     def call(model_name: str) -> str:
-        """One model, with retries for transient errors. 404 => _ModelNotFound."""
+        """One model, with backoff for transient errors.
+
+        404 -> _ModelNotFound; retries exhausted on 429/5xx -> _ModelBusy;
+        any other HTTP error (bad key, bad request) fails at once.
+        """
+        global _last_call_at
         # Key goes in a header, not the query string, so it can't leak into
         # proxy, CDN or exception logs that record full URLs.
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
         headers = {"Content-Type": "application/json", "x-goog-api-key": key}
+        wait = MIN_INTERVAL_SECONDS - (time.monotonic() - _last_call_at)
+        if wait > 0:
+            time.sleep(wait)
+        err: Exception = RuntimeError("unknown error")
         for attempt in range(RETRY_ATTEMPTS):
             request = urllib.request.Request(url, data=body, headers=headers)
+            retry_after = None
             try:
+                _last_call_at = time.monotonic()
                 with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
                     result = json.loads(response.read().decode("utf-8"))
                     candidates = result.get("candidates", [])
@@ -127,32 +149,51 @@ def gemini(
                 if e.code == 404:  # model does not exist: retrying is pointless
                     raise _ModelNotFound(model_name) from None
                 err = RuntimeError(str(e).replace(key, "***"))
-            except Exception as e:
+                if e.code not in RETRYABLE_HTTP:  # 400/401/403...: retrying can't help
+                    notify(f"Gemini API error (not retrying): {err}")
+                    raise err
+                ra = (e.headers.get("Retry-After") if e.headers else None) or ""
+                retry_after = float(ra) if ra.replace(".", "", 1).isdigit() else None
+            except Exception as e:  # timeouts / connection resets
                 err = RuntimeError(str(e).replace(key, "***")) if key in str(e) else e
             if attempt == RETRY_ATTEMPTS - 1:
-                notify(f"Gemini API failed after {RETRY_ATTEMPTS} attempts: {err}")
-                raise err
-            notify(f"Gemini API retry {attempt + 1}: {err}")
-            time.sleep(RETRY_SLEEP_SECONDS)
-        return ""
+                break
+            delay = min(RETRY_SLEEP_SECONDS * (2 ** attempt), MAX_BACKOFF_SECONDS)
+            delay += random.uniform(0, delay * 0.1)
+            if retry_after:  # Google told us how long to wait
+                delay = max(delay, min(retry_after, MAX_BACKOFF_SECONDS))
+            notify(f"Gemini '{model_name}' retry {attempt + 1}/{RETRY_ATTEMPTS - 1}: {err} (waiting {delay:.0f}s)")
+            time.sleep(delay)
+        notify(f"Gemini '{model_name}' still failing after {RETRY_ATTEMPTS} attempts: {err}")
+        raise _ModelBusy(str(err))
 
+    reason = ""
     try:
         return call(target_model)
     except _ModelNotFound:
-        notify(f"Gemini model '{target_model}' returned 404 (retired or renamed?). Looking for a working model...")
+        reason = "returned 404 (retired or renamed?)"
+    except _ModelBusy as e:
+        reason = f"is overloaded or rate-limited ({e})"
+    notify(f"Gemini model '{target_model}' {reason}. Looking for another model...")
 
     candidates = [m for m in discover_models(key, notify) if m != target_model]
-    for candidate in candidates:
+    last_busy = ""
+    for candidate in candidates[:4]:
         try:
             out = call(candidate)
         except _ModelNotFound:
+            continue
+        except _ModelBusy as e:
+            last_busy = str(e)
             continue
         _resolved_model = candidate
         notify(f"Using Gemini model '{candidate}' instead. Set GEMINI_MODEL={candidate} to make this permanent.")
         return out
     raise RuntimeError(
-        f"No usable Gemini model found (tried '{target_model}' and {candidates or 'no alternatives'}). "
-        "Check that the API key is valid and the Generative Language API is enabled."
+        f"No usable Gemini model found (tried '{target_model}' and {candidates[:4] or 'no alternatives'}). "
+        + (f"Last error: {last_busy}. " if last_busy else "")
+        + "If this is 429, the API quota is exhausted (check Google AI Studio usage/billing); "
+        "otherwise check that the key is valid and the Generative Language API is enabled."
     )
 
 
