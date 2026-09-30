@@ -17,10 +17,58 @@ from typing import Callable
 
 from core.log import log as _default_log
 
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+DEFAULT_MODEL = "gemini-2.5-flash"
+# `or` (not a default arg) so an empty GEMINI_MODEL from CI counts as unset.
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL") or DEFAULT_MODEL
+
+# Model that actually worked this process; set after a 404 fallback so later
+# calls in the same run go straight to it.
+_resolved_model: str | None = None
+_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models?pageSize=100"
+_BAD_NAME_PARTS = ("lite", "image", "tts", "live", "audio", "embedding", "exp",
+                   "preview", "thinking", "8b", "vision", "robotics", "computer")
+
 RETRY_ATTEMPTS = 3
 RETRY_SLEEP_SECONDS = 8
 REQUEST_TIMEOUT_SECONDS = 90
+
+
+def _model_rank(name: str):
+    """Sort key: newest stable `gemini-X[.Y]-flash*` first. None = not a candidate."""
+    import re
+    m = re.fullmatch(r"gemini-(\d+(?:\.\d+)?)-flash(?:-latest)?", name)
+    if m:
+        return (1, float(m.group(1)))
+    if name in ("gemini-flash-latest",):
+        return (1, 999.0)
+    return None
+
+
+def discover_models(key: str, log: Callable[[str], None]) -> list[str]:
+    """Ask Google which Flash models this key can call, best first."""
+    req = urllib.request.Request(_MODELS_URL, headers={"x-goog-api-key": key})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except Exception as e:  # never leak the key into logs
+        log(f"Could not list Gemini models: {str(e).replace(key, '***')}")
+        return []
+    names = []
+    for m in data.get("models", []):
+        if "generateContent" not in m.get("supportedGenerationMethods", []):
+            continue
+        name = m.get("name", "").removeprefix("models/")
+        if any(bad in name for bad in _BAD_NAME_PARTS):
+            continue
+        if _model_rank(name):
+            names.append(name)
+    names.sort(key=_model_rank, reverse=True)
+    log(f"Gemini models available to this key: {', '.join(names) or 'none matched'}")
+    return names
+
+
+class _ModelNotFound(Exception):
+    pass
 
 
 def gemini(
@@ -40,16 +88,13 @@ def gemini(
     key = ((api_key or "").strip() or os.environ.get("GEMINI_API_KEY", "")).strip()
 
     notify = log_fn or (lambda msg: _default_log("llm", msg))
-    target_model = model or GEMINI_MODEL
+    global _resolved_model
+    target_model = _resolved_model or model or GEMINI_MODEL
 
     if not key:
         notify("Warning: GEMINI_API_KEY is not set.")
         return ""
 
-    # Key goes in a header, not the query string, so it can't leak into proxy,
-    # CDN or exception logs that record full URLs.
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent"
-    headers = {"Content-Type": "application/json", "x-goog-api-key": key}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -58,35 +103,57 @@ def gemini(
         },
     }
     if system:
-        payload["systemInstruction"] = {
-            "parts": [{"text": system}]
-        }
+        payload["systemInstruction"] = {"parts": [{"text": system}]}
+    body = json.dumps(payload).encode("utf-8")
 
-    request = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode("utf-8"),
-        headers=headers,
-    )
-
-    for attempt in range(RETRY_ATTEMPTS):
-        try:
-            with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
-                result = json.loads(response.read().decode("utf-8"))
-                candidates = result.get("candidates", [])
-                if candidates:
-                    parts = candidates[0].get("content", {}).get("parts", [])
-                    if parts:
-                        return strip_code_fence(parts[0].get("text", "").strip())
-                return ""
-        except Exception as e:
-            # Defensive: never let the key appear in logged error text.
-            e = RuntimeError(str(e).replace(key, "***")) if key and key in str(e) else e
+    def call(model_name: str) -> str:
+        """One model, with retries for transient errors. 404 => _ModelNotFound."""
+        # Key goes in a header, not the query string, so it can't leak into
+        # proxy, CDN or exception logs that record full URLs.
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
+        headers = {"Content-Type": "application/json", "x-goog-api-key": key}
+        for attempt in range(RETRY_ATTEMPTS):
+            request = urllib.request.Request(url, data=body, headers=headers)
+            try:
+                with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+                    result = json.loads(response.read().decode("utf-8"))
+                    candidates = result.get("candidates", [])
+                    if candidates:
+                        parts = candidates[0].get("content", {}).get("parts", [])
+                        if parts:
+                            return strip_code_fence(parts[0].get("text", "").strip())
+                    return ""
+            except urllib.error.HTTPError as e:
+                if e.code == 404:  # model does not exist: retrying is pointless
+                    raise _ModelNotFound(model_name) from None
+                err = RuntimeError(str(e).replace(key, "***"))
+            except Exception as e:
+                err = RuntimeError(str(e).replace(key, "***")) if key in str(e) else e
             if attempt == RETRY_ATTEMPTS - 1:
-                notify(f"Gemini API failed after {RETRY_ATTEMPTS} attempts: {e}")
-                raise
-            notify(f"Gemini API retry {attempt + 1}: {e}")
+                notify(f"Gemini API failed after {RETRY_ATTEMPTS} attempts: {err}")
+                raise err
+            notify(f"Gemini API retry {attempt + 1}: {err}")
             time.sleep(RETRY_SLEEP_SECONDS)
-    return ""
+        return ""
+
+    try:
+        return call(target_model)
+    except _ModelNotFound:
+        notify(f"Gemini model '{target_model}' returned 404 (retired or renamed?). Looking for a working model...")
+
+    candidates = [m for m in discover_models(key, notify) if m != target_model]
+    for candidate in candidates:
+        try:
+            out = call(candidate)
+        except _ModelNotFound:
+            continue
+        _resolved_model = candidate
+        notify(f"Using Gemini model '{candidate}' instead. Set GEMINI_MODEL={candidate} to make this permanent.")
+        return out
+    raise RuntimeError(
+        f"No usable Gemini model found (tried '{target_model}' and {candidates or 'no alternatives'}). "
+        "Check that the API key is valid and the Generative Language API is enabled."
+    )
 
 
 def claude(
