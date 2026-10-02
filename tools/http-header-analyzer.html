@@ -203,6 +203,10 @@
   </div>
 
   <script>
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
     function analyzeHeaders() {
       const input = document.getElementById('headers').value;
       if (!input) return;
@@ -220,8 +224,8 @@
       headersList.innerHTML = Object.entries(headers)
         .map(([name, value]) => `
           <div class="header-row">
-            <div class="header-name">${name}</div>
-            <div class="header-value">${value}</div>
+            <div class="header-name">${escapeHtml(name)}</div>
+            <div class="header-value">${escapeHtml(value)}</div>
           </div>
         `).join('');
 
@@ -248,9 +252,9 @@
       securityCheck.innerHTML = checks
         .map(check => `
           <div class="header-row">
-            <div class="header-name">${check.name}</div>
+            <div class="header-name">${escapeHtml(check.name)}</div>
             <div style="flex: 1;"><span class="security-badge badge-${check.status}">${check.status.toUpperCase()}</span></div>
-            <div class="header-value">${check.value}</div>
+            <div class="header-value">${escapeHtml(check.value)}</div>
           </div>
         `).join('');
 
