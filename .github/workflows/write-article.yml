@@ -96,7 +96,7 @@ jobs:
         run: |
           git config user.name "ITVedas Bot"
           git config user.email "bot@itvedas.com"
-          git pull --rebase --autostash origin main
+          git pull --rebase --autostash origin HEAD
           git add -A
           if git diff --staged --quiet; then
             echo "No changes to commit"
@@ -104,9 +104,9 @@ jobs:
             git commit -m "Autopilot update $(date -u +'%Y-%m-%d %H:%M UTC')"
             # Retry once on a race with another bot push, then fail loudly
             # instead of silently dropping the run's output.
-            if ! git push origin main; then
-              git pull --rebase --autostash origin main
-              git push origin main
+            if ! git push origin HEAD; then
+              git pull --rebase --autostash origin HEAD
+              git push origin HEAD
             fi
           fi
 
