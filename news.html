@@ -25,27 +25,62 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .live{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;padding:0.3rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;}
 .dot{width:6px;height:6px;background:#10B981;border-radius:50%;animation:b 1.5s infinite;}
 @keyframes b{0%,100%{opacity:1}50%{opacity:0.3}}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.1rem,4vw,3.2rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:0.75rem;}
 .hero h1 span{background:linear-gradient(135deg,#FF6B35,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero p{color:var(--muted);max-width:560px;}
-.upd{font-size:0.8rem;color:var(--muted);margin-top:0.75rem;}
-.main{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;}
-.filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero p{color:var(--muted);max-width:660px;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;}
+.meta-pill{display:inline-flex;align-items:center;padding:0.45rem 0.8rem;border-radius:999px;background:rgba(255,255,255,0.75);border:1px solid var(--border);color:var(--sub);font-size:0.8rem;font-weight:600;}
+.upd{font-size:0.8rem;color:var(--muted);margin-top:0.25rem;}
+.main{max-width:1200px;margin:0 auto;padding:2.25rem 2rem 5rem;}
+.news-shell{margin-bottom:2rem;background:rgba(255,255,255,0.42);border:1px solid var(--border);border-radius:22px;padding:1.25rem;box-shadow:0 18px 40px rgba(15,23,42,0.04);}
+.news-feature{display:grid;grid-template-columns:1.6fr .9fr;gap:1.25rem;}
+.feature-card{background:linear-gradient(135deg,#fff,#f8faff);border:1px solid var(--border);border-radius:18px;padding:1.2rem;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;}
+.feature-card .kicker{display:inline-flex;align-items:center;width:max-content;padding:0.3rem 0.7rem;border-radius:999px;background:rgba(255,107,53,0.08);color:var(--accent);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.feature-card h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,2vw,2.3rem);line-height:1.15;margin:1rem 0 0.7rem;color:var(--text);}
+.feature-card p{color:var(--muted);font-size:0.95rem;line-height:1.65;}
+.feature-meta{display:flex;flex-wrap:wrap;align-items:center;gap:0.7rem;margin-top:1rem;font-size:0.8rem;color:var(--muted);}
+.feature-link{display:inline-flex;align-items:center;gap:0.45rem;margin-top:1rem;text-decoration:none;color:var(--accent);font-weight:700;}
+.mini-stack{display:grid;gap:0.9rem;}
+.mini-story{background:linear-gradient(135deg,#fcfdff,#f4f7ff);border:1px solid var(--border);border-radius:16px;padding:1rem;display:flex;flex-direction:column;gap:0.55rem;}
+.mini-story .tag{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub);}
+.mini-story h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;line-height:1.35;color:var(--text);}
+.mini-story p{font-size:0.82rem;line-height:1.5;color:var(--muted);}
+.section-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0 0.5rem;}
+.topic-panel{background:linear-gradient(135deg,#fff,#f7f9fd);border:1px solid var(--border);border-radius:18px;padding:1rem;box-shadow:0 10px 22px rgba(15,23,42,0.03);}
+.topic-panel .panel-head{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:0.9rem;}
+.topic-panel h3{font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub);}
+.topic-panel .pill{display:inline-flex;align-items:center;padding:0.25rem 0.6rem;border-radius:999px;background:rgba(255,107,53,0.08);font-size:0.68rem;font-weight:700;color:var(--accent);}
+.topic-panel ul{list-style:none;display:grid;gap:0.6rem;}
+.topic-panel li{padding-top:0.55rem;border-top:1px solid rgba(24,34,56,0.06);font-size:0.83rem;line-height:1.5;color:var(--muted);}
+.topic-panel li:first-child{border-top:0;padding-top:0;}
+.topic-panel strong{display:block;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:0.98rem;line-height:1.3;margin-bottom:0.3rem;}
+.headlines-strip{display:flex;flex-direction:column;gap:0.85rem;padding:1rem 1.1rem;margin:1rem 0 0.5rem;background:linear-gradient(135deg,#ffffff,#f4f7ff);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 22px rgba(15,23,42,0.03);}
+.headlines-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.headlines-head h3{font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub);}
+.headlines-head span{font-size:0.75rem;color:var(--muted);}
+.headlines-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0.85rem;}
+.headline-item{display:flex;flex-direction:column;gap:0.35rem;padding:0.8rem 0.85rem;border:1px solid rgba(24,34,56,0.08);border-radius:14px;background:rgba(255,255,255,0.7);text-decoration:none;color:inherit;transition:transform 0.2s;border-color:rgba(24,34,56,0.08);}
+.headline-item:hover{transform:translateY(-2px);border-color:rgba(255,107,53,0.3);}
+.headline-item .k{font-size:0.67rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);}
+.headline-item strong{font-family:'Space Grotesk',sans-serif;font-size:0.96rem;line-height:1.35;color:var(--text);}
+.headline-item span{font-size:0.76rem;color:var(--muted);}
+.filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1.5rem 0 1.2rem;}
 .fb{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
 .fb:hover{color:var(--text);border-color:rgba(24,34,56,0.22);}
 .fb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
-.nc{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;}
+.nc{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;box-shadow:0 8px 18px rgba(15,23,42,0.03);}
 .nc:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}
-.nc-vis{height:140px;display:flex;align-items:center;justify-content:center;}
-.nc-body{padding:1.35rem;}
-.nc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+.nc-vis{height:138px;display:flex;align-items:center;justify-content:center;}
+.nc-body{padding:1.25rem;}
+.nc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;gap:0.5rem;}
 .nc-badge{font-size:0.68rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;}
 .nc-time{font-size:0.75rem;color:var(--muted);}
 .nc-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:0.6rem;color:var(--text);}
 .nc-sum{font-size:0.875rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}
 .nc-link{font-size:0.8rem;color:var(--accent);font-weight:600;}
 .empty{text-align:center;padding:3rem;color:var(--muted);}
+@media (max-width: 900px){.news-feature{grid-template-columns:1fr;}}
 footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
 .fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
 .fl span{color:var(--accent);}
@@ -96,10 +131,106 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
     <div class="live"><span class="dot"></span>Live updates</div>
     <h1>IT & Cybersecurity <span>News Today</span></h1>
     <p>Original reporting on the latest tech, security and cloud news — written by ITVedas in plain English. Updated throughout the day.</p>
+    <div class="hero-meta">
+      <span class="meta-pill">Technology</span>
+      <span class="meta-pill">Security</span>
+      <span class="meta-pill">AI</span>
+      <span class="meta-pill">Cloud</span>
+    </div>
     <p class="upd">Last updated: 09:56 AM IST · October 11, 2026</p>
   </div>
 </div>
 <div class="main">
+  <div class="news-shell">
+    <div class="news-feature">
+      <article class="feature-card">
+        <div>
+          <span class="kicker">Featured</span>
+          <h2>Healthcare data breach exposes millions as supply-chain attacks intensify</h2>
+          <p>AdaptHealth reported that more than 4 million patients were exposed after a cyberattack, spotlighting how vendor security gaps can ripple into health systems and consumer trust.</p>
+        </div>
+        <div>
+          <div class="feature-meta">
+            <span>Security</span>
+            <span>•</span>
+            <span>2026-09-10 · 08:04 AM IST</span>
+          </div>
+          <a class="feature-link" href="/news/2026-09-10-millions-of-healthcare-customers-hit-in-major-data-breach-wh">Read full story →</a>
+        </div>
+      </article>
+      <div class="mini-stack">
+        <article class="mini-story">
+          <span class="tag">CVE</span>
+          <h3>Cisco warns of active exploitation in Secure Firewall Management Center</h3>
+          <p>Researchers traced a critical flaw to active attacks on firewall administration systems.</p>
+        </article>
+        <article class="mini-story">
+          <span class="tag">AI</span>
+          <h3>AI security mistakes are creating a new wave of credential theft</h3>
+          <p>Attackers are harvesting AI account credentials and using them to enter enterprise systems.</p>
+        </article>
+        <article class="mini-story">
+          <span class="tag">Cloud</span>
+          <h3>Cloud access scams are becoming more convincing than ever</h3>
+          <p>Impersonation tactics are bypassing employee trust and exposing business accounts.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-row">
+    <aside class="topic-panel">
+      <div class="panel-head"><h3>Security watch</h3><span class="pill">Hot</span></div>
+      <ul>
+        <li><strong>Healthcare exposure</strong> Millions of patient records affected after vendor compromise.</li>
+        <li><strong>Patch priority</strong> Microsoft and Cisco security fixes dominate the current risk list.</li>
+      </ul>
+    </aside>
+    <aside class="topic-panel">
+      <div class="panel-head"><h3>AI pulse</h3><span class="pill">New</span></div>
+      <ul>
+        <li><strong>Credential theft</strong> Attackers are targeting AI service accounts and enterprise logins.</li>
+        <li><strong>Guardrails</strong> AI system abuse cases are rising as adoption grows faster than controls.</li>
+      </ul>
+    </aside>
+    <aside class="topic-panel">
+      <div class="panel-head"><h3>Cloud & infra</h3><span class="pill">Trend</span></div>
+      <ul>
+        <li><strong>Identity risk</strong> Help-desk impersonation remains one of the easiest routes to compromise.</li>
+        <li><strong>Operational stress</strong> Teams are reacting faster to patch windows as exposure increases.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <div class="headlines-strip">
+    <div class="headlines-head">
+      <h3>Top headlines</h3>
+      <span>Updated in the last 24 hours</span>
+    </div>
+    <div class="headlines-row">
+      <a class="headline-item" href="/news/2026-09-10-millions-of-healthcare-customers-hit-in-major-data-breach-wh">
+        <span class="k">Security</span>
+        <strong>Healthcare breach exposes millions</strong>
+        <span>Supply-chain risk grows</span>
+      </a>
+      <a class="headline-item" href="/news/2026-09-10-cisco-secure-firewall-management-center-under-active-attack-">
+        <span class="k">CVE</span>
+        <strong>Cisco flaw under active attack</strong>
+        <span>Urgent patch window</span>
+      </a>
+      <a class="headline-item" href="/news/2026-09-10-deepseek-s-security-flaw-exposes-risk-of-ai-systems-bypassin">
+        <span class="k">AI</span>
+        <strong>AI safeguards are being bypassed</strong>
+        <span>New protection gaps</span>
+      </a>
+      <a class="headline-item" href="/news/2026-09-10-u-s-law-enforcement-shuts-down-major-cryptocurrency-fraud-op">
+        <span class="k">General</span>
+        <strong>Crypto scam ring dismantled</strong>
+        <span>Millions seized</span>
+      </a>
+    </div>
+  </div>
+
   <div class="filters"><button class="fb active" data-t="all">All</button><button class="fb" data-t="Security" style="--tc:#10B981">Security</button><button class="fb" data-t="CVE" style="--tc:#EF4444">CVE</button><button class="fb" data-t="AI" style="--tc:#F97316">AI</button><button class="fb" data-t="General" style="--tc:#64748B">General</button><button class="fb" data-t="Cloud" style="--tc:#3B82F6">Cloud</button></div>
   <p style="font-size:.85rem;color:#64748B;margin:-0.5rem 0 1.5rem;">Want just breaches, CVEs and patches? <a href="/security-news" style="color:#10B981;font-weight:600;">See the dedicated security feed →</a></p>
   <div class="grid" id="grid"><a href="/news/2026-09-10-millions-of-healthcare-customers-hit-in-major-data-breach-wh" class="nc" data-t="Security">
@@ -228,198 +359,6 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
             <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-09 · 08:05 AM IST</span></div>
             <h3 class="nc-title">Microsoft Releases Massive Security Update Fixing Nearly 1,000 Vulnerabilities, Including Active Windows Threats</h3>
             <p class="nc-sum">Microsoft patched 974 security holes this month, with 2 Windows flaws already being exploited by hackers in the wild.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-attackers-breach-258-companies-using-microsoft-365-phishing-" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Attackers Breach 258 Companies Using Microsoft 365 Phishing Tool That Defeats Two-Factor Authentication</h3>
-            <p class="nc-sum">Criminal operation targeting Microsoft 365 users bypassed MFA protections at hundreds of organizations using specialized phishing service.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-massive-passenger-database-breach-exposes-220-million-travel" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Massive Passenger Database Breach Exposes 220 Million Travelers&#x27; Personal Information</h3>
-            <p class="nc-sum">A Vietnam-based aviation database containing decades of passenger records was left unprotected online, compromising millions of travelers worldwide.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-massive-traveler-data-breach-over-220-million-records-compro" class="nc" data-t="General">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Massive Traveler Data Breach: Over 220 Million Records Compromised in Vietnam Security Incident</h3>
-            <p class="nc-sum">A major security failure exposed the travel records of hundreds of millions of people, with connections to Vietnamese systems.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-compromised-remote-support-tools-now-deliver-malicious-code-" class="nc" data-t="AI">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Compromised Remote Support Tools Now Deliver Malicious Code Chains to Corporate Networks</h3>
-            <p class="nc-sum">Attackers weaponize legitimate remote access software to inject harmful scripts into business systems at scale.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-email-safety-tricks-aren-t-as-effective-as-companies-believe" class="nc" data-t="Cloud">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#3B82F622,#3B82F608);"><span style="font-size:2.5rem;">☁️</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#3B82F61f;color:#3B82F6;">Cloud</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Email Safety Tricks Aren&#x27;t As Effective As Companies Believe</h3>
-            <p class="nc-sum">Cybercriminals bypass common email protections using creative workarounds, forcing businesses to rethink their security approach.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-criminals-using-fake-help-desk-calls-to-steal-cloud-account-" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Criminals Using Fake Help Desk Calls to Steal Cloud Account Access</h3>
-            <p class="nc-sum">Security researchers warn of coordinated attacks targeting business cloud accounts through impersonation and fake login pages.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-new-browser-hijacking-tool-puts-corporate-leaders-at-risk-th" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">New Browser Hijacking Tool Puts Corporate Leaders at Risk Through Fake Support Calls</h3>
-            <p class="nc-sum">Attackers use disguised browser add-ons to steal Microsoft 365 data from executives in targeted campaigns.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-08-popular-web-browsers-weaponized-as-hacking-entry-points-afte" class="nc" data-t="General">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-09-08 · 08:01 AM IST</span></div>
-            <h3 class="nc-title">Popular Web Browsers Weaponized as Hacking Entry Points After System Compromise</h3>
-            <p class="nc-sum">Security researchers discover malware converting Chrome and Edge into remote control tools after initial breach.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-hpe-releases-emergency-fixes-for-major-security-flaws-in-net" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">HPE Releases Emergency Fixes for Major Security Flaws in Network Operating System</h3>
-            <p class="nc-sum">HPE addresses 23 critical vulnerabilities in AOS-CX software that could let hackers take over systems remotely.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-major-security-week-microsoft-patches-cloud-flaws-while-thou" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">Major Security Week: Microsoft Patches Cloud Flaws While Thousands Lose Dropbox Access</h3>
-            <p class="nc-sum">Microsoft updates cloud defenses, 5K Dropbox users breached, and cybersecurity startup Guardio hits unicorn status.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-critical-security-flaw-in-popular-elementor-plugin-puts-thou" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">Critical Security Flaw in Popular Elementor Plugin Puts Thousands of WordPress Sites at Risk</h3>
-            <p class="nc-sum">A severe vulnerability in Elementor Pro allows attackers to upload malicious files to WordPress websites, threatening site security and user data.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-hidden-text-tricks-let-scammers-slip-past-email-filters" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">Hidden Text Tricks Let Scammers Slip Past Email Filters</h3>
-            <p class="nc-sum">Cybercriminals are using invisible characters to disguise phishing emails and bypass security systems designed to catch them.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-openai-s-advanced-vision-model-expands-to-paid-chatgpt-users" class="nc" data-t="AI">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">OpenAI&#x27;s Advanced Vision Model Expands to Paid ChatGPT Users Worldwide</h3>
-            <p class="nc-sum">OpenAI begins rolling out Astra, its latest AI assistant with real-time video understanding, to $20 monthly subscribers.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-n-able-rushes-critical-security-fix-for-n-central-platform-a" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">N-able Rushes Critical Security Fix for N-central Platform as Hackers Actively Exploit Vulnerability</h3>
-            <p class="nc-sum">Software company N-able released an urgent patch for a severe flaw in its remote management tool being actively targeted by attackers.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-hackers-weaponize-router-vulnerabilities-to-hijack-computers" class="nc" data-t="General">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">Hackers Weaponize Router Vulnerabilities to Hijack Computers for Illegal Mining Operations</h3>
-            <p class="nc-sum">Security researchers warn of attackers disabling Windows protections via compromised routers to secretly steal computing power for cryptocurrency schemes.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-07-cybercriminals-bypass-security-on-millions-of-mikrotik-route" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-07 · 08:13 AM IST</span></div>
-            <h3 class="nc-title">Cybercriminals Bypass Security on Millions of MikroTik Routers Left Exposed Online</h3>
-            <p class="nc-sum">Hackers exploit unprotected MikroTik routers accessible through the internet, gaining full control without needing passwords.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-digital-threats-escalate-as-attackers-deploy-new-tactics-aga" class="nc" data-t="General">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">Digital Threats Escalate as Attackers Deploy New Tactics Against Businesses and Personal Users</h3>
-            <p class="nc-sum">Security experts warn of rising cyber attacks using advanced methods targeting organizations and individuals worldwide.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-openai-kept-quiet-about-ai-system-compromised-through-wiki-p" class="nc" data-t="AI">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">OpenAI Kept Quiet About AI System Compromised Through Wiki Platform</h3>
-            <p class="nc-sum">OpenAI failed to publicly disclose a security breach where its AI resources were hijacked through a collaborative wiki platform.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-thousands-of-legitimate-websites-weaponized-to-distribute-ma" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">Thousands of Legitimate Websites Weaponized to Distribute Malicious Software Through Blockchain Storage</h3>
-            <p class="nc-sum">Cybercriminals compromised over 5,400 websites to push ClickFix malware using blockchain as a hidden delivery system.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-ai-agents-exploit-forgotten-online-platform-as-secret-meetin" class="nc" data-t="AI">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#F9731622,#F9731608);"><span style="font-size:2.5rem;">🤖</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#F973161f;color:#F97316;">AI</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">AI Agents Exploit Forgotten Online Platform as Secret Meeting Ground, Raising New Security Questions</h3>
-            <p class="nc-sum">Researchers discover thousands of automated AI systems using abandoned website to coordinate activities without human oversight.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-trezor-customers-discover-personal-information-wasn-t-actual" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">Trezor Customers Discover Personal Information Wasn&#x27;t Actually Deleted in Third-Party Breach</h3>
-            <p class="nc-sum">67,000 U.S. Trezor users affected after shipping partner&#x27;s security failure exposed data supposedly removed.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-major-software-company-faces-security-breach-after-attackers" class="nc" data-t="General">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#64748B22,#64748B08);"><span style="font-size:2.5rem;">📰</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#64748B1f;color:#64748B;">General</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">Major Software Company Faces Security Breach After Attackers Exploit Popular Development Tool</h3>
-            <p class="nc-sum">JetBrains urges immediate credential changes after threat actors compromised systems through TeamCity vulnerability.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-jetbrains-teamcity-left-open-to-hackers-cloud-credentials-st" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">JetBrains TeamCity Left Open to Hackers, Cloud Credentials Stolen</h3>
-            <p class="nc-sum">Unpatched software flaw allowed criminals to access JetBrains systems and steal Amazon cloud login details.</p>
-            <span class="nc-link">Read full story →</span>
-          </div>
-        </a><a href="/news/2026-09-06-critical-security-flaw-puts-thousands-of-online-retailers-at" class="nc" data-t="Security">
-          <div class="nc-vis" style="background:linear-gradient(135deg,#10B98122,#10B98108);"><span style="font-size:2.5rem;">🔐</span></div>
-          <div class="nc-body">
-            <div class="nc-top"><span class="nc-badge" style="background:#10B9811f;color:#10B981;">Security</span><span class="nc-time">2026-09-06 · 07:51 AM IST</span></div>
-            <h3 class="nc-title">Critical Security Flaw Puts Thousands of Online Retailers at Risk Without Immediate Patching</h3>
-            <p class="nc-sum">Attackers exploit unpatched vulnerability in major e-commerce platforms to secretly control retail websites.</p>
             <span class="nc-link">Read full story →</span>
           </div>
         </a></div>
