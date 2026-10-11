@@ -179,7 +179,7 @@ appcmd list wp
 <pre><code>Import-Module WebAdministration
 
 Set-ItemProperty -Path "IIS:\AppPools\MyAppPool" -Name processModel `
-  -Value @{ userName = "CORP\svc-webapp01"; password = "P@ssw0rd!"; identityType = 3 }
+  -Value @{ userName = "CORP\svc-webapp01"; password = "REPLACE_WITH_SERVICE_ACCOUNT_PASSWORD"; identityType = 3 }
 
 # identityType: 0=LocalSystem, 1=LocalService, 2=NetworkService, 3=SpecificUser, 4=ApplicationPoolIdentity
 </code></pre>

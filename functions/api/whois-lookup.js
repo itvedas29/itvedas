@@ -89,6 +89,19 @@ export async function onRequestPost() {
   return jsonResponse({ error: "Use GET" }, 405);
 }
 
+let bootstrapCache = null;
+let bootstrapFetchedAt = 0;
+const BOOTSTRAP_TTL_MS = 24 * 60 * 60 * 1000;
+
+async function getBootstrap() {
+  if (bootstrapCache && Date.now() - bootstrapFetchedAt < BOOTSTRAP_TTL_MS) return bootstrapCache;
+  const res = await fetchWithTimeout(RDAP_BOOTSTRAP_URL);
+  if (!res.ok) return null;
+  bootstrapCache = await res.json();
+  bootstrapFetchedAt = Date.now();
+  return bootstrapCache;
+}
+
 async function getRdapBase(tld) {
   // No `cf` fetch options here (e.g. cacheEverything) -- that requires
   // zone/plan settings this project doesn't have and throws at runtime
@@ -96,10 +109,8 @@ async function getRdapBase(tld) {
   // pages dev`, which is exactly the kind of local/production gap that
   // broke this endpoint twice already. Plain fetch, matching the proven
   // pattern in dns-lookup.js and my-ip.js.
-  const res = await fetchWithTimeout(RDAP_BOOTSTRAP_URL);
-  if (!res.ok) return null;
-
-  const data = await res.json();
+  const data = await getBootstrap();
+  if (!data) return null;
   for (const [tlds, urls] of data.services || []) {
     if (Array.isArray(tlds) && tlds.some(t => t.toLowerCase() === tld) && urls && urls.length) {
       return urls[0].endsWith("/") ? urls[0] : urls[0] + "/";
