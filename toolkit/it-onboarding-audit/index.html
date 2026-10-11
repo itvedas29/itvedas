@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A production-ready IT onboarding, 30-day security audit, and emergency offboarding runbook with an interactive checklist and branded PDF export.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="The Production IT Operations Runbook: Employee Onboarding & 30-Day Security Audit | ITVedas">
+  <meta property="og:description" content="Practical SOPs for sysadmins, IT engineers, and MSPs — from pre-start provisioning to secure offboarding.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.itvedas.com/toolkit/it-onboarding-audit/">
+  <meta property="og:image" content="https://www.itvedas.com/assets/og-default.png">
+  <link rel="canonical" href="https://www.itvedas.com/toolkit/it-onboarding-audit/">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>The Production IT Operations Runbook: Employee Onboarding & 30-Day Security Audit | ITVedas</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #184C78;
+      --navy-deep: #0B2750;
+      --orange: #FF7A00;
+      --ink: #17243a;
+      --body: #40516a;
+      --muted: #63738a;
+      --line: #dce4ee;
+      --canvas: #f1f5fa;
+      --surface: #fff;
+      --pale-blue: #eaf2f9;
+      --green: #18794e;
+      --shadow: 0 14px 42px rgba(18, 47, 78, .08);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--canvas);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; line-height: 1.65; min-width: 320px; }
+    a { color: var(--navy); }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .skip-link {
+      position: absolute; left: 1rem; top: -4rem; z-index: 20;
+      padding: .7rem 1rem; background: var(--navy-deep); color: white; border-radius: .5rem;
+    }
+    .skip-link:focus { top: 1rem; }
+    .site-header {
+      position: sticky; top: 0; z-index: 10; display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem; min-height: 68px; padding: .6rem max(1.25rem, calc((100vw - 1180px) / 2));
+      background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px);
+    }
+    .brand { display: inline-flex; align-items: center; }
+    .brand img { display: block; width: 150px; height: auto; }
+    .site-header nav { display: flex; gap: 1.3rem; align-items: center; }
+    .site-header nav a { color: var(--body); font-size: .9rem; font-weight: 600; text-decoration: none; }
+    .site-header nav a:hover { color: var(--navy); }
+    .hero {
+      color: white; background: radial-gradient(ellipse at 82% 10%, rgba(255,122,0,.2), transparent 34%), linear-gradient(125deg, #102d4d, #184c78);
+      padding: clamp(3.2rem, 8vw, 6.2rem) max(1.25rem, calc((100vw - 1050px) / 2)) 4rem;
+    }
+    .hero-inner { max-width: 1050px; margin: auto; }
+    .eyebrow { color: #b9d7ef; font-size: .76rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    h1, h2, h3, h4 { font-family: Lexend, Inter, sans-serif; line-height: 1.2; letter-spacing: -.025em; }
+    h1 { max-width: 900px; margin: .8rem 0 1rem; font-size: clamp(2rem, 5vw, 3.65rem); }
+    .subtitle { max-width: 780px; margin: 0; color: #e0edf8; font-size: clamp(1rem, 2vw, 1.25rem); }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.7rem; }
+    .hero-meta span { border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: .36rem .75rem; color: #e7f1fa; font-size: .78rem; }
+    main { width: min(1180px, calc(100% - 2rem)); margin: 2.5rem auto 4rem; }
+    .intro-card, .phase-card, .checklist-card, .feedback-card, .closing-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+    }
+    .intro-card { padding: clamp(1.3rem, 3vw, 2.2rem); margin-bottom: 1.5rem; }
+    .intro-card h2, .phase-card h2, .checklist-card h2, .feedback-card h2, .closing-card h2 {
+      margin: 0 0 .85rem; color: var(--navy-deep); font-size: clamp(1.35rem, 2.7vw, 1.9rem);
+    }
+    p { color: var(--body); margin: 0 0 1rem; }
+    p:last-child { margin-bottom: 0; }
+    .intro-grid { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 1.5rem; align-items: start; }
+    .outcome-box { padding: 1.1rem; background: var(--pale-blue); border-radius: 12px; }
+    .outcome-box strong { display: block; margin-bottom: .4rem; color: var(--navy-deep); }
+    .outcome-box ul { padding-left: 1.2rem; margin: 0; color: var(--body); font-size: .9rem; }
+    .outcome-box li + li { margin-top: .35rem; }
+    .phase-card { padding: clamp(1.3rem, 3vw, 2rem); margin: 1.25rem 0; scroll-margin-top: 88px; }
+    .phase-kicker { display: flex; align-items: center; gap: .65rem; margin-bottom: .55rem; color: var(--navy); font-size: .76rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .phase-number { display: inline-grid; width: 1.7rem; height: 1.7rem; place-items: center; color: white; background: var(--navy); border-radius: 50%; font-size: .82rem; letter-spacing: 0; }
+    .phase-card h2 { margin-bottom: .55rem; }
+    .phase-card h3 { margin: 1.35rem 0 .4rem; color: var(--navy-deep); font-size: 1.05rem; }
+    .phase-card ul { color: var(--body); padding-left: 1.25rem; margin: .6rem 0 0; }
+    .phase-card li + li { margin-top: .45rem; }
+    .callout { padding: .9rem 1rem; margin-top: 1rem; border-left: 4px solid var(--orange); background: #fff7ef; border-radius: 0 9px 9px 0; color: #514331; font-size: .93rem; }
+    .callout strong { color: #763b00; }
+    .checklist-card { padding: clamp(1.25rem, 3vw, 2rem); margin-top: 1.5rem; scroll-margin-top: 88px; }
+    .section-lead { margin-bottom: 1.25rem; }
+    .table-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .85rem; margin: 1.2rem 0; }
+    .filters { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .filter-button {
+      border: 1px solid var(--line); border-radius: 999px; padding: .48rem .78rem; color: var(--body);
+      background: white; font-size: .82rem; font-weight: 600;
+    }
+    .filter-button:hover, .filter-button[aria-pressed="true"] { border-color: var(--navy); color: white; background: var(--navy); }
+    .search-wrap { min-width: min(100%, 250px); flex: 0 1 300px; }
+    .search-wrap input { width: 100%; padding: .62rem .8rem; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; }
+    .search-wrap input:focus, input:focus, textarea:focus, button:focus-visible, a:focus-visible {
+      outline: 3px solid rgba(255,122,0,.45); outline-offset: 2px;
+    }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 11px; }
+    table { width: 100%; min-width: 900px; border-collapse: collapse; }
+    th, td { padding: .82rem .75rem; text-align: left; vertical-align: top; border-bottom: 1px solid #e8edf3; }
+    thead th { color: white; background: var(--navy); font-size: .78rem; letter-spacing: .03em; }
+    tbody tr:nth-child(even) { background: #f6f9fc; }
+    tbody tr:last-child td { border-bottom: 0; }
+    td { color: var(--body); font-size: .86rem; }
+    td:first-child { min-width: 133px; color: var(--navy-deep); font-weight: 700; }
+    td:nth-child(2) { min-width: 190px; color: var(--ink); font-weight: 600; }
+    td:nth-child(3) { min-width: 400px; }
+    td:nth-child(4) { min-width: 170px; }
+    .task-check { width: 1.15rem; height: 1.15rem; margin: .12rem .3rem 0 0; accent-color: var(--green); vertical-align: top; }
+    .task-label { display: inline-flex; align-items: flex-start; }
+    .task-label.is-done { color: var(--green); text-decoration: line-through; text-decoration-thickness: 1px; }
+    .table-status { min-height: 1.5rem; margin: .6rem 0; color: var(--muted); font-size: .85rem; }
+    .export-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 1rem; }
+    .button-primary, .button-secondary, .micro-button {
+      display: inline-flex; justify-content: center; align-items: center; gap: .5rem; border: 0; border-radius: 9px;
+      padding: .8rem 1.15rem; font-weight: 700; text-decoration: none; transition: transform .15s ease, background .15s ease;
+    }
+    .button-primary { color: white; background: var(--navy); }
+    .button-primary:hover { color: white; background: var(--navy-deep); transform: translateY(-1px); }
+    .button-secondary { color: var(--navy); background: var(--pale-blue); }
+    .button-secondary:hover { background: #dceaf6; }
+    .button-primary:disabled { cursor: wait; opacity: .65; transform: none; }
+    .export-note { color: var(--muted); font-size: .82rem; }
+    .feedback-card { padding: clamp(1.25rem, 3vw, 2rem); margin-top: 1.5rem; scroll-margin-top: 88px; }
+    .feedback-card h2 { margin-bottom: .45rem; }
+    .microcopy { color: var(--body); margin-bottom: 1rem; }
+    .micro-actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+    .micro-button { color: var(--navy); background: white; border: 1px solid #bfd0e0; }
+    .micro-button:hover, .micro-button[aria-pressed="true"] { color: white; background: var(--navy); border-color: var(--navy); }
+    .feedback-form-wrap { padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--line); }
+    .feedback-form-wrap[hidden] { display: none; }
+    .feedback-form { display: grid; gap: 1rem; max-width: 760px; }
+    .form-row { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(250px, 1.2fr); gap: 1rem; }
+    .field { display: grid; gap: .4rem; }
+    .field label, .rating-label { color: var(--ink); font-size: .88rem; font-weight: 700; }
+    .field input, .field textarea { width: 100%; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .rating-stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: .15rem; }
+    .rating-stars input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .rating-stars label { padding: 0 .12rem; color: #8794a6; cursor: pointer; font-size: 2rem; line-height: 1.1; }
+    .rating-stars label:hover, .rating-stars label:hover ~ label, .rating-stars input:checked ~ label { color: #e18a00; }
+    .rating-stars input:focus-visible + label { outline: 3px solid rgba(255,122,0,.45); border-radius: 4px; }
+    .consent-label { display: flex; align-items: flex-start; gap: .6rem; color: var(--body); font-size: .9rem; }
+    .consent-label input { width: 1.05rem; height: 1.05rem; margin-top: .2rem; accent-color: var(--navy); }
+    .form-status { min-height: 1.5rem; margin: 0; font-size: .9rem; }
+    .form-status[data-state="error"] { color: #a12222; }
+    .form-status[data-state="success"] { color: var(--green); }
+    .closing-card { padding: clamp(1.25rem, 3vw, 2rem); margin-top: 1.5rem; }
+    .closing-card h2 { font-size: 1.4rem; }
+    footer { padding: 2rem 1rem; border-top: 1px solid var(--line); color: var(--muted); text-align: center; font-size: .83rem; }
+    footer a { color: var(--navy); font-weight: 600; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 760px) {
+      .site-header { min-height: 60px; }
+      .site-header nav { gap: .8rem; }
+      .site-header nav a { font-size: .8rem; }
+      .brand img { width: 122px; }
+      .intro-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      main { width: min(100% - 1rem, 1180px); margin-top: 1rem; }
+    }
+    @media (max-width: 460px) {
+      .site-header { padding-inline: .8rem; }
+      .site-header nav a:nth-child(2) { display: none; }
+      .hero { padding-inline: 1rem; }
+      .table-controls { align-items: stretch; }
+      .search-wrap { flex-basis: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to runbook</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ITVedas home">
+      <img src="/assets/brand/itvedas-logo.svg" alt="itvedas.com">
+    </a>
+    <nav aria-label="Page navigation">
+      <a href="#runbook">Runbook</a>
+      <a href="#checklist">Interactive checklist</a>
+      <a href="#feedback">Feedback</a>
+    </nav>
+  </header>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-inner">
+      <div class="eyebrow">IT Operations · Production Runbook</div>
+      <h1 id="page-title">The Production IT Operations Runbook: Employee Onboarding &amp; 30-Day Security Audit</h1>
+      <p class="subtitle">Standard Operating Procedures (SOP) for Sysadmins, IT Engineers, and Managed Service Providers.</p>
+      <div class="hero-meta" aria-label="Runbook details">
+        <span>Version 1.2</span><span>Joiner · Audit · Leaver</span><span>Interactive checklist + PDF</span>
+      </div>
+    </div>
+  </section>
+
+  <main id="main-content">
+    <article id="runbook" aria-labelledby="page-title">
+      <section class="intro-card">
+        <div class="intro-grid">
+          <div>
+            <h2>Why a repeatable onboarding runbook matters</h2>
+            <p>Ad-hoc onboarding turns a straightforward people change into a chain of undocumented exceptions. A missed approval can leave a new hire with excessive access; a rushed laptop handover can expose an unencrypted endpoint; and an account created outside the normal request path can be invisible to access reviews. These gaps create avoidable compliance findings and make it difficult to prove who approved access, when a device was secured, or whether a license was reclaimed.</p>
+            <p>Inconsistent provisioning also wastes money. Teams buy duplicate subscriptions, assign premium seats without role justification, and forget to reclaim licenses after a departure. Meanwhile, credentials shared in chat or reused from a temporary password can linger long after the first login. This SOP ties each action to an owner, a verification step, and durable evidence so the process is secure, auditable, and practical for both internal IT teams and MSP service desks.</p>
+            <p>Use the first three phases for every joiner, adapting named platforms to your environment. Phase 4 is the linked emergency leaver procedure: execute it when employment ends or access must be revoked immediately. Record exceptions in the service ticket, name an approver, and set an expiry before any exception is granted.</p>
+          </div>
+          <aside class="outcome-box" aria-label="Operational outcomes">
+            <strong>At each stage, retain:</strong>
+            <ul>
+              <li>A ticket or change record</li>
+              <li>Approvals and assigned owner</li>
+              <li>System-generated verification evidence</li>
+              <li>Exception expiry and closure notes</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="phase-card" id="phase-pre-day-1" aria-labelledby="phase1-title">
+        <div class="phase-kicker"><span class="phase-number">1</span> Before the start date</div>
+        <h2 id="phase1-title">Phase 1: Pre-Day 1 Hardware &amp; Identity Provisioning</h2>
+        <p>Start from an approved HR or manager request containing the employee’s legal name, start date, manager, department, location, role, and approved access profile. Use that request as the source of truth; do not infer elevated access from a job title. Assign the endpoint and identity work to named owners early enough to resolve stock, licensing, or approval issues before the employee arrives.</p>
+        <h3>Prepare a known-good, attributable endpoint</h3>
+        <ul>
+          <li><strong>Asset tagging in the CMDB:</strong> Assign a unique asset identifier and record serial number, make/model, assigned user, purchase/warranty details, location, and lifecycle status. Apply the physical tag and reconcile the device record against the actual hardware before release.</li>
+          <li><strong>Clean OS deployment:</strong> Provision from the organization’s approved, supported image or zero-touch enrollment profile. Apply the current security baseline, remove stale local accounts and unapproved software, confirm time synchronization, and record the build or enrollment result.</li>
+          <li><strong>BitLocker/FileVault key escrow:</strong> Enable full-disk encryption before user data is placed on the device. Verify the recovery key has escrowed to the approved Entra ID, AD, or MDM repository and that authorized recovery staff can retrieve it; never place recovery secrets in the asset notes or ticket.</li>
+          <li><strong>EDR/RMM agent verification:</strong> Confirm the endpoint appears in the correct tenant, reports healthy and current, and is assigned the intended policy. A locally installed agent is not proof of protection: check in-console heartbeat, device identity, and alert status.</li>
+        </ul>
+        <h3>Provision least-privilege identity and services</h3>
+        <ul>
+          <li><strong>AD/IdP account creation:</strong> Create the account from the approved identity request with a unique sign-in name, correct directory attributes, manager, organizational unit, and lifecycle status. Use a controlled provisioning workflow where available and document the immutable user identifier in the ticket.</li>
+          <li><strong>RBAC security group assignment:</strong> Apply only role-approved baseline groups and application entitlements. Check inherited access, nested group membership, privileged roles, and conflicting duties. Record who approved each non-standard group and its review date.</li>
+          <li><strong>SaaS license provisioning:</strong> Allocate only the licenses needed for the employee’s approved duties. Confirm seat availability and application access, record the SKU/assignment in the identity ticket, and set a review trigger for temporary or premium licenses.</li>
+        </ul>
+        <div class="callout"><strong>Release gate:</strong> Do not hand over an endpoint until encryption recovery is escrowed and the management/security agents report healthy. Escalate any exception to the security or IT owner and document the risk acceptance and expiry.</div>
+      </section>
+
+      <section class="phase-card" id="phase-day-1" aria-labelledby="phase2-title">
+        <div class="phase-kicker"><span class="phase-number">2</span> First working day</div>
+        <h2 id="phase2-title">Phase 2: Day-1 Access &amp; Handover</h2>
+        <p>Verify the recipient’s identity using the organization’s established in-person or remote verification process before disclosing access details or transferring equipment. The manager or sponsor should confirm the role and requested access. Provide concise instructions, then ask the employee to complete the sign-in and recovery steps themselves rather than observing or recording their secrets.</p>
+        <ul>
+          <li><strong>Enforced MFA authenticator app setup:</strong> Require registration of the approved authenticator or phishing-resistant factor, enforce MFA through the identity provider’s policy, and verify a fresh sign-in challenge. Provide a secure recovery method consistent with policy; do not treat SMS as equivalent where stronger factors are required.</li>
+          <li><strong>One-time secret credential handover:</strong> Deliver the initial sign-in secret through an approved, access-controlled channel separate from the account identifier where possible. Require a change at first sign-in, prohibit reuse, and never put passwords, recovery codes, or private keys in tickets, email, or chat transcripts.</li>
+          <li><strong>802.1X/VPN certificate setup:</strong> Enroll the managed device for certificate-based network access using the approved device identity and profile. Test 802.1X and remote VPN access from the expected network path; verify certificate validity, renewal behavior, and revocation ownership.</li>
+          <li><strong>Ticketing portal onboarding:</strong> Confirm the employee can access the service portal, find support instructions, and submit a test or real request. Explain severity routing, support hours, and how to report a lost device or suspected compromise.</li>
+          <li><strong>Digital asset acknowledgment:</strong> Obtain the organization’s electronic acknowledgment for the specific issued equipment and accessories. Record asset IDs, condition, handover timestamp, policy version, and the employee’s acknowledgment in the approved asset or HR system.</li>
+        </ul>
+        <div class="callout"><strong>Handover evidence:</strong> Record completion timestamps and system evidence, not authenticator seeds, passwords, recovery codes, or private certificate material. Any credential reset or MFA bypass must be temporary, approved, and independently reviewed.</div>
+      </section>
+
+      <section class="phase-card" id="phase-30-day" aria-labelledby="phase3-title">
+        <div class="phase-kicker"><span class="phase-number">3</span> By day 30</div>
+        <h2 id="phase3-title">Phase 3: 30-Day Post-Onboarding Security Audit</h2>
+        <p>Schedule the review when access is requested so it is not forgotten after the immediate start-date work. Compare effective access with the employee’s actual duties and manager approval. The review should be performed by someone with authority to remove access and, where practicable, not solely by the person who provisioned it.</p>
+        <ul>
+          <li><strong>Audit temporary privilege escalations:</strong> Review PIM/PAM activation history, local administrator membership, emergency elevation grants, and temporary group changes. Confirm each elevation had a business justification, approver, bounded duration, and completed removal; investigate any standing privilege that was meant to expire.</li>
+          <li><strong>MDM/WSUS patch health check:</strong> Confirm the device remains enrolled and compliant, has checked in recently, and has installed required OS and application security updates within policy. Investigate failed or deferred updates, stale WSUS/MDM status, disabled controls, and unsupported software; document remediation and due date.</li>
+          <li><strong>Shadow IT inspection:</strong> Review endpoint software inventory, browser extensions, unsanctioned cloud storage, OAuth grants, and relevant proxy/CASB or SaaS discovery alerts. Validate business need with the manager; remove prohibited applications or move approved use into sanctioned, managed services.</li>
+          <li><strong>Cloud backup sync verification:</strong> Verify protected folders and approved cloud backup clients are active, current, and associated with the correct employee identity. Check recent successful sync/backup status and restore capability without exposing personal data; resolve quota, policy, or authentication errors.</li>
+        </ul>
+        <div class="callout"><strong>Close the audit:</strong> Record reviewer, evidence sources, findings, remediation owner, target dates, and the manager’s access attestation. Leave unresolved findings open with a risk owner; do not mark the review complete merely because a ticket was created.</div>
+      </section>
+
+      <section class="phase-card" id="phase-offboarding" aria-labelledby="phase4-title">
+        <div class="phase-kicker"><span class="phase-number">4</span> Emergency / leaver workflow</div>
+        <h2 id="phase4-title">Phase 4: Emergency Offboarding Protocol</h2>
+        <p>Offboarding is a coordinated identity, endpoint, data-retention, and asset process. Follow legal hold, privacy, labor, and incident-response requirements for the jurisdiction and case. For an involuntary or security-sensitive departure, coordinate timing with HR and the incident commander; avoid notifying the departing user before access controls are ready.</p>
+        <ul>
+          <li><strong>T-0 account revocation &amp; session kill:</strong> At the authorized effective time, disable the primary identity and linked accounts, revoke refresh tokens and active sessions, invalidate application sessions where supported, remove privileged access, and block remote access. Preserve audit logs and evidence before routine cleanup. Verify revocation in the identity provider and critical connected services; prioritize this step for emergency containment.</li>
+          <li><strong>T+24h mailbox/drive reassignment:</strong> After the documented approval and retention/legal-hold check, delegate or transfer business records to the manager or designated custodian. Apply mailbox auto-reply or forwarding only where policy and law permit. Keep access time-bound, log the recipient and scope, and verify shared files remain owned by the organization rather than an individual account.</li>
+          <li><strong>T+7d hardware sanitize &amp; license reclamation:</strong> Recover all issued devices and accessories, update custody in the CMDB, then sanitize or securely erase storage using the approved media procedure before redeployment or disposal. Reclaim SaaS and platform licenses only after retention and transfer needs are met; record the sanitization certificate, asset disposition, and reclaimed seat.</li>
+        </ul>
+        <div class="callout"><strong>Emergency control:</strong> If the device is lost, stolen, or potentially compromised, do not wait for the normal T+24h/T+7d milestones. Initiate incident response, remote lock or wipe when authorized, revoke device certificates, and preserve relevant logs.</div>
+      </section>
+
+      <section class="checklist-card" id="checklist" aria-labelledby="checklist-title">
+        <h2 id="checklist-title">Interactive onboarding &amp; security checklist</h2>
+        <p class="section-lead">Filter by phase, search for a control, and check off completed work on this device. Your check marks stay in this browser only and are not included in feedback submissions.</p>
+        <div class="table-controls">
+          <div class="filters" role="group" aria-label="Filter checklist by phase">
+            <button class="filter-button" type="button" data-phase="all" aria-pressed="true">All</button>
+            <button class="filter-button" type="button" data-phase="pre-day-1" aria-pressed="false">Pre-Day 1</button>
+            <button class="filter-button" type="button" data-phase="day-1" aria-pressed="false">Day 1</button>
+            <button class="filter-button" type="button" data-phase="30-day" aria-pressed="false">30-Day Audit</button>
+            <button class="filter-button" type="button" data-phase="offboarding" aria-pressed="false">Offboarding</button>
+          </div>
+          <div class="search-wrap">
+            <label class="sr-only" for="checklist-search">Search checklist tasks</label>
+            <input id="checklist-search" type="search" placeholder="Search tasks or evidence…">
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table id="runbook-table">
+            <caption class="sr-only">IT onboarding, 30-day security audit, and offboarding checklist</caption>
+            <thead>
+              <tr><th scope="col">Phase</th><th scope="col">Checklist item</th><th scope="col">Execution standard</th><th scope="col">Evidence to retain</th></tr>
+            </thead>
+            <tbody>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Complete asset tagging in CMDB"><span>Asset tagging in CMDB</span></label></td>
+                <td>Assign a unique asset ID; reconcile tag, serial, assigned user, location, warranty, and lifecycle status with the physical device.</td><td>CMDB record and asset handover ticket</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Complete clean OS deployment"><span>Clean OS deployment</span></label></td>
+                <td>Deploy the approved supported image, apply the security baseline, remove stale accounts and unapproved software, and confirm enrollment/build status.</td><td>Deployment or MDM enrollment record</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Verify BitLocker or FileVault key escrow"><span>BitLocker / FileVault key escrow</span></label></td>
+                <td>Enable full-disk encryption and verify the recovery key is escrowed in the approved directory or MDM vault and retrievable by authorized staff.</td><td>Encryption compliance and escrow status (never the key itself)</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Verify EDR and RMM agents"><span>EDR / RMM agent verification</span></label></td>
+                <td>Verify device identity, healthy console heartbeat, current policy assignment, and absence of blocking alerts in the EDR/RMM consoles.</td><td>Console device status and policy assignment</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Create AD or IdP account"><span>AD / IdP account creation</span></label></td>
+                <td>Create the account from an approved request; validate unique sign-in, attributes, manager, organizational unit, and lifecycle state.</td><td>Identity request, approver, and account identifier</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Assign RBAC security groups"><span>RBAC security group assignment</span></label></td>
+                <td>Assign role-approved baseline groups; check nested/inherited and privileged membership and document approval for exceptions.</td><td>Group membership export and approvals</td>
+              </tr>
+              <tr data-phase="pre-day-1">
+                <td>Pre-Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Provision SaaS licenses"><span>SaaS license provisioning</span></label></td>
+                <td>Allocate the minimum role-required SKUs, verify seat availability and service access, and set a review for temporary or premium seats.</td><td>License assignment record and role justification</td>
+              </tr>
+              <tr data-phase="day-1">
+                <td>Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Set up enforced MFA authenticator"><span>Enforced MFA authenticator setup</span></label></td>
+                <td>Enroll the approved factor, enforce the identity-provider policy, and verify a fresh challenge; provide a policy-compliant recovery path.</td><td>MFA registration and sign-in policy status; no seeds/codes</td>
+              </tr>
+              <tr data-phase="day-1">
+                <td>Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Hand over one-time secret credential"><span>One-time secret credential handover</span></label></td>
+                <td>Use an approved controlled channel, require a first-login change, and never store passwords or recovery codes in tickets, email, or chat.</td><td>Handover completion timestamp only</td>
+              </tr>
+              <tr data-phase="day-1">
+                <td>Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Configure 802.1X and VPN certificates"><span>802.1X / VPN certificate setup</span></label></td>
+                <td>Enroll the managed device profile, test wired/wireless and remote connectivity, and confirm validity, renewal, and revocation ownership.</td><td>Certificate enrollment and connection test result</td>
+              </tr>
+              <tr data-phase="day-1">
+                <td>Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Onboard user to ticketing portal"><span>Ticketing portal onboarding</span></label></td>
+                <td>Verify portal access and a test or real request; explain support hours, priority routing, and lost-device/compromise reporting.</td><td>Portal account and onboarding confirmation</td>
+              </tr>
+              <tr data-phase="day-1">
+                <td>Day 1</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Record digital asset acknowledgment"><span>Digital asset acknowledgment</span></label></td>
+                <td>Collect electronic acknowledgment for assigned equipment and accessories with asset IDs, condition, timestamp, and policy version.</td><td>Signed acknowledgment in approved asset/HR system</td>
+              </tr>
+              <tr data-phase="30-day">
+                <td>30-Day Audit</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Audit temporary privilege escalations"><span>Audit temporary privilege escalations</span></label></td>
+                <td>Review PIM/PAM, local admin, emergency grants, and temporary groups; verify justification, approval, expiry, removal, and remaining privilege.</td><td>Activation logs, access review, and remediation record</td>
+              </tr>
+              <tr data-phase="30-day">
+                <td>30-Day Audit</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Check MDM and WSUS patch health"><span>MDM / WSUS patch health</span></label></td>
+                <td>Confirm recent check-in, compliant enrollment, required OS/app patches within policy, and remediation of failed or deferred updates.</td><td>MDM/WSUS compliance report and remediation ticket</td>
+              </tr>
+              <tr data-phase="30-day">
+                <td>30-Day Audit</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Inspect for shadow IT"><span>Shadow IT inspection</span></label></td>
+                <td>Review software, browser extensions, unmanaged storage, OAuth grants, and discovery alerts; validate need and remove or sanction use.</td><td>Inventory/discovery findings and manager disposition</td>
+              </tr>
+              <tr data-phase="30-day">
+                <td>30-Day Audit</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Verify cloud backup synchronization"><span>Cloud backup sync verification</span></label></td>
+                <td>Verify approved folders/client, correct identity, recent successful sync/backup, and restore capability without exposing personal data.</td><td>Backup status, sync timestamp, and any remediation</td>
+              </tr>
+              <tr data-phase="offboarding">
+                <td>Offboarding · T-0</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Revoke accounts and terminate sessions at T-0"><span>Account revocation &amp; session kill</span></label></td>
+                <td>At the authorized time, disable identity and linked accounts, revoke tokens/sessions, remove privilege, block remote access, and verify critical apps.</td><td>Revocation timestamps, verification, and preserved audit logs</td>
+              </tr>
+              <tr data-phase="offboarding">
+                <td>Offboarding · T+24h</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Reassign mailbox and drive at T plus 24 hours"><span>Mailbox / drive reassignment</span></label></td>
+                <td>After approval and retention/legal-hold review, transfer business records to an authorized custodian; limit and log delegated access.</td><td>Approval, retention decision, and time-bound access record</td>
+              </tr>
+              <tr data-phase="offboarding">
+                <td>Offboarding · T+7d</td><td><label class="task-label"><input class="task-check" type="checkbox" aria-label="Sanitize hardware and reclaim licenses at T plus 7 days"><span>Hardware sanitize &amp; license reclamation</span></label></td>
+                <td>Recover and reconcile assets, securely sanitize media before reuse/disposal, then reclaim licenses after transfer and retention needs are met.</td><td>Chain of custody, sanitization record, disposition, and reclaimed seat</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-status" id="table-status" aria-live="polite"></p>
+        <div class="export-row">
+          <button class="button-primary" id="download-pdf" type="button">Download Branded PDF Checklist</button>
+          <span class="export-note">A4 PDF · Version 1.2 · Includes all phases regardless of filters</span>
+        </div>
+        <p class="form-status" id="pdf-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="feedback-card" id="feedback" aria-labelledby="feedback-title">
+        <h2 id="feedback-title">Help improve this runbook</h2>
+        <p class="microcopy">Did this checklist save your team time?</p>
+        <div class="micro-actions" role="group" aria-label="Quick checklist feedback">
+          <button class="micro-button" type="button" data-answer="yes" aria-pressed="false">Yes, significantly</button>
+          <button class="micro-button" type="button" data-answer="needs-improvement" aria-pressed="false">Needs improvement</button>
+        </div>
+        <div class="feedback-form-wrap" id="feedback-form-wrap" hidden>
+          <form class="feedback-form" id="feedback-form">
+            <input type="hidden" name="checklistImpact" id="checklist-impact" value="">
+            <div>
+              <span class="rating-label" id="rating-label">Your rating <span aria-hidden="true">*</span></span>
+              <div class="rating-stars" role="radiogroup" aria-labelledby="rating-label">
+                <input type="radio" id="rating-5" name="rating" value="5" required><label for="rating-5" aria-label="5 stars">★</label>
+                <input type="radio" id="rating-4" name="rating" value="4"><label for="rating-4" aria-label="4 stars">★</label>
+                <input type="radio" id="rating-3" name="rating" value="3"><label for="rating-3" aria-label="3 stars">★</label>
+                <input type="radio" id="rating-2" name="rating" value="2"><label for="rating-2" aria-label="2 stars">★</label>
+                <input type="radio" id="rating-1" name="rating" value="1"><label for="rating-1" aria-label="1 star">★</label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="reviewer-role">Your Role / Organization <span aria-hidden="true">*</span></label>
+                <input id="reviewer-role" name="roleOrganization" type="text" maxlength="120" placeholder="e.g., Sysadmin, IT Manager" required>
+              </div>
+              <div class="field">
+                <label for="review-text">What specific task or headache did this streamline? (Or what check did we miss?) <span aria-hidden="true">*</span></label>
+                <textarea id="review-text" name="review" maxlength="2000" required></textarea>
+              </div>
+            </div>
+            <label class="consent-label">
+              <input name="displayAsPeerReview" type="checkbox" value="true">
+              <span>Allow itvedas.com to display this as a verified peer review.</span>
+            </label>
+            <div class="export-row">
+              <button class="button-primary" id="submit-feedback" type="submit">Submit feedback</button>
+              <span class="export-note">Do not include passwords, personal data, or confidential company details.</span>
+            </div>
+            <p class="form-status" id="feedback-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="closing-card">
+        <h2>Make the process yours, then keep it measurable</h2>
+        <p>Map every step to the tools and approval paths your organization actually uses. Define a control owner and an evidence location, test the emergency offboarding path before it is urgent, and review this SOP whenever identity, device-management, or retention policy changes. The checklist is a repeatable starting point—not a substitute for your organization’s legal, privacy, security, or change-control requirements.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <p>Published by <a href="/">itvedas.com</a> — Real-world IT Administration Guides.</p>
+    <p><a href="/feedback">Leave feedback at itvedas.com/feedback</a> · © <span id="footer-year"></span> ITVedas</p>
+  </footer>
+
+  <script>
+    (() => {
+      "use strict";
+      const table = document.querySelector("#runbook-table");
+      const rows = Array.from(table.querySelectorAll("tbody tr"));
+      const phaseButtons = Array.from(document.querySelectorAll(".filter-button"));
+      const searchInput = document.querySelector("#checklist-search");
+      const tableStatus = document.querySelector("#table-status");
+      const feedbackWrap = document.querySelector("#feedback-form-wrap");
+      const feedbackForm = document.querySelector("#feedback-form");
+      const feedbackStatus = document.querySelector("#feedback-status");
+      const pdfStatus = document.querySelector("#pdf-status");
+      const downloadButton = document.querySelector("#download-pdf");
+      let activePhase = "all";
+      document.querySelector("#footer-year").textContent = new Date().getFullYear();
+
+      const updateRows = () => {
+        const query = searchInput.value.trim().toLocaleLowerCase();
+        let visible = 0;
+        for (const row of rows) {
+          const matchesPhase = activePhase === "all" || row.dataset.phase === activePhase;
+          const matchesText = !query || row.textContent.toLocaleLowerCase().includes(query);
+          row.hidden = !(matchesPhase && matchesText);
+          if (!row.hidden) visible += 1;
+        }
+        tableStatus.textContent = `${visible} of ${rows.length} checklist items shown.`;
+      };
+      phaseButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activePhase = button.dataset.phase;
+          phaseButtons.forEach((candidate) => candidate.setAttribute("aria-pressed", String(candidate === button)));
+          updateRows();
+        });
+      });
+      searchInput.addEventListener("input", updateRows);
+      table.querySelectorAll(".task-check").forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          checkbox.closest(".task-label").classList.toggle("is-done", checkbox.checked);
+        });
+      });
+      updateRows();
+
+      document.querySelectorAll(".micro-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".micro-button").forEach((candidate) => candidate.setAttribute("aria-pressed", String(candidate === button)));
+          document.querySelector("#checklist-impact").value = button.dataset.answer;
+          feedbackWrap.hidden = false;
+          feedbackStatus.textContent = "";
+          feedbackWrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          document.querySelector("#rating-5").focus({ preventScroll: true });
+        });
+      });
+
+      const setStatus = (element, message, state) => {
+        element.textContent = message;
+        if (state) element.dataset.state = state;
+        else delete element.dataset.state;
+      };
+
+      feedbackForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!feedbackForm.reportValidity()) return;
+        const data = new FormData(feedbackForm);
+        const rating = Number(data.get("rating"));
+        const payload = {
+          source: "it-onboarding-audit",
+          checklistImpact: data.get("checklistImpact"),
+          rating,
+          roleOrganization: String(data.get("roleOrganization")).trim(),
+          review: String(data.get("review")).trim(),
+          displayAsPeerReview: data.get("displayAsPeerReview") === "true",
+          submittedAt: new Date().toISOString()
+        };
+        const submitButton = document.querySelector("#submit-feedback");
+        submitButton.disabled = true;
+        setStatus(feedbackStatus, "Submitting your feedback…");
+        try {
+          const response = await fetch("/api/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error(`Feedback endpoint returned HTTP ${response.status}.`);
+          setStatus(feedbackStatus, "Thank you — your feedback was submitted.", "success");
+          feedbackForm.reset();
+          document.querySelectorAll(".micro-button").forEach((candidate) => candidate.setAttribute("aria-pressed", "false"));
+          document.querySelector("#checklist-impact").value = "";
+        } catch (error) {
+          setStatus(feedbackStatus, `Feedback could not be submitted. ${error.message} Please try again later.`, "error");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      const embeddedLogoSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="120" viewBox="0 0 520 120"><rect width="520" height="120" rx="14" fill="#ffffff"/><text x="20" y="79" font-family="Arial,sans-serif" font-size="64" font-weight="700" fill="#0B2750">itvedas</text><text x="294" y="79" font-family="Arial,sans-serif" font-size="64" font-weight="700" fill="#FF7A00">.com</text></svg>';
+      const toDataUri = (svg) => `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+      const loadLogoPng = () => new Promise((resolve, reject) => {
+        const logoImage = new Image();
+        logoImage.crossOrigin = "anonymous";
+        logoImage.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = logoImage.naturalWidth || 520;
+            canvas.height = logoImage.naturalHeight || 120;
+            canvas.getContext("2d").drawImage(logoImage, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/png"));
+          } catch (error) {
+            reject(error);
+          }
+        };
+        logoImage.onerror = () => {
+          const fallback = new Image();
+          fallback.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = fallback.naturalWidth;
+            canvas.height = fallback.naturalHeight;
+            canvas.getContext("2d").drawImage(fallback, 0, 0);
+            resolve(canvas.toDataURL("image/png"));
+          };
+          fallback.onerror = () => reject(new Error("The site logo and embedded fallback could not be loaded."));
+          fallback.src = toDataUri(embeddedLogoSvg);
+        };
+        logoImage.src = "/assets/brand/itvedas-logo.svg";
+      });
+
+      downloadButton.addEventListener("click", async () => {
+        setStatus(pdfStatus, "");
+        const jsPDF = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDF || typeof jsPDF.API.autoTable !== "function") {
+          setStatus(pdfStatus, "The PDF generator could not be loaded. Check your connection and try again.", "error");
+          return;
+        }
+        downloadButton.disabled = true;
+        setStatus(pdfStatus, "Preparing your branded checklist…");
+        try {
+          const logoPng = await loadLogoPng();
+          const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
+          const title = "The Production IT Operations Runbook: Employee Onboarding & 30-Day Security Audit";
+          const publishedDate = new Intl.DateTimeFormat("en", { year: "numeric", month: "long", day: "numeric" }).format(new Date());
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          const margin = { top: 31, right: 12, bottom: 17, left: 12 };
+          const footerText = "Document published by itvedas.com — Real-world IT Administration Guides. Leave feedback at itvedas.com/feedback";
+          const columns = ["Phase", "Checklist item", "Execution standard", "Evidence to retain"];
+          const body = rows.map((row) => Array.from(row.children, (cell, index) => {
+            if (index === 1) return `[ ] ${cell.querySelector("label span").textContent.trim()}`;
+            return cell.textContent.trim();
+          }));
+
+          pdf.autoTable({
+            head: [columns],
+            body,
+            margin,
+            startY: 34,
+            theme: "grid",
+            styles: { font: "helvetica", fontSize: 7.6, cellPadding: 2.3, lineColor: [220, 228, 238], lineWidth: .15, textColor: [35, 49, 69], overflow: "linebreak", valign: "middle" },
+            headStyles: { fillColor: [24, 76, 120], textColor: [255, 255, 255], fontStyle: "bold", fontSize: 8.2 },
+            alternateRowStyles: { fillColor: [244, 248, 252] },
+            columnStyles: { 0: { cellWidth: 28, fontStyle: "bold" }, 1: { cellWidth: 47, fontStyle: "bold" }, 2: { cellWidth: 145 }, 3: { cellWidth: 53 } },
+            willDrawPage: (data) => {
+              const pageNumber = data.pageNumber;
+              pdf.saveGraphicsState();
+              pdf.setGState(new pdf.GState({ opacity: 0.08 }));
+              pdf.setTextColor(24, 76, 120);
+              pdf.setFont("helvetica", "bold");
+              pdf.setFontSize(38);
+              pdf.text("ITVEDAS.COM", pageWidth / 2, pageHeight / 2, { angle: 32, align: "center" });
+              pdf.restoreGraphicsState();
+              pdf.addImage(logoPng, "PNG", margin.left, 7, 32, 7.4);
+              pdf.setFont("helvetica", "bold");
+              pdf.setFontSize(8.4);
+              pdf.setTextColor(11, 39, 80);
+              pdf.text(title, margin.left + 36, 11.6, { maxWidth: pageWidth - margin.left - margin.right - 95 });
+              pdf.setFont("helvetica", "normal");
+              pdf.setFontSize(7.5);
+              pdf.setTextColor(82, 98, 119);
+              pdf.text(`Version v1.2 · Published ${publishedDate}`, pageWidth - margin.right, 11.6, { align: "right" });
+              data.settings.margin.top = margin.top;
+              pdf.setFontSize(7);
+              pdf.setTextColor(73, 89, 108);
+              pdf.textWithLink(footerText, margin.left, pageHeight - 7, { url: "https://www.itvedas.com/feedback" });
+              pdf.text(`Page ${pageNumber}`, pageWidth - margin.right, pageHeight - 7, { align: "right" });
+            }
+          });
+          pdf.save("itvedas-employee-onboarding-security-audit-v1.2.pdf");
+          setStatus(pdfStatus, "Your branded A4 PDF checklist is ready.", "success");
+        } catch (error) {
+          setStatus(pdfStatus, `The PDF could not be generated. ${error.message}`, "error");
+        } finally {
+          downloadButton.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

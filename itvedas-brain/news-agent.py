@@ -140,14 +140,15 @@ def json_ld(obj):
 TOPIC_COLORS = {
     "Security":"#10B981","Cloud":"#3B82F6","DevOps":"#8B5CF6",
     "Networking":"#FF6B35","Databases":"#F59E0B","Linux":"#EF4444",
-    "Hardware":"#06B6D4","Compliance":"#EC4899","AI":"#F97316","General":"#64748B",
+    "Hardware":"#06B6D4","Compliance":"#EC4899","AI":"#F97316",
+    "Software":"#6366F1","General":"#64748B",
     "CVE":"#EF4444"
 }
 
 TOPIC_EMOJI = {
     "Security":"🔐","Cloud":"☁️","DevOps":"⚙️","Networking":"🌐",
     "Databases":"🗄️","Linux":"🐧","Hardware":"🖥️","Compliance":"📋",
-    "AI":"🤖","General":"📰","CVE":"🛡️"
+    "AI":"🤖","Software":"💻","General":"📰","CVE":"🛡️"
 }
 
 NEWS_FEEDS = ns.NEWS_FEEDS  # curated source list lives in core/news_sources.py
@@ -168,15 +169,23 @@ def write_with_openai(prompt, max_tokens=2500):
 def classify(title):
     t = title.lower()
     if re.search(r"cve-\d{4}-\d+", t): return "CVE"
-    if any(w in t for w in ["hack","vuln","breach","ransomware","phish","malware","cve","exploit","attack","cyber","threat"]): return "Security"
-    if any(w in t for w in ["aws","azure","gcp","cloud","serverless","s3","ec2"]): return "Cloud"
-    if any(w in t for w in ["kubernetes","docker","devops","ci/cd","terraform","deploy"]): return "DevOps"
-    if any(w in t for w in ["linux","ubuntu","kernel","bash"]): return "Linux"
-    if any(w in t for w in ["database","sql","mongodb","postgres"]): return "Databases"
-    if any(w in t for w in ["network","dns","firewall","vpn"]): return "Networking"
-    if any(w in t for w in ["gpu","cpu","chip","hardware","server"]): return "Hardware"
-    if any(w in t for w in ["gdpr","hipaa","compliance","regulation","pci"]): return "Compliance"
-    if any(w in t for w in ["ai","llm","gpt","machine learning"]): return "AI"
+    if re.search(r"\b(?:hack(?:er|ers|ing)?|vulnerabilit(?:y|ies)|flaw|breach|ransomware|phish(?:ing)?|malware|exploit|attack|cybersecurity|threat|zero.day|0.day|patch(?:es|ed)?)\b", t):
+        return "Security"
+    if re.search(r"\b(?:aws|azure|gcp|cloud|serverless|s3|ec2)\b", t): return "Cloud"
+    if re.search(r"\b(?:kubernetes|docker|devops|ci/cd|terraform|deploy(?:ment)?|container|gitlab|github actions|sre|observability)\b", t):
+        return "DevOps"
+    if re.search(r"\b(?:linux|ubuntu|kernel|bash|fedora|debian|red hat)\b", t): return "Linux"
+    if re.search(r"\b(?:database|sql|mongodb|postgres(?:ql)?|mysql|redis|sqlite|data warehouse)\b", t):
+        return "Databases"
+    if re.search(r"\b(?:network(?:ing)?|dns|firewall|vpn|router|bgp|wi-fi|5g|ethernet|telecom)\b", t):
+        return "Networking"
+    if re.search(r"\b(?:gpu|cpu|chip|hardware|server|processor|semiconductor|laptop|smartphone|memory)\b", t):
+        return "Hardware"
+    if re.search(r"\b(?:gdpr|hipaa|compliance|regulation|pci|nist)\b", t): return "Compliance"
+    if re.search(r"\b(?:ai|llm|gpt|machine learning|artificial intelligence|generative ai|language model)\b", t):
+        return "AI"
+    if re.search(r"\b(?:software|programming|open source|developer tools|framework|programming language)\b", t):
+        return "Software"
     return "General"
 
 CVE_EXTRA = """
@@ -502,11 +511,11 @@ def build_news_index(articles, update_time):
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Original IT and cybersecurity news explained in plain English — written by ITVedas, updated throughout the day.">
-<meta name="keywords" content="IT news, cybersecurity news, tech news today, cloud news, DevOps news">
+<meta name="description" content="IT, software and cybersecurity news in plain English, covering vulnerabilities, AI, cloud, DevOps, networking, databases, Linux and hardware.">
+<meta name="keywords" content="IT news, cybersecurity news, technology news, software news, AI, cloud, DevOps, networking, databases, Linux, hardware, CVE">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE}/news">
-<title>IT News Today — {today} | ITVedas</title>
+<title>IT, Cybersecurity &amp; Technology News — {today} | ITVedas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -534,6 +543,9 @@ nav{{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:ce
 .fb{{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}}
 .fb:hover{{color:var(--text);border-color:rgba(24,34,56,0.22);}}
 .fb.active{{background:var(--accent);border-color:var(--accent);color:#fff;}}
+.coverage{{margin:-0.5rem 0 1.75rem;color:var(--muted);font-size:.86rem;line-height:1.8;}}
+.coverage a{{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap;}}
+.coverage a:hover{{text-decoration:underline;}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}}
 .nc{{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}}
 .nc:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,0.15);}}
@@ -566,12 +578,20 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
   <div class="hero-in">
     <div class="live"><span class="dot"></span>Live updates</div>
     <h1>IT & Cybersecurity <span>News Today</span></h1>
-    <p>Original reporting on the latest tech, security and cloud news — written by ITVedas in plain English. Updated throughout the day.</p>
+    <p>Original, source-linked coverage of cybersecurity and the wider technology landscape—from vulnerabilities and AI to cloud, software, networking, databases, Linux and hardware.</p>
     <p class="upd">Last updated: {update_time} · {today}</p>
   </div>
 </div>
 <div class="main">
   <div class="filters">{filter_btns}</div>
+  <p class="coverage">Explore in-depth guides:
+    <a href="/articles/security/">Security</a> · <a href="/articles/cve/">CVE analysis</a> ·
+    <a href="/articles/ai-models/">AI</a> · <a href="/articles/cloud/">Cloud</a> ·
+    <a href="/articles/devops/">DevOps</a> · <a href="/articles/networking/">Networking</a> ·
+    <a href="/articles/databases/">Databases</a> · <a href="/articles/linux/">Linux</a> ·
+    <a href="/articles/hardware/">Hardware</a> · <a href="/articles/api/">APIs</a> ·
+    <a href="/chapters">all topic areas</a>.
+  </p>
   <p style="font-size:.85rem;color:#64748B;margin:-0.5rem 0 1.5rem;">Want just breaches, CVEs and patches? <a href="/security-news" style="color:#10B981;font-weight:600;">See the dedicated security feed →</a></p>
   <div class="grid" id="grid">{cards}</div>
   <div class="empty" id="empty" style="display:none;">No stories in this category yet. Check back soon.</div>

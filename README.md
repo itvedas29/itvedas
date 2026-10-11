@@ -37,10 +37,11 @@ Once every calendar keyword already has a published article, it refreshes the
 oldest article in place (same URL, new content, `dateModified` bumped) instead
 of creating a second page competing for the same keyword.
 - **`itvedas-brain/news-agent.py`** — fetches RSS headlines (including
-security/CVE feeds), writes AI-assisted commentary for fresh stories (at most
-`MAX_NEW_ARTICLES_PER_RUN` = 8 per run), and publishes to `news/`. Runs **once
-daily**. Every news page carries a disclosure that it is AI-assisted and links
-the original source.
+security/CVE feeds and broader technology sources for software, AI, cloud,
+databases, Linux and hardware), writes AI-assisted commentary for fresh
+stories (at most `NEWS_MAX_PER_RUN` = 2 per run), and publishes to `news/`.
+Runs **once daily**. Every news page carries a disclosure that it is
+AI-assisted and links the original source.
 
 **Review gate.** Each draft is scored by a second model call before publishing.
 A draft below the bar is rewritten once and reviewed again; if it still fails,
