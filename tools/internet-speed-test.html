@@ -120,6 +120,7 @@
     .metric-label { display: block; color: #6B7A94; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
     .metric-value { display: block; margin-top: 0.35rem; font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 700; line-height: 1.2; }
     .metric-unit { display: block; color: #6B7A94; font-size: 0.85rem; }
+    .metric-help { display: block; margin-top: 0.35rem; color: #6B7A94; font-size: 0.74rem; }
     .content-section { margin-top: 1.5rem; padding: 1.5rem; }
     .content-section h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
     .content-section p { margin: 0; color: #4A5568; }
@@ -206,9 +207,22 @@
 
   <section class="results" aria-label="Speed test results">
     <div class="metric-card">
-      <span class="metric-label">Latency</span>
+      <span class="metric-label">Unloaded latency</span>
       <span id="latency-result" class="metric-value">--</span>
       <span class="metric-unit">ms</span>
+      <span class="metric-help">Before the speed test</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Loaded latency</span>
+      <span id="loaded-latency-result" class="metric-value">--</span>
+      <span class="metric-unit">ms</span>
+      <span class="metric-help">While transferring data</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Jitter</span>
+      <span id="jitter-result" class="metric-value">--</span>
+      <span class="metric-unit">ms</span>
+      <span class="metric-help">Variation between pings</span>
     </div>
     <div class="metric-card">
       <span class="metric-label">Download</span>
@@ -224,14 +238,15 @@
 
   <section class="content-section">
     <h2>How the test works</h2>
-    <p>The test takes five latency readings and five download and upload samples, then reports the median to reduce the effect of one unusually fast or slow request. It downloads 50 MB and uploads 10 MB. The animation shows test progress; the reported speeds are calculated from the actual data transferred and elapsed request times.</p>
+    <p>The test takes five unloaded latency readings, then five download and upload samples. A small latency probe runs alongside each data transfer to measure loaded latency. Speeds and latency use the median to reduce the effect of one unusually fast or slow request. Jitter is the average change between consecutive unloaded latency readings. The test downloads 50 MB and uploads 10 MB; speeds use actual transferred bytes and elapsed request times.</p>
+    <p>Some services use multiple simultaneous data streams to saturate very fast connections. This test uses one data transfer at a time to keep its traffic bounded, so it may report lower peak throughput on some high-speed connections.</p>
     <h2>How to check whether the result is representative</h2>
     <ol>
       <li>For a baseline, connect your computer to the router with Ethernet. If testing Wi-Fi, stay close to the router.</li>
       <li>Pause VPNs, downloads, video streams, and other busy devices; close extra tabs that use the network.</li>
       <li>Run the test two or three times and compare the results. Then compare with your plan's advertised speed and another independent speed-test service.</li>
     </ol>
-    <p>No browser test can establish one universal “true” speed: results depend on the route and test server, your device, Wi-Fi, and congestion. This tool estimates the throughput available between your browser and Cloudflare's test network; it does not measure your ISP in isolation or guarantee peak plan speed.</p>
+    <p>No browser test can establish one universal “true” speed: results depend on the route and test server, your device, Wi-Fi, and congestion. This tool estimates the throughput available between your browser and Cloudflare's test network; it does not measure your ISP in isolation or guarantee peak plan speed. A large difference between unloaded and loaded latency can indicate that your connection becomes less responsive under load.</p>
     <div class="privacy-note">The test runs in your browser and this page does not save your results. Test traffic goes to Cloudflare, which can receive your IP address and request metadata as part of serving the test.</div>
   </section>
 

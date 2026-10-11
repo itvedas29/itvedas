@@ -4,6 +4,7 @@
   const DOWNLOAD_BYTES = 10_000_000;
   const UPLOAD_BYTES = 2_000_000;
   const TRIALS = 5;
+  const PING_INTERVAL_MS = 250;
   const TEST_TIMEOUT_MS = 180_000;
 
   const startButton = document.getElementById('start-test');
@@ -15,6 +16,8 @@
   const elapsedLabel = document.getElementById('test-elapsed');
   const phaseSteps = Array.from(document.querySelectorAll('[data-phase]'));
   const latencyResult = document.getElementById('latency-result');
+  const loadedLatencyResult = document.getElementById('loaded-latency-result');
+  const jitterResult = document.getElementById('jitter-result');
   const downloadResult = document.getElementById('download-result');
   const uploadResult = document.getElementById('upload-result');
   let activeController = null;
@@ -37,16 +40,37 @@
     const samples = [];
     for (let i = 0; i < TRIALS; i += 1) {
       setPhase('latency', `Measuring latency… (${i + 1} of ${TRIALS})`);
-      const startedAt = performance.now();
-      const response = await fetchResponse(testUrl(DOWNLOAD_URL, 0), {
-        cache: 'no-store',
-        mode: 'cors',
-        signal
-      });
-      await response.arrayBuffer();
-      samples.push(performance.now() - startedAt);
+      samples.push(await measureLatencySample(signal));
+      if (i < TRIALS - 1) await waitBetweenSamples(signal);
     }
-    return median(samples);
+    return samples;
+  }
+
+  function waitBetweenSamples(signal) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = window.setTimeout(() => {
+        signal.removeEventListener('abort', abort);
+        resolve();
+      }, PING_INTERVAL_MS);
+      const abort = () => {
+        window.clearTimeout(timeoutId);
+        signal.removeEventListener('abort', abort);
+        reject(signal.reason || new Error('Test cancelled.'));
+      };
+      if (signal.aborted) abort();
+      else signal.addEventListener('abort', abort, { once: true });
+    });
+  }
+
+  async function measureLatencySample(signal) {
+    const startedAt = performance.now();
+    const response = await fetchResponse(testUrl(DOWNLOAD_URL, 0), {
+      cache: 'no-store',
+      mode: 'cors',
+      signal
+    });
+    await response.arrayBuffer();
+    return performance.now() - startedAt;
   }
 
   async function measureDownload(signal) {
@@ -103,6 +127,12 @@
     const sorted = [...values].sort((a, b) => a - b);
     const middle = Math.floor(sorted.length / 2);
     return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  function averageAbsoluteChange(values) {
+    if (values.length < 2) return 0;
+    const changes = values.slice(1).map((value, index) => Math.abs(value - values[index]));
+    return changes.reduce((sum, change) => sum + change, 0) / changes.length;
   }
 
   function formatElapsed(durationMs) {
@@ -163,29 +193,42 @@
     error.textContent = '';
     error.classList.remove('visible');
     latencyResult.textContent = '--';
+    loadedLatencyResult.textContent = '--';
+    jitterResult.textContent = '--';
     downloadResult.textContent = '--';
     uploadResult.textContent = '--';
     finishProgress('READY');
     setBusy(true);
 
     try {
-      const latency = await measureLatency(controller.signal);
+      const latencySamples = await measureLatency(controller.signal);
 
       const downloadSamples = [];
+      const loadedLatencySamples = [];
       for (let i = 0; i < TRIALS; i += 1) {
         setPhase('download', `Measuring download speed… (${i + 1} of ${TRIALS})`);
-        const result = await measureDownload(controller.signal);
+        const [result, loadedLatency] = await Promise.all([
+          measureDownload(controller.signal),
+          measureLatencySample(controller.signal)
+        ]);
         downloadSamples.push(speedMbps(result.bytes, result.durationMs));
+        loadedLatencySamples.push(loadedLatency);
       }
 
       const uploadSamples = [];
       for (let i = 0; i < TRIALS; i += 1) {
         setPhase('upload', `Measuring upload speed… (${i + 1} of ${TRIALS})`);
-        const result = await measureUpload(controller.signal);
+        const [result, loadedLatency] = await Promise.all([
+          measureUpload(controller.signal),
+          measureLatencySample(controller.signal)
+        ]);
         uploadSamples.push(speedMbps(result.bytes, result.durationMs));
+        loadedLatencySamples.push(loadedLatency);
       }
 
-      latencyResult.textContent = latency.toFixed(0);
+      latencyResult.textContent = median(latencySamples).toFixed(0);
+      loadedLatencyResult.textContent = median(loadedLatencySamples).toFixed(0);
+      jitterResult.textContent = averageAbsoluteChange(latencySamples).toFixed(0);
       downloadResult.textContent = median(downloadSamples).toFixed(1);
       uploadResult.textContent = median(uploadSamples).toFixed(1);
       finishProgress('DONE', true);
