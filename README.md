@@ -106,6 +106,14 @@ into HTML.
 
 - **`.github/workflows/validate-static-site.yml`** — validates JSON, the CVE
 schema, and JavaScript syntax on every push.
+- **`.github/workflows/audit-search-discoverability.yml`** — scans public HTML,
+articles, internal links, sitemap/robots/llms.txt, structured data, and
+machine-readable content signals weekly, on relevant pull requests, or
+manually. It publishes prioritized Markdown and JSON reports as a workflow
+artifact. Run locally with
+`python3 scripts/audit-search-discoverability.py --root .`.
+The audit is read-only and heuristic; it does not query Search Console,
+analytics, live rankings, or field Core Web Vitals.
 
 ## Documentation
 
