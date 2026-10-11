@@ -3,6 +3,9 @@
 import unittest
 import json
 import re
+import sys
+import types
+from unittest.mock import patch
 
 
 class TestQAValidation(unittest.TestCase):
@@ -47,6 +50,33 @@ class TestSitemapGeneration(unittest.TestCase):
         xml_sample = '<?xml version="1.0"?><urlset><url><loc>/test</loc></url></urlset>'
         self.assertIn("<?xml", xml_sample)
         self.assertIn("</urlset>", xml_sample)
+
+
+class TestCVEIngestionNormalization(unittest.TestCase):
+    def test_cpe23_vendor_and_product_extraction_is_deterministic(self):
+        requests_stub = types.ModuleType("requests")
+        with patch.dict(sys.modules, {"requests": requests_stub}):
+            from scripts.cve_unified_sync import normalize
+
+        def cpe(vendor):
+            return f"cpe:2.3:a:{vendor}:sample_product:*:*:*:*:*:*:*:*"
+
+        cve = {
+            "id": "CVE-2026-12345",
+            "descriptions": [{"lang": "en", "value": "Example vulnerability"}],
+            "configurations": [{"nodes": [{"cpeMatch": [
+                {"criteria": cpe("zeta_vendor")},
+                {"criteria": cpe("alpha_vendor")},
+            ]}]}],
+        }
+
+        normalized = normalize(cve, set())
+        cve["configurations"][0]["nodes"][0]["cpeMatch"].reverse()
+        normalized_reversed = normalize(cve, set())
+
+        self.assertEqual(normalized["affected"], "Alpha Vendor")
+        self.assertEqual(normalized["affected_products"], ["Sample Product"])
+        self.assertEqual(normalized_reversed["affected"], normalized["affected"])
 
 
 if __name__ == "__main__":

@@ -1,97 +1,62 @@
 """Tests for subscribe API endpoint"""
 
-import json
+import subprocess
 import unittest
-from unittest.mock import MagicMock, patch
+from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
-class MockRequest:
-    def __init__(self, method="POST", body=None, origin="https://itvedas.com"):
-        self.method = method
-        self.body = body
-        self._headers = {"Origin": origin}
+NODE_HANDLER_TEST = r"""
+import assert from 'node:assert/strict';
+import { webcrypto } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 
-    def get(self, key):
-        return self._headers.get(key)
+if (!globalThis.crypto) Object.defineProperty(globalThis, 'crypto', { value: webcrypto });
+const source = await readFile('functions/api/subscribe.js', 'utf8');
+const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
+const { onRequestPost } = await import(moduleUrl);
+const values = new Map();
+const env = { SUBSCRIBERS: {
+    get: async key => values.get(key) ?? null,
+    put: async (key, value) => values.set(key, value)
+} };
 
-    async def json(self):
-        if self.body:
-            return json.loads(self.body) if isinstance(self.body, str) else self.body
-        raise ValueError("No body")
+async function post(email, ip, origin = 'https://itvedas.com') {
+    const request = new Request('https://itvedas.com/api/subscribe', {
+        method: 'POST',
+        headers: { Origin: origin, 'CF-Connecting-IP': ip, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    });
+    return onRequestPost({ request, env });
+}
 
-
-class MockResponse:
-    def __init__(self, status=200, body=None):
-        self.status = status
-        self.body = body or {}
-
-    def __str__(self):
-        return json.dumps(self.body)
+const accepted = await post('User@example.com', '192.0.2.1');
+assert.equal(accepted.status, 200);
+assert.equal((await accepted.json()).success, true);
+const duplicate = await post('user@example.com', '192.0.2.2');
+assert.equal(duplicate.status, 400);
+assert.equal((await duplicate.json()).message, 'Already subscribed');
+const invalid = await post('not-an-email', '192.0.2.3');
+assert.equal(invalid.status, 400);
+const blocked = await post('other@example.com', '192.0.2.4', 'https://evil.example');
+assert.equal(blocked.status, 403);
+console.log('subscribe handler checks passed');
+"""
 
 
 class SubscribeAPITests(unittest.TestCase):
-    """Test cases for subscription endpoint"""
+    """Black-box tests for the newsletter Cloudflare function."""
 
-    def test_post_required(self):
-        """Only POST method should be allowed"""
-        # API should return 405 for non-POST methods
-        self.assertNotEqual("POST", "GET")
-
-    def test_email_validation_required(self):
-        """Email validation should reject invalid formats"""
-        invalid_emails = [
-            "notanemail",
-            "@example.com",
-            "user@",
-            "user @example.com",
-            ""
-        ]
-        for email in invalid_emails:
-            # Invalid emails should either not have @, or have spaces, or be empty
-            is_invalid = (
-                "@" not in email or
-                " " in email or
-                len(email) == 0 or
-                email.endswith("@") or
-                email.startswith("@")
-            )
-            self.assertTrue(is_invalid, f"Email should be invalid: {email}")
-
-    def test_duplicate_subscription_rejected(self):
-        """Should reject duplicate email subscriptions"""
-        # This would be tested with actual API call
-        pass
-
-    def test_error_message_generic(self):
-        """Error messages should not expose server details"""
-        # Error response should be generic, not expose internals
-        error_msg = "Unable to process subscription. Please try again later."
-        self.assertNotIn("error", error_msg.lower())
-        self.assertNotIn("traceback", error_msg.lower())
-
-    def test_valid_subscription_stored(self):
-        """Valid subscriptions should be stored with metadata"""
-        valid_email = "user@example.com"
-        self.assertIn("@", valid_email)
-        self.assertGreater(len(valid_email.split("@")[1]), 0)
-
-
-class TestAPIInputValidation(unittest.TestCase):
-    """Test input validation for API endpoints"""
-
-    def test_json_parsing_required(self):
-        """API should validate JSON is well-formed"""
-        invalid_json = "{invalid json}"
-        try:
-            json.loads(invalid_json)
-            self.fail("Should raise JSONDecodeError")
-        except json.JSONDecodeError:
-            pass
-
-    def test_required_fields_validation(self):
-        """API should validate required fields present"""
-        incomplete_payload = {}
-        self.assertNotIn("email", incomplete_payload)
+    def test_handler_validation_duplicate_and_origin(self):
+        result = subprocess.run(
+            ["node", "--input-type=module", "-e", NODE_HANDLER_TEST],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("subscribe handler checks passed", result.stdout)
 
 
 if __name__ == "__main__":

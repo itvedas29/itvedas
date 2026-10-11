@@ -9,6 +9,10 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 /cve              /articles/cve/     301
 /cve/             /articles/cve/     301
 
+# Retire the stale hand-written CVE sample page in favor of the canonical feed.
+/cve-database-complete  /cve-listing  301
+/cve-database-complete/ /cve-listing  301
+
 # Individual CVE detail pages: cve-listing.html's viewCVE() navigates to
 # /cve/{id}/, and cve-detail.html reads the ID back out of the URL path
 # client-side. These rewrites must come before the catch-all below or

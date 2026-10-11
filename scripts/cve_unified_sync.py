@@ -36,14 +36,14 @@ def normalize(cve,kev):
   for node in cfg.get('nodes',[]):
    for m in node.get('cpeMatch',[]):
     p=m.get('criteria','').split(':')
-    if len(p)>=5 and p[0]=='cpe' and p[2]=='2.3':vendors.add(p[3].replace('_',' ').title());products.add(p[4].replace('_',' ').title())
+    if len(p)>=5 and p[0]=='cpe' and p[1]=='2.3' and p[2] in {'a','h','o'}:vendors.add(p[3].replace('_',' ').title());products.add(p[4].replace('_',' ').title())
  cwes=[]
  for w in cve.get('weaknesses',[]):
   for x in w.get('description',[]):
    v=x.get('value');
    if v and v not in cwes:cwes.append(v)
  refs=[x.get('url') for x in cve.get('references',[]) if x.get('url')];published=cve.get('published','');modified=cve.get('lastModified',published);year=int(cid.split('-')[1]) if len(cid.split('-'))>1 and cid.split('-')[1].isdigit() else now().year
- return {'id':cid,'name':desc[:100] or cid,'affected':next(iter(vendors),'Unknown'),'affected_products':sorted(products)[:20],'year':year,'severity':severity(s,ver),'cvss':round(s,1),'cvss_version':ver,'type':classify_type(desc,cwes),'description':desc[:500] or 'No description available','remediation':'Apply vendor security updates and follow NVD/vendor mitigation guidance.','published_date':published.split('T')[0] if published else now().date().isoformat(),'last_modified_date':modified,'cwe':cwes,'known_exploited':cid in kev,'references':refs[:50],'source':'nvd','withdrawn':cve.get('vulnStatus')=='Rejected'}
+ return {'id':cid,'name':desc[:100] or cid,'affected':sorted(vendors)[0] if vendors else 'Unknown','affected_products':sorted(products)[:20],'year':year,'severity':severity(s,ver),'cvss':round(s,1),'cvss_version':ver,'type':classify_type(desc,cwes),'description':desc[:500] or 'No description available','remediation':'Apply vendor security updates and follow NVD/vendor mitigation guidance.','published_date':published.split('T')[0] if published else now().date().isoformat(),'last_modified_date':modified,'cwe':cwes,'known_exploited':cid in kev,'references':refs[:50],'source':'nvd','withdrawn':cve.get('vulnStatus')=='Rejected'}
 def fetch_github_advisories(report):
  """CVE-id -> {ghsa,url,summary} from GitHub's global advisory database.
 

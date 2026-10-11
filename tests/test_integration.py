@@ -199,6 +199,15 @@ class TestConfigurationFiles(unittest.TestCase):
         self.assertTrue((REPO_ROOT / "_headers").exists())
         self.assertTrue((REPO_ROOT / "_redirects").exists())
 
+    def test_legacy_cve_database_routes_to_canonical_listing(self):
+        rules = [
+            line.split()
+            for line in (REPO_ROOT / "_redirects").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+        self.assertIn(["/cve-database-complete", "/cve-listing", "301"], rules)
+        self.assertIn(["/cve-database-complete/", "/cve-listing", "301"], rules)
+
     def test_gitignore_exists(self):
         """.gitignore should exist"""
         gitignore = Path(str(REPO_ROOT) + "/.gitignore")
