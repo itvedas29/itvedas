@@ -52,13 +52,22 @@ NEWS_FEEDS = [
     "https://kubernetes.io/feed.xml",
     "https://github.blog/feed/",
     "https://lwn.net/headlines/rss",
+    # Broader technology and software engineering
+    "https://www.theregister.com/software/headlines.atom",
+    "https://www.postgresql.org/news.rss",
+    "https://about.gitlab.com/atom.xml",
+    "https://www.redhat.com/en/rss/blog",
+    "https://www.infoq.com/feed/",
+    "https://techcrunch.com/category/artificial-intelligence/feed/",
+    "https://arstechnica.com/gadgets/feed/",
 ]
 
 # Vendors/projects announcing their own news - worth covering even when only
 # one outlet has it (e.g. a Kubernetes release on kubernetes.io).
 OFFICIAL_SOURCES = {"msrc.microsoft.com", "security.googleblog.com", "blog.talosintelligence.com",
                     "unit42.paloaltonetworks.com", "aws.amazon.com", "cloudblogs.microsoft.com",
-                    "kubernetes.io", "github.blog", "lwn.net", "isc.sans.edu"}
+                    "kubernetes.io", "github.blog", "lwn.net", "isc.sans.edu",
+                    "postgresql.org", "about.gitlab.com", "redhat.com"}
 
 # Stories scoring below this are skipped even if there is room under the cap:
 # a single outlet's non-security item scores 3, so it needs another signal
