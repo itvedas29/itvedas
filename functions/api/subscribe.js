@@ -15,7 +15,9 @@ export async function onRequestPost(context) {
   const { request, env } = context;
   const origin = request.headers.get("Origin") || "";
 
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+  // Browsers always send Origin on POST, so requiring it blocks scripted signups
+  // that simply omit the header.
+  if (!ALLOWED_ORIGINS.includes(origin)) {
     return jsonResponse({ success: false, message: "Origin not allowed" }, 403);
   }
 
@@ -38,14 +40,12 @@ export async function onRequestPost(context) {
     // A short edge-side throttle reduces automated writes without retaining a
     // permanent IP profile. KV is eventually consistent, so this is abuse
     // reduction rather than a hard global quota.
-    const clientIp = request.headers.get("CF-Connecting-IP") || "";
-    if (clientIp) {
-      const rateKey = `subscribe-rate:${await anonymizedRateKey(clientIp)}`;
-      if (await env.SUBSCRIBERS.get(rateKey)) {
-        return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
-      }
-      await env.SUBSCRIBERS.put(rateKey, "1", { expirationTtl: RATE_LIMIT_SECONDS });
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    const rateKey = `subscribe-rate:${await anonymizedRateKey(clientIp)}`;
+    if (await env.SUBSCRIBERS.get(rateKey)) {
+      return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
     }
+    await env.SUBSCRIBERS.put(rateKey, "1", { expirationTtl: RATE_LIMIT_SECONDS });
 
     const normalizedEmail = email.toLowerCase();
     const key = `subscriber:${normalizedEmail}`;

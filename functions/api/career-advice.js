@@ -43,14 +43,18 @@ export async function onRequestPost(context) {
   }
 
   // Best-effort edge rate limiting via Cloudflare KV
+  // Fail closed: without a rate-limit store, anyone could run up Gemini costs.
+  if (!env.RATE_LIMIT_KV) {
+    console.error("career-advice: RATE_LIMIT_KV is not bound; refusing request");
+    return jsonResponse({ error: "This service is temporarily unavailable." }, 503);
+  }
+  // Requests without an IP share one bucket instead of skipping the limit.
   const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
-  if (env.RATE_LIMIT_KV && clientIp !== "unknown") {
-    const allowed = await checkRateLimit(env.RATE_LIMIT_KV, clientIp);
-    if (!allowed) {
-      return jsonResponse({ error: "Too many requests. Please try again later." }, 429, {
-        "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS)
-      });
-    }
+  const allowed = await checkRateLimit(env.RATE_LIMIT_KV, clientIp);
+  if (!allowed) {
+    return jsonResponse({ error: "Too many requests. Please try again later." }, 429, {
+      "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS)
+    });
   }
 
   let body;
