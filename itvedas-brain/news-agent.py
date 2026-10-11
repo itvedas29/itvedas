@@ -156,11 +156,10 @@ NEWS_FEEDS = ns.NEWS_FEEDS  # curated source list lives in core/news_sources.py
 # left linking out to the source. Still capped (well above what a normal
 # run sees) so a pathological feed dump can't trigger unbounded Claude
 # calls / runtime in a single run.
-MAX_NEW_ARTICLES_PER_RUN = int(os.environ.get("NEWS_MAX_PER_RUN", "6"))  # was 8; cut from 25 on 2026-08-06: news cron moved from
-# hourly to once-daily as part of an indexing-recovery pass (77% of the sitemap
-# was thin autopilot /news/ pages, GSC showed only 46 indexed). A once-daily run
-# would otherwise still dump up to 25 new pages in a single burst; capping it
-# lower keeps daily publish volume down while indexing catches up.
+MAX_NEW_ARTICLES_PER_RUN = int(os.environ.get("NEWS_MAX_PER_RUN", "2"))
+# The autopilot queue was repeatedly piling up and each run was publishing too many
+# original AI articles in one burst. Keeping this cap low prevents long runs and
+# avoids a backlog of stale jobs waiting behind each other.
 
 def write_with_openai(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
