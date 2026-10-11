@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Test your internet connection with a free browser-based speed test. Measure download speed, upload speed, and latency without installing an app.">
+  <meta property="og:title" content="Internet Speed Test | IT Vedas">
+  <meta property="og:description" content="Measure your internet download speed, upload speed, and latency with this free browser-based test.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.itvedas.com/tools/internet-speed-test">
+  <link rel="canonical" href="https://www.itvedas.com/tools/internet-speed-test">
+  <title>Internet Speed Test | IT Vedas</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Internet Speed Test",
+    "description": "Measure internet download speed, upload speed, and latency in your browser.",
+    "url": "https://www.itvedas.com/tools/internet-speed-test",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web"
+  }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #EEF3FC;
+      color: #182238;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .eyebrow { color: #07845d; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    h1 { margin: 0.35rem 0 0.5rem; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.2; }
+    .intro { max-width: 680px; margin: 0 0 1.5rem; color: #4A5568; }
+    .test-card, .metric-card, .content-section {
+      background: #FFFFFF;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 14px;
+    }
+    .test-card { padding: clamp(1.25rem, 4vw, 2rem); text-align: center; }
+    .test-card h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+    .test-note { margin: 0 0 1.25rem; color: #6B7A94; font-size: 0.9rem; }
+    .button-row { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    button {
+      min-height: 48px;
+      padding: 0.75rem 1.5rem;
+      border: 0;
+      border-radius: 8px;
+      background: #07845d;
+      color: #FFFFFF;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: #066d4d; }
+    button:focus-visible { outline: 3px solid #182238; outline-offset: 3px; }
+    button.secondary { background: #EEF3FC; border: 1px solid rgba(24,34,56,0.2); color: #182238; }
+    button:disabled { cursor: not-allowed; opacity: 0.6; }
+    .status { min-height: 1.6em; margin: 1rem 0 0; color: #4A5568; }
+    .error-box {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(185,28,28,0.3);
+      border-radius: 8px;
+      background: rgba(239,68,68,0.1);
+      color: #B91C1C;
+      text-align: left;
+    }
+    .error-box.visible { display: block; }
+    .results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .metric-card { padding: 1.25rem 1rem; text-align: center; }
+    .metric-label { display: block; color: #6B7A94; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .metric-value { display: block; margin-top: 0.35rem; font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 700; line-height: 1.2; }
+    .metric-unit { display: block; color: #6B7A94; font-size: 0.85rem; }
+    .content-section { margin-top: 1.5rem; padding: 1.5rem; }
+    .content-section h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+    .content-section p { margin: 0; color: #4A5568; }
+    .privacy-note { margin-top: 1rem; padding: 1rem; border-left: 3px solid #07845d; background: rgba(16,185,129,0.08); color: #31534a; font-size: 0.9rem; }
+    .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .related-tools a { color: #07845d; text-decoration: none; }
+    .related-tools a:hover { text-decoration: underline; }
+    @media (max-width: 600px) {
+      .results { grid-template-columns: 1fr; gap: 0.75rem; }
+      .metric-card { padding: 1rem; }
+      .metric-value { font-size: 2rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="/css/site-nav.css">
+</head>
+<body>
+<!-- site-nav:start (generated from partials/site-nav.html by scripts/apply-site-nav.py; edit the partial, not this copy) -->
+<div class="site-header" data-mode="sticky">
+<a class="sn-skip" href="#main-content">Skip to content</a>
+<nav class="sn-nav" aria-label="Main">
+<a class="sn-logo" href="/" aria-label="ITVedas home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" class="sn-mark" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg><span class="sn-word">IT<span>Vedas</span></span></a>
+<button class="sn-burger" type="button" aria-expanded="false" aria-controls="sn-menu"><span class="sn-burger-lines" aria-hidden="true"></span>Menu</button>
+<div class="sn-menu" id="sn-menu">
+<ul class="sn-tops">
+<li class="sn-top" data-section="learn"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-learn">Learn IT<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel sn-wide" id="sn-learn"><div class="sn-panel-head"><a class="sn-start" href="/chapters"><span class="sn-t">New to IT? Start here</span><span class="sn-d">Every topic in the order to learn it, from the basics up</span></a></div><div class="sn-grid"><div class="sn-group"><p class="sn-gt">The basics</p><ul><li><a class="sn-item" href="/articles/networking/"><span class="sn-t">Networking</span><span class="sn-d">How devices connect and share data</span></a></li><li><a class="sn-item" href="/articles/hardware/"><span class="sn-t">Hardware</span><span class="sn-d">What is inside a computer and why it matters</span></a></li><li><a class="sn-item" href="/articles/linux/"><span class="sn-t">Linux</span><span class="sn-d">The system most servers run on</span></a></li><li><a class="sn-item" href="/articles/cloud/"><span class="sn-t">Cloud</span><span class="sn-d">Renting computers and storage online</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Staying safe</p><ul><li><a class="sn-item" href="/articles/security/"><span class="sn-t">Security</span><span class="sn-d">Protecting people and systems from attacks</span></a></li><li><a class="sn-item" href="/articles/compliance/"><span class="sn-t">Compliance</span><span class="sn-d">Rules for handling data, like GDPR</span></a></li><li><a class="sn-item" href="/articles/cve/"><span class="sn-t">Real attacks explained</span><span class="sn-d">Famous security flaws, in plain words</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Building software</p><ul><li><a class="sn-item" href="/articles/api/"><span class="sn-t">APIs</span><span class="sn-d">How apps talk to each other</span></a></li><li><a class="sn-item" href="/articles/devops/"><span class="sn-t">DevOps</span><span class="sn-d">How software is built and released</span></a></li><li><a class="sn-item" href="/articles/databases/"><span class="sn-t">Databases</span><span class="sn-d">Where apps keep their information</span></a></li><li><a class="sn-item" href="/articles/ai-models/"><span class="sn-t">AI models</span><span class="sn-d">How AI tools like chatbots work</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Microsoft tools</p><ul><li><a class="sn-item" href="/articles/azure/"><span class="sn-t">Azure</span><span class="sn-d">Microsoft’s cloud</span></a></li><li><a class="sn-item" href="/articles/powershell/"><span class="sn-t">PowerShell</span><span class="sn-d">Automating Windows tasks</span></a></li><li><a class="sn-item" href="/articles/iis/"><span class="sn-t">IIS</span><span class="sn-d">Running websites on Windows</span></a></li><li><a class="sn-item" href="/articles/sql-server/"><span class="sn-t">SQL Server</span><span class="sn-d">Microsoft’s database</span></a></li></ul></div></div></div></li>
+<li class="sn-top" data-section="news"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-news">News<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-news"><ul class="sn-list"><li><a class="sn-item" href="/news"><span class="sn-t">Latest IT news</span><span class="sn-d">What happened this week, explained simply</span></a></li><li><a class="sn-item" href="/security-news"><span class="sn-t">Security news</span><span class="sn-d">New attacks, breaches and urgent updates</span></a></li><li><a class="sn-item" href="/news/archive/"><span class="sn-t">News archive</span><span class="sn-d">Every past story, by date</span></a></li></ul></div></li>
+<li class="sn-top" data-section="software"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-software">Software<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-software"><ul class="sn-list"><li><a class="sn-item" href="/software/"><span class="sn-t">Software specs</span><span class="sn-d">Requirements, prices and user reviews for IT software</span></a></li><li><a class="sn-item" href="/ai-tools/"><span class="sn-t">AI tools guide</span><span class="sn-d">Popular AI tools compared side by side</span></a></li></ul></div></li>
+<li class="sn-top" data-section="tools"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-tools">Free tools<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-tools"><ul class="sn-list"><li><a class="sn-item" href="/tools/"><span class="sn-t">Free IT tools</span><span class="sn-d">Calculators, lookups and converters that run in your browser</span></a></li><li><a class="sn-item" href="/cve-listing"><span class="sn-t">Security flaw lookup</span><span class="sn-d">Search known software vulnerabilities (CVEs)</span></a></li></ul></div></li>
+<li class="sn-top" data-section="careers"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-careers">Careers<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-careers"><ul class="sn-list"><li><a class="sn-item" href="/career-paths"><span class="sn-t">Career paths</span><span class="sn-d">What each IT job involves and how to get there</span></a></li><li><a class="sn-item" href="/career-navigator"><span class="sn-t">Find your career</span><span class="sn-d">Answer a few questions and get a suggestion</span></a></li><li><a class="sn-item" href="/quiz"><span class="sn-t">Skills quiz</span><span class="sn-d">Test what you know in a few minutes</span></a></li></ul></div></li>
+<li class="sn-top" data-section="help"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-help">Help<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-help"><ul class="sn-list"><li><a class="sn-item" href="/problems-solutions"><span class="sn-t">Problems and fixes</span><span class="sn-d">Step-by-step fixes for common computer issues</span></a></li><li><a class="sn-item" href="/faq"><span class="sn-t">Common questions</span><span class="sn-d">Quick answers about IT and this site</span></a></li><li><a class="sn-item" href="/about"><span class="sn-t">About ITVedas</span><span class="sn-d">Who we are and how we write our guides</span></a></li><li><a class="sn-item" href="/services"><span class="sn-t">Services</span><span class="sn-d">Work with us</span></a></li><li><a class="sn-item" href="/contact"><span class="sn-t">Contact us</span><span class="sn-d">Ask a question or report a mistake</span></a></li></ul></div></li>
+</ul>
+<div class="sn-actions">
+<button class="sn-search-btn" type="button" aria-expanded="false" aria-controls="sn-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
+<a class="sn-cta" href="/chapters">Start learning</a>
+</div>
+</div>
+</nav>
+<div class="sn-search" id="sn-search" hidden>
+<form class="sn-search-form" role="search" action="/" method="get">
+<label class="sn-vh" for="sn-q">Search ITVedas</label>
+<input id="sn-q" type="search" name="q" placeholder="What do you want to learn? Try “Wi-Fi” or “firewall”" autocomplete="off">
+<button type="button" class="sn-search-close">Close</button>
+</form>
+<ul class="sn-results" aria-live="polite"></ul>
+</div>
+</div>
+<div class="sn-spacer" aria-hidden="true"></div>
+<!-- site-nav:end -->
+<main id="main-content" class="container">
+  <p class="eyebrow">Free network tool</p>
+  <h1>Internet Speed Test</h1>
+  <p class="intro">Check your connection's download speed, upload speed, and latency. For the most useful result, pause downloads, streaming, and other heavy network activity while the test runs.</p>
+
+  <section class="test-card" aria-labelledby="test-heading">
+    <h2 id="test-heading">Ready to test your connection?</h2>
+    <p class="test-note">A test transfers about 22 MB of data to Cloudflare's speed-test network.</p>
+    <div class="button-row">
+      <button id="start-test" type="button">Start speed test</button>
+      <button id="cancel-test" class="secondary" type="button" hidden>Cancel test</button>
+    </div>
+    <p id="test-status" class="status" role="status" aria-live="polite">Your results will appear here.</p>
+    <div id="test-error" class="error-box" role="alert"></div>
+  </section>
+
+  <section class="results" aria-label="Speed test results">
+    <div class="metric-card">
+      <span class="metric-label">Latency</span>
+      <span id="latency-result" class="metric-value">--</span>
+      <span class="metric-unit">ms</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Download</span>
+      <span id="download-result" class="metric-value">--</span>
+      <span class="metric-unit">Mbps</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Upload</span>
+      <span id="upload-result" class="metric-value">--</span>
+      <span class="metric-unit">Mbps</span>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2>How the test works</h2>
+    <p>The test checks response time, then downloads and uploads small test files to Cloudflare's nearby speed-test network. Speeds are estimates for your connection to that network and can vary with Wi-Fi signal, device activity, and network congestion.</p>
+    <div class="privacy-note">The test runs in your browser and this page does not save your results. Test traffic goes to Cloudflare, which can receive your IP address and request metadata as part of serving the test.</div>
+  </section>
+
+  <section class="content-section">
+    <h2>Related network tools</h2>
+    <div class="related-tools">
+      <a href="/tools/ip-address-checker.html">IP Address Checker</a>
+      <a href="/tools/dns-lookup.html">DNS Lookup</a>
+      <a href="/tools/cidr-calculator.html">CIDR Calculator</a>
+    </div>
+  </section>
+</main>
+<script src="/js/internet-speed-test.js" defer></script>
+<script src="/js/site-nav.js" defer></script>
+</body>
+</html>
