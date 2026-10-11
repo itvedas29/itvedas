@@ -2,18 +2,23 @@
   const DOWNLOAD_URL = 'https://speed.cloudflare.com/__down';
   const UPLOAD_URL = 'https://speed.cloudflare.com/__up';
   const DOWNLOAD_BYTES = 10_000_000;
-  const UPLOAD_BYTES = 1_000_000;
-  const TRIALS = 2;
-  const TEST_TIMEOUT_MS = 45_000;
+  const UPLOAD_BYTES = 2_000_000;
+  const TRIALS = 5;
+  const TEST_TIMEOUT_MS = 180_000;
 
   const startButton = document.getElementById('start-test');
   const cancelButton = document.getElementById('cancel-test');
   const status = document.getElementById('test-status');
   const error = document.getElementById('test-error');
+  const visual = document.getElementById('test-visual');
+  const phaseLabel = document.getElementById('test-phase');
+  const elapsedLabel = document.getElementById('test-elapsed');
+  const phaseSteps = Array.from(document.querySelectorAll('[data-phase]'));
   const latencyResult = document.getElementById('latency-result');
   const downloadResult = document.getElementById('download-result');
   const uploadResult = document.getElementById('upload-result');
   let activeController = null;
+  const phases = ['latency', 'download', 'upload'];
 
   function testUrl(endpoint, bytes) {
     const params = new URLSearchParams({ bytes: String(bytes), cache: String(Date.now() + Math.random()) });
@@ -30,7 +35,8 @@
 
   async function measureLatency(signal) {
     const samples = [];
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < TRIALS; i += 1) {
+      setPhase('latency', `Measuring latency… (${i + 1} of ${TRIALS})`);
       const startedAt = performance.now();
       const response = await fetchResponse(testUrl(DOWNLOAD_URL, 0), {
         cache: 'no-store',
@@ -40,7 +46,7 @@
       await response.arrayBuffer();
       samples.push(performance.now() - startedAt);
     }
-    return samples.reduce((total, sample) => total + sample, 0) / samples.length;
+    return median(samples);
   }
 
   async function measureDownload(signal) {
@@ -89,8 +95,44 @@
     return { bytes: payload.byteLength, durationMs };
   }
 
-  function formatMbps(bytes, durationMs) {
-    return ((bytes * 8) / (durationMs / 1000) / 1_000_000).toFixed(1);
+  function speedMbps(bytes, durationMs) {
+    return (bytes * 8) / (durationMs * 1000);
+  }
+
+  function median(values) {
+    const sorted = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  function formatElapsed(durationMs) {
+    const totalSeconds = Math.floor(durationMs / 1000);
+    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+
+  function setPhase(phase, message) {
+    const activeIndex = phases.indexOf(phase);
+    visual.classList.add('is-running');
+    phaseLabel.textContent = phase.toUpperCase();
+    status.textContent = message;
+    phaseSteps.forEach((step, index) => {
+      step.classList.toggle('is-active', index === activeIndex);
+      step.classList.toggle('is-complete', index < activeIndex);
+      if (index === activeIndex) step.setAttribute('aria-current', 'step');
+      else step.removeAttribute('aria-current');
+    });
+  }
+
+  function finishProgress(label, completed = false) {
+    visual.classList.remove('is-running');
+    phaseLabel.textContent = label;
+    phaseSteps.forEach(step => {
+      step.classList.remove('is-active');
+      step.classList.toggle('is-complete', completed);
+      step.removeAttribute('aria-current');
+    });
   }
 
   function setBusy(isBusy) {
@@ -108,6 +150,11 @@
     const controller = new AbortController();
     activeController = controller;
     let timedOut = false;
+    const startedAt = performance.now();
+    elapsedLabel.textContent = '00:00';
+    const elapsedInterval = window.setInterval(() => {
+      elapsedLabel.textContent = formatElapsed(performance.now() - startedAt);
+    }, 1000);
     const timeoutId = window.setTimeout(() => {
       timedOut = true;
       controller.abort();
@@ -118,43 +165,44 @@
     latencyResult.textContent = '--';
     downloadResult.textContent = '--';
     uploadResult.textContent = '--';
+    finishProgress('READY');
     setBusy(true);
 
     try {
-      status.textContent = 'Measuring latency…';
       const latency = await measureLatency(controller.signal);
 
-      let downloadBytes = 0;
-      let downloadDurationMs = 0;
+      const downloadSamples = [];
       for (let i = 0; i < TRIALS; i += 1) {
-        status.textContent = `Measuring download speed… (${i + 1} of ${TRIALS})`;
+        setPhase('download', `Measuring download speed… (${i + 1} of ${TRIALS})`);
         const result = await measureDownload(controller.signal);
-        downloadBytes += result.bytes;
-        downloadDurationMs += result.durationMs;
+        downloadSamples.push(speedMbps(result.bytes, result.durationMs));
       }
 
-      let uploadBytes = 0;
-      let uploadDurationMs = 0;
+      const uploadSamples = [];
       for (let i = 0; i < TRIALS; i += 1) {
-        status.textContent = `Measuring upload speed… (${i + 1} of ${TRIALS})`;
+        setPhase('upload', `Measuring upload speed… (${i + 1} of ${TRIALS})`);
         const result = await measureUpload(controller.signal);
-        uploadBytes += result.bytes;
-        uploadDurationMs += result.durationMs;
+        uploadSamples.push(speedMbps(result.bytes, result.durationMs));
       }
 
       latencyResult.textContent = latency.toFixed(0);
-      downloadResult.textContent = formatMbps(downloadBytes, downloadDurationMs);
-      uploadResult.textContent = formatMbps(uploadBytes, uploadDurationMs);
+      downloadResult.textContent = median(downloadSamples).toFixed(1);
+      uploadResult.textContent = median(uploadSamples).toFixed(1);
+      finishProgress('DONE', true);
       status.textContent = 'Test complete. Results are estimates for your connection to Cloudflare.';
     } catch (testError) {
       if (controller.signal.aborted) {
+        finishProgress(timedOut ? 'TIMEOUT' : 'CANCELLED');
         status.textContent = timedOut ? 'The test timed out. Try again when your connection is more stable.' : 'Test cancelled.';
       } else {
+        finishProgress('ERROR');
         status.textContent = 'The speed test could not be completed.';
         error.textContent = `${testError.message} Check your connection and allow requests to speed.cloudflare.com, then try again.`;
         error.classList.add('visible');
       }
     } finally {
+      elapsedLabel.textContent = formatElapsed(performance.now() - startedAt);
+      window.clearInterval(elapsedInterval);
       window.clearTimeout(timeoutId);
       if (activeController === controller) activeController = null;
       setBusy(false);

@@ -42,6 +42,51 @@
     .test-card { padding: clamp(1.25rem, 4vw, 2rem); text-align: center; }
     .test-card h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
     .test-note { margin: 0 0 1.25rem; color: #6B7A94; font-size: 0.9rem; }
+    .test-visual {
+      position: relative;
+      display: grid;
+      width: 176px;
+      aspect-ratio: 1;
+      place-items: center;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFFFF 57%, rgba(16,185,129,0.08) 58%);
+    }
+    .test-ring {
+      position: absolute;
+      inset: 0;
+      border: 4px solid rgba(16,185,129,0.16);
+      border-top-color: #07845d;
+      border-right-color: #10B981;
+      border-radius: 50%;
+      animation: speed-test-spin 1.2s linear infinite;
+      animation-play-state: paused;
+    }
+    .test-visual.is-running .test-ring { animation-play-state: running; }
+    .test-visual-core { display: grid; gap: 0.15rem; }
+    .test-phase { color: #07845d; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; }
+    .test-visual-core strong { font-size: 1.2rem; }
+    .test-visual-core span:last-child { color: #6B7A94; font-size: 0.78rem; }
+    @keyframes speed-test-spin { to { transform: rotate(360deg); } }
+    .test-steps {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0 auto 1.25rem;
+      padding: 0;
+      list-style: none;
+    }
+    .test-steps li {
+      min-width: 82px;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid rgba(24,34,56,0.12);
+      border-radius: 100px;
+      color: #6B7A94;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+    .test-steps li.is-active { border-color: #07845d; background: rgba(16,185,129,0.1); color: #066d4d; }
+    .test-steps li.is-complete { border-color: rgba(16,185,129,0.35); color: #07845d; }
     .button-row { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
     button {
       min-height: 48px;
@@ -78,6 +123,8 @@
     .content-section { margin-top: 1.5rem; padding: 1.5rem; }
     .content-section h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
     .content-section p { margin: 0; color: #4A5568; }
+    .content-section p + h2, .content-section p + p { margin-top: 1rem; }
+    .content-section ol { margin: 0.75rem 0 0; padding-left: 1.35rem; color: #4A5568; }
     .privacy-note { margin-top: 1rem; padding: 1rem; border-left: 3px solid #07845d; background: rgba(16,185,129,0.08); color: #31534a; font-size: 0.9rem; }
     .related-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
     .related-tools a { color: #07845d; text-decoration: none; }
@@ -86,6 +133,11 @@
       .results { grid-template-columns: 1fr; gap: 0.75rem; }
       .metric-card { padding: 1rem; }
       .metric-value { font-size: 2rem; }
+      .test-steps { gap: 0.3rem; }
+      .test-steps li { min-width: 0; padding: 0.35rem 0.55rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .test-ring { animation: none; }
     }
   </style>
   <link rel="stylesheet" href="/css/site-nav.css">
@@ -130,7 +182,20 @@
 
   <section class="test-card" aria-labelledby="test-heading">
     <h2 id="test-heading">Ready to test your connection?</h2>
-    <p class="test-note">A test transfers about 22 MB of data to Cloudflare's speed-test network.</p>
+    <p class="test-note">Five samples per measurement; transfers up to about 60 MB to Cloudflare.</p>
+    <div id="test-visual" class="test-visual" aria-hidden="true">
+      <div class="test-ring"></div>
+      <div class="test-visual-core">
+        <span id="test-phase" class="test-phase">READY</span>
+        <strong id="test-elapsed">00:00</strong>
+        <span>elapsed</span>
+      </div>
+    </div>
+    <ol class="test-steps" aria-label="Speed test progress">
+      <li data-phase="latency">Latency</li>
+      <li data-phase="download">Download</li>
+      <li data-phase="upload">Upload</li>
+    </ol>
     <div class="button-row">
       <button id="start-test" type="button">Start speed test</button>
       <button id="cancel-test" class="secondary" type="button" hidden>Cancel test</button>
@@ -159,7 +224,14 @@
 
   <section class="content-section">
     <h2>How the test works</h2>
-    <p>The test checks response time, then downloads and uploads small test files to Cloudflare's nearby speed-test network. Speeds are estimates for your connection to that network and can vary with Wi-Fi signal, device activity, and network congestion.</p>
+    <p>The test takes five latency readings and five download and upload samples, then reports the median to reduce the effect of one unusually fast or slow request. It downloads 50 MB and uploads 10 MB. The animation shows test progress; the reported speeds are calculated from the actual data transferred and elapsed request times.</p>
+    <h2>How to check whether the result is representative</h2>
+    <ol>
+      <li>For a baseline, connect your computer to the router with Ethernet. If testing Wi-Fi, stay close to the router.</li>
+      <li>Pause VPNs, downloads, video streams, and other busy devices; close extra tabs that use the network.</li>
+      <li>Run the test two or three times and compare the results. Then compare with your plan's advertised speed and another independent speed-test service.</li>
+    </ol>
+    <p>No browser test can establish one universal “true” speed: results depend on the route and test server, your device, Wi-Fi, and congestion. This tool estimates the throughput available between your browser and Cloudflare's test network; it does not measure your ISP in isolation or guarantee peak plan speed.</p>
     <div class="privacy-note">The test runs in your browser and this page does not save your results. Test traffic goes to Cloudflare, which can receive your IP address and request metadata as part of serving the test.</div>
   </section>
 
