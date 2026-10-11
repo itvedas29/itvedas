@@ -136,10 +136,12 @@
   }
 
   function formatElapsed(durationMs) {
-    const totalSeconds = Math.floor(durationMs / 1000);
+    const totalTenths = Math.floor(durationMs / 100);
+    const totalSeconds = Math.floor(totalTenths / 10);
     const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
     const seconds = String(totalSeconds % 60).padStart(2, '0');
-    return `${minutes}:${seconds}`;
+    const tenths = totalTenths % 10;
+    return `${minutes}:${seconds}.${tenths}`;
   }
 
   function setPhase(phase, message) {
