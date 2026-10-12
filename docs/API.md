@@ -19,19 +19,25 @@ Subscribe email address to ITVedas newsletter and updates.
 ```json
 {
   "email": "user@example.com",
-  "timestamp": "2026-07-17T10:30:00Z"
+  "consent": true
 }
 ```
 
 **Fields:**
 - `email` (required, string): Valid email address
-- `timestamp` (optional, ISO-8601): Subscription timestamp
+- `consent` (required, boolean): Explicit agreement to receive ITVedas email updates
 
 #### Validation Rules
-- Email must contain `@` symbol
-- Email format: `user@domain.extension`
-- Maximum payload: 6000 characters total
+- Email must be valid and no longer than 254 characters
+- Marketing consent must be true
 - Duplicate emails rejected
+
+The Cloudflare Pages Function forwards confirmed signups to the Google Apps
+Script web app using a server-side secret. The script writes the UTC signup
+time, normalized email, source, consent, and subscription status to the
+`Newsletter Subscribers` sheet tab. Quiz emails are not sent to this endpoint.
+See [Google Sheets newsletter setup](./GOOGLE-SHEETS-NEWSLETTER-SETUP.md) to
+configure the spreadsheet and Cloudflare secrets.
 
 #### Response - Success (200)
 ```json
@@ -41,23 +47,28 @@ Subscribe email address to ITVedas newsletter and updates.
 }
 ```
 
-#### Response - Error (400, 500)
+#### Response - Error (400, 403, 409, 429, 503)
 ```json
 {
   "success": false,
-  "message": "Unable to process subscription. Please try again later."
+  "message": "Please confirm that you want to receive email updates."
 }
 ```
 
 **Error Codes:**
-- `400` - Invalid JSON or missing required fields
+- `400` - Invalid email, invalid request, or missing consent
+- `403` - Origin not allowed
+- `409` - Already subscribed
 - `405` - Only POST method allowed
-- `500` - Server processing error
+- `429` - Rate limited (when optional `SUBSCRIBE_RATE_LIMIT` KV is configured)
+- `500` - Server or Google Sheets processing error
+- `503` - Google Sheets integration is not configured
 
 #### Security
 - Origin validation (CORS)
 - No error details exposed to client
-- Email validation prevents injection
+- Google Sheets webhook secret is only sent server-to-server
+- Newsletter consent is required and is recorded
 - Duplicate subscription prevention
 
 ---

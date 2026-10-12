@@ -21,44 +21,63 @@ export async function onRequestPost(context) {
     return jsonResponse({ success: false, message: "Origin not allowed" }, 403);
   }
 
-  if (!env.SUBSCRIBERS) {
-    console.error("Subscribe error: SUBSCRIBERS KV namespace not bound");
-    return jsonResponse({ success: false, message: "Unable to process subscription. Please try again later." }, 500);
+  if (!env.GOOGLE_SHEETS_WEB_APP_URL || !env.GOOGLE_SHEETS_WEBHOOK_SECRET) {
+    console.error("Subscribe error: Google Sheets integration is not configured");
+    return jsonResponse({ success: false, message: "Subscriptions are temporarily unavailable. Please try again later." }, 503);
   }
 
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonResponse({ success: false, message: "Invalid JSON body" }, 400);
+    }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return jsonResponse({ success: false, message: "Invalid request body" }, 400);
+    }
     const email = typeof body.email === "string" ? body.email.trim() : "";
+    const consent = body.consent === true;
 
-    // This intentionally ignores all client-controlled metadata. Receipt time is
-    // established at the edge so it cannot be forged by the browser.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) || email.length > 254) {
       return jsonResponse({ success: false, message: "Invalid email format" }, 400);
     }
-
-    // A short edge-side throttle reduces automated writes without retaining a
-    // permanent IP profile. KV is eventually consistent, so this is abuse
-    // reduction rather than a hard global quota.
-    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
-    const rateKey = `subscribe-rate:${await anonymizedRateKey(clientIp)}`;
-    if (await env.SUBSCRIBERS.get(rateKey)) {
-      return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
-    }
-    await env.SUBSCRIBERS.put(rateKey, "1", { expirationTtl: RATE_LIMIT_SECONDS });
-
-    const normalizedEmail = email.toLowerCase();
-    const key = `subscriber:${normalizedEmail}`;
-    if (await env.SUBSCRIBERS.get(key)) {
-      return jsonResponse({ success: false, message: "Already subscribed" }, 400);
+    if (!consent) {
+      return jsonResponse({ success: false, message: "Please confirm that you want to receive email updates." }, 400);
     }
 
-    await env.SUBSCRIBERS.put(key, JSON.stringify({
-      email,
-      timestamp: new Date().toISOString(),
-      verified: false,
-      source: "homepage-signup"
-    }));
+    // If the optional KV namespace is configured, throttle without retaining
+    // the visitor's IP address.
+    if (env.SUBSCRIBE_RATE_LIMIT) {
+      const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rateKey = `subscribe-rate:${await anonymizedRateKey(clientIp)}`;
+      if (await env.SUBSCRIBE_RATE_LIMIT.get(rateKey)) {
+        return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
+      }
+      await env.SUBSCRIBE_RATE_LIMIT.put(rateKey, "1", { expirationTtl: RATE_LIMIT_SECONDS });
+    }
+
+    const response = await fetch(env.GOOGLE_SHEETS_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret: env.GOOGLE_SHEETS_WEBHOOK_SECRET,
+        email,
+        source: "homepage-newsletter"
+      })
+    });
+    if (!response.ok) {
+      throw new Error(`Google Sheets endpoint returned HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+    if (result.code === "already_subscribed") {
+      return jsonResponse({ success: false, message: "This email is already subscribed." }, 409);
+    }
+    if (result.success !== true) {
+      throw new Error("Google Sheets endpoint did not confirm the subscription");
+    }
 
     return jsonResponse({ success: true, message: "Successfully subscribed" });
   } catch (error) {

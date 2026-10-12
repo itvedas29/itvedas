@@ -18,7 +18,7 @@ Static HTML site — **no frontend framework, no build tool, no `package.json`**
 
 Two Cloudflare Pages Functions only:
 - `functions/api/career-advice.js` — powers the Career Navigator quiz. Server-side call to Anthropic (`claude-haiku-4-5-20251001`), origin-allowlist check, input capped at 6000 chars, output fields bounded. No rate limiting or fetch timeout.
-- `functions/api/subscribe.js` — newsletter signup. Validates email, dedupes via a Cloudflare KV binding (`env.SUBSCRIBERS`) that **is not declared in `wrangler.toml`** — meaning in the current repo state, subscriptions likely aren't actually persisted anywhere (the endpoint no-ops gracefully and still returns success). The static `data/subscribers.json` (empty) is disconnected dead data.
+- `functions/api/subscribe.js` — newsletter signup. Validates email and explicit consent, then forwards signups server-to-server to a Google Apps Script web app. The script stores signups in the bound Google Sheet and deduplicates addresses. Production requires `GOOGLE_SHEETS_WEB_APP_URL` and `GOOGLE_SHEETS_WEBHOOK_SECRET` in Cloudflare Pages; until configured, the endpoint returns 503. Optional `SUBSCRIBE_RATE_LIMIT` KV throttling can be configured.
 
 No rate limiting, SSRF protection, or request-size limiting exists anywhere server-side (not currently needed — neither function proxies arbitrary user-controlled URLs).
 
