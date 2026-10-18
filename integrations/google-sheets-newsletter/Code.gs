@@ -1,3 +1,6 @@
+const SPREADSHEET_ID = "17jo4PX9f0vIn5u9R4f23vcE6Z6148M8CW9KVzLmWCs4";
+const QUIZ_LEVELS = ["beginner", "intermediate", "advanced"];
+
 function doPost(event) {
   const properties = PropertiesService.getScriptProperties();
   const expectedSecret = properties.getProperty("NEWSLETTER_WEBHOOK_SECRET");
@@ -21,6 +24,10 @@ function doPost(event) {
     return appendQuizResult(payload);
   }
 
+  return appendNewsletterSignup(payload);
+}
+
+function appendNewsletterSignup(payload) {
   const email = typeof payload.email === "string" ? payload.email.trim().toLowerCase() : "";
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return jsonOutput({ success: false, code: "invalid_email" });
@@ -32,19 +39,9 @@ function doPost(event) {
   }
 
   try {
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    if (!spreadsheet) {
-      console.error("Newsletter spreadsheet is unavailable.");
-      return jsonOutput({ success: false, code: "not_configured" });
-    }
-
-    let sheet = spreadsheet.getSheetByName("Newsletter Subscribers");
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet("Newsletter Subscribers");
-    }
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Subscribed at (UTC)", "Email", "Source", "Consent", "Status"]);
-    }
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getOrCreateSheet(spreadsheet, "Newsletter Subscribers",
+      ["Subscribed at (UTC)", "Email", "Source", "Consent", "Status"]);
 
     const lastRow = sheet.getLastRow();
     if (lastRow > 1) {
@@ -60,13 +57,7 @@ function doPost(event) {
     }
 
     sheet.getRange("B:B").setNumberFormat("@");
-    sheet.appendRow([
-      new Date().toISOString(),
-      email,
-      "homepage-newsletter",
-      "yes",
-      "subscribed"
-    ]);
+    sheet.appendRow([new Date().toISOString(), email, "homepage-newsletter", "yes", "subscribed"]);
     return jsonOutput({ success: true });
   } catch (error) {
     console.error("Newsletter sheet write failed: " + error);
@@ -76,14 +67,13 @@ function doPost(event) {
   }
 }
 
-const QUIZ_LEVELS = ["beginner", "intermediate", "advanced"];
-
 function appendQuizResult(payload) {
   const name = typeof payload.name === "string" ? payload.name.trim() : "";
   const email = typeof payload.email === "string" ? payload.email.trim().toLowerCase() : "";
   const level = typeof payload.level === "string" ? payload.level : "";
   const score = Number(payload.score);
   const topics = typeof payload.topics === "string" ? payload.topics.slice(0, 1000) : "";
+
   if (!name || name.length > 100) {
     return jsonOutput({ success: false, code: "invalid_name" });
   }
@@ -100,18 +90,9 @@ function appendQuizResult(payload) {
   }
 
   try {
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    if (!spreadsheet) {
-      console.error("Quiz spreadsheet is unavailable.");
-      return jsonOutput({ success: false, code: "not_configured" });
-    }
-    let sheet = spreadsheet.getSheetByName("Quiz Participants");
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet("Quiz Participants");
-    }
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Submitted at (UTC)", "Name", "Email", "Level", "Score", "Topic breakdown", "Consent"]);
-    }
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getOrCreateSheet(spreadsheet, "Quiz Participants",
+      ["Submitted at (UTC)", "Name", "Email", "Level", "Score", "Topic breakdown", "Consent"]);
     sheet.getRange("C:C").setNumberFormat("@");
     sheet.appendRow([new Date().toISOString(), name, email, level, score, topics, "yes"]);
     return jsonOutput({ success: true });
@@ -121,6 +102,17 @@ function appendQuizResult(payload) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function getOrCreateSheet(spreadsheet, name, headers) {
+  let sheet = spreadsheet.getSheetByName(name);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(name);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+  }
+  return sheet;
 }
 
 function jsonOutput(value) {
