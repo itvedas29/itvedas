@@ -67,6 +67,8 @@ def add_category_context(content, file_path):
 
     if len(parts) < 2 or parts[0] not in ['articles', 'chapters']:
         return content, False
+    if parts[1].endswith('.html'):
+        return content, False
 
     category = parts[1]
 
