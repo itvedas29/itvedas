@@ -37,8 +37,6 @@ export async function onRequestPost(context) {
 
     const name = typeof body.name === "string" ? body.name.trim() : "";
     const email = typeof body.email === "string" ? body.email.trim() : "";
-    const level = typeof body.level === "string" ? body.level : "";
-    const score = body.score;
     const consent = body.consent === true;
 
     if (!name || name.length > 100) {
@@ -47,27 +45,29 @@ export async function onRequestPost(context) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
       return jsonResponse({ success: false, message: "Invalid email format" }, 400);
     }
-    if (!LEVELS.includes(level) || !Number.isInteger(score) || score < 0 || score > 10) {
-      return jsonResponse({ success: false, message: "Invalid quiz result" }, 400);
-    }
     if (!consent) {
       return jsonResponse({ success: false, message: "Please confirm that we can store your details." }, 400);
     }
 
-    const topics = JSON.stringify(body.topics && typeof body.topics === "object" ? body.topics : {}).slice(0, 1000);
+    const forward = { secret: env.GOOGLE_SHEETS_WEBHOOK_SECRET, name, email };
+    if (body.stage === "start") {
+      forward.type = "quiz_start";
+    } else {
+      const level = typeof body.level === "string" ? body.level : "";
+      const score = body.score;
+      if (!LEVELS.includes(level) || !Number.isInteger(score) || score < 0 || score > 10) {
+        return jsonResponse({ success: false, message: "Invalid quiz result" }, 400);
+      }
+      forward.type = "quiz";
+      forward.level = level;
+      forward.score = score;
+      forward.topics = JSON.stringify(body.topics && typeof body.topics === "object" ? body.topics : {}).slice(0, 1000);
+    }
 
     const response = await fetch(env.GOOGLE_SHEETS_WEB_APP_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret: env.GOOGLE_SHEETS_WEBHOOK_SECRET,
-        type: "quiz",
-        name,
-        email,
-        level,
-        score,
-        topics
-      })
+      body: JSON.stringify(forward)
     });
     if (!response.ok) {
       throw new Error(`Google Sheets endpoint returned HTTP ${response.status}`);

@@ -20,6 +20,9 @@ function doPost(event) {
     return jsonOutput({ success: false, code: "unauthorized" });
   }
 
+  if (payload.type === "quiz_start") {
+    return appendQuizStart(payload);
+  }
   if (payload.type === "quiz") {
     return appendQuizResult(payload);
   }
@@ -67,6 +70,36 @@ function appendNewsletterSignup(payload) {
   }
 }
 
+function appendQuizStart(payload) {
+  const name = typeof payload.name === "string" ? payload.name.trim() : "";
+  const email = typeof payload.email === "string" ? payload.email.trim().toLowerCase() : "";
+  if (!name || name.length > 100) {
+    return jsonOutput({ success: false, code: "invalid_name" });
+  }
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return jsonOutput({ success: false, code: "invalid_email" });
+  }
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) {
+    return jsonOutput({ success: false, code: "temporarily_unavailable" });
+  }
+
+  try {
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = getOrCreateSheet(spreadsheet, "Quiz Participants",
+      ["Started at (UTC)", "Name", "Email", "Consent"]);
+    sheet.getRange("C:C").setNumberFormat("@");
+    sheet.appendRow([new Date().toISOString(), name, email, "yes"]);
+    return jsonOutput({ success: true });
+  } catch (error) {
+    console.error("Quiz start write failed: " + error);
+    return jsonOutput({ success: false, code: "write_failed" });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function appendQuizResult(payload) {
   const name = typeof payload.name === "string" ? payload.name.trim() : "";
   const email = typeof payload.email === "string" ? payload.email.trim().toLowerCase() : "";
@@ -91,7 +124,7 @@ function appendQuizResult(payload) {
 
   try {
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = getOrCreateSheet(spreadsheet, "Quiz Participants",
+    const sheet = getOrCreateSheet(spreadsheet, "Quiz Results",
       ["Submitted at (UTC)", "Name", "Email", "Level", "Score", "Topic breakdown", "Consent"]);
     sheet.getRange("C:C").setNumberFormat("@");
     sheet.appendRow([new Date().toISOString(), name, email, level, score, topics, "yes"]);

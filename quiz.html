@@ -93,8 +93,9 @@ let level='',questions=[],current=0,answers=[],streak=0,finalScore=0,topicScoreG
 let userName='',userEmail='';
 
 function validateEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
-function continueToIntro(){const name=document.getElementById('userName').value.trim(),email=document.getElementById('userEmail').value.trim();if(!name||!email){alert('Please fill in all fields');return;}if(!validateEmail(email)){alert('Please enter a valid email');return;}if(!document.getElementById('quizConsent').checked){alert('Please confirm that we can store your details to issue your certificate.');return;}userName=name;userEmail=email;showScreen('intro');}
-async function submitQuizResult(){try{await fetch('/api/quiz-submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:userName,email:userEmail,level:level,score:finalScore,consent:true,topics:topicScoreGlobal}),keepalive:true});}catch(e){}}
+function continueToIntro(){const name=document.getElementById('userName').value.trim(),email=document.getElementById('userEmail').value.trim();if(!name||!email){alert('Please fill in all fields');return;}if(!validateEmail(email)){alert('Please enter a valid email');return;}if(!document.getElementById('quizConsent').checked){alert('Please confirm that we can store your details to issue your certificate.');return;}userName=name;userEmail=email;submitQuiz({stage:'start',name:name,email:email,consent:true});showScreen('intro');}
+function submitQuiz(data){try{fetch('/api/quiz-submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),keepalive:true}).catch(function(){});}catch(e){}}
+function submitQuizResult(){submitQuiz({stage:'result',name:userName,email:userEmail,consent:true,level:level,score:finalScore,topics:topicScoreGlobal});}
 
 function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function selectLevel(el,lvl){document.querySelectorAll('.level').forEach(l=>l.classList.remove('selected'));el.classList.add('selected');level=lvl;const b=document.getElementById('startBtn');b.disabled=false;b.textContent='Start the Quiz →';}
