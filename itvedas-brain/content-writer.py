@@ -559,6 +559,7 @@ footer{{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;c
     <span class="badge-info">{level_badge}</span>
   </div>
   <h1>{title}</h1>
+  <p class="byline" style="margin:.5rem 0 0;font-size:.9rem;color:#64748B;">By <a href="/author/" style="color:inherit;">ITVedas Technical Leadership</a> · Published {date_str}</p>
 </div>
 <div class="layout">
   <article>

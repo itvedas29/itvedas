@@ -1,3 +1,5 @@
+import importlib.util
+import datetime
 """Integration and workflow tests"""
 
 import unittest
@@ -66,9 +68,18 @@ class TestSitemapIntegration(unittest.TestCase):
             with open(index_file, encoding="utf-8") as f:
                 data = json.load(f)
                 pages = data.get("pages", data) if isinstance(data, dict) else data
-                index_count = len(pages)
 
-            # Sitemap should have same or more URLs
+            spec = importlib.util.spec_from_file_location(
+                "generate_sitemap", REPO_ROOT / "scripts" / "generate-sitemap.py")
+            gen = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(gen)
+            cutoff = (datetime.date.today() - datetime.timedelta(days=gen.NEWS_SITEMAP_DAYS)).isoformat()
+            index_count = sum(
+                1 for pg in pages
+                if not (str(pg.get("url", "")).startswith("/news/")
+                        and gen._news_date(Path(str(pg.get("path", "")).replace("\\", "/"))) < cutoff))
+
+            # Sitemap should have same or more URLs than the recency-filtered index
             self.assertGreaterEqual(sitemap_count, index_count * 0.5)
 
     def test_sitemap_urls_are_unique(self):

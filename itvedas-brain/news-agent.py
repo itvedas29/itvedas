@@ -476,6 +476,7 @@ footer{{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center
     <span class="badge-info">⏱ {rt}</span>
   </div>
   <h1>{headline}</h1>
+  <p class="byline" style="margin:.5rem 0 0;font-size:.9rem;color:#64748B;">By <a href="/author/" style="color:inherit;">ITVedas Technical Leadership</a> · Published {date_str}</p>
   <p class="summary">{summary}</p>
 </div>
 <div class="article">

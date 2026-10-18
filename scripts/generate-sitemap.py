@@ -4,7 +4,7 @@ import pathlib, datetime, re, xml.etree.ElementTree as ET
 SITE_URL='https://www.itvedas.com'; ROOT=pathlib.Path('.')
 # News is commentary on dated events; older posts stay live and linked from
 # /news/archive/ but are not submitted for crawling.
-NEWS_SITEMAP_DAYS=90
+NEWS_SITEMAP_DAYS=60
 
 def _news_date(f):
     m=re.match(r'(\d{4}-\d{2}-\d{2})-',f.name)
