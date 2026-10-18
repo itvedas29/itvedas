@@ -80,6 +80,22 @@ class TestClusteringAndRanking(unittest.TestCase):
         seen[ns.story_key(k8s)] = "2026-09-20"
         self.assertTrue(ns.already_published(k8s, seen))
 
+    def test_shared_vocabulary_does_not_suppress_distinct_stories(self):
+        pairs = [
+            ("Adobe ColdFusion Under Active Attack - Here's What Companies Need to Know",
+             "Active Attacks Underway on Microsoft SharePoint Vulnerability - Here's What Companies Need to Know"),
+            ("Microsoft Releases Massive Security Update to Fix Over 600 Flaws, Including Actively Exploited Bugs",
+             "Microsoft Releases Massive Security Update Fixing Nearly 1,000 Vulnerabilities"),
+            ("Microsoft Releases Critical Security Fix for Windows Defender Flaw",
+             "Microsoft Fixes Critical Windows Defender Vulnerability Exposing Computers"),
+        ]
+        for old_title, new_title in pairs:
+            old = ns.cluster_items([{"title": old_title, "link": "https://a.test/x", "desc": "",
+                                     "source": "a.test", "published": None}])[0]
+            new = ns.cluster_items([{"title": new_title, "link": "https://b.test/y", "desc": "",
+                                     "source": "b.test", "published": None}])[0]
+            self.assertFalse(ns.already_published(new, {ns.story_key(old): "2026-09-20"}), new_title)
+
 
 class TestGroundingAndSafety(unittest.TestCase):
     def test_extract_article_text_skips_chrome(self):

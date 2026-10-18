@@ -219,7 +219,7 @@ severity: [severity/CVSS rating or plain-impact description, one short line]
 fix: [the fix or mitigation, one short line]"""
 
 SEEN_FILE = pathlib.Path("itvedas-brain/state/news_seen.json")
-SEEN_DAYS = 30
+SEEN_DAYS = 180
 DETAILED_MIN_CHARS = 2500   # below this much source material, write a short piece instead of padding
 
 
