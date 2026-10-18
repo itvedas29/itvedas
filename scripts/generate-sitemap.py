@@ -2,6 +2,13 @@
 """Generate sitemap.xml from indexable HTML pages."""
 import pathlib, datetime, re, xml.etree.ElementTree as ET
 SITE_URL='https://www.itvedas.com'; ROOT=pathlib.Path('.')
+# News is commentary on dated events; older posts stay live and linked from
+# /news/archive/ but are not submitted for crawling.
+NEWS_SITEMAP_DAYS=90
+
+def _news_date(f):
+    m=re.match(r'(\d{4}-\d{2}-\d{2})-',f.name)
+    return m.group(1) if m else '0000-00-00'
 
 def indexable(path):
     try: raw=path.read_text(encoding='utf-8',errors='ignore')
@@ -85,10 +92,12 @@ def build():
     root.remove(root[-1]); u=ET.SubElement(root,'url'); ET.SubElement(u,'loc').text=SITE_URL; ET.SubElement(u,'lastmod').text=today; ET.SubElement(u,'changefreq').text='weekly'; ET.SubElement(u,'priority').text='1.0'
     priority={'news.html':(.9,'daily'),'security-news.html':(.9,'daily'),'career-paths.html':(.8,'monthly'),'career-navigator.html':(.8,'monthly'),'chapters.html':(.8,'weekly'),'quiz.html':(.7,'monthly'),'faq.html':(.7,'weekly'),'problems-solutions.html':(.7,'monthly')}
     for f in sorted(files['main']): p,fr=priority.get(f.name,(.6,'monthly')); add(f,fr,p)
+    news_cutoff=(datetime.date.today()-datetime.timedelta(days=NEWS_SITEMAP_DAYS)).isoformat()
+    files['news']=[f for f in files['news'] if _news_date(f)>=news_cutoff]
     for key,fr,p in [('chapters','weekly',.7),('chapter_hubs','weekly',.8),('chapter_content','monthly',.7),('articles','monthly',.8),('news','weekly',.7),('manageengine','monthly',.6),('tools','monthly',.7),('software','monthly',.8),('toolkit','weekly',.7)]:
         for f in sorted(files[key]): add(f,fr,p)
     ET.indent(root,space='  '); ET.ElementTree(root).write(ROOT/'sitemap.xml',encoding='utf-8',xml_declaration=True)
-    total=sum(map(len,files.values()))+1
+    total=len(root.findall('url'))
     print(f'Sitemap generated: {total} indexable URLs (noindex pages excluded)')
     for k,v in files.items(): print(f'  - {k}: {len(v)}')
     return total
