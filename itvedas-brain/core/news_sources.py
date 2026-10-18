@@ -40,6 +40,8 @@ NEWS_FEEDS = [
     "https://www.theregister.com/security/headlines.atom",
     "https://arstechnica.com/security/feed/",
     # Primary / research sources
+    # Known broken upstream, not a regression: CISA returns HTTP 403 to automated
+    # clients (bot blocking), and the MSRC feed is malformed XML (line 124).
     "https://www.cisa.gov/cybersecurity-advisories/all.xml",
     "https://isc.sans.edu/rssfeed_full.xml",
     "https://msrc.microsoft.com/blog/feed",
