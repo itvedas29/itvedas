@@ -321,7 +321,7 @@ def pick_keyword(state):
 # ─────────────────────────────────────────────────────────────────
 #  STEP 2 — write article
 # ─────────────────────────────────────────────────────────────────
-def write_article(keyword, topic):
+def write_article(keyword, topic, feedback=None):
     system = (
         "You are the lead writer for ITVedas, an IT knowledge hub for complete beginners.\n"
         "RULES:\n"
@@ -359,6 +359,11 @@ THEN the article HTML body:
 Include at least one <div class="callout"><div class="callout-title">Pro Tip</div>…</div>.
 Use <strong> for key terms and <code> for technical terms on first mention.
 1500-2000 words. Return ONLY the META comment + HTML body. No html/head/body tags."""
+    if feedback:
+        prompt += f"""
+
+An editor reviewed your previous draft and asked for this change - fix it:
+{feedback}"""
     return claude(prompt, system=system, max_tokens=16000)
 
 # ─────────────────────────────────────────────────────────────────
@@ -369,11 +374,12 @@ def review(content, keyword):
 Score 0-100 on: beginner-friendliness (30), real examples (25), structure (25), SEO (20).
 Reply with JSON: score, verdict, and fix (a short note on what to improve).
 verdict = PUBLISH if score >= 75 else REWRITE.
-Article (first 2000 chars): {content[:2000]}"""
+Full article:
+{content}"""
     try:
         r = claude_json(prompt, REVIEW_SCHEMA)
         if r:
-            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')}")
+            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} — {r.get('fix', '')}")
             return r
     except Exception as e:
         log(f"Review parse error: {e}")
@@ -855,7 +861,7 @@ def main():
     score = r.get("score", 80)
     if r.get("verdict") == "REWRITE":
         log("Rewriting (low score)")
-        content = write_article(keyword, topic)
+        content = write_article(keyword, topic, feedback=r.get("fix"))
         # Re-review the rewrite rather than assuming it passed.
         r = review(content, keyword)
         score = r.get("score", 80)

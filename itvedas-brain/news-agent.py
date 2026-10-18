@@ -236,7 +236,7 @@ def load_cve_lookup():
         return None
 
 
-def write_story(cluster, dossier):
+def write_story(cluster, dossier, feedback=None):
     """Write one article from a cluster of reports plus its source dossier."""
     lead = cluster["lead"]
     topic = "CVE" if cluster["cves"] else classify(lead["title"])
@@ -287,6 +287,11 @@ Structure:
 {CVE_EXTRA if topic == "CVE" else ""}
 
 Return ONLY the meta block + HTML body. No html/head/body tags, no links."""
+    if feedback:
+        prompt += f"""
+
+An editor reviewed your previous draft and asked for this change - fix it:
+{feedback}"""
     return write_with_openai(prompt, max_tokens=16000 if detailed else 8000), detailed
 
 
@@ -349,11 +354,12 @@ Score 0-100 on:
 
 Reply with JSON: score, verdict, and fix (a short note on what to improve).
 verdict = PUBLISH if score >= 75 else REWRITE.
-Article body (first 2500 chars): {body[:2500]}"""
+Article body:
+{body}"""
     try:
         r = review_json(prompt)
         if r:
-            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} ({item['title'][:50]})")
+            log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} ({item['title'][:50]}) — {r.get('fix', '')}")
             return r
     except Exception as e:
         log(f"Review parse error: {e}")
@@ -902,7 +908,7 @@ def main():
         dossier = ns.build_dossier(cluster)
         # `item` is what review/page code expects: the lead report, with the
         # full dossier as context so the reviewer fact-checks against it.
-        item = dict(lead, desc=dossier[:6000], cves=sorted(cluster["cves"]),
+        item = dict(lead, desc=dossier[:14000], cves=sorted(cluster["cves"]),
                     sources=[(i["source"], i["link"]) for i in cluster["items"]])
         content, detailed = write_story(cluster, dossier)
         meta, body = parse_article(content, item)
@@ -911,7 +917,7 @@ def main():
         score = review.get('score', 80)
         if review.get('verdict') == 'REWRITE':
             log(f"Rewriting (low score): {item['title'][:50]}")
-            content, detailed = write_story(cluster, dossier)
+            content, detailed = write_story(cluster, dossier, feedback=review.get('fix'))
             meta, body = parse_article(content, item)
             # Re-review the rewrite instead of assuming it passed. A draft
             # that fails twice is skipped rather than published.
