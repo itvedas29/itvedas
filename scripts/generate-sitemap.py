@@ -11,7 +11,24 @@ def indexable(path):
     if re.search(r'<meta[^>]+name=[\"\']robots[\"\'][^>]+noindex',raw,re.I): return False
     return True
 
+def redirected_paths():
+    """URL paths that _redirects sends elsewhere; a sitemap entry for one of
+    these is a redirect, which search engines report as an error."""
+    out=set()
+    for line in (ROOT/'_redirects').read_text(encoding='utf-8').splitlines():
+        parts=line.split()
+        if len(parts)>=3 and parts[0].startswith('/') and not parts[0].endswith(('.html','/')) and '*' not in parts[0] and ':' not in parts[0] and parts[2] in ('301','302','308'):
+            out.add(parts[0])
+    return out
+
 def get_html_files():
+    files=_collect_html_files()
+    redirected=redirected_paths()
+    for k in files:
+        files[k]=[f for f in files[k] if url(f)[len(SITE_URL):] not in redirected]
+    return files
+
+def _collect_html_files():
     files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[],'software':[],'toolkit':[]}
     for f in ROOT.glob('*.html'):
         if f.name not in ['cve-database.html','cve-database-complete.html','index.html','404.html'] and indexable(f): files['main'].append(f)

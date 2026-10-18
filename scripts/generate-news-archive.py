@@ -202,12 +202,13 @@ def render_page(items, page_num, total_pages):
     # clean URLs (strips .html), so the canonical must omit it too.
     canonical = f"{SITE}/news/archive/" + ("" if page_num == 1 else f"page-{page_num}")
 
+    robots = "index,follow" if page_num == 1 else "noindex,follow"
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Full archive of ITVedas original IT and cybersecurity news coverage, page {page_num} of {total_pages}.">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="{robots}">
 <link rel="canonical" href="{canonical}">
 <link rel="icon" type="image/svg+xml" href="/assets/brand/itvedas-mark.svg">
 <title>News Archive — Page {page_num} | ITVedas</title>
@@ -261,6 +262,10 @@ def main():
         page_html = render_page(chunk, p, total_pages)
         out_name = "index.html" if p == 1 else f"page-{p}.html"
         (ARCHIVE_DIR / out_name).write_text(page_html, encoding="utf-8")
+
+    for stale in ARCHIVE_DIR.glob("page-*.html"):
+        if int(stale.stem.split("-")[1]) > total_pages:
+            stale.unlink()
 
     print(f"Wrote {total_pages} archive page(s) covering {len(items)} news posts to {ARCHIVE_DIR}/")
     return 0
