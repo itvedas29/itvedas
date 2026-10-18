@@ -6,7 +6,7 @@
 // Cloudflare Pages dashboard > your project > Settings > Environment variables
 //
 // Visitor's browser calls: POST /api/career-advice
-// This function calls Google Gemini 2.5 Flash, and returns ONLY the structured result.
+// This function calls Google Gemini (gemini-flash-latest), and returns ONLY the structured result.
 
 const VALID_CHAPTERS = [
   "networking", "cloud", "security", "devops",
@@ -112,13 +112,14 @@ Tone: encouraging, plain-spoken, like a knowledgeable friend — not corporate, 
 
   try {
     // Key goes in a header, never the URL, so it cannot leak into logs.
-    const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+    const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
     const payload = {
       contents: [{ parts: [{ text: userPrompt }] }],
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1024,
+        // Headroom for the model's thinking tokens before the JSON answer.
+        maxOutputTokens: 4096,
         responseMimeType: "application/json"
       }
     };

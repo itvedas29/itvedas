@@ -25,8 +25,9 @@ itvedas-brain/core/   Shared LLM call + logging helpers for all brain scripts
 
 ## Content pipeline
 
-All LLM calls go through `itvedas-brain/core/llm.py`, which uses **Google
-Gemini** (`gemini-2.5-flash` by default). Scheduled runs live in
+All LLM calls go through `itvedas-brain/core/llm.py`, which uses the **Claude
+API** via the official `anthropic` SDK (`claude-opus-5-5` by default; install
+with `pip install -r requirements.txt`). Scheduled runs live in
 `.github/workflows/write-article.yml`:
 
 - **`itvedas-brain/content-writer.py`** — picks the next keyword from the content
@@ -52,14 +53,15 @@ or the review call itself fails, it is not published that run. Set
 
 | Variable | Required | Used by |
 | --- | --- | --- |
-| `GEMINI_API_KEY` | yes | both scripts (exit immediately if missing) |
-| `GEMINI_MODEL` | no | override the model (default `gemini-2.5-flash`) |
+| `ANTHROPIC_API_KEY` | yes | both scripts (exit immediately if missing) |
+| `CLAUDE_MODEL` | no | override the model (default `claude-opus-5-5`) |
 | `REVIEW_STRICT` | no | `1` (default) blocks unreviewed drafts; `0` disables |
 | `GA4_ID` | no | analytics tag on generated pages |
 | `NOTIFY_EMAIL`, `SMTP_FROM`, `SMTP_PASS` | no | content-writer email notifications |
 
-The key is sent to Google in the `x-goog-api-key` header, never in the URL, and
-keys issued by other providers are never used as a fallback.
+Keys issued by other providers are never used as a fallback. If Claude's safety
+classifiers decline a request (security news can trip them), the API retries it
+on Anthropic's recommended fallback model (`fallbacks: "default"`).
 
 Both scripts ping [IndexNow](https://www.indexnow.org) (`itvedas-brain/core/indexnow.py`)
 after publishing, so Bing/Yandex pick up new or refreshed pages immediately.
@@ -73,7 +75,8 @@ note the equivalent IST time.
 ### Running the pipeline locally
 
 ```
-export GEMINI_API_KEY=...
+pip install -r requirements.txt
+export ANTHROPIC_API_KEY=...
 python3 itvedas-brain/content-writer.py   # write a new article
 python3 itvedas-brain/news-agent.py       # refresh the news feed
 ```

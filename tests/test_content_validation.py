@@ -92,7 +92,7 @@ class TestArticleContent(unittest.TestCase):
 
     def test_article_files_have_structure(self):
         """Article HTML files should have proper structure"""
-        article_files = list(Path(str(REPO_ROOT) + "/articles").glob("*.html"))
+        article_files = sorted(Path(str(REPO_ROOT) + "/articles").glob("*.html"))
 
         for article_file in article_files[:5]:  # Sample first 5
             content = article_file.read_text(encoding="utf-8")
@@ -101,7 +101,7 @@ class TestArticleContent(unittest.TestCase):
 
     def test_article_has_metadata(self):
         """Articles should have metadata (date, author, etc)"""
-        article_files = list(Path(str(REPO_ROOT) + "/articles").glob("*.html"))
+        article_files = sorted(Path(str(REPO_ROOT) + "/articles").glob("*.html"))
 
         for article_file in article_files[:5]:
             content = article_file.read_text(encoding="utf-8")
@@ -122,14 +122,14 @@ class TestChapterContent(unittest.TestCase):
         """Chapter directory should have content"""
         chapters_dir = Path(str(REPO_ROOT) + "/chapters")
         if chapters_dir.exists():
-            chapter_files = list(chapters_dir.glob("**/*.html"))
+            chapter_files = sorted(chapters_dir.glob("**/*.html"))
             self.assertGreater(len(chapter_files), 0)
 
     def test_chapter_has_navigation(self):
         """Chapters should have navigation"""
         chapters_dir = Path(str(REPO_ROOT) + "/chapters")
         if chapters_dir.exists():
-            chapter_files = list(chapters_dir.glob("*.html"))
+            chapter_files = sorted(chapters_dir.glob("*.html"))
             if chapter_files:
                 for chapter in chapter_files[:3]:
                     content = chapter.read_text(encoding="utf-8")
@@ -144,7 +144,7 @@ class TestNewsArchive(unittest.TestCase):
         """News directory should have content"""
         news_dir = Path(str(REPO_ROOT) + "/news")
         if news_dir.exists():
-            news_files = list(news_dir.glob("*.html"))
+            news_files = sorted(news_dir.glob("*.html"))
             # Should have some news files
             self.assertGreater(len(news_files), 0)
 
@@ -152,7 +152,7 @@ class TestNewsArchive(unittest.TestCase):
         """News items should have publication timestamps"""
         news_dir = Path(str(REPO_ROOT) + "/news")
         if news_dir.exists():
-            news_files = list(news_dir.glob("*.html"))
+            news_files = sorted(news_dir.glob("*.html"))
             for news_file in news_files[:5]:
                 content = news_file.read_text(encoding="utf-8")
                 # Should have date info
@@ -204,13 +204,13 @@ class TestToolsPage(unittest.TestCase):
     def test_tools_directory_has_content(self):
         """Tools directory should have tool files"""
         tools_dir = Path(str(REPO_ROOT) + "/tools")
-        tool_files = list(tools_dir.glob("*.html"))
+        tool_files = sorted(tools_dir.glob("*.html"))
         self.assertGreater(len(tool_files), 1)  # More than just index
 
     def test_tools_have_descriptions(self):
         """Tools should have descriptions"""
         tools_dir = Path(str(REPO_ROOT) + "/tools")
-        tool_files = list(tools_dir.glob("*.html"))
+        tool_files = sorted(tools_dir.glob("*.html"))
 
         for tool_file in tool_files[:3]:
             content = tool_file.read_text(encoding="utf-8")
@@ -265,21 +265,21 @@ class TestResourceIntegrity(unittest.TestCase):
         """CSS resources should exist"""
         css_dir = Path(str(REPO_ROOT) + "/css")
         if css_dir.exists():
-            css_files = list(css_dir.glob("*.css"))
+            css_files = sorted(css_dir.glob("*.css"))
             self.assertGreater(len(css_files), 0)
 
     def test_js_files_exist(self):
         """JavaScript resources should exist"""
         js_dir = Path(str(REPO_ROOT) + "/js")
         self.assertTrue(js_dir.exists())
-        js_files = list(js_dir.glob("*.js"))
+        js_files = sorted(js_dir.glob("*.js"))
         self.assertGreater(len(js_files), 0)
 
     def test_image_resources_exist(self):
         """Image resources should exist or be referenced correctly"""
         img_dir = Path(str(REPO_ROOT) + "/img")
         if img_dir.exists():
-            img_files = list(img_dir.glob("*"))
+            img_files = sorted(img_dir.glob("*"))
             self.assertGreater(len(img_files), 0)
 
 
@@ -288,7 +288,7 @@ class TestPerformanceIndicators(unittest.TestCase):
 
     def test_minified_assets_present(self):
         """Should have minified CSS/JS files"""
-        js_files = list(Path(str(REPO_ROOT) + "/js").glob("*.min.js"))
+        js_files = sorted(Path(str(REPO_ROOT) + "/js").glob("*.min.js"))
         # Minified files are optional but good practice
         pass  # No strict requirement
 

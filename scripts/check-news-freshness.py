@@ -34,7 +34,7 @@ def main():
     print(f"Newest news article: {newest} ({age} day(s) old, limit {MAX_AGE_DAYS})")
     if age > MAX_AGE_DAYS:
         print(f"::error::News is stale: last article {newest}. Check the 'Run News Agent' step "
-              "(GEMINI_API_KEY / model) in this workflow.")
+              "(ANTHROPIC_API_KEY / model) in this workflow.")
         return 1
     return 0
 

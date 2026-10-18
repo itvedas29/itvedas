@@ -15,12 +15,12 @@
    8. Regenerates sitemap.xml
    9. Emails you a notification (optional)
 
- LLM: Google Gemini (see core/llm.py) handles both drafting and the
+ LLM: Claude (see core/llm.py) handles both drafting and the
  self-review/QA gate that decides PUBLISH vs REWRITE.
 
  Config via environment variables (GitHub Secrets):
-   GEMINI_API_KEY      (required)
-   GEMINI_MODEL        (optional, defaults to gemini-2.5-flash)
+   ANTHROPIC_API_KEY   (required)
+   CLAUDE_MODEL        (optional, defaults to claude-opus-5-5)
    GA4_ID              (optional, e.g. G-XXXXXXXXXX)
    NOTIFY_EMAIL        (optional, where to send notifications)
    SMTP_FROM           (optional, Gmail sender)
@@ -33,7 +33,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from core.llm import claude as _core_claude, openai_chat as _core_openai_chat
+from core.llm import claude as _core_claude, claude_json as _core_claude_json, openai_chat as _core_openai_chat
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 
@@ -61,13 +61,13 @@ def json_ld(obj):
 # ─────────────────────────────────────────────────────────────────
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────
-API_KEY    = os.environ.get("GEMINI_API_KEY", "").strip()
+API_KEY    = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 GA4_ID     = os.environ.get("GA4_ID", "").strip()
 NOTIFY_TO  = os.environ.get("NOTIFY_EMAIL", "").strip()
 SMTP_FROM  = os.environ.get("SMTP_FROM", "").strip()
 SMTP_PASS  = os.environ.get("SMTP_PASS", "").strip()
 
-MODEL      = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL      = os.environ.get("CLAUDE_MODEL") or "claude-opus-5-5"
 # 1 (default): failed reviews block publishing. 0: old publish-regardless mode.
 REVIEW_STRICT = os.environ.get("REVIEW_STRICT", "1").strip() != "0"
 SITE_URL   = "https://www.itvedas.com"
@@ -188,6 +188,22 @@ def log(msg):
 def claude(prompt, system=None, max_tokens=4000):
     return _core_claude(prompt, system=system, max_tokens=max_tokens,
                          api_key=API_KEY, model=MODEL, log_fn=log)
+
+# Review replies are constrained to this shape, so they always parse.
+REVIEW_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "score": {"type": "integer"},
+        "verdict": {"type": "string", "enum": ["PUBLISH", "REWRITE"]},
+        "fix": {"type": "string"},
+    },
+    "required": ["score", "verdict", "fix"],
+    "additionalProperties": False,
+}
+
+def claude_json(prompt, schema, max_tokens=4000):
+    return _core_claude_json(prompt, schema, max_tokens=max_tokens, effort="low",
+                              api_key=API_KEY, model=MODEL, log_fn=log)
 
 def openai_chat(prompt, system=None, max_tokens=4000):
     return _core_openai_chat(prompt, system=system, max_tokens=max_tokens,
@@ -343,7 +359,7 @@ THEN the article HTML body:
 Include at least one <div class="callout"><div class="callout-title">Pro Tip</div>…</div>.
 Use <strong> for key terms and <code> for technical terms on first mention.
 1500-2000 words. Return ONLY the META comment + HTML body. No html/head/body tags."""
-    return claude(prompt, system=system, max_tokens=4000)
+    return claude(prompt, system=system, max_tokens=16000)
 
 # ─────────────────────────────────────────────────────────────────
 #  STEP 3 — self-review
@@ -351,13 +367,12 @@ Use <strong> for key terms and <code> for technical terms on first mention.
 def review(content, keyword):
     prompt = f"""Review this IT article for the keyword "{keyword}".
 Score 0-100 on: beginner-friendliness (30), real examples (25), structure (25), SEO (20).
-Reply with ONLY JSON: {{"score":85,"verdict":"PUBLISH","fix":"short note"}}
+Reply with JSON: score, verdict, and fix (a short note on what to improve).
 verdict = PUBLISH if score >= 75 else REWRITE.
 Article (first 2000 chars): {content[:2000]}"""
     try:
-        m = re.search(r'\{[^{}]+\}', claude(prompt, max_tokens=200), re.DOTALL)
-        if m:
-            r = json.loads(m.group())
+        r = claude_json(prompt, REVIEW_SCHEMA)
+        if r:
             log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')}")
             return r
     except Exception as e:
@@ -821,7 +836,7 @@ def main():
     log("=" * 55)
     log("ITVedas Brain — run start")
     if not API_KEY:
-        log("FATAL: GEMINI_API_KEY not set")
+        log("FATAL: ANTHROPIC_API_KEY not set")
         raise SystemExit(1)
 
 

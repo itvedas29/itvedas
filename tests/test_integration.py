@@ -117,13 +117,13 @@ class TestHTMLFilesExist(unittest.TestCase):
         """Tools directory should have content"""
         tools_dir = Path(str(REPO_ROOT) + "/tools")
         self.assertTrue(tools_dir.exists())
-        self.assertGreater(len(list(tools_dir.glob("*.html"))), 0)
+        self.assertGreater(len(sorted(tools_dir.glob("*.html"))), 0)
 
     def test_news_exists(self):
         """News directory should exist and have items"""
         news_dir = Path(str(REPO_ROOT) + "/news")
         if news_dir.exists():
-            news_files = list(news_dir.glob("*.html"))
+            news_files = sorted(news_dir.glob("*.html"))
             self.assertGreater(len(news_files), 0)
 
 
@@ -149,7 +149,7 @@ class TestDirectoryStructure(unittest.TestCase):
     def test_script_files_are_executable(self):
         """Python scripts should be readable"""
         scripts_dir = Path(str(REPO_ROOT) + "/scripts")
-        python_files = list(scripts_dir.glob("*.py"))
+        python_files = sorted(scripts_dir.glob("*.py"))
         self.assertGreater(len(python_files), 0)
 
 

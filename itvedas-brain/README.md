@@ -2,21 +2,21 @@
 
 Autonomous content generation and intelligence engine for ITVedas.com.
 
-Powered by **Google Gemini** (`gemini-2.5-flash`) via standard library `urllib.request` (zero external dependencies).
+Powered by the **Claude API** (`claude-opus-5-5`) via the official `anthropic` Python SDK (pinned in `requirements.txt`).
 
 ## Architecture & Components
 
-- `core/llm.py` - Core Google Gemini API client with retry and code fence stripping
-- `gemini_client.py` - Lightweight Gemini helper utility
+- `core/llm.py` - Claude API helper: one `claude()` call used by every script, with refusal fallback and JSON-schema replies for reviews
 - `content-writer.py` - Long-form technical curriculum and guide generator
 - `news-agent.py` - RSS ingestion and tech/security news intelligence generator
 - `state/` - Pipeline memory, publishing history, and deduplication state
 
 ## Configuration
 
-Set `GEMINI_API_KEY` in your environment or repository secrets:
+Set `ANTHROPIC_API_KEY` in your environment or repository secrets:
 
 ```bash
-export GEMINI_API_KEY="your-gemini-api-key"
-export GEMINI_MODEL="gemini-2.5-flash"
+pip install -r requirements.txt
+export ANTHROPIC_API_KEY="your-anthropic-api-key"
+export CLAUDE_MODEL="claude-opus-5-5"   # optional
 ```

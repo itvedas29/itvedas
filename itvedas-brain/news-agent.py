@@ -8,18 +8,18 @@ Legal: transformative original content, not copying.
 Each story = own headline, own words, own analysis,
 own page on itvedas.com, with a source citation link.
 
-LLM: Google Gemini writes the article body (GEMINI_API_KEY, GEMINI_MODEL) via core/llm.py.
+LLM: Claude writes the article body (ANTHROPIC_API_KEY, CLAUDE_MODEL) via core/llm.py.
 """
 import os, json, urllib.request, pathlib, datetime, re, time, hashlib, sys, html
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from core.llm import claude as _core_claude
+from core.llm import claude as _core_claude, claude_json as _core_claude_json
 from core.log import log as _core_log
 from core.indexnow import submit as _indexnow_submit
 from core import news_sources as ns
 
-GEMINI_KEY   = os.environ.get("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+CLAUDE_MODEL  = os.environ.get("CLAUDE_MODEL") or "claude-opus-5-5"
 REVIEW_STRICT = os.environ.get("REVIEW_STRICT", "1").strip() != "0"
 GA4_ID  = os.environ.get("GA4_ID", "").strip()
 SITE    = "https://www.itvedas.com"
@@ -164,7 +164,23 @@ MAX_NEW_ARTICLES_PER_RUN = int(os.environ.get("NEWS_MAX_PER_RUN", "2"))
 
 def write_with_openai(prompt, max_tokens=2500):
     return _core_claude(prompt, max_tokens=max_tokens,
-                        api_key=GEMINI_KEY, model=GEMINI_MODEL, log_fn=log)
+                        api_key=ANTHROPIC_KEY, model=CLAUDE_MODEL, log_fn=log)
+
+# Review replies are constrained to this shape, so they always parse.
+REVIEW_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "score": {"type": "integer"},
+        "verdict": {"type": "string", "enum": ["PUBLISH", "REWRITE"]},
+        "fix": {"type": "string"},
+    },
+    "required": ["score", "verdict", "fix"],
+    "additionalProperties": False,
+}
+
+def review_json(prompt, max_tokens=4000):
+    return _core_claude_json(prompt, REVIEW_SCHEMA, max_tokens=max_tokens, effort="low",
+                             api_key=ANTHROPIC_KEY, model=CLAUDE_MODEL, log_fn=log)
 
 def classify(title):
     t = title.lower()
@@ -271,7 +287,7 @@ Structure:
 {CVE_EXTRA if topic == "CVE" else ""}
 
 Return ONLY the meta block + HTML body. No html/head/body tags, no links."""
-    return write_with_openai(prompt, max_tokens=4000 if detailed else 2000), detailed
+    return write_with_openai(prompt, max_tokens=16000 if detailed else 8000), detailed
 
 
 def load_seen():
@@ -331,14 +347,12 @@ Score 0-100 on:
   placeholders, or a leftover META block in the visible body.
 - Clarity/structure (20): reads as a complete, coherent article.
 
-Reply with ONLY JSON: {{"score":85,"verdict":"PUBLISH","fix":"short note"}}
+Reply with JSON: score, verdict, and fix (a short note on what to improve).
 verdict = PUBLISH if score >= 75 else REWRITE.
 Article body (first 2500 chars): {body[:2500]}"""
     try:
-        reply = write_with_openai(prompt, max_tokens=200)
-        m = re.search(r'\{[^{}]+\}', reply, re.DOTALL)
-        if m:
-            r = json.loads(m.group())
+        r = review_json(prompt)
+        if r:
             log(f"Self-review: {r.get('score')}/100 — {r.get('verdict')} ({item['title'][:50]})")
             return r
     except Exception as e:
@@ -848,8 +862,8 @@ def update_homepage_security(published):
 
 def main():
     print("News Agent v2 — original commentary mode")
-    if not GEMINI_KEY:
-        raise SystemExit("FATAL: GEMINI_API_KEY not set")
+    if not ANTHROPIC_KEY:
+        raise SystemExit("FATAL: ANTHROPIC_API_KEY not set")
     pathlib.Path("news").mkdir(exist_ok=True)
     pathlib.Path("itvedas-brain/state").mkdir(parents=True, exist_ok=True)
 

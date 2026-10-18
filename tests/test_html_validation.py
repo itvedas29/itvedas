@@ -33,7 +33,7 @@ class TestHTMLStructure(unittest.TestCase):
     """Test basic HTML structure"""
 
     def setUp(self):
-        self.html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
+        self.html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
 
     def test_html_files_exist(self):
         """Should have HTML files to test"""
@@ -71,7 +71,7 @@ class TestCanonicalURLs(unittest.TestCase):
 
     def test_canonical_urls_present(self):
         """Pages should have canonical URLs"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
+        html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
         files_with_canonical = 0
 
         for html_file in html_files[:10]:
@@ -99,7 +99,7 @@ class TestMetaTags(unittest.TestCase):
 
     def test_meta_description_present(self):
         """Pages should have meta description"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
+        html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
         files_with_description = 0
 
         for html_file in html_files[:10]:
@@ -159,7 +159,7 @@ class TestAccessibility(unittest.TestCase):
 
     def test_buttons_have_type_attribute(self):
         """Buttons should have type attribute"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("**/*.html"))
+        html_files = sorted(Path(str(REPO_ROOT) + "").glob("**/*.html"))
         for html_file in html_files[:5]:
             content = html_file.read_text(encoding="utf-8")
             # Extract button tags
@@ -177,10 +177,10 @@ class TestSRI(unittest.TestCase):
 
     def test_sri_on_cdns(self):
         """External CDN resources should have SRI"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
+        html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
         files_with_sri = 0
 
-        for html_file in html_files[:10]:
+        for html_file in html_files:
             content = html_file.read_text(encoding="utf-8")
             if 'integrity=' in content and 'crossorigin=' in content:
                 files_with_sri += 1
@@ -239,8 +239,8 @@ class TestNoInlineHandlers(unittest.TestCase):
 
     def test_no_onclick_attributes(self):
         """Should not have onclick= attributes (refactored)"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
-        for html_file in html_files[:10]:
+        html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
+        for html_file in html_files:
             content = html_file.read_text(encoding="utf-8")
             # Should not have inline onclick (may have data-onclick for refactored code)
             inline_onclick = re.findall(r'\s+onclick=', content)
@@ -248,7 +248,7 @@ class TestNoInlineHandlers(unittest.TestCase):
 
     def test_event_listener_script_loaded(self):
         """Refactored files should load event listener script"""
-        html_files = list(Path(str(REPO_ROOT) + "").glob("*.html"))
+        html_files = sorted(Path(str(REPO_ROOT)).glob("*.html"))
         files_with_script = 0
 
         for html_file in html_files:

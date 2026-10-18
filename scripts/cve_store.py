@@ -43,7 +43,18 @@ def load_db() -> list[dict]:
         return []
     if isinstance(raw, dict):
         raw = raw.get("cves", [])
-    return [repair_record(r) for r in raw if isinstance(r, dict) and r.get("id")]
+    return [repair_record(r) for r in raw
+            if isinstance(r, dict) and valid_cve_id(r.get("id"))]
+
+
+# Real CVE sequence numbers are 4 digits (may start with 0, e.g. CVE-2014-0160)
+# or 5+ digits with no leading zero. An earlier import generated 640 fake
+# records with ids like CVE-2024-00611; this keeps them from coming back.
+_CVE_ID_RE = re.compile(r"CVE-\d{4}-(?:\d{4}|[1-9]\d{4,})")
+
+
+def valid_cve_id(cve_id) -> bool:
+    return isinstance(cve_id, str) and bool(_CVE_ID_RE.fullmatch(cve_id))
 
 
 def save_db(records: list[dict]) -> None:

@@ -460,10 +460,10 @@
         <div style="margin-top: 0.75rem;">
           <small style="color: var(--text-muted); font-weight: 600;">Click to run real command simulations:</small>
           <div class="cmd-pills">
-            <button class="cmd-pill" type="button" onclick="runSim('bgp')">bgp-check</button>
-            <button class="cmd-pill" type="button" onclick="runSim('cve')">cve-latest</button>
-            <button class="cmd-pill" type="button" onclick="runSim('sysctl')">sysctl-kernel</button>
-            <button class="cmd-pill" type="button" onclick="runSim('zerotrust')">zero-trust</button>
+            <button class="cmd-pill" type="button" data-sim="bgp">bgp-check</button>
+            <button class="cmd-pill" type="button" data-sim="cve">cve-latest</button>
+            <button class="cmd-pill" type="button" data-sim="sysctl">sysctl-kernel</button>
+            <button class="cmd-pill" type="button" data-sim="zerotrust">zero-trust</button>
           </div>
         </div>
       </div>
@@ -497,9 +497,9 @@
           <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem;">
             <div class="tabs-header">
               <div>
-                <button class="tab-btn active" type="button" onclick="switchTab('bash')">Bash (Linux)</button>
-                <button class="tab-btn" type="button" onclick="switchTab('ps')">PowerShell</button>
-                <button class="tab-btn" type="button" onclick="switchTab('py')">Python</button>
+                <button class="tab-btn active" type="button" data-tab="bash">Bash (Linux)</button>
+                <button class="tab-btn" type="button" data-tab="ps">PowerShell</button>
+                <button class="tab-btn" type="button" data-tab="py">Python</button>
               </div>
               <button class="copy-btn" id="copyCodeBtn" type="button">Copy Code</button>
             </div>
@@ -514,7 +514,7 @@ sysctl -w net.core.rmem_max=16777216</code></pre>
   </main>
 
   <!-- Command Palette Modal -->
-  <div class="cmd-overlay" id="cmdOverlay" onclick="if(event.target===this)closeCmd();">
+  <div class="cmd-overlay" id="cmdOverlay">
     <div class="cmd-modal">
       <input type="text" class="cmd-search-input" id="cmdInput" placeholder="Type a topic, CVE, protocol, or command..." autocomplete="off">
       <div class="cmd-results">
@@ -564,6 +564,7 @@ sysctl -w net.core.rmem_max=16777216</code></pre>
     const closeCmd = () => { cmdOverlay.style.display = 'none'; };
     document.getElementById('openCmdPalette').addEventListener('click', openCmd);
     document.getElementById('demoCmdBtn').addEventListener('click', openCmd);
+    cmdOverlay.addEventListener('click', (e) => { if (e.target === cmdOverlay) closeCmd(); });
 
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); }
@@ -590,11 +591,13 @@ sysctl -w net.core.rmem_max=16777216</code></pre>
       ps: `# Configure Windows Server Firewall and NIC buffer sizing\nSet-NetTCPSetting -SettingName InternetCustom -AutoTuningLevelLocal Normal\nNew-NetFirewallRule -DisplayName "ITVedas API" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow`,
       py: `import urllib.request, json\n# Query live ITVedas CVE intelligence endpoint\nres = urllib.request.urlopen("https://www.itvedas.com/cve-data/cve-summary-index.json")\ndata = json.loads(res.read())\nprint(f"Total CVEs tracked: {len(data)}")`
     };
-    function switchTab(lang) {
+    function switchTab(btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('codeSample').textContent = codeSnippets[lang];
+      btn.classList.add('active');
+      document.getElementById('codeSample').textContent = codeSnippets[btn.dataset.tab];
     }
+    document.querySelectorAll('[data-sim]').forEach(b => b.addEventListener('click', () => runSim(b.dataset.sim)));
+    document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => switchTab(b)));
 
     // Copy Code Button
     document.getElementById('copyCodeBtn').addEventListener('click', () => {
