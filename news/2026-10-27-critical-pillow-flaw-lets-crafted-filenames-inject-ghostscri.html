@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="CVE-2026-112900, rated 9.2 Critical, affects Pillow 2.6.0 up to 13.0.0 through its Ghostscript EPS handling. Upgrade to 13.0.0.">
+<meta name="keywords" content="CVE news, IT news, Critical Pillow Flaw Lets Crafted Filenames Inject">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Critical Pillow Flaw Lets Crafted Filenames Inject Ghostscript Arguments; Version 13.0.0 Fixes It | ITVedas News">
+<meta property="og:description" content="CVE-2026-112900, rated 9.2 Critical, affects Pillow 2.6.0 up to 13.0.0 through its Ghostscript EPS handling. Upgrade to 13.0.0.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://www.itvedas.com/news/2026-10-27-critical-pillow-flaw-lets-crafted-filenames-inject-ghostscri">
+<title>Critical Pillow Flaw Lets Crafted Filenames Inject Ghostscript Arguments; Version 13.0.0 Fixes It | ITVedas News</title>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Critical Pillow Flaw Lets Crafted Filenames Inject Ghostscript Arguments; Version 13.0.0 Fixes It", "description": "CVE-2026-112900, rated 9.2 Critical, affects Pillow 2.6.0 up to 13.0.0 through its Ghostscript EPS handling. Upgrade to 13.0.0.", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "author": {"@type": "Organization", "name": "ITVedas"}, "publisher": {"@type": "Organization", "name": "ITVedas", "url": "https://www.itvedas.com"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FC;--bg2:#FFFFFF;--bg3:#F7F9FD;--text:#182238;--muted:#6B7A94;--sub:#4A5568;--accent:#EF4444;--border:rgba(24,34,56,0.12);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(255,255,255,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);text-decoration:none;}
+.logo span{color:#FF6B35;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.875rem;padding:0.5rem 1rem;border:1px solid var(--border);border-radius:8px;transition:color 0.2s;}
+.nav-back:hover{color:var(--text);}
+.hero-visual{margin-top:64px;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#EF444422,#EF444408);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#EF444418,transparent 70%);}
+.hero-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 8px 24px #EF444444);}
+.hero{max-width:780px;margin:0 auto;padding:2.5rem 2rem 1rem;}
+.breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.badges{display:flex;gap:0.6rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.badge{background:#EF44441f;border:1px solid #EF444444;color:#EF4444;padding:0.3rem 0.85rem;border-radius:100px;font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-info{color:var(--muted);font-size:0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:1rem;}
+.summary{font-size:1.1rem;color:var(--sub);border-left:3px solid var(--accent);padding-left:1.25rem;margin-bottom:1rem;}
+.article{max-width:780px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+.article h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent);}
+.article p{margin-bottom:1.3rem;color:var(--sub);}
+.article ul,.article ol{margin:0.75rem 0 1.5rem 1.5rem;color:var(--sub);}
+.article li{margin-bottom:0.6rem;}
+.article strong{color:var(--text);}
+.article blockquote{background:var(--bg2);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.75rem 0;color:var(--sub);font-style:italic;}
+.source-box{margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:0.875rem;color:var(--muted);}
+.source-box a{color:var(--accent);text-decoration:none;}
+.source-box a:hover{text-decoration:underline;}
+.cta{margin-top:2rem;padding:2rem;background:linear-gradient(135deg,#EF444414,#8B5CF614);border:1px solid #EF444433;border-radius:16px;text-align:center;}
+.cta p{margin-bottom:1.25rem;color:var(--sub);}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:0.8rem 2rem;border-radius:10px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;}
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.875rem;}
+.fl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem;}
+.fl span{color:#FF6B35;}
+.flinks{display:flex;gap:1.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;}
+.flinks a{color:var(--muted);text-decoration:none;}
+.flinks a:hover{color:#FF6B35;}
+@media(max-width:640px){nav{padding:0 1.25rem;}.hero,.article{padding-left:1.25rem;padding-right:1.25rem;}}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D98BFZSJYP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D98BFZSJYP');</script>
+<link rel="stylesheet" href="/css/site-nav.css">
+</head>
+<body>
+<!-- site-nav:start (generated from partials/site-nav.html by scripts/apply-site-nav.py; edit the partial, not this copy) -->
+<div class="site-header" data-mode="fixed">
+<a class="sn-skip" href="#main-content">Skip to content</a>
+<nav class="sn-nav" aria-label="Main">
+<a class="sn-logo" href="/" aria-label="ITVedas home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="1em" height="1em" class="sn-mark" aria-hidden="true"><rect x="5.12" y="46.08" width="17.92" height="8.96" rx="1.92" fill="#0B2750"/><rect x="21.76" y="35.84" width="19.20" height="19.20" rx="1.92" fill="#0B2750"/><rect x="38.40" y="21.76" width="19.20" height="33.28" rx="1.92" fill="#0B2750"/><path d="M 1.28 46.08 C 16.00 60.80, 39.68 57.60, 57.60 21.76" fill="none" stroke="#FF7A00" stroke-width="4.48" stroke-linecap="round"/><path d="M 49.42 18.10 L 62.83 10.08 L 65.78 25.42 Z" fill="#FF7A00"/></svg><span class="sn-word">IT<span>Vedas</span></span></a>
+<button class="sn-burger" type="button" aria-expanded="false" aria-controls="sn-menu"><span class="sn-burger-lines" aria-hidden="true"></span>Menu</button>
+<div class="sn-menu" id="sn-menu">
+<ul class="sn-tops">
+<li class="sn-top" data-section="learn"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-learn">Learn IT<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel sn-wide" id="sn-learn"><div class="sn-panel-head"><a class="sn-start" href="/chapters"><span class="sn-t">New to IT? Start here</span><span class="sn-d">Every topic in the order to learn it, from the basics up</span></a></div><div class="sn-grid"><div class="sn-group"><p class="sn-gt">The basics</p><ul><li><a class="sn-item" href="/articles/networking/"><span class="sn-t">Networking</span><span class="sn-d">How devices connect and share data</span></a></li><li><a class="sn-item" href="/articles/hardware/"><span class="sn-t">Hardware</span><span class="sn-d">What is inside a computer and why it matters</span></a></li><li><a class="sn-item" href="/articles/linux/"><span class="sn-t">Linux</span><span class="sn-d">The system most servers run on</span></a></li><li><a class="sn-item" href="/articles/cloud/"><span class="sn-t">Cloud</span><span class="sn-d">Renting computers and storage online</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Staying safe</p><ul><li><a class="sn-item" href="/articles/security/"><span class="sn-t">Security</span><span class="sn-d">Protecting people and systems from attacks</span></a></li><li><a class="sn-item" href="/articles/compliance/"><span class="sn-t">Compliance</span><span class="sn-d">Rules for handling data, like GDPR</span></a></li><li><a class="sn-item" href="/articles/cve/"><span class="sn-t">Real attacks explained</span><span class="sn-d">Famous security flaws, in plain words</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Building software</p><ul><li><a class="sn-item" href="/articles/api/"><span class="sn-t">APIs</span><span class="sn-d">How apps talk to each other</span></a></li><li><a class="sn-item" href="/articles/devops/"><span class="sn-t">DevOps</span><span class="sn-d">How software is built and released</span></a></li><li><a class="sn-item" href="/articles/databases/"><span class="sn-t">Databases</span><span class="sn-d">Where apps keep their information</span></a></li><li><a class="sn-item" href="/articles/ai-models/"><span class="sn-t">AI models</span><span class="sn-d">How AI tools like chatbots work</span></a></li></ul></div><div class="sn-group"><p class="sn-gt">Microsoft tools</p><ul><li><a class="sn-item" href="/articles/azure/"><span class="sn-t">Azure</span><span class="sn-d">Microsoft’s cloud</span></a></li><li><a class="sn-item" href="/articles/powershell/"><span class="sn-t">PowerShell</span><span class="sn-d">Automating Windows tasks</span></a></li><li><a class="sn-item" href="/articles/iis/"><span class="sn-t">IIS</span><span class="sn-d">Running websites on Windows</span></a></li><li><a class="sn-item" href="/articles/sql-server/"><span class="sn-t">SQL Server</span><span class="sn-d">Microsoft’s database</span></a></li></ul></div></div></div></li>
+<li class="sn-top" data-section="news"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-news">News<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-news"><ul class="sn-list"><li><a class="sn-item" href="/news"><span class="sn-t">Latest IT news</span><span class="sn-d">What happened this week, explained simply</span></a></li><li><a class="sn-item" href="/security-news"><span class="sn-t">Security news</span><span class="sn-d">New attacks, breaches and urgent updates</span></a></li><li><a class="sn-item" href="/news/archive/"><span class="sn-t">News archive</span><span class="sn-d">Every past story, by date</span></a></li></ul></div></li>
+<li class="sn-top" data-section="software"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-software">Software<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-software"><ul class="sn-list"><li><a class="sn-item" href="/software/"><span class="sn-t">Software specs</span><span class="sn-d">Requirements, prices and user reviews for IT software</span></a></li><li><a class="sn-item" href="/ai-tools/"><span class="sn-t">AI tools guide</span><span class="sn-d">Popular AI tools compared side by side</span></a></li></ul></div></li>
+<li class="sn-top" data-section="tools"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-tools">Free tools<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-tools"><ul class="sn-list"><li><a class="sn-item" href="/tools/"><span class="sn-t">Free IT tools</span><span class="sn-d">Calculators, lookups and converters that run in your browser</span></a></li><li><a class="sn-item" href="/cve-listing"><span class="sn-t">Security flaw lookup</span><span class="sn-d">Search known software vulnerabilities (CVEs)</span></a></li></ul></div></li>
+<li class="sn-top" data-section="careers"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-careers">Careers<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-careers"><ul class="sn-list"><li><a class="sn-item" href="/career-paths"><span class="sn-t">Career paths</span><span class="sn-d">What each IT job involves and how to get there</span></a></li><li><a class="sn-item" href="/career-navigator"><span class="sn-t">Find your career</span><span class="sn-d">Answer a few questions and get a suggestion</span></a></li><li><a class="sn-item" href="/quiz"><span class="sn-t">Skills quiz</span><span class="sn-d">Test what you know in a few minutes</span></a></li></ul></div></li>
+<li class="sn-top" data-section="help"><button class="sn-btn" type="button" aria-expanded="false" aria-controls="sn-help">Help<svg class="sn-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sn-panel" id="sn-help"><ul class="sn-list"><li><a class="sn-item" href="/problems-solutions"><span class="sn-t">Problems and fixes</span><span class="sn-d">Step-by-step fixes for common computer issues</span></a></li><li><a class="sn-item" href="/faq"><span class="sn-t">Common questions</span><span class="sn-d">Quick answers about IT and this site</span></a></li><li><a class="sn-item" href="/about"><span class="sn-t">About ITVedas</span><span class="sn-d">Who we are and how we write our guides</span></a></li><li><a class="sn-item" href="/services"><span class="sn-t">Services</span><span class="sn-d">Work with us</span></a></li><li><a class="sn-item" href="/contact"><span class="sn-t">Contact us</span><span class="sn-d">Ask a question or report a mistake</span></a></li></ul></div></li>
+</ul>
+<div class="sn-actions">
+<button class="sn-search-btn" type="button" aria-expanded="false" aria-controls="sn-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Search</span></button>
+<a class="sn-cta" href="/chapters">Start learning</a>
+</div>
+</div>
+</nav>
+<div class="sn-search" id="sn-search" hidden>
+<form class="sn-search-form" role="search" action="/" method="get">
+<label class="sn-vh" for="sn-q">Search ITVedas</label>
+<input id="sn-q" type="search" name="q" placeholder="What do you want to learn? Try “Wi-Fi” or “firewall”" autocomplete="off">
+<button type="button" class="sn-search-close">Close</button>
+</form>
+<ul class="sn-results" aria-live="polite"></ul>
+</div>
+</div>
+<div class="sn-spacer" aria-hidden="true"></div>
+<!-- site-nav:end -->
+<div class="hero-visual"><div class="hero-emoji">🛡️</div></div>
+<div class="hero">
+  <div class="breadcrumb"><a href="/">Home</a> › <a href="/news">News</a> › CVE</div>
+  <div class="badges">
+    <span class="badge">CVE</span>
+    <span class="badge-info">📅 2026-10-27 · 08:54 AM IST</span>
+    <span class="badge-info">⏱ 6 min read</span>
+  </div>
+  <h1>Critical Pillow Flaw Lets Crafted Filenames Inject Ghostscript Arguments; Version 13.0.0 Fixes It</h1>
+  <p class="byline" style="margin:.5rem 0 0;font-size:.9rem;color:#64748B;">By <a href="/author/" style="color:inherit;">ITVedas Technical Leadership</a> · Published 2026-10-27</p>
+  <p class="summary">CVE-2026-112900, rated 9.2 Critical, affects Pillow 2.6.0 up to 13.0.0 through its Ghostscript EPS handling. Upgrade to 13.0.0.</p>
+</div>
+<div class="article">
+  <p>A critical flaw in Pillow, one of the most widely used image-processing libraries in Python, can let an attacker who controls a filename inject extra arguments into the Ghostscript program that Pillow uses to render EPS images. The Pillow project fixed the bug, tracked as <strong>CVE-2026-112900</strong>, in version 13.0.0, released on October 16, 2026. The CVE record followed on October 19 with a CVSS 4.0 score of 9.2. GitLab has since published a remediation guide. It says GitLab's own products are not affected, but that many customer Python projects likely are.</p>
+
+<h2 id="what-happened">What happened</h2>
+
+<p>The sequence of events, according to GitLab's write-up and the CVE record, is short:</p>
+
+<ul>
+<li><strong>October 16, 2026:</strong> The Pillow project shipped version 13.0.0. It contained several security fixes, including the one now tracked as CVE-2026-112900.</li>
+<li><strong>October 19, 2026:</strong> The CVE record was published. It classifies the bug as both argument injection (CWE-88) and OS command injection (CWE-78).</li>
+<li><strong>As of October 26, 2026:</strong> Linux distributions were at very different stages of reviewing and patching the issue, based on a snapshot of their security trackers that GitLab compiled.</li>
+</ul>
+
+<p>GitLab said its Security team found no evidence of impact on GitLab-managed infrastructure. Its products do not include Pillow, so GitLab.com, GitLab Self-Managed and GitLab Dedicated are not affected. The company's guide is aimed at security and platform teams that host Python projects on GitLab and need to find every affected codebase.</p>
+
+<h2 id="who-is-affected">Who is affected</h2>
+
+<p>The vulnerable range is wide. According to the CVE description, every Pillow release from <strong>2.6.0 up to, but not including, 13.0.0</strong> is affected. That covers many years of releases. The CVE record lists 13.0.0 as the only fixed version, so there are no backported patches for older release branches. Every project still on an older line has to move to 13.0.0.</p>
+
+<p>Many teams may not realise they use Pillow at all. GitLab points out that Pillow is often a <em>transitive dependency</em>, meaning a library pulled in by another library rather than chosen directly. Web frameworks, thumbnail generators and machine-learning toolkits commonly bring it in several layers down the dependency tree.</p>
+
+<p>Pillow installed through a Linux distribution's package manager is a separate case, because distributions use their own version numbers. GitLab's snapshot from October 26 reported:</p>
+
+<ul>
+<li><strong>Amazon Linux 2</strong> is listed as not affected.</li>
+<li><strong>Ubuntu</strong> lists all releases as still needing evaluation.</li>
+<li><strong>Red Hat, Arch Linux and Oracle Linux</strong> had no record for the CVE at that point.</li>
+<li><strong>Alpine's</strong> tracker could not be checked.</li>
+<li>Debian, SUSE and Amazon Linux trackers were consulted for package-level status. Admins should check those trackers directly for their release.</li>
+</ul>
+
+<p>Not every Pillow user can actually be attacked this way. GitLab says a system is exposed only when all of the following are true:</p>
+
+<ul>
+<li>The code opens an EPS file using a filename that an attacker can influence. An upload saved under the name the user gave it is a typical example.</li>
+<li>The image is actually loaded or rendered, not merely opened.</li>
+<li>Ghostscript is installed, since that is the program Pillow calls.</li>
+</ul>
+
+<p>Services that generate their own filenames, or that process images entirely in memory, are much less likely to be reachable.</p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<p>EPS (Encapsulated PostScript) files are not simple pictures. They are small programs written in the PostScript language. Pillow cannot draw them by itself, so it hands the work to <strong>Ghostscript</strong>, an external interpreter, by launching it as a separate command.</p>
+
+<p>The problem is in how Pillow builds that command. According to the CVE description, Pillow's <code>EpsImagePlugin.Ghostscript</code> placed the caller-supplied input filename on Ghostscript's command line without first turning it into a safe absolute path. Like many command-line tools, Ghostscript treats certain leading characters as special:</p>
+
+<ul>
+<li>A name that begins with a <strong>hyphen</strong> can be read as a command option rather than a file. That lets someone who controls the filename change Ghostscript's behaviour. This is the argument injection part.</li>
+<li>A name that begins with an <strong>@ sign</strong> tells Ghostscript to read further arguments from a text file. If an attacker can also control the contents of that file, they can supply more arguments. GitLab describes this as the route toward full command execution.</li>
+</ul>
+
+<p>Pillow already runs Ghostscript with <code>-dSAFER</code>, a sandbox setting that limits what a PostScript program can do. GitLab notes that the advisory says this protection does not help here. The sandbox restricts the document being rendered, while this attack changes the command line used to launch Ghostscript in the first place. For the same reason, GitLab says framework updates and checks on image contents will not prevent the issue, because the dangerous input is the filename, not the file data.</p>
+
+<h2 id="how-serious-is-it">How serious is it?</h2>
+
+<p>The CVE Numbering Authority rated the flaw <strong>9.2 (Critical)</strong> on CVSS 4.0, and ITVedas's CVE database records the same score. The bug is <strong>not</strong> on CISA's Known Exploited Vulnerabilities list, and GitLab says no exploitation in the wild has been reported so far.</p>
+
+<p>There are still reasons for urgency. GitLab reports that CISA's assessment marks the issue as automatable with "total technical impact." That means that where the conditions are met, attacks could be scripted at scale and the consequences could be severe.</p>
+
+<p>The real-world risk depends heavily on how an application handles uploads. Argument injection needs only control of the filename. Full command execution additionally requires control over an @-referenced text file. GitLab's guide and the CVE data agree on these points, and we found no disagreements between the sources.</p>
+
+<h2 id="what-to-do-now">What to do now</h2>
+
+<p><strong>For administrators and developers:</strong></p>
+
+<ul>
+<li><strong>Upgrade Pillow to 13.0.0 or later</strong> in every project and container image that handles untrusted images.</li>
+<li><strong>Find hidden copies.</strong> Use dependency scanning, container scanning and code search to locate projects that pull in Pillow indirectly. GitLab's guide covers its own dependency scanning, container scanning, Orbit, code search and Duo Agent Platform for remediating many projects at once.</li>
+<li><strong>Rebuild container images.</strong> If a Dockerfile installs Pillow without a pinned version, rebuild it without cached layers so it fetches the fixed release, then redeploy. If it pins an older version, update the pin first.</li>
+<li><strong>Check base images.</strong> Images built on someone else's base image only get the fix once the upstream maintainer updates it.</li>
+<li><strong>Check distribution trackers</strong> if Pillow comes from OS packages. Until your distribution ships a fix, install 13.0.0 from PyPI in a virtual environment or container.</li>
+<li><strong>Remove Ghostscript</strong> from any image that does not need EPS support.</li>
+<li><strong>Test before shipping.</strong> Version 13.0.0 changes some behaviours, including how duplicate TIFF tags are handled and how I-mode images are saved as PNG.</li>
+<li><strong>If you cannot upgrade yet:</strong> save uploads under server-generated names, restrict accepted formats (for example, opening only PNG and JPEG), or remove Ghostscript.</li>
+</ul>
+
+<p><strong>For everyday users:</strong></p>
+
+<ul>
+<li>You do not need to take direct action unless you run Python software yourself. If you do, update Pillow with your usual package tools.</li>
+<li>Install updates for desktop or server applications that process images when vendors release them.</li>
+</ul>
+
+<h2 id="what-we-still-don-t-know">What we still don't know</h2>
+
+<ul>
+<li>GitLab says 13.0.0 also fixed other High and Critical issues. The available material does not fully describe them.</li>
+<li>When Ubuntu, Red Hat, Arch Linux, Oracle Linux and Alpine will publish their assessments or fixed packages.</li>
+<li>How many widely used frameworks or services save uploads under user-supplied names in a way that meets the exposure conditions.</li>
+<li>Whether proof-of-concept attacks will appear now that the details are public.</li>
+</ul>
+
+<p><em>ITVedas analysis:</em> The highest risk here is less the bug itself than how hard it is to see. Pillow is often buried several layers deep in dependency trees and container images, so teams that only check their direct dependencies may miss it. Organisations should take inventory first and patch quickly, and should remove Ghostscript from any image that does not need it.</p>
+  <div class="source-box">
+    📎 This article is AI-assisted commentary produced by ITVedas's automated news pipeline, based on reporting by <a href="https://about.gitlab.com/blog/pillow-cve-find-and-fix-with-gitlab/" target="_blank" rel="noopener nofollow">about.gitlab.com</a>. Full technical record: <a href="/cve/CVE-2026-112900/">CVE-2026-112900</a>. It is checked by an automated review step, not by a human editor. Read the original report for full details and verify critical facts before acting on them.
+  </div>
+  <div class="cta">
+    <p>Want to understand the technology behind this story? ITVedas has beginner-friendly guides on every IT topic.</p>
+    <a href="/#chapters" class="btn">Explore IT Chapters →</a>
+  </div>
+</div>
+<footer>
+  <div class="fl">IT<span>Vedas</span></div>
+  <p>Original IT news and guides — explained simply, for everyone.</p>
+  <div class="flinks">
+    <a href="/">Home</a><a href="/news">News</a>
+    <a href="/#chapters">Chapters</a><a href="mailto:info@itvedas.com">Contact</a>
+  </div>
+  <p style="margin-top:1rem;">© 2026 ITVedas</p>
+</footer>
+<script src="/js/site-nav.js" defer></script>
+</body>
+</html>
