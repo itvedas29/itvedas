@@ -32,7 +32,7 @@ jobs:
           python -m json.tool search-index.json > /tmp/search-index.json
           # Canonical CVE DB is gzipped (see scripts/cve_store.py); the
           # schema validator below loads and checks it.
-          python -m json.tool cve-data/cve-summary-index.json > /dev/null
+          python3 -c "import gzip, json; json.loads(gzip.open('cve-data/cve-summary-index.json.gz', 'rt', encoding='utf-8').read())"
           python3 scripts/validate-cve-schema.py
       - name: Check every page uses the shared site navigation
         run: python3 scripts/apply-site-nav.py --check

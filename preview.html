@@ -589,7 +589,7 @@ sysctl -w net.core.rmem_max=16777216</code></pre>
     const codeSnippets = {
       bash: `# Set TCP keepalive and memory buffers for low-latency multi-region transit\nsysctl -w net.ipv4.tcp_keepalive_time=60\nsysctl -w net.ipv4.tcp_rmem="4096 87380 6291456"\nsysctl -w net.core.rmem_max=16777216`,
       ps: `# Configure Windows Server Firewall and NIC buffer sizing\nSet-NetTCPSetting -SettingName InternetCustom -AutoTuningLevelLocal Normal\nNew-NetFirewallRule -DisplayName "ITVedas API" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow`,
-      py: `import urllib.request, json\n# Query live ITVedas CVE intelligence endpoint\nres = urllib.request.urlopen("https://www.itvedas.com/cve-data/cve-summary-index.json")\ndata = json.loads(res.read())\nprint(f"Total CVEs tracked: {len(data)}")`
+      py: `import urllib.request, json, gzip\n# Query live ITVedas CVE intelligence endpoint\nres = urllib.request.urlopen("https://www.itvedas.com/cve-data/cve-summary-index.json.gz")\ndata = json.loads(gzip.decompress(res.read()))\nprint(f"Total CVEs tracked: {len(data)}")`
     };
     function switchTab(btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
