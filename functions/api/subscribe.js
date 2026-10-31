@@ -76,7 +76,7 @@ export async function onRequestPost(context) {
       return jsonResponse({ success: false, message: "This email is already subscribed." }, 409);
     }
     if (result.success !== true) {
-      throw new Error("Google Sheets endpoint did not confirm the subscription");
+      throw new Error(`Google Sheets endpoint did not confirm the subscription: ${result.code || "unknown"}`);
     }
 
     return jsonResponse({ success: true, message: "Successfully subscribed" });
