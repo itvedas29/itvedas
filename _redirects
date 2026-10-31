@@ -1,38 +1,19 @@
-# Cloudflare Pages Routing Configuration
-
-# Redirect apex domain to www (301 permanent redirect for SEO)
-http://itvedas.com/*  https://www.itvedas.com/:splat  301
-https://itvedas.com/* https://www.itvedas.com/:splat  301
+# Pages allows 2,000 static redirects and 100 dynamic redirects, and static
+# rules must come before dynamic ones. Rules after the first dynamic rule were
+# being counted as dynamic and skipped, so static rules are listed first.
 
 # CVE Database Routing - Consolidated to /articles/cve/
 # All /cve/* requests redirect to /articles/cve/ (301 for SEO)
 /cve              /articles/cve/     301
 /cve/             /articles/cve/     301
-
 # Retire the stale hand-written CVE sample page in favor of the canonical feed.
 /cve-database-complete  /cve-listing  301
 /cve-database-complete/ /cve-listing  301
-
-# Individual CVE detail pages: cve-listing.html's viewCVE() navigates to
-# /cve/{id}/, and cve-detail.html reads the ID back out of the URL path
-# client-side. These rewrites must come before the catch-all below or
-# every per-CVE link gets swallowed into the generic /articles/cve/ listing.
-# Target must be the extensionless clean URL (/cve-detail), not
-# /cve-detail.html -- Cloudflare Pages' automatic .html-trimming redirect
-# fires even on a 200 rewrite target, which turned this into a real 308
-# redirect to /cve-detail and stripped the CVE ID off the URL entirely.
-/cve/:id/         /cve-detail   200
-/cve/:id          /cve-detail   200
-
-/cve/:splat       /articles/cve/     301
-
 # NOTE: Cloudflare Pages automatically serves .html files for extensionless URLs
 # No need for explicit .html redirects - they cause infinite loops!
-
 # Deals page removed 2026-07 — send old links home
 /deals.html       /                  301
 /deals            /                  301
-
 # Duplicate articles consolidated 2026-07-20 - old URLs redirect to the surviving version.
 # Targets omit .html - Cloudflare Pages' clean-URL rule 308-redirects a .html
 # target to its extensionless form, so a .html target here was creating an
@@ -50,12 +31,10 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 /articles/2026-06-27-vpn-wifi.html /articles/2026-07-06-networking 301
 /articles/2026-06-17-security.html /articles/2026-07-08-security 301
 /articles/2026-07-01-security.html /articles/2026-07-17-security 301
-
 # Near-duplicate /news/ articles consolidated 2026-10-18 (Kubernetes community-update cluster).
 /news/2026-07-01-kubernetes-leadership-shares-latest-updates-on-container-man /news/2026-07-04-kubernetes-community-shares-latest-updates-on-container-mana 301
 /news/2026-07-07-kubernetes-community-shares-latest-platform-updates-and-deve /news/2026-07-04-kubernetes-community-shares-latest-updates-on-container-mana 301
 /news/2026-07-09-kubernetes-team-shares-latest-platform-updates-through-offic /news/2026-08-05-kubernetes-community-shares-latest-platform-developments-thr 301
-
 # Near-duplicate /news/ articles consolidated 2026-10-18 - redirected to the most complete copy of the same story.
 /news/2026-06-19-accenture-s-4-1-billion-security-bet-three-companies-join-fo /news/2026-06-19-accenture-s-massive-4-1-billion-industrial-security-bet-resh 301
 /news/2026-06-19-research-data-platform-redcap-faces-growing-threat-as-thousa /news/2026-06-19-critical-security-gap-thousands-of-redcap-research-servers-r 301
@@ -242,3 +221,18 @@ https://itvedas.com/* https://www.itvedas.com/:splat  301
 /news/2026-08-24-kubernetes-team-shares-latest-updates-on-container-managemen /news/2026-07-04-kubernetes-community-shares-latest-updates-on-container-mana 301
 /news/2026-08-28-popular-chinese-router-brand-found-harboring-hidden-security /news/2026-08-06-popular-chinese-router-brand-found-with-hidden-security-hole 301
 /news/2026-08-30-hackers-hide-backdoor-malware-behind-fake-security-checkpoin /news/2026-07-01-hackers-hide-malware-in-fake-security-fixes-targeting-tech-r 301
+# Cloudflare Pages Routing Configuration
+# Redirect apex domain to www (301 permanent redirect for SEO)
+http://itvedas.com/*  https://www.itvedas.com/:splat  301
+https://itvedas.com/* https://www.itvedas.com/:splat  301
+# Individual CVE detail pages: cve-listing.html's viewCVE() navigates to
+# /cve/{id}/, and cve-detail.html reads the ID back out of the URL path
+# client-side. These rewrites must come before the catch-all below or
+# every per-CVE link gets swallowed into the generic /articles/cve/ listing.
+# Target must be the extensionless clean URL (/cve-detail), not
+# /cve-detail.html -- Cloudflare Pages' automatic .html-trimming redirect
+# fires even on a 200 rewrite target, which turned this into a real 308
+# redirect to /cve-detail and stripped the CVE ID off the URL entirely.
+/cve/:id/         /cve-detail   200
+/cve/:id          /cve-detail   200
+/cve/:splat       /articles/cve/     301
