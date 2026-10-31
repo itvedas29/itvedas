@@ -36,7 +36,7 @@ def get_html_files():
     return files
 
 def _collect_html_files():
-    files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[],'software':[],'toolkit':[]}
+    files={'main':[],'chapters':[],'articles':[],'news':[],'chapter_content':[],'chapter_hubs':[],'manageengine':[],'tools':[],'software':[],'toolkit':[],'ai_tools':[],'resources':[],'author':[]}
     for f in ROOT.glob('*.html'):
         if f.name not in ['cve-database.html','cve-database-complete.html','index.html','404.html'] and indexable(f): files['main'].append(f)
     for d in (ROOT/'articles').glob('*/'):
@@ -58,6 +58,13 @@ def _collect_html_files():
     if d.is_dir(): files['software']=[f for f in sorted(d.rglob('index.html')) if indexable(f)]
     d=ROOT/'toolkit'
     if d.is_dir(): files['toolkit']=[f for f in sorted(d.rglob('index.html')) if indexable(f)]
+    # AI tools hubs and comparisons (index.html hubs map to their folder URL via url()).
+    d=ROOT/'ai-tools'
+    if d.is_dir(): files['ai_tools']=[f for f in sorted(d.rglob('*.html')) if indexable(f)]
+    d=ROOT/'resources'
+    if d.is_dir(): files['resources']=[f for f in sorted(d.rglob('*.html')) if indexable(f)]
+    d=ROOT/'author'
+    if d.is_dir(): files['author']=[f for f in sorted(d.rglob('index.html')) if indexable(f)]
     return files
 
 def url(f):
@@ -94,7 +101,7 @@ def build():
     for f in sorted(files['main']): p,fr=priority.get(f.name,(.6,'monthly')); add(f,fr,p)
     news_cutoff=(datetime.date.today()-datetime.timedelta(days=NEWS_SITEMAP_DAYS)).isoformat()
     files['news']=[f for f in files['news'] if _news_date(f)>=news_cutoff]
-    for key,fr,p in [('chapters','weekly',.7),('chapter_hubs','weekly',.8),('chapter_content','monthly',.7),('articles','monthly',.8),('news','weekly',.7),('manageengine','monthly',.6),('tools','monthly',.7),('software','monthly',.8),('toolkit','weekly',.7)]:
+    for key,fr,p in [('chapters','weekly',.7),('chapter_hubs','weekly',.8),('chapter_content','monthly',.7),('articles','monthly',.8),('news','weekly',.7),('manageengine','monthly',.6),('tools','monthly',.7),('software','monthly',.8),('toolkit','weekly',.7),('ai_tools','monthly',.7),('resources','monthly',.6),('author','monthly',.5)]:
         for f in sorted(files[key]): add(f,fr,p)
     ET.indent(root,space='  '); ET.ElementTree(root).write(ROOT/'sitemap.xml',encoding='utf-8',xml_declaration=True)
     total=len(root.findall('url'))
