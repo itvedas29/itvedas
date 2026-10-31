@@ -11,6 +11,7 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:8080"
 ];
 const LEVELS = ["beginner", "intermediate", "advanced"];
+const RATE_LIMIT_SECONDS = 60;
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -64,6 +65,17 @@ export async function onRequestPost(context) {
       forward.topics = JSON.stringify(body.topics && typeof body.topics === "object" ? body.topics : {}).slice(0, 1000);
     }
 
+    // Every accepted request appends a sheet row, so throttle each stage per
+    // visitor (keyed by a hash, never the raw IP) when the quiz KV is bound.
+    if (env.QUIZ_KV) {
+      const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rateKey = `quiz-submit-rate:${forward.type}:${await anonymizedRateKey(clientIp)}`;
+      if (await env.QUIZ_KV.get(rateKey)) {
+        return jsonResponse({ success: false, message: "Please wait before trying again." }, 429);
+      }
+      await env.QUIZ_KV.put(rateKey, "1", { expirationTtl: RATE_LIMIT_SECONDS });
+    }
+
     const response = await fetch(env.GOOGLE_SHEETS_WEB_APP_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +97,12 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet() {
   return jsonResponse({ success: false, message: "Use POST" }, 405);
+}
+
+async function anonymizedRateKey(value) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
 function jsonResponse(obj, status = 200) {

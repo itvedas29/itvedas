@@ -90,7 +90,7 @@ function appendQuizStart(payload) {
     const sheet = getOrCreateSheet(spreadsheet, "Quiz Participants",
       ["Started at (UTC)", "Name", "Email", "Consent"]);
     sheet.getRange("C:C").setNumberFormat("@");
-    sheet.appendRow([new Date().toISOString(), name, email, "yes"]);
+    sheet.appendRow([new Date().toISOString(), sheetText(name), email, "yes"]);
     return jsonOutput({ success: true });
   } catch (error) {
     console.error("Quiz start write failed: " + error);
@@ -127,7 +127,7 @@ function appendQuizResult(payload) {
     const sheet = getOrCreateSheet(spreadsheet, "Quiz Results",
       ["Submitted at (UTC)", "Name", "Email", "Level", "Score", "Topic breakdown", "Consent"]);
     sheet.getRange("C:C").setNumberFormat("@");
-    sheet.appendRow([new Date().toISOString(), name, email, level, score, topics, "yes"]);
+    sheet.appendRow([new Date().toISOString(), sheetText(name), email, level, score, sheetText(topics), "yes"]);
     return jsonOutput({ success: true });
   } catch (error) {
     console.error("Quiz sheet write failed: " + error);
@@ -135,6 +135,12 @@ function appendQuizResult(payload) {
   } finally {
     lock.releaseLock();
   }
+}
+
+// appendRow treats text starting with = + - @ (or a tab/CR) as a formula. A leading
+// apostrophe makes Sheets store visitor-supplied text literally.
+function sheetText(value) {
+  return /^[=+\-@\t\r]/.test(value) ? "'" + value : value;
 }
 
 function getOrCreateSheet(spreadsheet, name, headers) {

@@ -25,7 +25,9 @@ env:
 
 concurrency:
   group: repo-writer
-  cancel-in-progress: true
+  # Queue instead of cancelling: this group is shared with the CVE sync, and a
+  # cancelled run can stop between commit and push or waste LLM calls.
+  cancel-in-progress: false
 
 jobs:
   autopilot:
