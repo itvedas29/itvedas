@@ -44,7 +44,7 @@ function appendNewsletterSignup(payload) {
   try {
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
     const sheet = getOrCreateSheet(spreadsheet, "Newsletter Subscribers",
-      ["Subscribed at (UTC)", "Email", "Source", "Consent", "Status"]);
+      ["Subscribed at (UTC)", "Email", "Source", "Consent", "Status", "Subscriber ID"]);
 
     const lastRow = sheet.getLastRow();
     if (lastRow > 1) {
@@ -59,9 +59,11 @@ function appendNewsletterSignup(payload) {
       }
     }
 
+    const subscriberId = nextSubscriberId(sheet);
     sheet.getRange("B:B").setNumberFormat("@");
-    sheet.appendRow([new Date().toISOString(), email, "homepage-newsletter", "yes", "subscribed"]);
-    return jsonOutput({ success: true });
+    sheet.getRange("F:F").setNumberFormat("@");
+    sheet.appendRow([new Date().toISOString(), email, "homepage-newsletter", "yes", "subscribed", subscriberId]);
+    return jsonOutput({ success: true, id: subscriberId });
   } catch (error) {
     console.error("Newsletter sheet write failed: " + error);
     return jsonOutput({ success: false, code: "write_failed" });
@@ -135,6 +137,23 @@ function appendQuizResult(payload) {
   } finally {
     lock.releaseLock();
   }
+}
+
+// Next sequential subscriber ID (ITV-00001, ITV-00002, ...). Derived from the
+// highest existing ID in the Subscriber ID column (F) rather than a stored
+// counter, so it stays correct across redeployments and never collides with
+// IDs already written to the sheet. Runs inside the caller's lock.
+function nextSubscriberId(sheet) {
+  const lastRow = sheet.getLastRow();
+  let max = 0;
+  if (lastRow > 1) {
+    const ids = sheet.getRange(2, 6, lastRow - 1, 1).getValues();
+    for (let i = 0; i < ids.length; i++) {
+      const found = /^ITV-(\d+)$/.exec(String(ids[i][0]).trim());
+      if (found) max = Math.max(max, Number(found[1]));
+    }
+  }
+  return "ITV-" + String(max + 1).padStart(5, "0");
 }
 
 // appendRow treats text starting with = + - @ (or a tab/CR) as a formula. A leading
