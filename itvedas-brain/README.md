@@ -9,6 +9,8 @@ Powered by the **Claude API** (`claude-opus-5-5`) via the official `anthropic` P
 - `core/llm.py` - Claude API helper: one `claude()` call used by every script, with refusal fallback and JSON-schema replies for reviews
 - `content-writer.py` - Long-form technical curriculum and guide generator
 - `news-agent.py` - RSS ingestion and tech/security news intelligence generator
+- `growth-agent.py` - Weekly SEO/AEO manager driven by Search Console + GA4 data (see `docs/GROWTH-AGENT.md`)
+- `core/google_data.py`, `core/growth.py` - Read-only Google API access and the growth agent's decision logic
 - `state/` - Pipeline memory, publishing history, and deduplication state
 
 ## Configuration

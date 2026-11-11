@@ -1,0 +1,90 @@
+name: ITVedas Growth Agent
+
+# Weekly SEO / AEO manager. Reads Search Console + GA4, fixes weak titles and
+# descriptions, queues topics and refreshes for the content writer, and posts
+# a report to this run's summary. Setup: docs/GROWTH-AGENT.md
+
+on:
+  schedule:
+    - cron: '43 2 * * 2'   # Tuesdays 02:43 UTC = 08:13 IST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Analyse and report only - change nothing'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  # Shared with the autopilot and CVE sync so bots never push over each other.
+  group: repo-writer
+  cancel-in-progress: false
+
+jobs:
+  growth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # bots never read history; full clone of this repo is hundreds of MB
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run growth agent
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+          GROWTH_DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          GROWTH_MAX_META_FIXES: ${{ vars.GROWTH_MAX_META_FIXES }}
+          GROWTH_MAX_NEW_KEYWORDS: ${{ vars.GROWTH_MAX_NEW_KEYWORDS }}
+          GROWTH_MAX_REFRESH: ${{ vars.GROWTH_MAX_REFRESH }}
+          GROWTH_REPORT_DIR: /tmp/itvedas-growth
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: python3 itvedas-brain/growth-agent.py
+
+      - name: Check every page still uses the shared site navigation
+        run: python3 scripts/apply-site-nav.py --check
+
+      - name: Commit and push
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name "ITVedas Bot"
+          git config user.email "bot@itvedas.com"
+          git pull --rebase --autostash origin HEAD
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Growth agent update $(date -u +'%Y-%m-%d')"
+            if ! git push origin HEAD; then
+              git pull --rebase --autostash origin HEAD
+              git push origin HEAD
+            fi
+          fi
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itvedas-growth-report
+          path: /tmp/itvedas-growth/
+          if-no-files-found: ignore
+          retention-days: 90

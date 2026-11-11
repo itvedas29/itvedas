@@ -44,6 +44,15 @@ stories (at most `NEWS_MAX_PER_RUN` = 2 per run), and publishes to `news/`.
 Runs **once daily**. Every news page carries a disclosure that it is
 AI-assisted and links the original source.
 
+- **`itvedas-brain/growth-agent.py`** — the SEO / AEO manager. Weekly, it reads
+Google Search Console and GA4, rewrites the title and meta description of pages
+that rank well but rarely get clicked (and reverts rewrites that made things
+worse), and queues new topics and article refreshes for `content-writer.py`
+in `itvedas-brain/state/growth_queue.json`. Once the built-in calendar is
+finished the writer takes its work from that queue. Needs a Google service
+account; see [`docs/GROWTH-AGENT.md`](docs/GROWTH-AGENT.md). Runs from
+`.github/workflows/growth-agent.yml`.
+
 **Review gate.** Each draft is scored by a second model call before publishing.
 A draft below the bar is rewritten once and reviewed again; if it still fails,
 or the review call itself fails, it is not published that run. Set
@@ -57,6 +66,8 @@ or the review call itself fails, it is not published that run. Set
 | `CLAUDE_MODEL` | no | override the model (default `claude-opus-5-5`) |
 | `REVIEW_STRICT` | no | `1` (default) blocks unreviewed drafts; `0` disables |
 | `GA4_ID` | no | analytics tag on generated pages |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | growth agent only | read-only Search Console + GA4 access |
+| `GA4_PROPERTY_ID` | no | numeric GA4 property id for the growth agent's traffic report |
 | `NOTIFY_EMAIL`, `SMTP_FROM`, `SMTP_PASS` | no | content-writer email notifications |
 
 Keys issued by other providers are never used as a fallback. If Claude's safety
@@ -117,7 +128,8 @@ manually. It publishes prioritized Markdown and JSON reports as a workflow
 artifact. Run locally with
 `python3 scripts/audit-search-discoverability.py --root .`.
 The audit is read-only and heuristic; it does not query Search Console,
-analytics, live rankings, or field Core Web Vitals.
+analytics, live rankings, or field Core Web Vitals. The growth agent above is the part
+that works from live Search Console and analytics data.
 
 ## Documentation
 

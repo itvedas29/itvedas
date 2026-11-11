@@ -78,6 +78,10 @@ ROOT       = pathlib.Path(".")
 ARTICLES   = ROOT / "articles"
 BRAIN_DIR  = ROOT / "itvedas-brain" / "state"
 STATE_FILE = BRAIN_DIR / "state.json"
+# Written by growth-agent.py from Search Console data: new topics to write
+# and existing articles to refresh. Absent/empty = original behaviour.
+GROWTH_QUEUE_FILE = BRAIN_DIR / "growth_queue.json"
+GROWTH_MAX_ATTEMPTS = 2
 
 COMPONENT  = "content-writer"
 
@@ -267,6 +271,67 @@ def score_by_search_interest(keywords):
     return scores
 
 # ─────────────────────────────────────────────────────────────────
+# GROWTH QUEUE — work handed over by growth-agent.py
+# ─────────────────────────────────────────────────────────────────
+# Search queries the picked article should answer (set by pick_keyword).
+_FOCUS_QUERIES = []
+
+def load_growth_queue():
+    try:
+        q = json.loads(GROWTH_QUEUE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        q = {}
+    return {"keywords": list(q.get("keywords", [])), "refresh": list(q.get("refresh", []))}
+
+def save_growth_queue(q):
+    tmp = GROWTH_QUEUE_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(q, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    tmp.replace(GROWTH_QUEUE_FILE)
+
+def pick_from_growth_queue(state):
+    """Next job from the growth agent's queue as (keyword, topic, is_refresh,
+    existing_entry, focus_queries), or None when the queue has nothing usable.
+
+    New topics go first, then refreshes. An item stays queued until it is
+    published (finish_growth_item) so a failed review retries next run, but
+    is dropped after GROWTH_MAX_ATTEMPTS so one bad topic can't block the rest.
+    """
+    if not GROWTH_QUEUE_FILE.exists():
+        return None
+    q = load_growth_queue()
+    used = set(state.get("used_keywords", []))
+    by_file = {a.get("file"): a for a in state.get("published", [])}
+    q["keywords"] = [k for k in q["keywords"]
+                     if k.get("keyword") not in used and k.get("attempts", 0) < GROWTH_MAX_ATTEMPTS]
+    q["refresh"] = [r for r in q["refresh"]
+                    if r.get("file") in by_file and r.get("attempts", 0) < GROWTH_MAX_ATTEMPTS]
+    job = None
+    if q["keywords"]:
+        item = q["keywords"][0]
+        item["attempts"] = item.get("attempts", 0) + 1
+        job = (item["keyword"], item.get("topic", "Networking"), False, None, [])
+        log(f"Keyword (growth queue): {item['keyword']}  [{job[1]}]")
+    elif q["refresh"]:
+        item = q["refresh"][0]
+        item["attempts"] = item.get("attempts", 0) + 1
+        entry = by_file[item["file"]]
+        job = (entry["keyword"], entry["topic"], True, entry, list(item.get("queries", []))[:6])
+        log(f"Refreshing (growth queue): articles/{item['file']}  for {job[4]}")
+    save_growth_queue(q)
+    return job
+
+def finish_growth_item(keyword, filename, is_refresh):
+    """Remove a published job from the growth queue."""
+    if not GROWTH_QUEUE_FILE.exists():
+        return
+    q = load_growth_queue()
+    if is_refresh:
+        q["refresh"] = [r for r in q["refresh"] if r.get("file") != filename]
+    else:
+        q["keywords"] = [k for k in q["keywords"] if k.get("keyword") != keyword]
+    save_growth_queue(q)
+
+# ─────────────────────────────────────────────────────────────────
 # STEP 1 — pick keyword
 # ─────────────────────────────────────────────────────────────────
 def pick_keyword(state):
@@ -301,6 +366,13 @@ def pick_keyword(state):
             log(f"Keyword (calendar order — Trends unavailable): {keyword}  [{topic}]")
         return keyword, topic, False, None
 
+    # Calendar done: take data-driven work from the growth agent first.
+    _FOCUS_QUERIES.clear()
+    job = pick_from_growth_queue(state)
+    if job:
+        _FOCUS_QUERIES.extend(job[4])
+        return job[:4]
+
     log("Calendar complete — refreshing highest-demand article instead of duplicating")
     calendar_keywords = {k for k, _ in CALENDAR}
     candidates = [a for a in state.get("published", []) if a.get("keyword") in calendar_keywords]
@@ -321,7 +393,7 @@ def pick_keyword(state):
 # ─────────────────────────────────────────────────────────────────
 #  STEP 2 — write article
 # ─────────────────────────────────────────────────────────────────
-def write_article(keyword, topic, feedback=None):
+def write_article(keyword, topic, feedback=None, focus=None):
     system = (
         "You are the lead writer for ITVedas, an IT knowledge hub for complete beginners.\n"
         "RULES:\n"
@@ -359,6 +431,13 @@ THEN the article HTML body:
 Include at least one <div class="callout"><div class="callout-title">Pro Tip</div>…</div>.
 Use <strong> for key terms and <code> for technical terms on first mention.
 1500-2000 words. Return ONLY the META comment + HTML body. No html/head/body tags."""
+    if focus:
+        prompt += """
+
+People reach this page from the Google searches below. Cover each one, and
+give a direct one-to-two sentence answer where you cover it (search engines
+and AI assistants quote those). Use them in the FAQ section where they fit:
+""" + "\n".join(f"- {q}" for q in focus)
     if feedback:
         prompt += f"""
 
@@ -856,13 +935,14 @@ def main():
     #    article to refresh in place instead of duplicating)
     keyword, topic, is_refresh, existing = pick_keyword(state)
     # 2. write
-    content = write_article(keyword, topic)
+    focus = list(_FOCUS_QUERIES)
+    content = write_article(keyword, topic, focus=focus)
     # 3. review (one rewrite if weak)
     r = review(content, keyword)
     score = r.get("score", 80)
     if r.get("verdict") == "REWRITE":
         log("Rewriting (low score)")
-        content = write_article(keyword, topic, feedback=r.get("fix"))
+        content = write_article(keyword, topic, feedback=r.get("fix"), focus=focus)
         # Re-review the rewrite rather than assuming it passed.
         r = review(content, keyword)
         score = r.get("score", 80)
@@ -911,17 +991,22 @@ def main():
             raise
         log(f"Published: articles/{fname}")
         # 6. update state
-        state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-60:]
+        # Caps were 60 (enough for the 39-keyword calendar). With growth-queue
+        # topics added on top, 60 would push calendar keywords out of
+        # used_keywords (they would be written a second time) and drop older
+        # articles from the chapter pages built from state["published"].
+        state["used_keywords"] = (state.get("used_keywords", []) + [keyword])[-1000:]
         state["topic_counts"][topic] = state.get("topic_counts", {}).get(topic, 0) + 1
         state["total"] = state.get("total", 0) + 1
         state["published"] = (state.get("published", []) + [{
             "file": fname, "title": meta["title"], "topic": topic,
-            "keyword": keyword, "date": today, "score": score, "rt": rt}])[-60:]
+            "keyword": keyword, "date": today, "score": score, "rt": rt}])[-1000:]
     # 7. homepage, chapters, sitemap
     update_homepage(state)
     build_chapter_pages(state)
     build_sitemap(state)
     save_state(state)
+    finish_growth_item(keyword, fname, is_refresh)
     # 8. email
     send_email(meta, fname, score)
     # 9. tell Bing/Yandex about it now instead of waiting for their next crawl
